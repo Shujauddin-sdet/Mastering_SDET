@@ -31,5 +31,5 @@ console.log(city);
 
 ## Visual Guides
 
-![Variable Rules](images/Variable_Rules.png)
+![Variable Rules](Images/Variable_Rules.png)
 ________________________________________________________________________________
