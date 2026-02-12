@@ -1,6 +1,6 @@
-# Learning JS Pramod
+# Learning Playwright/Javascript/typescript
 
-Welcome to **Learning JS Pramod**! This repository is dedicated to mastering JavaScript concepts, from the basics to advanced topics like hot code paths and optimization.
+Welcome to **Playwright/Javascript/typescript**! This repository is dedicated to mastering JavaScript concepts, from the basics to advanced topics like hot code paths and optimization.
 
 ## 📂 Project Structure
 
@@ -36,4 +36,4 @@ Feel free to fork this repository and submit pull requests if you have any impro
 
 ## ✍️ Author
 
-[Shujaudin's Lobby]
+[Shujaudin]
