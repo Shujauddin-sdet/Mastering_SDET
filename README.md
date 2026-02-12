@@ -1,6 +1,6 @@
 # Learning Playwright/Javascript/typescript
 
-Welcome to **Playwright/Javascript/typescript**! This repository is dedicated to mastering JavaScript concepts, from the basics to advanced topics like hot code paths and optimization.
+Welcome to Learning of **Playwright/Javascript/typescript**! This repository is dedicated to mastering JavaScript concepts, from the basics to advanced topics like hot code paths and optimization.
 
 ## 📂 Project Structure
 
