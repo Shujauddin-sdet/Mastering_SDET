@@ -580,3 +580,122 @@ switch (day) {
 
 **Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
 _______________________________
+
+## 6. JavaScript Input/Output Methods
+
+**Overview:** Different ways to get input from users and display output in JavaScript.
+
+| Feature | Works in Browser? | Works in VS Code/Node? | Recommended For |
+|---------|-------------------|------------------------|-----------------|
+| `console.log()` | ✅ Yes | ✅ Yes | Everything (Universal) |
+| `prompt()` | ✅ Yes | ❌ No | Learning Browser basics |
+| `alert()` | ✅ Yes | ❌ No | Visual web alerts |
+| `confirm()` | ✅ Yes | ❌ No | Yes/No questions in browser |
+| `process.argv` | ❌ No | ✅ Yes | SDET Command Line Tools |
+
+---
+
+### **A) console.log()**
+**What it does:** Prints output to the console (browser DevTools or terminal).
+
+**Example:**
+```javascript
+console.log("Hello, World!"); // Output: Hello, World!
+let age = 25;
+console.log("Age:", age); // Output: Age: 25
+```
+
+---
+
+### **B) prompt()**
+**What it does:** Shows a popup box in the browser asking for user input. Returns the input as a **string**.
+
+**Example:**
+```javascript
+let name = prompt("Enter your name:");
+console.log("Hello,", name); // Whatever user types is stored in 'name'
+
+let num = prompt("Enter a number:");
+console.log(num + 5); // ⚠️ Will concatenate, not add! num is a string!
+console.log(Number(num) + 5); // ✅ Convert to number first
+```
+
+**Important:** Always convert `prompt()` input to a number if doing math!
+
+---
+
+### **C) alert()**
+**What it does:** Shows a popup message in the browser. User can only click "OK".
+
+**Example:**
+```javascript
+alert("Welcome to our website!"); // Shows popup with message
+alert("Your form has been submitted!"); // Another popup
+```
+
+**Use case:** Show important messages to users on web pages.
+
+---
+
+### **D) confirm()**
+**What it does:** Shows a popup with "OK" and "Cancel" buttons. Returns `true` if OK is clicked, `false` if Cancel.
+
+**Example:**
+```javascript
+let wantToDelete = confirm("Are you sure you want to delete?");
+
+if (wantToDelete) {
+    console.log("Item deleted!");
+} else {
+    console.log("Deletion cancelled.");
+}
+```
+
+**Use case:** Ask yes/no questions before important actions.
+
+---
+
+### **E) process.argv**
+**What it does:** Gets command-line arguments in Node.js. Returns an **array** of arguments.
+
+**Example:**
+```javascript
+// File: test.js
+console.log(process.argv);
+```
+
+**Run in terminal:**
+```bash
+node test.js hello world 123
+```
+
+**Output:**
+```javascript
+[
+  '/usr/local/bin/node',    // process.argv[0] - Node path
+  '/path/to/test.js',       // process.argv[1] - File path
+  'hello',                  // process.argv[2] - First argument
+  'world',                  // process.argv[3] - Second argument
+  '123'                     // process.argv[4] - Third argument
+]
+```
+
+**Practical example:**
+```javascript
+// File: greet.js
+let name = process.argv[2]; // Get first argument
+console.log("Hello,", name);
+```
+
+**Run:** `node greet.js John` → **Output:** `Hello, John`
+
+**Use case:** Building SDET command-line tools and automation scripts.
+
+---
+
+### **Quick Summary:**
+
+- **Browser only:** `prompt()`, `alert()`, `confirm()`
+- **Node.js only:** `process.argv`
+- **Works everywhere:** `console.log()`
+
