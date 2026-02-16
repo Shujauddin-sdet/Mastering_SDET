@@ -7,6 +7,7 @@ Answer:JavaScript is a programming language that is used to create dynamic and i
 - ECMAScript — mention that JavaScript follows the ECMAScript standard (ES6/ES2015+)
 - Role in web development: It's one of the three core technologies of the web alongside HTML (structure) and CSS (styling). JavaScript handles the behavior and logic layer.
 ____________________________________________________________________________________
+
 2. Variables
 - What is a variable?
 - A variable is a container for storing data.
@@ -33,3 +34,50 @@ console.log(city);
 
 ![Variable Rules](Images/Variable_Rules.png)
 ________________________________________________________________________________
+
+![diff_var_let_const](Images/diff_var_let_const.png)
+
+var age = 1;
+var age = 2;
+var age = 3;
+console.log(age);
+
+The last valuve will be printed and it is wrong way to write code usind var as we can redeclare the same variable many times.
+
+let age =1;
+
+age = 2;
+console.log(age);
+
+in let we can update the value of the variable but we cannot redeclare the same variable.
+
+const age = 1;
+
+age = 2;
+console.log(age);
+
+In const we cannot update the value of the variable and we cannot redeclare the same variable.
+________________________________________________________________________________
+
+3. Data Types
+- What is a data type?
+- A data type is a type of data that can be stored in a variable.
+- In JavaScript, there are two types of data types:
+- Primitive data types
+- Non-primitive data types
+
+- Primitive data types:
+- String (Text)
+- Number (Integer, Float)
+- Boolean (True, False)
+- Undefined (Value is not assigned)
+- Null (Value is intentionally assigned as null)
+- Symbol (Unique value)
+- BigInt (Large integer)
+
+- Non-primitive data types:
+- Object (Collection of key-value pairs)
+- Array (Ordered list of values)
+- Function (Block of code that performs a specific task)
+
+_____________________________________________________________
