@@ -117,6 +117,8 @@ console.log(a % b); // Output: 1 (remainder when 10 is divided by 3)
 console.log(a ** b); // Output: 1000 (10 to the power of 3)
 ```
 
+![Arithmetic Operators](Images/Arithmetic_Operators.png)
+
 ### 2. Comparison Operators (==, ===, !=, !==, >, <, >=, <=)
 **Meaning:** Used to compare two values and return a boolean (true or false).
 - `==` Equal to - checks if values are equal (with type conversion)
@@ -295,6 +297,8 @@ console.log(typeof address);   // Output: "undefined" (value not assigned)
 console.log(typeof [1, 2, 3]); // Output: "object" (arrays are objects)
 ```
 
+![typeof Operator](Images/Typeof_Operator.png)
+
 ### 8. in Operator
 **Meaning:** Checks if a property/key exists in an object. Returns true if found, false if not.
 
@@ -314,6 +318,8 @@ let car = { brand: "Toyota", model: "Camry" };
 console.log("brand" in car);      // Output: true
 console.log("year" in car);       // Output: false
 ```
+
+![in Operator](Images/In_Operator.png)
 
 ### 9. instanceof Operator
 **Meaning:** Checks if an object is an instance of a specific class or constructor. Returns true or false.
@@ -338,6 +344,8 @@ function Person(name) {
 let john = new Person("John");
 console.log(john instanceof Person);    // Output: true (john is instance of Person)
 ```
+
+![instanceof Operator](Images/Instanceof_Operator.png)
 
 ---
 
