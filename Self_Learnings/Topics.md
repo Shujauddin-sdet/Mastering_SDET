@@ -81,3 +81,501 @@ ________________________________________________________________________________
 - Function (Block of code that performs a specific task)
 
 _____________________________________________________________
+ 4. Operators
+- What is an operator?
+
+- An operator is a symbol that performs an operation on one or more operands. 
+ 
+-It is used to perform some operation on data.
+
+![Operator_and_Operands](Images/Operator_and_Operands.png)
+
+- In JavaScript, there are different types of operators:
+
+### 1. Arithmetic Operators (+, -, *, /, %, **)
+**Meaning:** Used to perform mathematical calculations on numbers.
+- `+` Addition - adds two numbers
+- `-` Subtraction - subtracts one number from another
+- `*` Multiplication - multiplies two numbers
+- `/` Division - divides one number by another
+- `%` Modulus - returns the remainder after division
+- `**` Exponentiation - raises the first operand to the power of the second operand
+
+**Example:**
+```javascript
+let a = 10;
+let b = 3;
+
+console.log(a + b); // Output: 13 (adds 10 and 3)
+console.log(a - b); // Output: 7 (subtracts 3 from 10)
+console.log(a * b); // Output: 30 (multiplies 10 by 3)
+console.log(a / b); // Output: 3.333... (divides 10 by 3)
+console.log(a % b); // Output: 1 (remainder when 10 is divided by 3)
+console.log(a ** b); // Output: 1000 (10 to the power of 3)
+```
+
+### 2. Comparison Operators (==, ===, !=, !==, >, <, >=, <=)
+**Meaning:** Used to compare two values and return a boolean (true or false).
+- `==` Equal to - checks if values are equal (with type conversion)
+- `===` Strict equal to - checks if values AND types are equal
+- `!=` Not equal to - checks if values are not equal
+- `!==` Strict not equal to - checks if values OR types are not equal
+- `>` Greater than
+- `<` Less than
+- `>=` Greater than or equal to
+- `<=` Less than or equal to
+
+**Example:**
+```javascript
+let x = 10;
+let y = "10";
+let z = 5;
+
+console.log(x == y);   // Output: true (10 equals "10" after type conversion)
+console.log(x === y);  // Output: false (number 10 is NOT strictly equal to string "10")
+console.log(x != z);   // Output: true (10 is not equal to 5)
+console.log(x !== y);  // Output: true (different types: number vs string)
+console.log(x > z);    // Output: true (10 is greater than 5)
+console.log(x < z);    // Output: false (10 is not less than 5)
+console.log(x >= 10);  // Output: true (10 is greater than or equal to 10)
+console.log(z <= 5);   // Output: true (5 is less than or equal to 5)
+```
+
+-Comparison Operators (The Equality Trap)
+In SDET work, checking values correctly is the difference between a "Pass" and a "Fail" in your tests.
+
+A. Loose Equality (==)
+Rule: Checks only the Value.
+
+Coercion: It converts data types automatically (e.g., changes a string to a number) to try and make them match.
+
+Example: 5 == "5" is true.
+
+B. Strict Equality (===)
+Rule: Checks both Value AND Data Type.
+
+SDET Best Practice: Always use === to prevent "invisible" bugs in your automation scripts.
+
+Example: 5 === "5" is false.
+
+### 3. Logical Operators (&&, ||, !)
+**Meaning:** Used to combine or invert boolean values.
+- `&&` AND - returns true if BOTH conditions are true
+- `||` OR - returns true if AT LEAST ONE condition is true
+- `!` NOT - inverts the boolean value (true becomes false, false becomes true)
+
+**Example:**
+```javascript
+let age = 25;
+let hasLicense = true;
+
+console.log(age >= 18 && hasLicense); // Output: true (age is 18+ AND has license)
+console.log(age >= 18 || hasLicense); // Output: true (at least one is true)
+console.log(!hasLicense);             // Output: false (inverts true to false)
+
+let isSunny = false;
+let isWarm = true;
+console.log(isSunny && isWarm);       // Output: false (NOT both are true)
+console.log(isSunny || isWarm);       // Output: true (at least one is true)
+console.log(!isSunny);                // Output: true (inverts false to true)
+```
+![Logical_Operators](Images/Logical_Operators.png)
+ 
+ ### 4. Assignment Operators (=, +=, -=, *=, /=, %=)
+**Meaning:** Used to assign or update values to variables.
+- `=` Assigns a value
+- `+=` Adds and assigns (a += 5 is same as a = a + 5)
+- `-=` Subtracts and assigns
+- `*=` Multiplies and assigns
+- `/=` Divides and assigns
+- `%=` Modulus and assigns
+
+**Example:**
+```javascript
+let score = 10;
+
+score = 20;    // Assigns 20 to score
+console.log(score); // Output: 20
+
+score += 5;    // Same as: score = score + 5 (20 + 5)
+console.log(score); // Output: 25
+
+score -= 3;    // Same as: score = score - 3 (25 - 3)
+console.log(score); // Output: 22
+
+score *= 2;    // Same as: score = score * 2 (22 * 2)
+console.log(score); // Output: 44
+
+score /= 4;    // Same as: score = score / 4 (44 / 4)
+console.log(score); // Output: 11
+
+score %= 5;    // Same as: score = score % 5 (remainder of 11/5)
+console.log(score); // Output: 1
+```
+
+### 5. Increment/Decrement Operators (++, --)
+**Meaning:** Used to increase or decrease a variable's value by 1.
+- `++` Increment - increases value by 1
+- `--` Decrement - decreases value by 1
+- Can be used as prefix (++a) or postfix (a++)
+
+**Example:**
+```javascript
+let count = 5;
+
+count++;           // Increases count by 1 (postfix)
+console.log(count); // Output: 6
+
+++count;           // Increases count by 1 (prefix)
+console.log(count); // Output: 7
+
+count--;           // Decreases count by 1 (postfix)
+console.log(count); // Output: 6
+
+--count;           // Decreases count by 1 (prefix)
+console.log(count); // Output: 5
+
+// Difference between prefix and postfix:
+let a = 10;
+console.log(a++);  // Output: 10 (uses current value first, THEN increments)
+console.log(a);    // Output: 11 (now incremented)
+
+let b = 10;
+console.log(++b);  // Output: 11 (increments FIRST, then uses new value)
+console.log(b);    // Output: 11
+```
+
+### 6. Ternary Operator (? :)
+**Meaning:** A shorthand for if-else statements. Returns one value if condition is true, another if false.
+- Syntax: `condition ? valueIfTrue : valueIfFalse`
+-if condition is true then valueIfTrue will be executed else valueIfFalse will be executed
+
+**Example:**
+```javascript
+let age = 20;
+let canVote = age >= 18 ? "Yes" : "No"; // If age >= 18, return "Yes", else "No"
+console.log(canVote); // Output: "Yes"
+
+let marks = 45;
+let result = marks >= 50 ? "Pass" : "Fail"; // Check if marks are 50 or more
+console.log(result); // Output: "Fail"
+
+// Can also use directly in console.log:
+let temp = 35;
+console.log(temp > 30 ? "Hot" : "Cold"); // Output: "Hot"
+```
+
+### 7. typeof Operator
+**Meaning:** Returns the data type of a value as a string.
+
+**Example:**
+```javascript
+let name = "John";
+let age = 30;
+let isStudent = true;
+let salary = null;
+let address;
+
+console.log(typeof name);      // Output: "string" (text)
+console.log(typeof age);       // Output: "number" (numeric value)
+console.log(typeof isStudent); // Output: "boolean" (true/false)
+console.log(typeof salary);    // Output: "object" (null is considered object - historical bug)
+console.log(typeof address);   // Output: "undefined" (value not assigned)
+console.log(typeof [1, 2, 3]); // Output: "object" (arrays are objects)
+```
+
+### 8. in Operator
+**Meaning:** Checks if a property/key exists in an object. Returns true if found, false if not.
+
+**Example:**
+```javascript
+let person = {
+  name: "John",
+  age: 30,
+  city: "New York"
+};
+
+console.log("name" in person);    // Output: true (property "name" exists)
+console.log("age" in person);     // Output: true (property "age" exists)
+console.log("country" in person); // Output: false (property "country" doesn't exist)
+
+let car = { brand: "Toyota", model: "Camry" };
+console.log("brand" in car);      // Output: true
+console.log("year" in car);       // Output: false
+```
+
+### 9. instanceof Operator
+**Meaning:** Checks if an object is an instance of a specific class or constructor. Returns true or false.
+
+**Example:**
+```javascript
+let numbers = [1, 2, 3, 4];
+let today = new Date();
+let message = "Hello";
+
+console.log(numbers instanceof Array);  // Output: true (numbers is an array)
+console.log(today instanceof Date);     // Output: true (today is a Date object)
+console.log(message instanceof String); // Output: false (primitive string, not String object)
+
+let obj = { name: "Test" };
+console.log(obj instanceof Object);     // Output: true (obj is an object)
+console.log(obj instanceof Array);      // Output: false (obj is not an array)
+
+function Person(name) {
+  this.name = name;
+}
+let john = new Person("John");
+console.log(john instanceof Person);    // Output: true (john is instance of Person)
+```
+
+---
+
+### 10. Unary Operators
+**Meaning:** Operators that work with only ONE operand (value). They perform operations on a single value.
+
+**Common Unary Operators:**
+- `+` Unary plus - converts operand to a number
+- `-` Unary minus - negates the operand
+- `!` Logical NOT - inverts boolean value
+- `++` Increment - increases value by 1
+- `--` Decrement - decreases value by 1
+- `typeof` - returns the data type
+- `delete` - deletes a property from an object
+- `void` - evaluates an expression and returns undefined
+
+**Example:**
+```javascript
+// Unary Plus (+) - converts to number
+let str = "5";
+console.log(+str);        // Output: 5 (string "5" converted to number 5)
+console.log(typeof +str); // Output: "number"
+
+let bool = true;
+console.log(+bool);       // Output: 1 (true converted to 1)
+console.log(+false);      // Output: 0 (false converted to 0)
+
+// Unary Minus (-) - negates the value
+let num = 10;
+console.log(-num);        // Output: -10 (makes positive number negative)
+console.log(-(-num));     // Output: 10 (double negative becomes positive)
+
+// Logical NOT (!) - inverts boolean
+let isActive = true;
+console.log(!isActive);   // Output: false (inverts true to false)
+console.log(!!isActive);  // Output: true (double negation returns original)
+
+// Increment (++) and Decrement (--)
+let count = 5;
+console.log(++count);     // Output: 6 (increments first, then returns)
+console.log(count++);     // Output: 6 (returns first, then increments)
+console.log(count);       // Output: 7 (now incremented)
+
+// typeof operator
+console.log(typeof "Hello");  // Output: "string"
+console.log(typeof 42);       // Output: "number"
+
+// delete operator
+let person = { name: "John", age: 30 };
+delete person.age;            // Deletes the 'age' property
+console.log(person);          // Output: { name: "John" }
+
+// void operator
+console.log(void 0);          // Output: undefined
+console.log(void (2 + 2));    // Output: undefined (evaluates 2+2 but returns undefined)
+```
+
+---
+
+## Operator Classification by Number of Operands:
+
+### **1. Unary Operators** (One Operand)
+Operate on a single value.
+- **Examples:** `!a`, `++a`, `--a`, `typeof a`, `-a`, `+a`, `delete obj.prop`
+- **Use cases:** Type conversion, negation, increment/decrement, type checking
+
+### **2. Binary Operators** (Two Operands)
+Operate on two values.
+- **Examples:** `a + b`, `a > b`, `a && b`, `a = b`, `a % b`
+- **Use cases:** Arithmetic, comparison, logical operations, assignments
+- **Note:** Most operators in JavaScript are binary operators
+
+### **3. Ternary Operator** (Three Operands)
+Operates on three values. JavaScript has only ONE ternary operator.
+- **Example:** `condition ? valueIfTrue : valueIfFalse`
+- **Use cases:** Conditional expressions, shorthand if-else statements
+_____________________________________________________
+
+## 5. Conditional Statements
+
+**What are Conditional Statements?**
+Conditional statements allow you to make decisions in your code based on conditions. Think of them as "if this happens, then do that."
+
+![Conditional Statements Flow](Images/Conditional_Statements_Flow.png)
+
+---
+  
+### **A) IF Statement**
+**Rule:** Executes code ONLY if the condition is **true**. If false, nothing happens.
+
+**Syntax:**
+```javascript
+if (condition) {
+    // code to execute if condition is true
+}
+```
+
+**Example:**
+```javascript
+let age = 20;
+
+if (age >= 18) {
+    console.log("You can vote!"); // This will print because age is 20
+}
+
+if (age >= 21) {
+    console.log("You can drink!"); // This will NOT print (nothing happens)
+}
+```
+
+---
+
+### **B) IF-ELSE Statement**
+**Rule:** If the condition is **true**, execute the `if` block. If **false**, execute the `else` block.
+
+**Syntax:**
+```javascript
+if (condition) {
+    // code if condition is true
+} else {
+    // code if condition is false
+}
+```
+
+**Example:**
+```javascript
+let mode = "dark-mode";
+let color;
+
+if (mode === "dark-mode") {
+    color = "Black"; // This executes because mode is "dark-mode"
+} else {
+    color = "White";
+}
+
+console.log(color); // Output: Black
+```
+
+**Another Example:**
+```javascript
+let marks = 45;
+
+if (marks >= 50) {
+    console.log("Pass");
+} else {
+    console.log("Fail"); // This executes because marks < 50
+}
+```
+
+---
+
+### **C) IF-ELSE-IF Statement**
+**Rule:** Checks multiple conditions in order. Executes the FIRST true condition. If none are true, executes the `else` block.
+
+**Syntax:**
+```javascript
+if (condition1) {
+    // code if condition1 is true
+} else if (condition2) {
+    // code if condition2 is true
+} else {
+    // code if none of the conditions are true
+}
+```
+
+**Example:**
+```javascript
+let marks = 75;
+
+if (marks >= 90) {
+    console.log("Grade: A");
+} else if (marks >= 75) {
+    console.log("Grade: B"); // This executes because marks = 75
+} else if (marks >= 50) {
+    console.log("Grade: C");
+} else {
+    console.log("Grade: F");
+}
+
+// Output: Grade: B
+```
+
+**Traffic Light Example:**
+```javascript
+let light = "yellow";
+
+if (light === "green") {
+    console.log("Go!");
+} else if (light === "yellow") {
+    console.log("Slow down!"); // This executes
+} else if (light === "red") {
+    console.log("Stop!");
+} else {
+    console.log("Invalid light!");
+}
+
+// Output: Slow down!
+```
+
+---
+
+### **Quick Comparison:**
+
+| Statement | When to Use |
+|-----------|-------------|
+| **if** | Execute code only when condition is true, otherwise skip |
+| **if-else** | Choose between 2 options (true or false) |
+| **if-else-if** | Choose between 3+ options (multiple conditions) |
+
+---
+
+switch statement    
+### **D) SWITCH Statement**
+**Rule:** Compares a single value against multiple `case` labels. It is more readable than long `if-else-if` chains when checking the same variable for specific values.
+
+**Syntax:**
+```javascript
+switch (expression) {
+    case value1:
+        // code to execute
+        break;
+    case value2:
+        // code to execute
+        break;
+    default:
+        // code if no case matches
+}
+```
+
+**Example:**
+```javascript
+let day = 3;
+
+switch (day) {
+    case 1:
+        console.log("Monday");
+        break;
+    case 2:
+        console.log("Tuesday");
+        break;
+    case 3:
+        console.log("Wednesday"); // This executes because day is 3
+        break;
+    default:
+        console.log("Invalid day");
+}
+
+// Output: Wednesday
+```
+
+**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
+_______________________________
