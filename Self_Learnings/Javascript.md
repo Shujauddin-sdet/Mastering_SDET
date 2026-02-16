@@ -81,6 +81,8 @@ ________________________________________________________________________________
 - Array (Ordered list of values)
 - Function (Block of code that performs a specific task)
 
+![JavaScript Data Types](Images/Data_Types_Overview.png)
+
 _____________________________________________________________
  4. Operators
 - What is an operator?
@@ -159,6 +161,8 @@ SDET Best Practice: Always use === to prevent "invisible" bugs in your automatio
 
 Example: 5 === "5" is false.
 
+![Equality Comparison](Images/Equality_Comparison.png)
+
 ### 3. Logical Operators (&&, ||, !)
 **Meaning:** Used to combine or invert boolean values.
 - `&&` AND - returns true if BOTH conditions are true
@@ -214,6 +218,8 @@ score %= 5;    // Same as: score = score % 5 (remainder of 11/5)
 console.log(score); // Output: 1
 ```
 
+![Assignment Operators Flow](Images/Assignment_Operators_Flow.png)
+
 ### 5. Increment/Decrement Operators (++, --)
 **Meaning:** Used to increase or decrease a variable's value by 1.
 - `++` Increment - increases value by 1
@@ -246,6 +252,8 @@ console.log(++b);  // Output: 11 (increments FIRST, then uses new value)
 console.log(b);    // Output: 11
 ```
 
+![Pre vs Post Increment](Images/Pre_Post_Increment.png)
+
 ### 6. Ternary Operator (? :)
 **Meaning:** A shorthand for if-else statements. Returns one value if condition is true, another if false.
 - Syntax: `condition ? valueIfTrue : valueIfFalse`
@@ -265,6 +273,8 @@ console.log(result); // Output: "Fail"
 let temp = 35;
 console.log(temp > 30 ? "Hot" : "Cold"); // Output: "Hot"
 ```
+
+![Ternary Operator Flow](Images/Ternary_Operator_Flow.png)
 
 ### 7. typeof Operator
 **Meaning:** Returns the data type of a value as a string.
@@ -577,6 +587,8 @@ switch (day) {
 
 // Output: Wednesday
 ```
+
+![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
 **Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
 _______________________________
