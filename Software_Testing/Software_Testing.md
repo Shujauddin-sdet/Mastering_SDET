@@ -179,6 +179,11 @@ Any project development has to follow the below phases:
 ![SDLC Models](../Self_Learnings/Images/Model_SDLC.png)
 
 #### 5.3.1 Waterfall Model / Linear Sequential Model
+
+![When to choose waterfall model](../Self_Learnings/Images/Choose_waterfall_model.png)
+![Advantages of Waterfall](../Self_Learnings/Images/Advantage_Waterfall_model.png)
+![Disadvantages of Waterfall](../Self_Learnings/Images/Disadvantage_Waterfall.png)
+
 *   **Meaning**: The oldest and simplest model where development flows steadily downwards through several phases.
 *   **Easy to Remember**: Like a **Waterfall**, the flow is only **downward**. Once you cross a stage, you cannot go back easily.
 *   **Key Highlights**: 
