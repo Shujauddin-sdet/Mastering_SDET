@@ -27,3 +27,6 @@ const profile = {
 
 console.log(profile);
 
+
+
+let character
