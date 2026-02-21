@@ -1,6 +1,6 @@
 # GitHub with Google Antigravity & VS Code with GitHub Copilot — Complete QA Tutorial
 
-### The Ultimate Guide to AI-Powered GitHub Workflows for QA Engineers & SDETs
+## The Ultimate Guide to AI-Powered GitHub Workflows for QA Engineers & SDETs
 
 **Covering:** GitHub MCP Setup · PR Automation · Issue Management · Agent Mode · Copilot Chat · Slash Commands · Custom Instructions · Troubleshooting
 
@@ -33,21 +33,19 @@ This tutorial is divided into **two major parts** with **18 modules total**. By 
 
 ### Part B: VS Code with GitHub Copilot (Modules 10–18)
 
-10. What is GitHub Copilot and Why QA Engineers Need It
-11. Prerequisites & Installation in VS Code
-12. Copilot Modes — Ask, Edit, and Agent Mode Explained
-13. Keyboard Shortcuts & Slash Commands for QA
-14. Context References — #file, @workspace, @terminal
-15. Custom Instructions — copilot-instructions.md for QA
-16. Agent Mode — Autonomous Multi-File Test Generation
-17. Copilot Skills & Custom Agents for QA
-18. Troubleshooting Copilot in VS Code
+1. What is GitHub Copilot and Why QA Engineers Need It
+2. Prerequisites & Installation in VS Code
+3. Copilot Modes — Ask, Edit, and Agent Mode Explained
+4. Keyboard Shortcuts & Slash Commands for QA
+5. Context References — #file, @workspace, @terminal
+6. Custom Instructions — copilot-instructions.md for QA
+7. Agent Mode — Autonomous Multi-File Test Generation
+8. Copilot Skills & Custom Agents for QA
+9. Troubleshooting Copilot in VS Code
 
 ---
 
----
-
-# PART A: GitHub with Google Antigravity
+## PART A: GitHub with Google Antigravity
 
 ---
 
@@ -106,17 +104,20 @@ That is the power. You never leave your IDE. The agent handles GitHub for you.
 ### 2.2 Installing Google Antigravity
 
 **macOS:**
+
 1. Download the `.dmg` from [antigravity.google](https://antigravity.google)
 2. Drag Antigravity to Applications
 3. Open and sign in with your Gmail account
 4. Select your preferred editor layout
 
 **Windows:**
+
 1. Download the `.exe` installer from [antigravity.google](https://antigravity.google)
 2. Run the installer and follow prompts
 3. Sign in with your Gmail account
 
 **Linux:**
+
 1. Download the `.AppImage` or `.deb` from [antigravity.google](https://antigravity.google)
 2. Make executable: `chmod +x Antigravity-*.AppImage`
 3. Run and sign in
@@ -130,6 +131,7 @@ git --version
 ```
 
 **Expected output:**
+
 ```
 git version 2.43.0
 ```
@@ -144,6 +146,7 @@ npm --version
 ```
 
 **Expected output:**
+
 ```
 v20.11.0
 10.2.4
@@ -164,6 +167,7 @@ This method uses GitHub's hosted MCP server. No Docker needed. No local server t
 **Step 2:** Click **MCP Servers** → **Manage MCP Servers** → **View raw config**.
 
 This opens the file:
+
 ```
 ~/.gemini/antigravity/mcp_config.json
 ```
@@ -332,6 +336,7 @@ The GitHub MCP Server organizes tools into **toolsets**. You can enable specific
 Antigravity recommends keeping total enabled tools under 50. For QA, configure your mcp_config.json with only what you need:
 
 **Remote server (add header):**
+
 ```json
 {
   "mcpServers": {
@@ -347,6 +352,7 @@ Antigravity recommends keeping total enabled tools under 50. For QA, configure y
 ```
 
 **Docker (add environment variable):**
+
 ```json
 {
   "mcpServers": {
@@ -414,6 +420,7 @@ Antigravity recommends keeping total enabled tools under 50. For QA, configure y
 **Scenario:** You find a bug during exploratory testing.
 
 **Prompt:**
+
 ```
 I found a bug on the checkout page. When I apply a discount code "SAVE20" and then remove 
 an item from cart, the discount percentage applies to the old total, not the updated total.
@@ -426,6 +433,7 @@ Create a GitHub issue in pramoddutta/ecommerce-app with:
 ```
 
 **What the agent does:**
+
 1. Formats your description into a proper bug report
 2. Calls `create_issue` with structured title, body, labels, and assignee
 3. Returns the issue URL
@@ -435,11 +443,13 @@ Create a GitHub issue in pramoddutta/ecommerce-app with:
 **Scenario:** You want the agent to write E2E tests for a new feature and submit them as a PR.
 
 **Step 1 — Create a branch:**
+
 ```
 Create a branch called "test/checkout-discount-e2e" from main in pramoddutta/ecommerce-app
 ```
 
 **Step 2 — Generate tests locally, then push:**
+
 ```
 Write Playwright E2E tests for the checkout discount feature covering:
 1. Apply valid discount code → verify total updates
@@ -451,6 +461,7 @@ Use POM pattern. Then push these files to the "test/checkout-discount-e2e" branc
 ```
 
 **Step 3 — Open PR:**
+
 ```
 Create a PR from "test/checkout-discount-e2e" to "main" with:
 - Title: "Add E2E tests for checkout discount feature"
@@ -461,6 +472,7 @@ Create a PR from "test/checkout-discount-e2e" to "main" with:
 ### 7.3 Workflow 3: Monitor CI/CD and Report Failures
 
 **Prompt:**
+
 ```
 Check the status of our latest GitHub Actions workflow run for the "regression-tests" workflow 
 in pramoddutta/ecommerce-app. If any tests failed, list the failing tests and create an issue 
@@ -470,6 +482,7 @@ for each failure with the error message and stack trace.
 ### 7.4 Workflow 4: Code Review on Test PRs
 
 **Prompt:**
+
 ```
 Review PR #55 in our test-automation repo. Check the test code for:
 1. Missing assertions
@@ -484,6 +497,7 @@ Add review comments on each issue you find.
 ### 7.5 Workflow 5: Search for Anti-Patterns Across Repos
 
 **Prompt:**
+
 ```
 Search all repositories in our GitHub org "thetestingacademy" for these QA anti-patterns:
 1. Thread.sleep() in Java test files
@@ -507,18 +521,21 @@ Antigravity's Agent Manager lets you run multiple agents in parallel. This is po
 Open Agent Manager and spawn 3 agents:
 
 **Agent 1 — Bug Hunter:**
+
 ```
 Review all changed files in PR #60. Identify potential bugs or edge cases 
 that are not covered by existing tests. Create a GitHub issue for each finding.
 ```
 
 **Agent 2 — Test Generator:**
+
 ```
 For each new function added in PR #60, generate unit tests with at least 
 80% branch coverage. Push the tests to branch "test/pr60-coverage".
 ```
 
 **Agent 3 — CI/CD Monitor:**
+
 ```
 Monitor the GitHub Actions workflow that runs on push to "test/pr60-coverage". 
 When it completes, report the results back with pass/fail counts.
@@ -552,6 +569,7 @@ The agent creates a detailed plan you can review before executing.
 **Symptom:** `git: command not found` when running `git --version`
 
 **Fix for macOS:**
+
 ```bash
 # Option 1: Xcode Command Line Tools (smallest, recommended)
 xcode-select --install
@@ -561,6 +579,7 @@ brew install git
 ```
 
 **Fix for Windows:**
+
 ```
 # Download from https://git-scm.com/download/win
 # Run the installer
@@ -569,17 +588,20 @@ brew install git
 ```
 
 **Fix for Ubuntu/Debian Linux:**
+
 ```bash
 sudo apt update
 sudo apt install git -y
 ```
 
 **Fix for Fedora/RHEL Linux:**
+
 ```bash
 sudo dnf install git -y
 ```
 
 **Verify after installation:**
+
 ```bash
 git --version
 git config --global user.name "Your Name"
@@ -591,12 +613,15 @@ git config --global user.email "your-email@example.com"
 **Symptom:** No "github" in MCP Servers panel after adding config.
 
 **Fixes:**
+
 1. **Close and fully reopen Antigravity** (not just reload — quit and relaunch)
 2. **Check JSON syntax** — a missing comma or bracket breaks everything:
+
    ```bash
    # Validate your JSON
    cat ~/.gemini/antigravity/mcp_config.json | python3 -m json.tool
    ```
+
 3. **Verify you used `serverUrl`** not `url` — Antigravity requires `serverUrl` for HTTP servers
 4. **Check token validity** — go to [github.com/settings/tokens](https://github.com/settings/tokens) and verify your token hasn't expired
 
@@ -605,15 +630,19 @@ git config --global user.email "your-email@example.com"
 **Symptom:** `docker: command not found` or container fails to start.
 
 **Fixes:**
+
 1. Install Docker Desktop: [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
 2. **Ensure Docker is running** — look for the Docker whale icon in your system tray
 3. If you get `permission denied`:
+
    ```bash
    # Linux only
    sudo usermod -aG docker $USER
    # Then logout and login again
    ```
+
 4. If the image fails to pull:
+
    ```bash
    docker logout ghcr.io
    docker pull ghcr.io/github/github-mcp-server
@@ -624,6 +653,7 @@ git config --global user.email "your-email@example.com"
 **Symptom:** Agent says it cannot authenticate with GitHub.
 
 **Fixes:**
+
 1. **Regenerate your PAT** — tokens expire, and the old one may be revoked
 2. **Check token permissions** — ensure Issues, Pull Requests, Contents, and Metadata are enabled
 3. **Check for extra spaces** — the token in mcp_config.json should have no leading/trailing spaces
@@ -634,9 +664,11 @@ git config --global user.email "your-email@example.com"
 **Symptom:** Antigravity warns about too many tools or agent behaves inconsistently.
 
 **Fix:** Limit toolsets to only what you need:
+
 ```json
 "X-MCP-Toolsets": "repos,issues,pull_requests,actions"
 ```
+
 Keep total enabled tools under 50 for optimal performance.
 
 ### 9.6 Node.js Not Installed (For npx Method)
@@ -644,6 +676,7 @@ Keep total enabled tools under 50 for optimal performance.
 **Symptom:** `npx: command not found`
 
 **Fix:**
+
 ```bash
 # macOS
 brew install node
@@ -673,9 +706,7 @@ If the file doesn't exist, create it manually with valid JSON (`{}`).
 
 ---
 
----
-
-# PART B: VS Code with GitHub Copilot
+## PART B: VS Code with GitHub Copilot
 
 ---
 
@@ -746,6 +777,7 @@ As of early 2026, Copilot has 4.7+ million paid users. It supports three modes: 
 **Step 1:** Create a new file called `LoginTest.java`.
 
 **Step 2:** Start typing:
+
 ```java
 // Test that user can login with valid credentials
 @Test
@@ -791,6 +823,7 @@ At the top of the chat panel, you'll see a **mode dropdown**. Click it to switch
 ### 12.3 When to Use Each Mode for QA
 
 **Use Ask Mode when:**
+
 ```
 # Explain what this test does
 What does this Playwright test check? Is it testing the correct behavior?
@@ -804,6 +837,7 @@ What's the best approach for testing an API endpoint that requires OAuth2 authen
 ```
 
 **Use Edit Mode when:**
+
 ```
 # Fix a specific test
 Fix the assertion on line 32 — it should check for HTTP 201, not 200
@@ -816,6 +850,7 @@ Replace all Thread.sleep() calls in this file with explicit WebDriverWait
 ```
 
 **Use Agent Mode when:**
+
 ```
 # Generate a complete test suite
 Create Playwright E2E tests for the user registration flow covering: 
@@ -861,18 +896,21 @@ Type `/` followed by the command name in the chat. These are shortcuts for commo
 ### 13.3 Practical Slash Command Examples for QA
 
 **Generate Tests:**
+
 ```
 /tests Generate Playwright tests for this component using AAA pattern (Arrange-Act-Assert). 
 Include happy path, edge cases, and error scenarios.
 ```
 
 **Fix Failing Test:**
+
 ```
 /fix This test fails with TimeoutError because the element is inside a shadow DOM. 
 Fix it to handle shadow DOM correctly.
 ```
 
 **Explain Complex Logic:**
+
 ```
 /explain Why does this test use a retry mechanism? What race conditions is it handling?
 ```
@@ -896,6 +934,7 @@ Context references let you point Copilot at specific information for more accura
 ### 14.2 Practical Examples for QA
 
 **Multi-file context:**
+
 ```
 Look at #file:LoginPage.java and #file:LoginTest.java. 
 The test is failing because the page object has outdated locators. 
@@ -904,12 +943,14 @@ described in #file:login.html
 ```
 
 **Workspace-wide search:**
+
 ```
 @workspace Find all test files that don't have any @BeforeMethod or @BeforeEach setup. 
 These tests might have initialization issues.
 ```
 
 **Terminal-based debugging:**
+
 ```
 @terminal The Playwright tests just failed. Look at the error output and tell me:
 1. Which tests failed
@@ -972,6 +1013,7 @@ Create the file at: `.github/copilot-instructions.md` in your project root.
 You can also create language-specific instruction files:
 
 `.github/copilot-instructions/java.md`:
+
 ```markdown
 - Use Java 17 features (records, pattern matching, text blocks)
 - Use var for local variables with obvious types
@@ -979,6 +1021,7 @@ You can also create language-specific instruction files:
 ```
 
 `.github/copilot-instructions/typescript.md`:
+
 ```markdown
 - Use strict TypeScript with no any types
 - Use Playwright fixtures for shared state
@@ -988,11 +1031,13 @@ You can also create language-specific instruction files:
 ### 15.4 Verify Instructions Are Working
 
 After creating the file, open Copilot Chat and type:
+
 ```
 /init
 ```
 
 Then ask:
+
 ```
 What QA conventions should you follow when generating tests for this project?
 ```
@@ -1024,6 +1069,7 @@ Agent Mode is the most powerful feature for QA Engineers. Unlike Ask or Edit mod
 ### 16.3 QA Prompt Templates for Agent Mode
 
 **Complete Framework Setup:**
+
 ```
 Set up a Selenium Java test automation project with:
 - Maven pom.xml with Selenium 4, TestNG, WebDriverManager, ExtentReports
@@ -1035,6 +1081,7 @@ Set up a Selenium Java test automation project with:
 ```
 
 **Playwright E2E Suite:**
+
 ```
 Create a Playwright TypeScript test suite for a shopping cart feature:
 1. Add item to cart → verify cart count updates
@@ -1049,6 +1096,7 @@ Run all tests and fix any failures.
 ```
 
 **API Test Generation:**
+
 ```
 I have this OpenAPI spec at @file:openapi.yaml. 
 Generate REST Assured tests for every endpoint covering:
@@ -1062,6 +1110,7 @@ Run them and show me the results.
 ```
 
 **Fix Flaky Tests:**
+
 ```
 @workspace Find all tests that have failed intermittently in the last CI run.
 For each flaky test:
@@ -1163,11 +1212,13 @@ You are an experienced Senior SDET reviewing test automation code.
 ### 17.4 Invoke Skills and Agents
 
 **Invoke the QA testing skill:**
+
 ```
 /qa-testing Create E2E tests for the user profile page
 ```
 
 **Invoke the QA reviewer agent:**
+
 ```
 @qa-reviewer Review the tests in src/test/java/tests/CheckoutTest.java
 ```
@@ -1181,6 +1232,7 @@ You are an experienced Senior SDET reviewing test automation code.
 **Symptom:** No gray "ghost text" appears as you type.
 
 **Fixes:**
+
 1. **Check Copilot status** — look at the Status Bar icon. If it shows a warning, click it for details.
 2. **Verify sign-in** — `Ctrl+Shift+P` → type `GitHub Copilot: Sign In`
 3. **Check language is enabled** — Copilot can be disabled for specific languages. Go to Settings → search "copilot" → ensure your language isn't in the disabled list.
@@ -1192,11 +1244,14 @@ You are an experienced Senior SDET reviewing test automation code.
 **Symptom:** No "Agent" option in the mode dropdown.
 
 **Fixes:**
+
 1. **Update VS Code** — Agent mode requires VS Code 1.99+. Check: `Help > About`.
 2. **Enable the setting**:
+
    ```json
    { "chat.agent.enabled": true }
    ```
+
 3. **Switch to Pre-Release extension** — Go to Extensions → GitHub Copilot → click "Switch to Pre-Release Version" → restart.
 4. **Check subscription** — Agent mode features may require Copilot Pro.
 
@@ -1205,6 +1260,7 @@ You are an experienced Senior SDET reviewing test automation code.
 **Symptom:** Network error in Copilot chat.
 
 **Fixes:**
+
 1. **Check internet connection** — Copilot requires internet access
 2. **Check proxy/firewall** — ensure `*.github.com` and `*.githubcopilot.com` are not blocked
 3. **Sign out and sign back in**:
@@ -1220,6 +1276,7 @@ You are an experienced Senior SDET reviewing test automation code.
 **Follow the same Git installation steps from Module 9.1** (Part A).
 
 After installing Git, restart VS Code and verify:
+
 ```bash
 git --version
 ```
@@ -1229,6 +1286,7 @@ git --version
 **Symptom:** You want Selenium Java, but Copilot generates Playwright TypeScript.
 
 **Fixes:**
+
 1. **Create copilot-instructions.md** (Module 15) — explicitly state your framework preferences
 2. **Be explicit in prompts** — "Using Selenium 4 with Java 17 and TestNG, write..."
 3. **Open relevant files** — Copilot uses your open tabs as context. Open your pom.xml or existing test files.
@@ -1239,6 +1297,7 @@ git --version
 **Symptom:** Agent keeps running commands that don't make sense or installs wrong dependencies.
 
 **Fixes:**
+
 1. **Be more specific** — vague prompts lead to wrong assumptions
 2. **Provide context** — reference your config files: `#file:playwright.config.ts`
 3. **Intervene early** — if the agent starts going wrong, hit Escape and redirect
@@ -1248,12 +1307,11 @@ git --version
 ### 18.7 Slow Suggestions or Timeouts
 
 **Fixes:**
+
 1. **Close unnecessary tabs** — too many open files slow down Copilot context
 2. **Reduce workspace size** — add large folders (node_modules, target, build) to `.gitignore`
 3. **Switch models** — in Chat, use the model dropdown to try a faster model
 4. **Check system resources** — close other heavy applications
-
----
 
 ---
 
