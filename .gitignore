@@ -15,3 +15,6 @@ logs/
 dist/
 coverage/
 *.local
+
+# Personal notes - not for GitHub
+To_self.md
