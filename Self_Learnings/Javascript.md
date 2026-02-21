@@ -1,15 +1,17 @@
-1. What is JavaScript?
-   
-JavaScript is a programming language that is used to create dynamic and interactive web pages. It is a high-level, interpreted programming language that is used to add functionality to web pages. It is a client-side programming language that is used to create dynamic and interactive web pages.   
+# 1. What is JavaScript?
+
+JavaScript is a programming language that is used to create dynamic and interactive web pages. It is a high-level, interpreted programming language that is used to add functionality to web pages. It is a client-side programming language that is used to create dynamic and interactive web pages.
 
 - JavaScript is a high-level, interpreted programming language primarily used to make web pages interactive and dynamic. It was created by Brendan Eich in 1995 at Netscape.
 - Where it runs: Originally designed to run in web browsers, JavaScript now also runs on servers (via Node.js), mobile apps, desktop applications, and even IoT devices.
 - Core features: It supports object-oriented, functional, and event-driven programming styles. It's dynamically typed, meaning you don't need to declare variable types explicitly.
 - ECMAScript — mention that JavaScript follows the ECMAScript standard (ES6/ES2015+)
 - Role in web development: It's one of the three core technologies of the web alongside HTML (structure) and CSS (styling). JavaScript handles the behavior and logic layer.
-____________________________________________________________________________________
 
-2. Variables
+---
+
+## 2. Variables
+
 - What is a variable?
 - A variable is a container for storing data.
 - In JavaScript, variables are declared using the var, let, or const keywords.
@@ -23,6 +25,8 @@ ________________________________________________________________________________
 - var variableName = value;
 
 - Example:
+
+```javascript
 let name = "John";
 const age = 30;
 var city = "New York";
@@ -30,37 +34,44 @@ var city = "New York";
 console.log(name);
 console.log(age);
 console.log(city);
+```
 
 ## Visual Guides
 
 ![Variable Rules](Images/Variable_Rules.png)
-________________________________________________________________________________
+---
 
 ![diff_var_let_const](Images/diff_var_let_const.png)
 
+```javascript
 var age = 1;
 var age = 2;
 var age = 3;
 console.log(age);
+```
 
-The last valuve will be printed and it is wrong way to write code usind var as we can redeclare the same variable many times.
+The last value will be printed and it is wrong way to write code using var as we can redeclare the same variable many times.
 
-let age =1;
-
+```javascript
+let age = 1;
 age = 2;
 console.log(age);
+```
 
-in let we can update the value of the variable but we cannot redeclare the same variable.
+In `let` we can update the value of the variable but we cannot redeclare the same variable.
 
+```javascript
 const age = 1;
-
-age = 2;
+// age = 2; // This would cause an error
 console.log(age);
+```
 
-In const we cannot update the value of the variable and we cannot redeclare the same variable.
-________________________________________________________________________________
+In `const` we cannot update the value of the variable and we cannot redeclare the same variable.
 
-3. Data Types
+---
+
+## 3. Data Types
+
 - What is a data type?
 - A data type is a type of data that can be stored in a variable.
 - In JavaScript, there are two types of data types:
@@ -83,12 +94,14 @@ ________________________________________________________________________________
 
 ![JavaScript Data Types](Images/Data_Types_Overview.png)
 
-_____________________________________________________________
- 4. Operators
+---
+
+## 4. Operators
+
 - What is an operator?
 
-- An operator is a symbol that performs an operation on one or more operands. 
- 
+- An operator is a symbol that performs an operation on one or more operands.
+
 -It is used to perform some operation on data.
 
 ![Operator_and_Operands](Images/Operator_and_Operands.png)
@@ -96,15 +109,20 @@ _____________________________________________________________
 - In JavaScript, there are different types of operators:
 
 ### 1. Arithmetic Operators (+, -, *, /, %, **)
+
 **Meaning:** Used to perform mathematical calculations on numbers.
+
 - `+` Addition - adds two numbers
 - `-` Subtraction - subtracts one number from another
 - `*` Multiplication - multiplies two numbers
 - `/` Division - divides one number by another
 - `%` Modulus - returns the remainder after division
 - `**` Exponentiation - raises the first operand to the power of the second operand
+- `++` Increment - increases the value of a variable by 1
+- `--` Decrement - decreases the value of a variable by 1
 
 **Example:**
+
 ```javascript
 let a = 10;
 let b = 3;
@@ -120,7 +138,9 @@ console.log(a ** b); // Output: 1000 (10 to the power of 3)
 ![Arithmetic Operators](Images/Arithmetic_Operators.png)
 
 ### 2. Comparison Operators (==, ===, !=, !==, >, <, >=, <=)
+
 **Meaning:** Used to compare two values and return a boolean (true or false).
+
 - `==` Equal to - checks if values are equal (with type conversion)
 - `===` Strict equal to - checks if values AND types are equal
 - `!=` Not equal to - checks if values are not equal
@@ -131,6 +151,7 @@ console.log(a ** b); // Output: 1000 (10 to the power of 3)
 - `<=` Less than or equal to
 
 **Example:**
+
 ```javascript
 let x = 10;
 let y = "10";
@@ -166,12 +187,15 @@ Example: 5 === "5" is false.
 ![Equality Comparison](Images/Equality_Comparison.png)
 
 ### 3. Logical Operators (&&, ||, !)
+
 **Meaning:** Used to combine or invert boolean values.
+
 - `&&` AND - returns true if BOTH conditions are true
 - `||` OR - returns true if AT LEAST ONE condition is true
 - `!` NOT - inverts the boolean value (true becomes false, false becomes true)
 
 **Example:**
+
 ```javascript
 let age = 25;
 let hasLicense = true;
@@ -186,10 +210,13 @@ console.log(isSunny && isWarm);       // Output: false (NOT both are true)
 console.log(isSunny || isWarm);       // Output: true (at least one is true)
 console.log(!isSunny);                // Output: true (inverts false to true)
 ```
+
 ![Logical_Operators](Images/Logical_Operators.png)
- 
- ### 4. Assignment Operators (=, +=, -=, *=, /=, %=)
+
+### 4. Assignment Operators (=, +=, -=, *=, /=, %=)
+
 **Meaning:** Used to assign or update values to variables.
+
 - `=` Assigns a value
 - `+=` Adds and assigns (a += 5 is same as a = a + 5)
 - `-=` Subtracts and assigns
@@ -198,6 +225,7 @@ console.log(!isSunny);                // Output: true (inverts false to true)
 - `%=` Modulus and assigns
 
 **Example:**
+
 ```javascript
 let score = 10;
 
@@ -223,12 +251,15 @@ console.log(score); // Output: 1
 ![Assignment Operators Flow](Images/Assignment_Operators_Flow.png)
 
 ### 5. Increment/Decrement Operators (++, --)
+
 **Meaning:** Used to increase or decrease a variable's value by 1.
+
 - `++` Increment - increases value by 1
 - `--` Decrement - decreases value by 1
 - Can be used as prefix (++a) or postfix (a++)
 
 **Example:**
+
 ```javascript
 let count = 5;
 
@@ -257,11 +288,14 @@ console.log(b);    // Output: 11
 ![Pre vs Post Increment](Images/Pre_Post_Increment.png)
 
 ### 6. Ternary Operator (? :)
+
 **Meaning:** A shorthand for if-else statements. Returns one value if condition is true, another if false.
+
 - Syntax: `condition ? valueIfTrue : valueIfFalse`
 -if condition is true then valueIfTrue will be executed else valueIfFalse will be executed
 
 **Example:**
+
 ```javascript
 let age = 20;
 let canVote = age >= 18 ? "Yes" : "No"; // If age >= 18, return "Yes", else "No"
@@ -279,9 +313,11 @@ console.log(temp > 30 ? "Hot" : "Cold"); // Output: "Hot"
 ![Ternary Operator Flow](Images/Ternary_Operator_Flow.png)
 
 ### 7. typeof Operator
+
 **Meaning:** Returns the data type of a value as a string.
 
 **Example:**
+
 ```javascript
 let name = "John";
 let age = 30;
@@ -300,9 +336,11 @@ console.log(typeof [1, 2, 3]); // Output: "object" (arrays are objects)
 ![typeof Operator](Images/Typeof_Operator.png)
 
 ### 8. in Operator
+
 **Meaning:** Checks if a property/key exists in an object. Returns true if found, false if not.
 
 **Example:**
+
 ```javascript
 let person = {
   name: "John",
@@ -322,9 +360,11 @@ console.log("year" in car);       // Output: false
 ![in Operator](Images/In_Operator.png)
 
 ### 9. instanceof Operator
+
 **Meaning:** Checks if an object is an instance of a specific class or constructor. Returns true or false.
 
 **Example:**
+
 ```javascript
 let numbers = [1, 2, 3, 4];
 let today = new Date();
@@ -350,9 +390,11 @@ console.log(john instanceof Person);    // Output: true (john is instance of Per
 ---
 
 ### 10. Unary Operators
+
 **Meaning:** Operators that work with only ONE operand (value). They perform operations on a single value.
 
 **Common Unary Operators:**
+
 - `+` Unary plus - converts operand to a number
 - `-` Unary minus - negates the operand
 - `!` Logical NOT - inverts boolean value
@@ -363,6 +405,7 @@ console.log(john instanceof Person);    // Output: true (john is instance of Per
 - `void` - evaluates an expression and returns undefined
 
 **Example:**
+
 ```javascript
 // Unary Plus (+) - converts to number
 let str = "5";
@@ -405,23 +448,30 @@ console.log(void (2 + 2));    // Output: undefined (evaluates 2+2 but returns un
 
 ---
 
-## Operator Classification by Number of Operands:
+## Operator Classification by Number of Operands
 
 ### **1. Unary Operators** (One Operand)
+
 Operate on a single value.
+
 - **Examples:** `!a`, `++a`, `--a`, `typeof a`, `-a`, `+a`, `delete obj.prop`
 - **Use cases:** Type conversion, negation, increment/decrement, type checking
 
 ### **2. Binary Operators** (Two Operands)
+
 Operate on two values.
+
 - **Examples:** `a + b`, `a > b`, `a && b`, `a = b`, `a % b`
 - **Use cases:** Arithmetic, comparison, logical operations, assignments
 - **Note:** Most operators in JavaScript are binary operators
 
 ### **3. Ternary Operator** (Three Operands)
+
 Operates on three values. JavaScript has only ONE ternary operator.
+
 - **Example:** `condition ? valueIfTrue : valueIfFalse`
 - **Use cases:** Conditional expressions, shorthand if-else statements
+
 _____________________________________________________
 
 ## 5. Conditional Statements
@@ -434,9 +484,11 @@ Conditional statements allow you to make decisions in your code based on conditi
 ---
   
 ### **A) IF Statement**
+
 **Rule:** Executes code ONLY if the condition is **true**. If false, nothing happens.
 
 **Syntax:**
+
 ```javascript
 if (condition) {
     // code to execute if condition is true
@@ -444,6 +496,7 @@ if (condition) {
 ```
 
 **Example:**
+
 ```javascript
 let age = 20;
 
@@ -459,9 +512,11 @@ if (age >= 21) {
 ---
 
 ### **B) IF-ELSE Statement**
+
 **Rule:** If the condition is **true**, execute the `if` block. If **false**, execute the `else` block.
 
 **Syntax:**
+
 ```javascript
 if (condition) {
     // code if condition is true
@@ -471,6 +526,7 @@ if (condition) {
 ```
 
 **Example:**
+
 ```javascript
 let mode = "dark-mode";
 let color;
@@ -485,6 +541,7 @@ console.log(color); // Output: Black
 ```
 
 **Another Example:**
+
 ```javascript
 let marks = 45;
 
@@ -498,9 +555,11 @@ if (marks >= 50) {
 ---
 
 ### **C) IF-ELSE-IF Statement**
+
 **Rule:** Checks multiple conditions in order. Executes the FIRST true condition. If none are true, executes the `else` block.
 
 **Syntax:**
+
 ```javascript
 if (condition1) {
     // code if condition1 is true
@@ -512,6 +571,7 @@ if (condition1) {
 ```
 
 **Example:**
+
 ```javascript
 let marks = 75;
 
@@ -529,6 +589,7 @@ if (marks >= 90) {
 ```
 
 **Traffic Light Example:**
+
 ```javascript
 let light = "yellow";
 
@@ -557,11 +618,14 @@ if (light === "green") {
 
 ---
 
-switch statement    
+---
+
 ### **D) SWITCH Statement**
+
 **Rule:** Compares a single value against multiple `case` labels. It is more readable than long `if-else-if` chains when checking the same variable for specific values.
 
 **Syntax:**
+
 ```javascript
 switch (expression) {
     case value1:
@@ -576,6 +640,7 @@ switch (expression) {
 ```
 
 **Example:**
+
 ```javascript
 let day = 3;
 
@@ -598,8 +663,8 @@ switch (day) {
 
 ![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
-**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
-_______________________________
+**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`
+---
 
 ## 6. JavaScript Input/Output Methods
 
@@ -616,9 +681,11 @@ _______________________________
 ---
 
 ### **A) console.log()**
+
 **What it does:** Prints output to the console (browser DevTools or terminal).
 
 **Example:**
+
 ```javascript
 console.log("Hello, World!"); // Output: Hello, World!
 let age = 25;
@@ -628,9 +695,11 @@ console.log("Age:", age); // Output: Age: 25
 ---
 
 ### **B) prompt()**
+
 **What it does:** Shows a popup box in the browser asking for user input. Returns the input as a **string**.
 
 **Example:**
+
 ```javascript
 let name = prompt("Enter your name:");
 console.log("Hello,", name); // Whatever user types is stored in 'name'
@@ -645,9 +714,11 @@ console.log(Number(num) + 5); // ✅ Convert to number first
 ---
 
 ### **C) alert()**
+
 **What it does:** Shows a popup message in the browser. User can only click "OK".
 
 **Example:**
+
 ```javascript
 alert("Welcome to our website!"); // Shows popup with message
 alert("Your form has been submitted!"); // Another popup
@@ -658,9 +729,11 @@ alert("Your form has been submitted!"); // Another popup
 ---
 
 ### **D) confirm()**
+
 **What it does:** Shows a popup with "OK" and "Cancel" buttons. Returns `true` if OK is clicked, `false` if Cancel.
 
 **Example:**
+
 ```javascript
 let wantToDelete = confirm("Are you sure you want to delete?");
 
@@ -676,20 +749,24 @@ if (wantToDelete) {
 ---
 
 ### **E) process.argv**
+
 **What it does:** Gets command-line arguments in Node.js. Returns an **array** of arguments.
 
 **Example:**
+
 ```javascript
 // File: test.js
 console.log(process.argv);
 ```
 
 **Run in terminal:**
+
 ```bash
 node test.js hello world 123
 ```
 
 **Output:**
+
 ```javascript
 [
   '/usr/local/bin/node',    // process.argv[0] - Node path
@@ -701,6 +778,7 @@ node test.js hello world 123
 ```
 
 **Practical example:**
+
 ```javascript
 // File: greet.js
 let name = process.argv[2]; // Get first argument
@@ -719,3 +797,11 @@ console.log("Hello,", name);
 - **Node.js only:** `process.argv`
 - **Works everywhere:** `console.log()`
 
+---
+
+## Appendix: Comparison Recap (== vs ===)
+
+- **`==` (Loose Equality)**: Checks only the value. It performs **type coercion** (automatically converts data types to match).
+  - *Example*: `5 == "5"` is `true`.
+- **`===` (Strict Equality)**: Checks both value AND data type. It does **not** perform type coercion.
+  - *Example*: `5 === "5"` is `false`.
