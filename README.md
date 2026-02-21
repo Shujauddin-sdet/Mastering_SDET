@@ -1,39 +1,33 @@
-# Learning Playwright/Javascript/typescript
+# Learning Playwright Batch
 
-Welcome to Learning of **Playwright/Javascript/typescript**! This repository is dedicated to mastering JavaScript concepts, from the basics to advanced topics like hot code paths and optimization.
+Small collection of Playwright example scripts used for learning and experimentation.
 
-## 📂 Project Structure
+Project structure
+- chapter_01_Basics: simple example scripts (JS)
+- chapter_02_Java_Concepts: placeholder for Java-related files
 
-The project is organized into chapters for easy navigation:
+Prerequisites
+- Node.js (14+ recommended)
+- npm or yarn
 
--   **Chapter_01_Basics**:
-    -   `01_Basics.js`: Introduction to JavaScript output.
-    -   `02.js`: Simple script.
-    -   `03_verifysetup.js`: Script to verify the environment setup.
-    -   `04_hotcode.js`: Exploration of Hot Code Paths and JIT compilation concepts.
+Quick start
+1. Install dependencies (add Playwright if you want to run tests):
 
-## 🚀 How to Run
+```bash
+npm init -y
+npm install -D @playwright/test
+npx playwright install
+```
 
-You can run any of the JavaScript files using Node.js.
+2. Run Playwright tests (if you add tests):
 
-1.  **Prerequisites**: Ensure you have Node.js installed.
-2.  **Run a script**: navigate to the directory and run the file using `node`.
+```bash
+npx playwright test
+```
 
-    ```bash
-    cd Chapter_01_Basics
-    node 01_Basics.js
-    ```
+Notes
+- This repo currently contains example JS files under `chapter_01_Basics`.
+- Add additional README details or scripts as you like.
 
-## 🧠 Key Concepts Covered
-
--   **JavaScript Basics**: Syntax and output.
--   **JIT Compilation**: Understanding how V8 optimizes code.
--   **Hot Code Paths**: Identifying and optimizing frequently executed code segments.
-
-## 🤝 Contributing
-
-Feel free to fork this repository and submit pull requests if you have any improvements or new concepts to add!
-
-## ✍️ Author
-
-[Shujaudin]
+License
+- MIT
