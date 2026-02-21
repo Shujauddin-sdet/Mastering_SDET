@@ -333,7 +333,7 @@ These companies provide **services** or build software for **other clients** (th
   * **Wipro**
   * **Cognizant**
 
-  ____
+  ____  
    What is Risk?
    Risk is the possibility of something bad happening that could affect the project.
 
