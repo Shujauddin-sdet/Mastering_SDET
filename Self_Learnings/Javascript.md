@@ -39,6 +39,7 @@ console.log(city);
 ## Visual Guides
 
 ![Variable Rules](Images/Variable_Rules.png)
+
 ---
 
 ![diff_var_let_const](Images/diff_var_let_const.png)
@@ -102,7 +103,7 @@ In `const` we cannot update the value of the variable and we cannot redeclare th
 
 - An operator is a symbol that performs an operation on one or more operands.
 
--It is used to perform some operation on data.
+- It is used to perform some operation on data.
 
 ![Operator_and_Operands](Images/Operator_and_Operands.png)
 
@@ -167,7 +168,7 @@ console.log(x >= 10);  // Output: true (10 is greater than or equal to 10)
 console.log(z <= 5);   // Output: true (5 is less than or equal to 5)
 ```
 
--Comparison Operators (The Equality Trap)
+- Comparison Operators (The Equality Trap)
 In SDET work, checking values correctly is the difference between a "Pass" and a "Fail" in your tests.
 
 A. Loose Equality (==)
@@ -292,7 +293,7 @@ console.log(b);    // Output: 11
 **Meaning:** A shorthand for if-else statements. Returns one value if condition is true, another if false.
 
 - Syntax: `condition ? valueIfTrue : valueIfFalse`
--if condition is true then valueIfTrue will be executed else valueIfFalse will be executed
+- if condition is true then valueIfTrue will be executed else valueIfFalse will be executed
 
 **Example:**
 
@@ -472,7 +473,7 @@ Operates on three values. JavaScript has only ONE ternary operator.
 - **Example:** `condition ? valueIfTrue : valueIfFalse`
 - **Use cases:** Conditional expressions, shorthand if-else statements
 
-_____________________________________________________
+---
 
 ## 5. Conditional Statements
 
@@ -611,12 +612,10 @@ if (light === "green") {
 ### **Quick Comparison:**
 
 | Statement | When to Use |
-|-----------|-------------|
+| --------- | ----------- |
 | **if** | Execute code only when condition is true, otherwise skip |
 | **if-else** | Choose between 2 options (true or false) |
 | **if-else-if** | Choose between 3+ options (multiple conditions) |
-
----
 
 ---
 
@@ -664,6 +663,7 @@ switch (day) {
 ![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
 **Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`
+
 ---
 
 ## 6. JavaScript Input/Output Methods
@@ -671,7 +671,7 @@ switch (day) {
 **Overview:** Different ways to get input from users and display output in JavaScript.
 
 | Feature | Works in Browser? | Works in VS Code/Node? | Recommended For |
-|---------|-------------------|------------------------|-----------------|
+| ------- | ----------------- | ---------------------- | --------------- |
 | `console.log()` | ✅ Yes | ✅ Yes | Everything (Universal) |
 | `prompt()` | ✅ Yes | ❌ No | Learning Browser basics |
 | `alert()` | ✅ Yes | ❌ No | Visual web alerts |
