@@ -70,6 +70,46 @@ console.log(age);
 In `const` we cannot update the value of the variable and we cannot redeclare the same variable.
 
 ---
+## 3. Temporary Variable
+
+A temporary variable (often called temp) is a variable used to hold a value temporarily while you rearrange or swap other variables. It's like using an extra cup when you want to swap the contents of two cups – you pour one into the extra cup, then the other into the first, then the extra into the second.
+
+📝 Why Do You Need It for Swapping?
+Imagine you have two variables:
+
+javascript
+let a = 3;
+let b = 7;
+If you simply do a = b;, you lose the original value of a (3) forever. Then you can't put it into b. The temporary variable saves that original value so you can complete the swap.
+
+✅ Correct Swap Using a Temporary Variable
+javascript
+let a = 3;
+let b = 7;
+
+let temp = a;   // temp now holds 3 (original a)
+a = b;          // a becomes 7 (value of b)
+b = temp;       // b becomes 3 (value saved in temp)
+
+console.log(a); // 7
+console.log(b); // 3
+Now the values are swapped! This works no matter what the original values are.
+
+🧠 Key Takeaway
+The temporary variable is just a storage box – it lets you keep a value safe while you move other values around. You'll see this pattern often in programming, not just for swapping but also for rotating values, reversing arrays, etc.
+
+📝 Your Notes
+Write down:
+
+Temporary variable: A variable used to hold a value temporarily during operations like swapping.
+
+Swap algorithm:
+
+temp = a
+a = b
+b = temp
+
+------------
 
 ## 3. Data Types
 
@@ -805,3 +845,75 @@ console.log("Hello,", name);
   - *Example*: `5 == "5"` is `true`.
 - **`===` (Strict Equality)**: Checks both value AND data type. It does **not** perform type coercion.
   - *Example*: `5 === "5"` is `false`.
+
+__________________
+
+## dynamic typing and static typing
+
+What Is Dynamic Typing in JavaScript, and How Does It Differ from Statically Typed Languages?
+JavaScript is a dynamically typed language, meaning you don't need to specify the data type of a variable when you declare it. Instead, the type is determined based on the value assigned to the variable while the program is running. This allows you to change the type of a variable throughout the program.
+
+Let's look at an example:
+
+Example Code
+let example = "Hello";
+example = 42;
+In this example, we have a variable called example with the data type of string. But then we update value to be a number instead.
+
+The flexibility of dynamic typing makes JavaScript more forgiving and easy to work with for quick scripting, but it can also introduce bugs that may be harder to catch, especially as your program grows larger.
+
+In statically typed languages like C# or C++, you must declare the data type of a variable when you create it, and that type cannot change.
+
+For instance, if you declare a variable as integer, you can only assign it integer values. If you try to assign it a different type, the program will throw an error.
+
+Here's an example in C# language:
+
+Example Code
+int data = 42; // data must always be an integer
+data = "Hello"; // This would cause an error in C#
+The difference between dynamic typing and static typing lies in the flexibility vs. the safety of your code. Dynamically typed languages offer flexibility but at the cost of potential runtime errors.
+
+Statically typed languages enforce stricter rules that can prevent certain errors, but they require more upfront declaration and offer less flexibility in changing types.
+
+Here is another example of creating a variable with a type set to number then changing it to later be of type string:
+
+Example Code
+let data = 100;  // Initially a number
+data = "New data";  // Dynamically changes to a string
+In a statically typed language, this kind of change would not be allowed, as the data type would be fixed.
+
+In conclusion, JavaScript's dynamic typing allows variables to change types freely, which offers flexibility but can lead to unexpected errors during execution.
+
+Statically typed languages like Java require you to specify variable types upfront, which helps catch errors before the program runs but offers less flexibility.
+
+___________________________________________________________
+
+What Is Bracket Notation, and How Do You Access Characters from a String?
+In JavaScript, strings are treated as sequences of characters, and each character in a string can be accessed using bracket notation. This allows you to retrieve a specific character from a string based on its position, which is called its index.
+
+An index is the position of a character within a string, and it is zero-based. This means that the first character of a string has an index of 0, the second character has an index of 1, and so on.
+
+For example, in the string hello, the character h is at index 0, e is at index 1, l is at index 2, and so on.
+
+Bracket notation uses square brackets ([]) and the index of the character you want to access. Let’s look at an example:
+
+let greeting = "hello";
+console.log(greeting[1]); // "e"
+In this example, we can access the character at index 1, which is e.
+
+To get the last character of a string, you can use the length of the string minus one. The length property of a string tells you how many characters it contains, so to access the last character, you would subtract one from the length:
+
+let greeting = "hello";
+console.log(greeting[greeting.length - 1]); // "o"
+In this case, the length of hello is 5, and the last character (o) is at index 4 which is 5 - 1.
+
+If you want to get multiple characters, you can use bracket notation like this:
+
+let greeting = "hello";
+let firstTwo = greeting[0] + greeting[1]; // "he"
+console.log(firstTwo);
+In this example, we are concatenating the first and second characters using bracket notation to form the string he.
+
+Bracket notation is useful when you need to access specific characters in a string, such as extracting initials from a name or checking a specific letter for validation.
+
+_______

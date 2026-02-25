@@ -1,3 +1,30 @@
 {
-    "markdown.validate.enabled": true
+    "markdown.validate.enabled": false,
+    "cSpell.enabledLanguageIds": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "css",
+        "json"
+    ],
+    "cSpell.languageSettings": [
+        {
+            "languageId": "markdown",
+            "enabled": false
+        }
+    ],
+    "cSpell.customDictionaries": {},
+    "cSpell.ignorePaths": [
+        "**/*.md"
+    ],
+    "markdownlint.enabled": false,
+    "[markdown]": {
+        "editor.quickSuggestions": {
+            "other": false,
+            "comments": false,
+            "strings": false
+        }
+    }
 }
