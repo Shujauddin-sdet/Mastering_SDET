@@ -92,6 +92,45 @@ console.log(age);
 In `const` we cannot update the value of the variable and we cannot redeclare the same variable.
 
 ---
+
+### 📌 Variable Naming Rules
+
+Not every name is a valid variable name in JavaScript. Here are the rules:
+
+**✅ Valid names:**
+- Can use letters, digits, `_`, and `$`
+- Must **start with** a letter, `_`, or `$` — NOT a number
+- Case-sensitive: `name` and `Name` are two different variables
+
+**❌ Invalid names:**
+```javascript
+let 1name = "wrong";   // ❌ cannot start with a number
+let my-name = "wrong"; // ❌ hyphens not allowed
+let let = "wrong";     // ❌ 'let' is a reserved keyword
+```
+
+**✅ Valid names:**
+```javascript
+let name = "John";      // ✅
+let _private = true;    // ✅ underscore is ok
+let $price = 99;        // ✅ dollar sign is ok
+let firstName = "Ali";  // ✅ camelCase — standard convention
+let age2 = 25;          // ✅ digit in middle/end is ok
+```
+
+**Naming convention in JavaScript:** Use **camelCase** — first word lowercase, each next word starts uppercase.
+```javascript
+// ✅ Good — camelCase
+let userAge = 25;
+let totalPrice = 100;
+let isLoggedIn = true;
+
+// ❌ Bad — not conventional
+let user_age = 25;   // snake_case (used in Python, not JS)
+let UserAge = 25;    // PascalCase (used for class names, not variables)
+```
+
+---
 ## 2.1 Temporary Variable
 
 A temporary variable (often called temp) is a variable used to hold a value temporarily while you rearrange or swap other variables. It's like using an extra cup when you want to swap the contents of two cups – you pour one into the extra cup, then the other into the first, then the extra into the second.
@@ -156,6 +195,78 @@ b = temp
 - Function (Block of code that performs a specific task)
 
 ![JavaScript Data Types](Images/Data_Types_Overview.png)
+
+---
+
+### 🔷 null vs undefined
+
+Both mean "no value" — but they mean it in **different ways**:
+
+| | `undefined` | `null` |
+|---|---|---|
+| **Meaning** | Variable declared but never given a value | Intentionally set to empty by the developer |
+| **Who sets it?** | JavaScript sets it automatically | You set it yourself |
+| **typeof** | `"undefined"` | `"object"` ← (famous JS bug!) |
+
+```javascript
+// undefined — JS sets this automatically
+let username;
+console.log(username); // undefined — you declared it but never assigned
+
+// null — YOU set this intentionally
+let loggedInUser = null; // no one is logged in yet
+console.log(loggedInUser); // null
+
+// checking the difference
+console.log(undefined == null);  // true  ← loose equality treats them the same
+console.log(undefined === null); // false ← strict equality — different types!
+```
+
+> 💡 Think of it this way: `undefined` = JS doesn't know. `null` = YOU said "nothing here".
+
+---
+
+### 🔷 NaN — Not a Number
+
+`NaN` stands for **Not a Number**. It appears when you try to do a math operation on something that isn't a number.
+
+```javascript
+console.log("hello" - 5);    // NaN  ← can't subtract from text
+console.log(Number("abc"));  // NaN  ← can't convert "abc" to a number
+console.log(0 / 0);          // NaN  ← undefined math
+
+// NaN is weird — it never equals itself!
+console.log(NaN === NaN);    // false  ← only value in JS not equal to itself!
+
+// Correct way to check for NaN
+console.log(isNaN("hello"));      // true  ← is it NaN?
+console.log(Number.isNaN(NaN));   // true  ← more reliable, only true for actual NaN
+console.log(Number.isNaN("hello")); // false ← "hello" is not NaN, just non-numeric
+```
+
+> ⚠️ Always use `Number.isNaN()` rather than `isNaN()` — `isNaN()` converts the value first which can give unexpected results.
+
+---
+
+### 🔷 typeof Quick Reference
+
+`typeof` tells you the data type of any value. Every beginner should know this table:
+
+```javascript
+console.log(typeof "hello");     // "string"
+console.log(typeof 42);          // "number"
+console.log(typeof 3.14);        // "number"  ← floats are also "number"
+console.log(typeof true);        // "boolean"
+console.log(typeof undefined);   // "undefined"
+console.log(typeof null);        // "object"  ← 🐛 famous JS bug! null is NOT an object
+console.log(typeof Symbol());    // "symbol"
+console.log(typeof 42n);         // "bigint"
+console.log(typeof {});          // "object"
+console.log(typeof []);          // "object"  ← arrays are also objects!
+console.log(typeof function(){}); // "function"
+```
+
+> ⚠️ `typeof null === "object"` is a **historical bug** in JavaScript from 1995. It was never fixed to avoid breaking old code. To properly check for null use: `value === null`
 
 ---
 
