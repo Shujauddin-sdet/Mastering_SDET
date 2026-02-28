@@ -203,6 +203,38 @@ console.log(big + BigInt(5));    // ✅ Must convert first
 
 ---
 
+### 🔷 Dynamic Typing vs Static Typing
+
+![Dynamic vs Static Typing](Images/Dynamic_vs_Static_Typing.png)
+
+**JavaScript is dynamically typed** — the variable type is decided by the value you put in, not by you. You can even change the type later.
+
+```javascript
+// JavaScript - dynamic typing
+let data = "Hello";   // type is string
+data = 42;            // now it's a number — no error!
+data = true;          // now it's a boolean — still fine!
+
+console.log(typeof data); // "boolean"
+```
+
+**Statically typed languages** (like Java, TypeScript) lock the type at declaration. You can't change it.
+
+```java
+// Java - static typing
+int data = 42;        // must be a number always
+data = "Hello";       // ❌ ERROR — type mismatch!
+```
+
+| | JavaScript (Dynamic) | Java/TypeScript (Static) |
+|---|---|---|
+| Type set by | Value at runtime | You at declaration |
+| Change type? | ✅ Yes | ❌ No |
+| Catches errors | At runtime | At compile time |
+| Flexibility | High | Low |
+
+---
+
 ## 4. Operators
 
 
