@@ -1,3 +1,23 @@
+# JavaScript Learning Notes
+
+## 📋 Table of Contents
+
+1. [What is JavaScript?](#1-what-is-javascript)
+2. [Variables](#2-variables)
+   - [2.1 Temporary Variable](#21-temporary-variable)
+3. [Data Types](#3-data-types)
+   - [Symbol](#-symbol)
+   - [BigInt](#-bigint)
+   - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
+   - [Type Coercion](#-type-coercion)
+4. [Operators](#4-operators)
+5. [Truthy and Falsy Values](#truthy-and-falsy-values)
+6. [Conditional Statements](#5-conditional-statements)
+7. [JavaScript Input/Output Methods](#6-javascript-inputoutput-methods)
+- [Appendix](#appendix-comparison-recap--vs-)
+
+---
+
 # 1. What is JavaScript?
 
 JavaScript is a programming language that is used to create dynamic and interactive web pages. It is a high-level, interpreted programming language that is used to add functionality to web pages. It is a client-side programming language that is used to create dynamic and interactive web pages.
@@ -70,7 +90,7 @@ console.log(age);
 In `const` we cannot update the value of the variable and we cannot redeclare the same variable.
 
 ---
-## 3. Temporary Variable
+## 2.1 Temporary Variable
 
 A temporary variable (often called temp) is a variable used to hold a value temporarily while you rearrange or swap other variables. It's like using an extra cup when you want to swap the contents of two cups – you pour one into the extra cup, then the other into the first, then the extra into the second.
 
@@ -232,6 +252,81 @@ data = "Hello";       // ❌ ERROR — type mismatch!
 | Change type? | ✅ Yes | ❌ No |
 | Catches errors | At runtime | At compile time |
 | Flexibility | High | Low |
+
+---
+### 🔷 Type Coercion
+
+**Type Coercion** is when JavaScript automatically (or you manually) converts one data type to another.
+
+![Type Coercion](Images/Type_Coercion.png)
+
+#### Implicit Coercion — JS does it automatically
+
+JavaScript quietly converts types behind the scenes. This can lead to **surprising results**:
+
+```javascript
+// + with a string → JS converts number to string (concatenation)
+console.log("5" + 1);    // "51"  ← NOT 6! string wins with +
+
+// - always does math → JS converts string to number
+console.log("5" - 1);    // 4    ← string becomes number
+
+// boolean converts to number
+console.log(true + 1);   // 2    ← true becomes 1
+console.log(false + 1);  // 1    ← false becomes 0
+
+// == triggers coercion (this is why === is preferred)
+console.log(5 == "5");   // true  ← number and string treated as equal!
+console.log(5 === "5");  // false ← strict, no coercion
+```
+
+#### Explicit Coercion — you control it
+
+You convert types yourself using built-in functions — safer and clearer:
+
+```javascript
+// Convert to Number
+console.log(Number("42"));     // 42
+console.log(Number(""));       // 0
+console.log(Number("hello"));  // NaN (can't convert text)
+console.log(Number(true));     // 1
+console.log(Number(false));    // 0
+
+// Convert to String
+console.log(String(42));       // "42"
+console.log(String(true));     // "true"
+console.log(String(null));     // "null"
+
+// Convert to Boolean
+console.log(Boolean(0));       // false
+console.log(Boolean(""));      // false
+console.log(Boolean("hello")); // true
+console.log(Boolean(1));       // true
+```
+
+#### Where you use this in real code
+
+**Getting input from a user (prompt returns a string):**
+```javascript
+let age = prompt("Enter your age:"); // returns "25" as string
+console.log(age + 1);               // "251" ← WRONG! string + number
+console.log(Number(age) + 1);       // 26   ← CORRECT! explicit conversion
+```
+
+**In SDET — reading values from the DOM:**
+```javascript
+let priceText = "499";   // text scraped from a webpage
+let price = Number(priceText);
+
+if (price > 100) {
+    console.log("Expensive item"); // works correctly after conversion
+}
+```
+
+> ⚠️ **Rule of thumb:** Always use `===` to avoid coercion surprises. Use explicit conversion (`Number()`, `String()`, `Boolean()`) when you need to change types intentionally.
+
+---
+
 
 ---
 
@@ -614,7 +709,7 @@ Operates on three values. JavaScript has only ONE ternary operator.
 
 ---
 
-## 4.5 Truthy and Falsy Values
+## Truthy and Falsy Values
 
 When JavaScript checks a condition (like in an `if` statement), it doesn't just look for `true` or `false`. It treats **any value** as either truthy or falsy.
 
@@ -1025,79 +1120,6 @@ console.log("Hello,", name);
 
 ---
 
-## Type Coercion
-
-**Type Coercion** is when JavaScript automatically (or you manually) converts one data type to another.
-
-![Type Coercion](Images/Type_Coercion.png)
-
-### 1. Implicit Coercion — JS does it automatically
-
-JavaScript quietly converts types behind the scenes. This can lead to **surprising results**:
-
-```javascript
-// + with a string → JS converts number to string (concatenation)
-console.log("5" + 1);    // "51"  ← NOT 6! string wins with +
-
-// - always does math → JS converts string to number
-console.log("5" - 1);    // 4    ← string becomes number
-
-// boolean converts to number
-console.log(true + 1);   // 2    ← true becomes 1
-console.log(false + 1);  // 1    ← false becomes 0
-
-// == triggers coercion (this is why === is preferred)
-console.log(5 == "5");   // true  ← number and string treated as equal!
-console.log(5 === "5");  // false ← strict, no coercion
-```
-
-### 2. Explicit Coercion — you control it
-
-You convert types yourself using built-in functions — safer and clearer:
-
-```javascript
-// Convert to Number
-console.log(Number("42"));     // 42
-console.log(Number(""));       // 0
-console.log(Number("hello"));  // NaN (can't convert text)
-console.log(Number(true));     // 1
-console.log(Number(false));    // 0
-
-// Convert to String
-console.log(String(42));       // "42"
-console.log(String(true));     // "true"
-console.log(String(null));     // "null"
-
-// Convert to Boolean
-console.log(Boolean(0));       // false
-console.log(Boolean(""));      // false
-console.log(Boolean("hello")); // true
-console.log(Boolean(1));       // true
-```
-
-### Where you use this in real code
-
-**Getting input from a user (prompt returns a string):**
-```javascript
-let age = prompt("Enter your age:"); // returns "25" as string
-console.log(age + 1);               // "251" ← WRONG! string + number
-console.log(Number(age) + 1);       // 26   ← CORRECT! explicit conversion
-```
-
-**In SDET — reading values from the DOM:**
-```javascript
-let priceText = "499";   // text scraped from a webpage
-let price = Number(priceText);
-
-if (price > 100) {
-    console.log("Expensive item"); // works correctly after conversion
-}
-```
-
-> ⚠️ **Rule of thumb:** Always use `===` to avoid coercion surprises. Use explicit conversion (`Number()`, `String()`, `Boolean()`) when you need to change types intentionally.
-
----
-
 ## Appendix: Comparison Recap (== vs ===)
 
 
@@ -1106,74 +1128,25 @@ if (price > 100) {
 - **`===` (Strict Equality)**: Checks both value AND data type. It does **not** perform type coercion.
   - *Example*: `5 === "5"` is `false`.
 
-__________________
+---
 
-## dynamic typing and static typing
+## Appendix: Bracket Notation
 
-What Is Dynamic Typing in JavaScript, and How Does It Differ from Statically Typed Languages?
-JavaScript is a dynamically typed language, meaning you don't need to specify the data type of a variable when you declare it. Instead, the type is determined based on the value assigned to the variable while the program is running. This allows you to change the type of a variable throughout the program.
+In JavaScript, individual characters in a string can be accessed using **bracket notation** with a zero-based index.
 
-Let's look at an example:
+- First character = index **0**
+- Last character = index **`length - 1`**
 
-Example Code
-let example = "Hello";
-example = 42;
-In this example, we have a variable called example with the data type of string. But then we update value to be a number instead.
-
-The flexibility of dynamic typing makes JavaScript more forgiving and easy to work with for quick scripting, but it can also introduce bugs that may be harder to catch, especially as your program grows larger.
-
-In statically typed languages like C# or C++, you must declare the data type of a variable when you create it, and that type cannot change.
-
-For instance, if you declare a variable as integer, you can only assign it integer values. If you try to assign it a different type, the program will throw an error.
-
-Here's an example in C# language:
-
-Example Code
-int data = 42; // data must always be an integer
-data = "Hello"; // This would cause an error in C#
-The difference between dynamic typing and static typing lies in the flexibility vs. the safety of your code. Dynamically typed languages offer flexibility but at the cost of potential runtime errors.
-
-Statically typed languages enforce stricter rules that can prevent certain errors, but they require more upfront declaration and offer less flexibility in changing types.
-
-Here is another example of creating a variable with a type set to number then changing it to later be of type string:
-
-Example Code
-let data = 100;  // Initially a number
-data = "New data";  // Dynamically changes to a string
-In a statically typed language, this kind of change would not be allowed, as the data type would be fixed.
-
-In conclusion, JavaScript's dynamic typing allows variables to change types freely, which offers flexibility but can lead to unexpected errors during execution.
-
-Statically typed languages like Java require you to specify variable types upfront, which helps catch errors before the program runs but offers less flexibility.
-
-___________________________________________________________
-
-What Is Bracket Notation, and How Do You Access Characters from a String?
-In JavaScript, strings are treated as sequences of characters, and each character in a string can be accessed using bracket notation. This allows you to retrieve a specific character from a string based on its position, which is called its index.
-
-An index is the position of a character within a string, and it is zero-based. This means that the first character of a string has an index of 0, the second character has an index of 1, and so on.
-
-For example, in the string hello, the character h is at index 0, e is at index 1, l is at index 2, and so on.
-
-Bracket notation uses square brackets ([]) and the index of the character you want to access. Let’s look at an example:
-
+```javascript
 let greeting = "hello";
-console.log(greeting[1]); // "e"
-In this example, we can access the character at index 1, which is e.
 
-To get the last character of a string, you can use the length of the string minus one. The length property of a string tells you how many characters it contains, so to access the last character, you would subtract one from the length:
+console.log(greeting[0]);                    // "h" — first character
+console.log(greeting[1]);                    // "e" — second character
+console.log(greeting[greeting.length - 1]);  // "o" — last character
 
-let greeting = "hello";
-console.log(greeting[greeting.length - 1]); // "o"
-In this case, the length of hello is 5, and the last character (o) is at index 4 which is 5 - 1.
-
-If you want to get multiple characters, you can use bracket notation like this:
-
-let greeting = "hello";
-let firstTwo = greeting[0] + greeting[1]; // "he"
+// Combine characters using bracket notation
+let firstTwo = greeting[0] + greeting[1];    // "he"
 console.log(firstTwo);
-In this example, we are concatenating the first and second characters using bracket notation to form the string he.
+```
 
-Bracket notation is useful when you need to access specific characters in a string, such as extracting initials from a name or checking a specific letter for validation.
-
-_______
+> 💡 Useful when you need to check or extract specific characters — like initials from a name or validating the format of a code.
