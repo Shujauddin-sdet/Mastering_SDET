@@ -614,7 +614,94 @@ Operates on three values. JavaScript has only ONE ternary operator.
 
 ---
 
+## 4.5 Truthy and Falsy Values
+
+When JavaScript checks a condition (like in an `if` statement), it doesn't just look for `true` or `false`. It treats **any value** as either truthy or falsy.
+
+![Truthy and Falsy Values](Images/Truthy_Falsy_Values.png)
+
+### ❌ Falsy Values — only 6 of them
+
+These are the **only** values that act as `false` in a condition:
+
+| Value | Why it's falsy |
+|-------|---------------|
+| `false` | It's literally false |
+| `0` | Zero is nothing |
+| `""` | Empty string — no content |
+| `null` | Intentionally empty |
+| `undefined` | Never given a value |
+| `NaN` | Not a valid number |
+
+### ✅ Truthy Values — everything else
+
+If it's not in the 6 falsy values above, it's truthy. Including these that often surprise people:
+
+```javascript
+// These all count as TRUE in a condition
+if (1)         console.log("truthy"); // ✅ non-zero number
+if ("hello")   console.log("truthy"); // ✅ non-empty string
+if ([])        console.log("truthy"); // ✅ empty array (still truthy!)
+if ({})        console.log("truthy"); // ✅ empty object (still truthy!)
+if (-1)        console.log("truthy"); // ✅ negative number
+```
+
+### Code Example
+
+```javascript
+// these are all FALSY - the if block will NOT run
+if (0)         console.log("runs"); // ❌ skipped
+if ("")        console.log("runs"); // ❌ skipped
+if (null)      console.log("runs"); // ❌ skipped
+if (undefined) console.log("runs"); // ❌ skipped
+
+// these are all TRUTHY - the if block WILL run
+if (1)         console.log("runs"); // ✅ prints
+if ("hi")      console.log("runs"); // ✅ prints
+if ([])        console.log("runs"); // ✅ prints (empty array is truthy!)
+```
+
+### Where you use this in real code
+
+**Checking if a user filled in a form field:**
+```javascript
+let username = "";
+
+if (username) {
+    console.log("Welcome, " + username); // skipped — empty string is falsy
+} else {
+    console.log("Please enter your name!"); // this runs
+}
+```
+
+**Checking if an API returned data:**
+```javascript
+let apiResponse = null; // API failed
+
+if (apiResponse) {
+    console.log("Got data:", apiResponse); // skipped — null is falsy
+} else {
+    console.log("No data returned"); // this runs
+}
+```
+
+**In SDET / automation testing:**
+```javascript
+let element = getElement(".submit-btn"); // returns null if not found
+
+if (element) {
+    element.click(); // only clicks if element exists (truthy)
+} else {
+    console.log("Button not found on page!");
+}
+```
+
+> 💡 **Key Rule to remember:** Only 6 things are falsy. Everything else — including empty arrays `[]` and empty objects `{}` — is truthy!
+
+---
+
 ## 5. Conditional Statements
+
 
 **What are Conditional Statements?**
 Conditional statements allow you to make decisions in your code based on conditions. Think of them as "if this happens, then do that."
