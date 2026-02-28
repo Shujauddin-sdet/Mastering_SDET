@@ -11,6 +11,7 @@
    - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
    - [Type Coercion](#-type-coercion)
 4. [Operators](#4-operators)
+   - [Nullish Coalescing (??) vs ||](#11-nullish-coalescing-operator-)
 5. [Truthy and Falsy Values](#truthy-and-falsy-values)
 6. [Conditional Statements](#5-conditional-statements)
 7. [JavaScript Input/Output Methods](#6-javascript-inputoutput-methods)
@@ -683,7 +684,67 @@ console.log(void (2 + 2));    // Output: undefined (evaluates 2+2 but returns un
 
 ---
 
+### 11. Nullish Coalescing Operator (??)
+
+**Meaning:** Returns the **right-hand value** only when the left-hand value is `null` or `undefined`. If the left side has any other value — even `0`, `""`, or `false` — it keeps it as is.
+
+> In simple words: **"Give me a fallback, but ONLY if I have nothing (null/undefined)"**
+
+![Nullish Coalescing vs OR](Images/Nullish_Coalescing_Operator.png)
+
+**Syntax:** `value ?? fallback`
+
+```javascript
+// ?? only triggers for null and undefined
+console.log(null ?? "default");      // "default"  ← null → use fallback
+console.log(undefined ?? "default"); // "default"  ← undefined → use fallback
+console.log(0 ?? "default");         // 0          ← 0 is NOT null, keep it!
+console.log("" ?? "default");        // ""         ← empty string is NOT null, keep it!
+console.log(false ?? "default");     // false      ← false is NOT null, keep it!
+```
+
+### ⚡ ?? vs || — The Key Difference
+
+This is where people get confused. Both look similar but behave very differently:
+
+| Situation | `??` result | `\|\|` result |
+|-----------|------------|--------------|
+| `null` | uses fallback ✅ | uses fallback ✅ |
+| `undefined` | uses fallback ✅ | uses fallback ✅ |
+| `0` | **keeps 0** ✅ | uses fallback ⚠️ |
+| `""` | **keeps ""** ✅ | uses fallback ⚠️ |
+| `false` | **keeps false** ✅ | uses fallback ⚠️ |
+
+```javascript
+let userScore = 0; // valid score of zero
+
+// Using || — WRONG behaviour for this case
+let score1 = userScore || 10;  // 10 ← 0 is falsy, gets replaced! Bug!
+
+// Using ?? — CORRECT behaviour
+let score2 = userScore ?? 10;  // 0  ← 0 is not null/undefined, kept! ✅
+```
+
+### Where you use this in real code
+
+**Safe default for settings that might not exist:**
+```javascript
+let fontSize = userSettings.fontSize ?? 16; // use 16 only if not set at all
+let username = user.name ?? "Guest";        // "Guest" only if name is null/undefined
+```
+
+**In SDET — reading config values:**
+```javascript
+let timeout = config.timeout ?? 5000; // default 5s only if timeout wasn't configured
+let retries = config.retries ?? 3;    // default 3 only if retries is absent
+```
+
+> 💡 **Rule:** Use `??` when `0`, `""`, or `false` are valid values you want to keep. Use `||` when ANY falsy value should trigger the fallback.
+
+---
+
 ## Operator Classification by Number of Operands
+
 
 ### **1. Unary Operators** (One Operand)
 
