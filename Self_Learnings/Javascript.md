@@ -137,7 +137,74 @@ b = temp
 
 ---
 
+### 🔷 Symbol
+
+A **Symbol** is a primitive data type introduced in ES6. Every Symbol created is **guaranteed to be unique** — even if two symbols have the exact same description, they are never equal to each other.
+
+![Symbol Explained](Images/Symbol_BigInt.png)
+
+**Think of it like this:** Two keys that look exactly the same but open completely different locks — that's what Symbol does.
+
+**When to use Symbol:**
+- When you need a property key that will never clash with another key
+- For hidden/private-like properties in objects (symbols are skipped in `for...in` loops)
+- Used internally by JavaScript itself (e.g., `Symbol.iterator`)
+
+```javascript
+const id1 = Symbol("id");
+const id2 = Symbol("id");
+
+console.log(id1 === id2);     // false — same description, but NOT the same!
+console.log(typeof id1);      // "symbol"
+console.log(id1.description); // "id"
+
+// Symbol as a unique object key
+const SECRET = Symbol("secret");
+const user = {
+    name: "Shujauddin",
+    [SECRET]: "internal-token-xyz"
+};
+
+console.log(user.name);    // Shujauddin
+console.log(user[SECRET]); // internal-token-xyz
+// Symbol key is hidden from for...in loops — acts like a private property
+```
+
+---
+
+### 🔷 BigInt
+
+**BigInt** is a primitive data type (ES2020+) used to work with **very large integers** that go beyond JavaScript's safe number limit.
+
+**The Problem with regular numbers:**
+JavaScript's `Number` type can only safely represent integers up to `9007199254740991`. Beyond that, it loses precision and gives wrong answers.
+
+```javascript
+console.log(Number.MAX_SAFE_INTEGER);   // 9007199254740991
+console.log(9007199254740991 + 2);      // 9007199254740992 — WRONG answer!
+```
+
+**BigInt fixes this** — just add `n` at the end of the number:
+
+```javascript
+const big = 9007199254740991n;
+console.log(big + 2n);   // 9007199254740993n — correct!
+console.log(typeof big); // "bigint"
+
+// ⚠️ You cannot mix BigInt with regular numbers
+// console.log(big + 5);         // ❌ TypeError!
+console.log(big + BigInt(5));    // ✅ Must convert first
+```
+
+**When to use BigInt:**
+- Financial calculations with very large amounts
+- Cryptography (huge numbers)
+- Any calculation where accuracy beyond 9 quadrillion matters
+
+---
+
 ## 4. Operators
+
 
 - What is an operator?
 

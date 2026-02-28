@@ -122,3 +122,73 @@ console.log(result);
 
 // Never use var in new code – it's outdated and can create hard‑to‑find bugs.
 
+
+// ============================================================
+// Symbol - A Primitive Data Type (ES6+)
+// ============================================================
+
+// Symbol creates a completely unique value every time it is called
+// Even if two symbols have the same description, they are never equal
+
+const id1 = Symbol("id");
+const id2 = Symbol("id");
+
+console.log(id1);           // Symbol(id)
+console.log(id2);           // Symbol(id)
+console.log(id1 === id2);   // false - they look the same but are NOT equal!
+
+// you can read the description using .description
+console.log(id1.description); // "id"
+
+// common use case - unique property keys in objects
+// this prevents accidental key conflicts between libraries or modules
+const USER_KEY = Symbol("userKey");
+const user = {
+    name: "Shujauddin",
+    [USER_KEY]: "secret-internal-id-123"  // symbol as key - hidden from normal loops
+};
+
+console.log(user.name);       // Shujauddin
+console.log(user[USER_KEY]);  // secret-internal-id-123
+
+// symbols are skipped in for...in loops (good for private-like properties)
+for (let key in user) {
+    console.log(key); // only prints "name" - symbol key is hidden
+}
+
+// typeof a symbol
+console.log(typeof id1); // "symbol"
+
+
+// ============================================================
+// BigInt - For Very Large Numbers (ES2020+)
+// ============================================================
+
+// Regular numbers in JS can only safely handle up to:
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991 (about 9 quadrillion)
+
+// beyond this number, regular numbers lose precision and become inaccurate
+console.log(9007199254740991 + 1);  // 9007199254740992 - ok
+console.log(9007199254740991 + 2);  // 9007199254740992 - WRONG! same result!
+
+// BigInt solves this by handling numbers of any size accurately
+// just add 'n' at the end of the number or use BigInt()
+
+const bigNum1 = 9007199254740991n;          // using the 'n' suffix
+const bigNum2 = BigInt("9007199254740991");  // using BigInt() constructor
+
+console.log(bigNum1 + 2n);   // 9007199254741993n - correct!
+console.log(bigNum1 * 2n);   // 18014398509481982n - accurate!
+
+// typeof a BigInt
+console.log(typeof bigNum1); // "bigint"
+
+// you CANNOT mix BigInt with regular numbers - you must convert first
+// console.log(bigNum1 + 5);  // ❌ TypeError!
+console.log(bigNum1 + BigInt(5)); // ✅ convert regular number to BigInt first
+
+// practical example - bank transaction with very large amount
+const bankBalance = 999999999999999999999n;
+const deposit = 1000000000000000000000n;
+const newBalance = bankBalance + deposit;
+console.log(`New balance: ${newBalance}`); // accurate!
