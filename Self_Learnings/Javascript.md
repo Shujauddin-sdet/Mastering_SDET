@@ -1025,7 +1025,81 @@ console.log("Hello,", name);
 
 ---
 
+## Type Coercion
+
+**Type Coercion** is when JavaScript automatically (or you manually) converts one data type to another.
+
+![Type Coercion](Images/Type_Coercion.png)
+
+### 1. Implicit Coercion — JS does it automatically
+
+JavaScript quietly converts types behind the scenes. This can lead to **surprising results**:
+
+```javascript
+// + with a string → JS converts number to string (concatenation)
+console.log("5" + 1);    // "51"  ← NOT 6! string wins with +
+
+// - always does math → JS converts string to number
+console.log("5" - 1);    // 4    ← string becomes number
+
+// boolean converts to number
+console.log(true + 1);   // 2    ← true becomes 1
+console.log(false + 1);  // 1    ← false becomes 0
+
+// == triggers coercion (this is why === is preferred)
+console.log(5 == "5");   // true  ← number and string treated as equal!
+console.log(5 === "5");  // false ← strict, no coercion
+```
+
+### 2. Explicit Coercion — you control it
+
+You convert types yourself using built-in functions — safer and clearer:
+
+```javascript
+// Convert to Number
+console.log(Number("42"));     // 42
+console.log(Number(""));       // 0
+console.log(Number("hello"));  // NaN (can't convert text)
+console.log(Number(true));     // 1
+console.log(Number(false));    // 0
+
+// Convert to String
+console.log(String(42));       // "42"
+console.log(String(true));     // "true"
+console.log(String(null));     // "null"
+
+// Convert to Boolean
+console.log(Boolean(0));       // false
+console.log(Boolean(""));      // false
+console.log(Boolean("hello")); // true
+console.log(Boolean(1));       // true
+```
+
+### Where you use this in real code
+
+**Getting input from a user (prompt returns a string):**
+```javascript
+let age = prompt("Enter your age:"); // returns "25" as string
+console.log(age + 1);               // "251" ← WRONG! string + number
+console.log(Number(age) + 1);       // 26   ← CORRECT! explicit conversion
+```
+
+**In SDET — reading values from the DOM:**
+```javascript
+let priceText = "499";   // text scraped from a webpage
+let price = Number(priceText);
+
+if (price > 100) {
+    console.log("Expensive item"); // works correctly after conversion
+}
+```
+
+> ⚠️ **Rule of thumb:** Always use `===` to avoid coercion surprises. Use explicit conversion (`Number()`, `String()`, `Boolean()`) when you need to change types intentionally.
+
+---
+
 ## Appendix: Comparison Recap (== vs ===)
+
 
 - **`==` (Loose Equality)**: Checks only the value. It performs **type coercion** (automatically converts data types to match).
   - *Example*: `5 == "5"` is `true`.
