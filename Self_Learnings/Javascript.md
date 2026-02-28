@@ -6,6 +6,7 @@
 2. [Variables](#2-variables)
    - [2.1 Temporary Variable](#21-temporary-variable)
 3. [Data Types](#3-data-types)
+   - [Pass by Value vs Pass by Reference](#-pass-by-value-vs-pass-by-reference)
    - [Symbol](#-symbol)
    - [BigInt](#-bigint)
    - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
@@ -158,7 +159,98 @@ b = temp
 
 ---
 
+### 🔷 Pass by Value vs Pass by Reference
+
+This explains how data is copied and shared in JavaScript — and it's directly tied to whether the type is **primitive** or **non-primitive (object)**.
+
+![Pass by Value vs Pass by Reference](Images/Pass_By_Value_Reference.png)
+
+---
+
+#### ✅ Pass by Value — Primitives (number, string, boolean, null, undefined)
+
+When you assign a primitive to another variable, JavaScript makes a **full copy**. Each variable has its own independent value. Changing one does **NOT** affect the other.
+
+```javascript
+let a = 10;
+let b = a;   // b gets a COPY of a's value
+
+b = 20;      // change b
+
+console.log(a); // 10  ← a is NOT affected, it has its own copy
+console.log(b); // 20
+```
+
+```javascript
+let name1 = "Alice";
+let name2 = name1;   // copy of "Alice"
+
+name2 = "Bob";
+
+console.log(name1); // "Alice" ← unchanged
+console.log(name2); // "Bob"
+```
+
+---
+
+#### ⚠️ Pass by Reference — Non-Primitives (Objects, Arrays)
+
+When you assign an object or array to another variable, JavaScript does **NOT** copy it. Both variables point to the **same object in memory**. Changing one changes both!
+
+```javascript
+let obj1 = { name: "John", age: 25 };
+let obj2 = obj1;   // NOT a copy — both point to the same object!
+
+obj2.name = "Pete"; // change via obj2
+
+console.log(obj1.name); // "Pete" ← obj1 is also changed! 😱
+console.log(obj2.name); // "Pete"
+```
+
+```javascript
+// Same with arrays
+let arr1 = [1, 2, 3];
+let arr2 = arr1;   // both point to the same array
+
+arr2.push(4);
+
+console.log(arr1); // [1, 2, 3, 4] ← arr1 also changed!
+console.log(arr2); // [1, 2, 3, 4]
+```
+
+---
+
+#### 🔐 How to copy an object WITHOUT sharing it
+
+If you want a real independent copy of an object:
+
+```javascript
+let original = { name: "John", age: 25 };
+
+// Spread operator creates a SHALLOW copy
+let copy = { ...original };
+
+copy.name = "Pete";
+
+console.log(original.name); // "John" ← safe, untouched ✅
+console.log(copy.name);     // "Pete"
+```
+
+#### Quick Summary
+
+| | Primitives (Pass by Value) | Objects/Arrays (Pass by Reference) |
+|---|---|---|
+| What is copied? | The actual value | The memory address (pointer) |
+| Change affects original? | ❌ No | ✅ Yes |
+| Types | number, string, boolean, null, undefined, symbol, bigint | object, array, function |
+| Independent copy? | ✅ Always | ❌ Need spread `{...obj}` or `[...arr]` |
+
+> 💡 **Key Rule:** If it's a primitive → you get a copy. If it's an object/array → you get a reference to the same thing in memory.
+
+---
+
 ### 🔷 Symbol
+
 
 A **Symbol** is a primitive data type introduced in ES6. Every Symbol created is **guaranteed to be unique** — even if two symbols have the exact same description, they are never equal to each other.
 
