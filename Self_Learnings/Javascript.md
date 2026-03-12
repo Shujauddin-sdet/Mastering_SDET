@@ -3,6 +3,7 @@
 ## 📋 Table of Contents
 
 1. [What is JavaScript?](#1-what-is-javascript)
+   - [Client-Side vs Server-Side](#client-side-vs-server-side)
    - [The JavaScript Console](#the-javascript-console)
 2. [Variables](#2-variables)
    - [2.1 Temporary Variable](#21-temporary-variable)
@@ -30,6 +31,27 @@ JavaScript is a programming language that is used to create dynamic and interact
 - Core features: It supports object-oriented, functional, and event-driven programming styles. It's dynamically typed, meaning you don't need to declare variable types explicitly.
 - ECMAScript — mention that JavaScript follows the ECMAScript standard (ES6/ES2015+)
 - Role in web development: It's one of the three core technologies of the web alongside HTML (structure) and CSS (styling). JavaScript handles the behavior and logic layer.
+
+### Client-Side vs Server-Side
+
+To understand how JavaScript works, it's important to understand the two main environments where code runs in web development.
+
+![Client vs Server Architecture](Images/client_server_architecture.png)
+
+#### 🖥️ Client-Side (Front-end)
+The **Client** refers to the user's device (laptop, phone) and the software they are using to view the web (like Chrome, Safari, Firefox). 
+- **What it does:** Displays the user interface, handles user interactions (clicks, scrolling), and makes the page look good.
+- **Technologies used:** HTML (Structure), CSS (Styling), and Client-Side JavaScript (Behavior).
+- **Example:** When you click a "Like" button and it turns blue immediately, that's client-side JavaScript reacting.
+
+#### 🗄️ Server-Side (Back-end)
+The **Server** is a powerful computer located somewhere else (in a data center) that listens for requests from clients, processes them, and sends data back.
+- **What it does:** Stores data in databases, handles security, processes payments, and runs complex business logic.
+- **Technologies used:** Node.js (Server-Side JavaScript), Python, Java, Databases (SQL, MongoDB), APIs.
+- **Example:** When you click that same "Like" button, the client sends a message to the server saying "Update the database to add 1 like". The server saves this so everyone else can see it.
+
+> **Why Node.js matters:** Historically, JavaScript *only* ran in the browser (Client-Side). Node.js was created to allow developers to run JavaScript on the Server-Side too. Now you can build the entire application using just one language!
+
 ---
 
 ## The JavaScript Console
@@ -213,10 +235,6 @@ console.table(users, ["name", "city"]);
 | `trace()` | Print a stack trace |
 
 > **Tip:** These methods will be your daily companions as you learn JavaScript and especially when you start automating with Playwright (where you often need to debug selectors, network requests, etc.).
-
-Next step: Open your browser's console right now and try each example. Modify them, play around, and see the output. This hands-on practice will cement the concepts.
-
-
 ---
 
 ## 2. Variables
