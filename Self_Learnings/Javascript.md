@@ -180,12 +180,51 @@ console.table(users);
 ### 5. Other Handy Tools
 As you get more advanced, you might need these specialized console tools:
 
-- **`console.time()` & `console.timeEnd()`**: Think of this as a stopwatch. It measures exactly how many milliseconds a piece of code takes to run. Great for testing performance!
-- **`console.count()`**: Every time the code hits this line, it adds +1 to a counter and prints it. Useful to see exactly how many times a loop ran.
-- **`console.group()` & `console.groupEnd()`**: Indents your console logs cleanly into a folder-like structure so it doesn't look like a giant wall of text.
-- **`console.info()`**: Prints an informational message (sometimes blue in browsers). Very similar to `log()` but used for distinct "info" updates.
-- **`console.debug()`**: Prints debug-level messages. Often hidden by default in browsers unless you enable debug output.
-- **`console.trace()`**: Prints a stack trace to show you exactly which function called which function to get to this line. Essential for complex debugging.
+**`console.time()` & `console.timeEnd()`**
+Think of this as a stopwatch. It measures exactly how many milliseconds a piece of code takes to run. Great for testing performance!
+```javascript
+console.time("loopTimer");
+for (let i = 0; i < 100000; i++) {
+  // some heavy work
+}
+console.timeEnd("loopTimer"); // Output: loopTimer: 3.456ms
+```
+
+**`console.count()`**
+Every time the code hits this line, it adds +1 to a counter and prints it. Useful to see exactly how many times a loop ran or a function was called.
+```javascript
+function loginUser() {
+  console.count("Login Attempt");
+}
+loginUser(); // Output: Login Attempt: 1
+loginUser(); // Output: Login Attempt: 2
+```
+
+**`console.group()` & `console.groupEnd()`**
+Indents your console logs cleanly into a folder-like structure so it doesn't look like a giant wall of text.
+```javascript
+console.group("User Details");
+console.log("Name: Alice");
+console.log("Role: Admin");
+console.groupEnd(); // Closes the folder so next logs are un-indented
+```
+
+**`console.info()` & `console.debug()`**
+`info()` prints an informational message (sometimes blue in browsers). `debug()` prints debug-level messages (often hidden by default in browsers unless you enable debug output).
+```javascript
+console.info("System has finished booting.");
+console.debug("Variable x is currently manually set to 5."); 
+```
+
+**`console.trace()`**
+Prints a stack trace to show you exactly which function called which function to get to this line. Essential for complex debugging!
+```javascript
+function stepOne() { stepTwo(); }
+function stepTwo() { console.trace("Trace to stepTwo"); }
+
+stepOne(); 
+// Output will show that 'stepOne' called 'stepTwo'
+```
 
 ### Summary Cheat Sheet
 
