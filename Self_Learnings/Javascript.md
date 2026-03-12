@@ -123,7 +123,9 @@ console.log("The current score is:", currentScore);
 In older programming languages like C, developers used a tool called `printf` (print formatted) to insert variables into text cleanly using placeholders. JavaScript allows you to do the exact same thing using `%` symbols!
 
 - `%s` is a placeholder for a **S**tring (text).
-- `%d` is a placeholder for a **D**igit (number).
+- `%d` or `%i` are placeholders for an Integer (whole number).
+- `%f` is a placeholder for a Float (decimal number).
+- `%o` is a placeholder for an Object.
 
 ```javascript
 // This reads as: "Hello [text string placeholder], you have [number placeholder] new messages."
@@ -180,17 +182,26 @@ As you get more advanced, you might need these specialized console tools:
 
 - **`console.time()` & `console.timeEnd()`**: Think of this as a stopwatch. It measures exactly how many milliseconds a piece of code takes to run. Great for testing performance!
 - **`console.count()`**: Every time the code hits this line, it adds +1 to a counter and prints it. Useful to see exactly how many times a loop ran.
-- **`console.group()`**: Indents your console logs cleanly into a folder-like structure so it doesn't look like a giant wall of text.
+- **`console.group()` & `console.groupEnd()`**: Indents your console logs cleanly into a folder-like structure so it doesn't look like a giant wall of text.
+- **`console.info()`**: Prints an informational message (sometimes blue in browsers). Very similar to `log()` but used for distinct "info" updates.
+- **`console.debug()`**: Prints debug-level messages. Often hidden by default in browsers unless you enable debug output.
+- **`console.trace()`**: Prints a stack trace to show you exactly which function called which function to get to this line. Essential for complex debugging.
 
 ### Summary Cheat Sheet
 
 | Command | What it does | When to use it |
 |---|---|---|
-| `console.log()` | Prints standard text | 90% of the time, general checking |
-| `console.error()` | Prints red text with stack trace | When an operation completely fails |
-| `console.warn()` | Prints yellow text | When something is risky but not broken |
-| `console.table()` | Displays data in a neat grid | When looking at Arrays or Objects |
-| `console.time()` | Starts a stopwatch | When checking how fast code runs |
+| `log()` | General output (black text) | 90% of the time, general checking |
+| `error()` | Error messages (red, includes stack) | When an operation completely fails |
+| `warn()` | Warnings (yellow text) | When something is risky but not broken |
+| `table()` | Displays data in a neat grid | When looking at Arrays or Objects |
+| `info()` | Informational messages (blue) | Distinct updates you want separated from logs |
+| `debug()` | Debug output (often hidden) | Granular internal checks |
+| `group()` | Groups related logs together | Organizing large amounts of log output |
+| `time()` | Starts a stopwatch timer | When checking how fast code runs |
+| `timeEnd()` | Ends the timer and prints duration | Paired with `time()` |
+| `count()` | Counts occurrences | Finding out how many times a loop runs |
+| `trace()` | Prints a stack trace | Finding the exact path code took to get here |
 
 > **🚀 SDET Tip:** These methods will be your daily companions. When you start automating browsers with Playwright, you constantly use `console.log()` to check if you successfully clicked a button, or `console.error()` to figure out why an element couldn't be found.
 
