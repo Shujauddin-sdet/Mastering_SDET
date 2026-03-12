@@ -4,6 +4,7 @@
 
 1. [What is JavaScript?](#1-what-is-javascript)
    - [Client-Side vs Server-Side](#client-side-vs-server-side)
+   - [What is Node.js?](#what-is-nodejs)
    - [The JavaScript Console](#the-javascript-console)
 2. [Variables](#2-variables)
    - [2.1 Temporary Variable](#21-temporary-variable)
@@ -51,6 +52,28 @@ The **Server** is a powerful computer located somewhere else (in a data center) 
 - **Example:** When you click that same "Like" button, the client sends a message to the server saying "Update the database to add 1 like". The server saves this so everyone else can see it.
 
 > **Why Node.js matters:** Historically, JavaScript *only* ran in the browser (Client-Side). Node.js was created to allow developers to run JavaScript on the Server-Side too. Now you can build the entire application using just one language!
+
+### What is Node.js?
+
+Node.js is not a new language or a framework—it is a **runtime environment** that allows JavaScript to run *outside* of a web browser. It takes the V8 JavaScript engine (the engine that powers Google Chrome) and runs it directly on your computer's operating system.
+
+#### ⚙️ Why is this important?
+Before Node.js, JavaScript was trapped inside the browser. It could only change colors, show popups, and interact with the webpage. 
+
+With Node.js, JavaScript broke free. Now JavaScript can:
+- **Write and read files** directly on your computer.
+- **Connect directly to databases** (like SQL or MongoDB).
+- **Run servers** that handle millions of HTTP requests (using tools like Express).
+- **Run Automation Scripts** (like API tests, Selenium, Playwright, or Cypress scripts directly from your terminal).
+
+#### 📦 NPM (Node Package Manager)
+When you install Node.js, you also get **NPM**. NPM is essential for modern development:
+- It's a massive online library containing over 1 million free code packages.
+- If you need to make an API call, you don't write it from scratch—you download a package (like `axios`).
+- If you need to write tests, you download a testing package (like `jest` or `playwright`).
+- You manage these packages using a `package.json` file in your project.
+
+> **SDET Takeaway:** In Test Automation, you almost never run your test scripts in a browser console. You define them in files and execute them through your terminal using Node.js (e.g., running `npx playwright test`).
 
 ---
 
