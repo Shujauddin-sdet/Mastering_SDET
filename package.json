@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "description": "Small collection of Playwright example scripts used for learning and experimentation.",
   "main": "secret.js",
+  "type": "module",
   "directories": {
     "test": "test"
-  },
-  "dependencies": {
-    "fsevents": "^2.3.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
