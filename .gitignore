@@ -26,5 +26,3 @@ secret.js
 /playwright/.cache/
 /playwright/.auth/
 
-# Auto-generated lock file (optional for solo projects)
-package-lock.json
