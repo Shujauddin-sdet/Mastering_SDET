@@ -1,0 +1,26 @@
+{
+  "name": "learning_js_pramod",
+  "version": "1.0.0",
+  "description": "Small collection of Playwright example scripts used for learning and experimentation.",
+  "main": "secret.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "fsevents": "^2.3.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^25.5.0",
+    "playwright": "^1.48.0",
+    "playwright-core": "^1.48.0"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-sdet:Shujauddin-sdet/Mastering_SDET.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
