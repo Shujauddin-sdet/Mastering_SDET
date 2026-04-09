@@ -278,6 +278,28 @@ console.log(city);
 
 ---
 
+![Var vs Let vs Const](Images/var_let_const.png)
+
+### Easy Explanation of `var`, `let`, and `const`
+
+Here is a simple table showing the differences based on the image:
+
+| Feature | `var` | `let` | `const` |
+| --- | --- | --- | --- |
+| **Stored in Global Scope** | ✅ Yes | ❌ No | ❌ No |
+| **Function Scope** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Block Scope** | ❌ No | ✅ Yes | ✅ Yes |
+| **Can Be Reassigned?** | ✅ Yes | ✅ Yes | ❌ No |
+| **Can Be Redeclared?** | ✅ Yes | ❌ No | ❌ No |
+| **Can Be Hoisted?** | ✅ Yes | ❌ No | ❌ No |
+
+**In simple words:**
+- **`var`** is the old way. It's too loose and can cause unexpected bugs because it can be redeclared, hoisted, and it leaks out of block scopes (like `if` statements or loops). You should generally **avoid** using it.
+- **`let`** is the modern way. Use this when you know the variable's value **will change** later (like a score or current age). It safely stays where you put it (Block Scope).
+- **`const`** is for constant values that **will NEVER change** (like someone's date of birth or a fixed URL). Once you set it, you cannot update or redeclare it.
+
+---
+
 ![diff_var_let_const](Images/diff_var_let_const.png)
 
 ```javascript
