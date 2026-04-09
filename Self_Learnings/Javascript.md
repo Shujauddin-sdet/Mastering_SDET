@@ -414,19 +414,48 @@ b = temp
 - Primitive data types
 - Non-primitive data types
 
-- Primitive data types:
-- String (Text)
-- Number (Integer, Float)
-- Boolean (True, False)
-- Undefined (Value is not assigned)
-- Null (Value is intentionally assigned as null)
-- Symbol (Unique value)
-- BigInt (Large integer)
+### 1. Primitive Data Types
+(Numbers, Strings, Booleans, Null, Undefined, Symbols)
 
-- Non-primitive data types:
-- Object (Collection of key-value pairs)
-- Array (Ordered list of values)
-- Function (Block of code that performs a specific task)
+**The Meaning:** A primitive is a single, simple value that is "immutable" (it cannot be changed). When you assign a primitive to a variable, the variable holds the actual value.
+
+**Fixed Size:** They take up a tiny, set amount of memory.
+
+**Passed by Value:** If you copy a primitive, you create a brand-new, separate copy. Changing one doesn't hurt the other.
+
+**Analogy:** A primitive is like a photograph. If I give you a copy of my photo and you draw a mustache on it, my original photo stays the same.
+
+```javascript
+let x = 10;
+let y = x; // y gets a copy of the value 10
+y = 20;    // x is still 10
+```
+
+### 2. Non-Primitive Data Types
+(Objects, Arrays, Functions)
+
+**The Meaning:** These are collections of values. A non-primitive variable doesn't actually hold the data itself; it holds a Reference (an address) to where the data is stored in memory.
+
+**Flexible Size:** They can grow or shrink (like adding items to an array).
+
+**Passed by Reference:** If you copy a non-primitive, you aren't copying the data—you're copying the map to that data. Both variables now point to the same "box" in memory.
+
+**Analogy:** A non-primitive is like a Google Doc. If I share the link (the reference) with you and you delete a paragraph, it’s deleted for me too, because we are both looking at the same document.
+
+```javascript
+let car1 = { color: "red" };
+let car2 = car1; // car2 now points to the SAME object as car1
+
+car2.color = "blue"; 
+console.log(car1.color); // "blue" (It changed for both!)
+```
+
+### Summary Comparison
+| Feature | Primitive | Non-Primitive |
+| --- | --- | --- |
+| Storage | Holds the Value directly. | Holds a Reference (Address). |
+| Mutability | Immutable (Cannot be changed). | Mutable (Can be changed). |
+| Structure | Single, simple piece of data. | Complex collection of data. |
 
 ![JavaScript Data Types](Images/Data_Types_Overview.png)
 
@@ -441,6 +470,8 @@ Both mean "no value" — but they mean it in **different ways**:
 | **Meaning** | Variable declared but never given a value | Intentionally set to empty by the developer |
 | **Who sets it?** | JavaScript sets it automatically | You set it yourself |
 | **typeof** | `"undefined"` | `"object"` ← (famous JS bug!) |
+
+> **Why is this a bug?** When JS was built in 1995, it checked the first few bits of a value (called a "type tag") to figure out its data type. The tag for an object was `000`. At that time, `null` was represented as a NULL pointer, which is basically just a bunch of zeros. Because `null` literally started with `000`, the system got tricked into thinking it was an object! They noticed the mistake later, but fixing it would have broken millions of websites that already relied on it, so they just had to leave it.
 
 ```javascript
 // undefined — JS sets this automatically
