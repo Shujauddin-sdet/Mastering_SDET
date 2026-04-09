@@ -1648,3 +1648,5 @@ console.log(firstTwo);
 ```
 
 > 💡 Useful when you need to check or extract specific characters — like initials from a name or validating the format of a code.
+
+

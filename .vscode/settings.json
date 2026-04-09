@@ -20,6 +20,9 @@
         "**/*.md"
     ],
     "markdownlint.enabled": false,
+    "terminal.integrated.env.osx": {
+        "PWDEBUG": "1"
+    },
     "[markdown]": {
         "editor.quickSuggestions": {
             "other": false,

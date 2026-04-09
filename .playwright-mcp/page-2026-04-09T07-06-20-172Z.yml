@@ -1,0 +1,980 @@
+- generic [ref=e2]:
+  - region
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FPramodDutta%2FLearningPlaywrightBatch
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=PramodDutta%2FLearningPlaywrightBatch
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "PramodDutta" [ref=e70] [cursor=pointer]:
+            - /url: /PramodDutta
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "LearningPlaywrightBatch" [ref=e73] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2FPramodDutta%2FLearningPlaywrightBatch
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 8" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2FPramodDutta%2FLearningPlaywrightBatch
+                - img [ref=e82]
+                - text: Fork
+                - generic "8" [ref=e84]
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2FPramodDutta%2FLearningPlaywrightBatch
+                - img [ref=e88]
+                - text: Star
+                - generic "6 users starred this repository" [ref=e90]: "6"
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues" [ref=e99] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+          - listitem [ref=e104]:
+            - link "Pull requests" [ref=e105] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/pulls
+              - img [ref=e106]
+              - generic [ref=e108]: Pull requests
+          - listitem [ref=e109]:
+            - link "Actions" [ref=e110] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/actions
+              - img [ref=e111]
+              - generic [ref=e113]: Actions
+          - listitem [ref=e114]:
+            - link "Projects" [ref=e115] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/projects
+              - img [ref=e116]
+              - generic [ref=e118]: Projects
+          - listitem [ref=e119]:
+            - link "Security and quality" [ref=e120] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/security
+              - img [ref=e121]
+              - generic [ref=e123]: Security and quality
+          - listitem [ref=e124]:
+            - link "Insights" [ref=e125] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/pulse
+              - img [ref=e126]
+              - generic [ref=e128]: Insights
+    - generic [ref=e141]:
+      - heading "PramodDutta/LearningPlaywrightBatch" [level=1] [ref=e143]
+      - generic [ref=e144]:
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - button "main branch" [ref=e151] [cursor=pointer]:
+                - generic [ref=e152]:
+                  - generic [ref=e154]:
+                    - img [ref=e156]
+                    - generic [ref=e159]: main
+                  - generic:
+                    - img
+              - generic [ref=e160]:
+                - link "1 Branch" [ref=e161] [cursor=pointer]:
+                  - /url: /PramodDutta/LearningPlaywrightBatch/branches
+                  - generic [ref=e162]:
+                    - generic:
+                      - img
+                    - generic [ref=e164]:
+                      - strong [ref=e165]: "1"
+                      - text: Branch
+                - link "0 Tags" [ref=e166] [cursor=pointer]:
+                  - /url: /PramodDutta/LearningPlaywrightBatch/tags
+                  - generic [ref=e167]:
+                    - generic:
+                      - img
+                    - generic [ref=e169]:
+                      - strong [ref=e170]: "0"
+                      - text: Tags
+            - generic [ref=e171]:
+              - generic [ref=e175]:
+                - img [ref=e177]
+                - combobox "Go to file" [ref=e179]
+              - button "Code" [ref=e180] [cursor=pointer]:
+                - generic [ref=e181]:
+                  - generic:
+                    - img
+                  - generic [ref=e182]: Code
+                  - generic:
+                    - img
+          - generic [ref=e183]:
+            - generic [ref=e184]:
+              - heading "Folders and files" [level=2] [ref=e185]
+              - table "Folders and files" [ref=e186]:
+                - rowgroup:
+                  - row "Name Last commit message Last commit date":
+                    - columnheader "Name"
+                    - columnheader "Last commit message":
+                      - generic "Last commit message"
+                    - columnheader "Last commit date":
+                      - generic "Last commit date"
+                - rowgroup [ref=e187]:
+                  - 'row "Latest commit PramodDutta commits by PramodDutta Add OOP inheritance examples: single, multi-level, hierarchical, mult… Open commit details Commit eb8ea75 · Apr 9, 20264 hours ago History 33 Commits" [ref=e188]':
+                    - 'cell "Latest commit PramodDutta commits by PramodDutta Add OOP inheritance examples: single, multi-level, hierarchical, mult… Open commit details Commit eb8ea75 · Apr 9, 20264 hours ago History 33 Commits" [ref=e189]':
+                      - generic [ref=e190]:
+                        - heading "Latest commit" [level=2] [ref=e191]
+                        - generic [ref=e192]:
+                          - generic [ref=e194]:
+                            - link "PramodDutta" [ref=e195] [cursor=pointer]:
+                              - /url: /PramodDutta
+                              - img "PramodDutta" [ref=e196]
+                            - link "commits by PramodDutta" [ref=e197] [cursor=pointer]:
+                              - /url: /PramodDutta/LearningPlaywrightBatch/commits?author=PramodDutta
+                              - text: PramodDutta
+                          - generic [ref=e198]:
+                            - 'link "Add OOP inheritance examples: single, multi-level, hierarchical, mult…" [ref=e201] [cursor=pointer]':
+                              - /url: /PramodDutta/LearningPlaywrightBatch/commit/eb8ea75f5691b3209eaa7209304fb96617f11535
+                            - button "Open commit details" [ref=e202] [cursor=pointer]:
+                              - img [ref=e203]
+                        - generic [ref=e205]:
+                          - generic [ref=e207]:
+                            - link "Commit eb8ea75" [ref=e208] [cursor=pointer]:
+                              - /url: /PramodDutta/LearningPlaywrightBatch/commit/eb8ea75f5691b3209eaa7209304fb96617f11535
+                              - text: eb8ea75
+                            - text: ·
+                            - generic "Apr 9, 2026, 8:14 AM GMT+5:30" [ref=e209]: Apr 9, 20264 hours ago
+                          - generic [ref=e210]:
+                            - heading "History" [level=2] [ref=e211]
+                            - link "33 Commits" [ref=e212] [cursor=pointer]:
+                              - /url: /PramodDutta/LearningPlaywrightBatch/commits/main/
+                              - generic [ref=e213]:
+                                - generic:
+                                  - img
+                                - generic [ref=e214]: 33 Commits
+                  - row ".claude, (Directory)" [ref=e215]:
+                    - cell ".claude, (Directory)" [ref=e216]:
+                      - generic [ref=e217]:
+                        - img [ref=e218]
+                        - link ".claude, (Directory)" [ref=e223] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/.claude
+                          - text: .claude
+                    - cell [ref=e224]
+                    - cell [ref=e226]
+                  - row ".github, (Directory)" [ref=e229]:
+                    - cell ".github, (Directory)" [ref=e230]:
+                      - generic [ref=e231]:
+                        - img [ref=e232]
+                        - link ".github, (Directory)" [ref=e237] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/.github
+                          - text: .github
+                    - cell [ref=e238]
+                    - cell [ref=e240]
+                  - row "Lecture_Playwright_AI_Agents, (Directory)" [ref=e243]:
+                    - cell "Lecture_Playwright_AI_Agents, (Directory)" [ref=e244]:
+                      - generic [ref=e245]:
+                        - img [ref=e246]
+                        - link "Lecture_Playwright_AI_Agents, (Directory)" [ref=e251] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/Lecture_Playwright_AI_Agents
+                          - text: Lecture_Playwright_AI_Agents
+                    - cell [ref=e252]
+                    - cell [ref=e254]
+                  - row "Lecture_Playwright_CLI, (Directory)" [ref=e257]:
+                    - cell "Lecture_Playwright_CLI, (Directory)" [ref=e258]:
+                      - generic [ref=e259]:
+                        - img [ref=e260]
+                        - link "Lecture_Playwright_CLI, (Directory)" [ref=e265] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/Lecture_Playwright_CLI
+                          - text: Lecture_Playwright_CLI
+                    - cell [ref=e266]
+                    - cell [ref=e268]
+                  - row "Lecture_Playwright_MCP, (Directory)" [ref=e271]:
+                    - cell "Lecture_Playwright_MCP, (Directory)" [ref=e272]:
+                      - generic [ref=e273]:
+                        - img [ref=e274]
+                        - link "Lecture_Playwright_MCP, (Directory)" [ref=e279] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/Lecture_Playwright_MCP
+                          - text: Lecture_Playwright_MCP
+                    - cell [ref=e280]
+                    - cell [ref=e282]
+                  - row "PW_JS_Test_1, (Directory)" [ref=e285]:
+                    - cell "PW_JS_Test_1, (Directory)" [ref=e286]:
+                      - generic [ref=e287]:
+                        - img [ref=e288]
+                        - link "PW_JS_Test_1, (Directory)" [ref=e293] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/PW_JS_Test_1
+                          - text: PW_JS_Test_1
+                    - cell [ref=e294]
+                    - cell [ref=e296]
+                  - row "Task_Interview_Coding_Questions, (Directory)" [ref=e299]:
+                    - cell "Task_Interview_Coding_Questions, (Directory)" [ref=e300]:
+                      - generic [ref=e301]:
+                        - img [ref=e302]
+                        - link "Task_Interview_Coding_Questions, (Directory)" [ref=e307] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/Task_Interview_Coding_Questions
+                          - text: Task_Interview_Coding_Questions
+                    - cell [ref=e308]
+                    - cell [ref=e310]
+                  - row "chapter_01_Basics, (Directory)" [ref=e313]:
+                    - cell "chapter_01_Basics, (Directory)" [ref=e314]:
+                      - generic [ref=e315]:
+                        - img [ref=e316]
+                        - link "chapter_01_Basics, (Directory)" [ref=e321] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_01_Basics
+                          - text: chapter_01_Basics
+                    - cell [ref=e322]
+                    - cell [ref=e324]
+                  - row "chapter_02_Java_Concepts, (Directory)" [ref=e327]:
+                    - cell "chapter_02_Java_Concepts, (Directory)" [ref=e328]:
+                      - generic [ref=e329]:
+                        - img [ref=e330]
+                        - link "chapter_02_Java_Concepts, (Directory)" [ref=e335] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_02_Java_Concepts
+                          - text: chapter_02_Java_Concepts
+                    - cell [ref=e336]
+                    - cell [ref=e338]
+                  - row "chapter_03_Identifier_Literal_Operators_Statement, (Directory)" [ref=e341]:
+                    - cell "chapter_03_Identifier_Literal_Operators_Statement, (Directory)" [ref=e342]:
+                      - generic [ref=e343]:
+                        - img [ref=e344]
+                        - link "chapter_03_Identifier_Literal_Operators_Statement, (Directory)" [ref=e349] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_03_Identifier_Literal_Operators_Statement
+                          - text: chapter_03_Identifier_Literal_Operators_Statement
+                    - cell [ref=e350]
+                    - cell [ref=e352]
+                  - row "chapter_04_Operators, (Directory)" [ref=e355]:
+                    - cell "chapter_04_Operators, (Directory)" [ref=e356]:
+                      - generic [ref=e357]:
+                        - img [ref=e358]
+                        - link "chapter_04_Operators, (Directory)" [ref=e363] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_04_Operators
+                          - text: chapter_04_Operators
+                    - cell [ref=e364]
+                    - cell [ref=e366]
+                  - row "chapter_05_Statements, (Directory)" [ref=e369]:
+                    - cell "chapter_05_Statements, (Directory)" [ref=e370]:
+                      - generic [ref=e371]:
+                        - img [ref=e372]
+                        - link "chapter_05_Statements, (Directory)" [ref=e377] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_05_Statements
+                          - text: chapter_05_Statements
+                    - cell [ref=e378]
+                    - cell [ref=e380]
+                  - row "chapter_06_Switch_Statements, (Directory)" [ref=e383]:
+                    - cell "chapter_06_Switch_Statements, (Directory)" [ref=e384]:
+                      - generic [ref=e385]:
+                        - img [ref=e386]
+                        - link "chapter_06_Switch_Statements, (Directory)" [ref=e391] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_06_Switch_Statements
+                          - text: chapter_06_Switch_Statements
+                    - cell [ref=e392]
+                    - cell [ref=e394]
+                  - row "chapter_07_Loops, (Directory)" [ref=e397]:
+                    - cell "chapter_07_Loops, (Directory)" [ref=e398]:
+                      - generic [ref=e399]:
+                        - img [ref=e400]
+                        - link "chapter_07_Loops, (Directory)" [ref=e405] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_07_Loops
+                          - text: chapter_07_Loops
+                    - cell [ref=e406]
+                    - cell [ref=e408]
+                  - row "chapter_08_Arrays, (Directory)" [ref=e411]:
+                    - cell "chapter_08_Arrays, (Directory)" [ref=e412]:
+                      - generic [ref=e413]:
+                        - img [ref=e414]
+                        - link "chapter_08_Arrays, (Directory)" [ref=e419] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_08_Arrays
+                          - text: chapter_08_Arrays
+                    - cell [ref=e420]
+                    - cell [ref=e422]
+                  - row "chapter_09_Functions, (Directory)" [ref=e425]:
+                    - cell "chapter_09_Functions, (Directory)" [ref=e426]:
+                      - generic [ref=e427]:
+                        - img [ref=e428]
+                        - link "chapter_09_Functions, (Directory)" [ref=e433] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_09_Functions
+                          - text: chapter_09_Functions
+                    - cell [ref=e434]
+                    - cell [ref=e436]
+                  - row "chapter_10_Strings, (Directory)" [ref=e439]:
+                    - cell "chapter_10_Strings, (Directory)" [ref=e440]:
+                      - generic [ref=e441]:
+                        - img [ref=e442]
+                        - link "chapter_10_Strings, (Directory)" [ref=e447] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_10_Strings
+                          - text: chapter_10_Strings
+                    - cell [ref=e448]
+                    - cell [ref=e450]
+                  - row "chapter_11_Objects, (Directory)" [ref=e453]:
+                    - cell "chapter_11_Objects, (Directory)" [ref=e454]:
+                      - generic [ref=e455]:
+                        - img [ref=e456]
+                        - link "chapter_11_Objects, (Directory)" [ref=e461] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_11_Objects
+                          - text: chapter_11_Objects
+                    - cell [ref=e462]
+                    - cell [ref=e464]
+                  - row "chapter_12_Multi_Dimension_Array, (Directory)" [ref=e467]:
+                    - cell "chapter_12_Multi_Dimension_Array, (Directory)" [ref=e468]:
+                      - generic [ref=e469]:
+                        - img [ref=e470]
+                        - link "chapter_12_Multi_Dimension_Array, (Directory)" [ref=e475] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_12_Multi_Dimension_Array
+                          - text: chapter_12_Multi_Dimension_Array
+                    - cell [ref=e476]
+                    - cell [ref=e478]
+                  - row "chapter_13_Callback, (Directory)" [ref=e481]:
+                    - cell "chapter_13_Callback, (Directory)" [ref=e482]:
+                      - generic [ref=e483]:
+                        - img [ref=e484]
+                        - link "chapter_13_Callback, (Directory)" [ref=e489] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_13_Callback
+                          - text: chapter_13_Callback
+                    - cell [ref=e490]
+                    - cell [ref=e492]
+                  - row "chapter_14_Promise, (Directory)" [ref=e495]:
+                    - cell "chapter_14_Promise, (Directory)" [ref=e496]:
+                      - generic [ref=e497]:
+                        - img [ref=e498]
+                        - link "chapter_14_Promise, (Directory)" [ref=e503] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_14_Promise
+                          - text: chapter_14_Promise
+                    - cell [ref=e504]
+                    - cell [ref=e506]
+                  - row "chapter_15_Async_Await, (Directory)" [ref=e509]:
+                    - cell "chapter_15_Async_Await, (Directory)" [ref=e510]:
+                      - generic [ref=e511]:
+                        - img [ref=e512]
+                        - link "chapter_15_Async_Await, (Directory)" [ref=e517] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_15_Async_Await
+                          - text: chapter_15_Async_Await
+                    - cell [ref=e518]
+                    - cell [ref=e520]
+                  - row "chapter_16_OOps, (Directory)" [ref=e523]:
+                    - cell "chapter_16_OOps, (Directory)" [ref=e524]:
+                      - generic [ref=e525]:
+                        - img [ref=e526]
+                        - link "chapter_16_OOps, (Directory)" [ref=e531] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_16_OOps
+                          - text: chapter_16_OOps
+                    - cell [ref=e532]
+                    - cell [ref=e534]
+                  - row "chapter_17_OOPs_Inheritance, (Directory)" [ref=e537]:
+                    - cell "chapter_17_OOPs_Inheritance, (Directory)" [ref=e538]:
+                      - generic [ref=e539]:
+                        - img [ref=e540]
+                        - link "chapter_17_OOPs_Inheritance, (Directory)" [ref=e545] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/chapter_17_OOPs_Inheritance
+                          - text: chapter_17_OOPs_Inheritance
+                    - cell [ref=e546]
+                    - cell [ref=e548]
+                  - row "specs, (Directory)" [ref=e551]:
+                    - cell "specs, (Directory)" [ref=e552]:
+                      - generic [ref=e553]:
+                        - img [ref=e554]
+                        - link "specs, (Directory)" [ref=e559] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/tree/main/specs
+                          - text: specs
+                    - cell [ref=e560]
+                    - cell [ref=e562]
+                  - row ".gitignore, (File)" [ref=e565]:
+                    - cell ".gitignore, (File)" [ref=e566]:
+                      - generic [ref=e567]:
+                        - img [ref=e568]
+                        - link ".gitignore, (File)" [ref=e573] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/.gitignore
+                          - text: .gitignore
+                    - cell [ref=e574]
+                    - cell [ref=e576]
+                  - row ".mcp.json, (File)" [ref=e579]:
+                    - cell ".mcp.json, (File)" [ref=e580]:
+                      - generic [ref=e581]:
+                        - img [ref=e582]
+                        - link ".mcp.json, (File)" [ref=e587] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/.mcp.json
+                          - text: .mcp.json
+                    - cell [ref=e588]
+                    - cell [ref=e590]
+                  - row "GitHub_Antigravity_VSCode_Copilot_QA_Tutorial.md, (File)" [ref=e593]:
+                    - cell "GitHub_Antigravity_VSCode_Copilot_QA_Tutorial.md, (File)" [ref=e594]:
+                      - generic [ref=e595]:
+                        - img [ref=e596]
+                        - link "GitHub_Antigravity_VSCode_Copilot_QA_Tutorial.md, (File)" [ref=e601] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/GitHub_Antigravity_VSCode_Copilot_QA_Tutorial.md
+                          - text: GitHub_Antigravity_VSCode_Copilot_QA_Tutorial.md
+                    - cell [ref=e602]
+                    - cell [ref=e604]
+                  - row "README.md, (File)" [ref=e607]:
+                    - cell "README.md, (File)" [ref=e608]:
+                      - generic [ref=e609]:
+                        - img [ref=e610]
+                        - link "README.md, (File)" [ref=e615] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/README.md
+                          - text: README.md
+                    - cell [ref=e616]
+                    - cell [ref=e618]
+                  - row "package-lock.json, (File)" [ref=e621]:
+                    - cell "package-lock.json, (File)" [ref=e622]:
+                      - generic [ref=e623]:
+                        - img [ref=e624]
+                        - link "package-lock.json, (File)" [ref=e629] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/package-lock.json
+                          - text: package-lock.json
+                    - cell [ref=e630]
+                    - cell [ref=e632]
+                  - row "package.json, (File)" [ref=e635]:
+                    - cell "package.json, (File)" [ref=e636]:
+                      - generic [ref=e637]:
+                        - img [ref=e638]
+                        - link "package.json, (File)" [ref=e643] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/package.json
+                          - text: package.json
+                    - cell [ref=e644]
+                    - cell [ref=e646]
+                  - row "sdet.live.png, (File)" [ref=e649]:
+                    - cell "sdet.live.png, (File)" [ref=e650]:
+                      - generic [ref=e651]:
+                        - img [ref=e652]
+                        - link "sdet.live.png, (File)" [ref=e657] [cursor=pointer]:
+                          - /url: /PramodDutta/LearningPlaywrightBatch/blob/main/sdet.live.png
+                          - text: sdet.live.png
+                    - cell [ref=e658]
+                    - cell [ref=e660]
+            - generic [ref=e664]:
+              - generic [ref=e665]:
+                - heading "Repository files navigation" [level=2] [ref=e666]
+                - navigation "Repository files" [ref=e667]:
+                  - list [ref=e668]:
+                    - listitem [ref=e669]:
+                      - link "README" [ref=e670] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e672]
+                        - generic [ref=e674]: README
+                - button "Outline" [ref=e675] [cursor=pointer]:
+                  - img [ref=e676]
+              - article [ref=e679]:
+                - generic [ref=e680]:
+                  - heading "Learning Playwright Batch" [level=1] [ref=e681]
+                  - 'link "Permalink: Learning Playwright Batch" [ref=e682] [cursor=pointer]':
+                    - /url: "#learning-playwright-batch"
+                    - img [ref=e683]
+                - paragraph [ref=e685]: A comprehensive learning resource covering JavaScript fundamentals and Playwright testing with example scripts and real-world scenarios.
+                - generic [ref=e686]:
+                  - heading "Project Structure" [level=2] [ref=e687]
+                  - 'link "Permalink: Project Structure" [ref=e688] [cursor=pointer]':
+                    - /url: "#project-structure"
+                    - img [ref=e689]
+                - generic [ref=e691]:
+                  - 'heading "Chapter 1: Basics" [level=3] [ref=e692]'
+                  - 'link "Permalink: Chapter 1: Basics" [ref=e693] [cursor=pointer]':
+                    - /url: "#chapter-1-basics"
+                    - img [ref=e694]
+                - list [ref=e696]:
+                  - listitem [ref=e697]:
+                    - strong [ref=e698]: Topics
+                    - text: ": Basic JavaScript setup, step-by-step examples, environment verification, and hot code reloading"
+                  - listitem [ref=e699]:
+                    - strong [ref=e700]: Files
+                    - text: ": 01_basic.js, 02_JS_Step_By_Step.js, 03_verify_setup.js, 04_hot_code.js"
+                  - listitem [ref=e701]:
+                    - strong [ref=e702]: Key Concepts
+                    - text: ": Getting started with JavaScript, environment setup verification"
+                - generic [ref=e703]:
+                  - 'heading "Chapter 2: JavaScript Concepts & Hoisting" [level=3] [ref=e704]'
+                  - 'link "Permalink: Chapter 2: JavaScript Concepts & Hoisting" [ref=e705] [cursor=pointer]':
+                    - /url: "#chapter-2-javascript-concepts--hoisting"
+                    - img [ref=e706]
+                - list [ref=e708]:
+                  - listitem [ref=e709]:
+                    - strong [ref=e710]: Topics
+                    - text: ": Comments, identifiers, variable declarations (var, let, const), hoisting behavior"
+                  - listitem [ref=e711]:
+                    - strong [ref=e712]: Files
+                    - text: ": 05_Core_Comments_JS.js, 06_Core_Identifier_JS.js, 07_var_let_const.js, 09_Hoisting.js, 14_let_hoisting.js, 18_const.js"
+                  - listitem [ref=e713]:
+                    - strong [ref=e714]: Key Concepts
+                    - text: ":"
+                    - list [ref=e715]:
+                      - listitem [ref=e716]: Variable scoping and declaration methods
+                      - listitem [ref=e717]: Hoisting with var, let, and const
+                      - listitem [ref=e718]: Function and block-level hoisting
+                      - listitem [ref=e719]: Temporal Dead Zone
+                - generic [ref=e720]:
+                  - 'heading "Chapter 3: Identifiers, Literals, Operators & Statements" [level=3] [ref=e721]'
+                  - 'link "Permalink: Chapter 3: Identifiers, Literals, Operators & Statements" [ref=e722] [cursor=pointer]':
+                    - /url: "#chapter-3-identifiers-literals-operators--statements"
+                    - img [ref=e723]
+                - list [ref=e725]:
+                  - listitem [ref=e726]:
+                    - strong [ref=e727]: Topics
+                    - text: ": Identifier naming conventions, literal values (strings, numbers, booleans), operators, null/undefined"
+                  - listitem [ref=e728]:
+                    - strong [ref=e729]: Files
+                    - text: ": 19_Identifier.js, 20_literla.js, 21_literals_all.js, 22_nul_typepf.js, 23_null_undefined.js, 24_equla_triequal.js, 25_IQ.js"
+                  - listitem [ref=e730]:
+                    - strong [ref=e731]: Key Concepts
+                    - text: ":"
+                    - list [ref=e732]:
+                      - listitem [ref=e733]: Identifier rules and naming conventions
+                      - listitem [ref=e734]: Different literal types
+                      - listitem [ref=e735]: Equality operators (==, ===)
+                      - listitem [ref=e736]: Type checking
+                - generic [ref=e737]:
+                  - 'heading "Chapter 4: Operators" [level=3] [ref=e738]'
+                  - 'link "Permalink: Chapter 4: Operators" [ref=e739] [cursor=pointer]':
+                    - /url: "#chapter-4-operators"
+                    - img [ref=e740]
+                - list [ref=e742]:
+                  - listitem [ref=e743]:
+                    - strong [ref=e744]: Topics
+                    - text: ": Assignment, comparison, logical, string, ternary, and type operators"
+                  - listitem [ref=e745]:
+                    - strong [ref=e746]: Files
+                    - text: ": 26_Assigned_Operator.js, 27_Assignment_Operators.js, 28_Comparsion_Operators.js, 29_Logical_Operators.js, 30_String_Operators.js, 31_Ternary_Operators.js, 31_Type_Operators.js, 32_Null_Optinal_Value.js"
+                  - listitem [ref=e747]:
+                    - strong [ref=e748]: Key Concepts
+                    - text: ":"
+                    - list [ref=e749]:
+                      - listitem [ref=e750]: Assignment operators and compound assignments
+                      - listitem [ref=e751]: Comparison operators
+                      - listitem [ref=e752]: Logical operators (&&, ||, !)
+                      - listitem [ref=e753]: String concatenation and operations
+                      - listitem [ref=e754]: Ternary conditional operator
+                      - listitem [ref=e755]: Type checking operators
+                - generic [ref=e756]:
+                  - 'heading "Chapter 5: Conditional Statements (If/Else)" [level=3] [ref=e757]'
+                  - 'link "Permalink: Chapter 5: Conditional Statements (If/Else)" [ref=e758] [cursor=pointer]':
+                    - /url: "#chapter-5-conditional-statements-ifelse"
+                    - img [ref=e759]
+                - list [ref=e761]:
+                  - listitem [ref=e762]:
+                    - strong [ref=e763]: Topics
+                    - text: ": If-else statements, nested conditions, real-world applications, API response handling"
+                  - listitem [ref=e764]:
+                    - strong [ref=e765]: Files
+                    - text: ": 33_Statement.js, 34_If_else_If.js, 35_REAL_LIVE_Example.js, 36_API_IF_ELSE.js, 37_IQ_IF_ESLE.js, 38_Logical_Op_IF_ELSE.js, 40_REAL_IF_ELSE.js"
+                  - listitem [ref=e766]:
+                    - strong [ref=e767]: Key Concepts
+                    - text: ":"
+                    - list [ref=e768]:
+                      - listitem [ref=e769]: Conditional branching
+                      - listitem [ref=e770]: If-else-if chains
+                      - listitem [ref=e771]: Real-world decision making
+                      - listitem [ref=e772]: API response validation
+                - generic [ref=e773]:
+                  - 'heading "Chapter 6: Switch Statements" [level=3] [ref=e774]'
+                  - 'link "Permalink: Chapter 6: Switch Statements" [ref=e775] [cursor=pointer]':
+                    - /url: "#chapter-6-switch-statements"
+                    - img [ref=e776]
+                - list [ref=e778]:
+                  - listitem [ref=e779]:
+                    - strong [ref=e780]: Topics
+                    - text: ": Switch case syntax, break statements, default cases, grouped cases, real examples"
+                  - listitem [ref=e781]:
+                    - strong [ref=e782]: Files
+                    - text: ": 42_Switch.js, 43_Switch_with_Break.js, 44_Switch_with_Default.js, 45_Switch_REAL_EXAMPLE.js, 46_Switch_GroupCase.js"
+                  - listitem [ref=e783]:
+                    - strong [ref=e784]: Key Concepts
+                    - text: ":"
+                    - list [ref=e785]:
+                      - listitem [ref=e786]: Switch statement structure
+                      - listitem [ref=e787]: Case fallthrough
+                      - listitem [ref=e788]: Default handling
+                      - listitem [ref=e789]: Grouped cases
+                      - listitem [ref=e790]: When to use switch vs if-else
+                - generic [ref=e791]:
+                  - 'heading "Chapter 7: Loops" [level=3] [ref=e792]'
+                  - 'link "Permalink: Chapter 7: Loops" [ref=e793] [cursor=pointer]':
+                    - /url: "#chapter-7-loops"
+                    - img [ref=e794]
+                - list [ref=e796]:
+                  - listitem [ref=e797]:
+                    - strong [ref=e798]: Topics
+                    - text: ": For loops, while loops, do-while loops, increment operators, loop control"
+                  - listitem [ref=e799]:
+                    - strong [ref=e800]: Files
+                    - text: ": 53_Loops.js, 54_Incremnt_operator.js, 56_For_Loops.js, 57_For_Loop.js, 59_While_Loop.js, 61_DO_while.js"
+                  - listitem [ref=e801]:
+                    - strong [ref=e802]: Key Concepts
+                    - text: ":"
+                    - list [ref=e803]:
+                      - listitem [ref=e804]: For loop iterations
+                      - listitem [ref=e805]: While and do-while loops
+                      - listitem [ref=e806]: Pre and post increment operators
+                      - listitem [ref=e807]: Loop control flow
+                - generic [ref=e808]:
+                  - 'heading "Chapter 8: Arrays" [level=3] [ref=e809]'
+                  - 'link "Permalink: Chapter 8: Arrays" [ref=e810] [cursor=pointer]':
+                    - /url: "#chapter-8-arrays"
+                    - img [ref=e811]
+                - list [ref=e813]:
+                  - listitem [ref=e814]:
+                    - strong [ref=e815]: Topics
+                    - text: ": Array creation, access and modification, adding/removing items, searching, iterating, transforming, sorting, slicing, copying, and destructuring"
+                  - listitem [ref=e816]:
+                    - strong [ref=e817]: Files
+                    - text: ": 63_Arrays_Creation.js, 64_Array_Access_Modify.js, 65_Arrays_Adding_Remove.js, 66_Array_REAL.js, 67_Array_Searching.js, 68_Arrays_Iterating.js, 69_Arrays_Transforming_Arrays.js, 70_Array_Sorting.js, 71_Arrays_Slicing.js, 72_Arrays_Checking.js, 73_Arrays_Copying_Shallow_Deep.js, 74_Arrays_Destructuring.js, 75_Task.js"
+                  - listitem [ref=e818]:
+                    - strong [ref=e819]: Key Concepts
+                    - text: ":"
+                    - list [ref=e820]:
+                      - listitem [ref=e821]:
+                        - text: Creating arrays with literals, constructors,
+                        - code [ref=e822]: Array.of()
+                        - text: ", and"
+                        - code [ref=e823]: Array.from()
+                      - listitem [ref=e824]: Accessing, updating, and removing elements
+                      - listitem [ref=e825]:
+                        - text: Using
+                        - code [ref=e826]: map()
+                        - text: ","
+                        - code [ref=e827]: filter()
+                        - text: ", and"
+                        - code [ref=e828]: reduce()
+                        - text: for transformations
+                      - listitem [ref=e829]: Sorting, slicing, shallow vs deep copying, and destructuring
+                - generic [ref=e830]:
+                  - 'heading "Chapter 9: Functions" [level=3] [ref=e831]'
+                  - 'link "Permalink: Chapter 9: Functions" [ref=e832] [cursor=pointer]':
+                    - /url: "#chapter-9-functions"
+                    - img [ref=e833]
+                - list [ref=e835]:
+                  - listitem [ref=e836]:
+                    - strong [ref=e837]: Topics
+                    - text: ": Function basics, function types, expressions, arrow functions, IIFE, default parameters, rest/spread, scope, hoisting, closures, pure functions, higher-order functions, and callbacks"
+                  - listitem [ref=e838]:
+                    - strong [ref=e839]: Files
+                    - text: ": 76_Functions.js, 77_Type1_Fn_Basic_Functions.js, 78_Type2_Fn_With_Arg_No_Return.js, 79_Type3_Fn_without_Arg_Return_Type.js, 80_Type4_Fn_With_Arg_With_Return.js, 81_Ex.js, 82_Fn_Expression.js, 83_Fn_Arrow.js, 84_Ex_API_Testing.js, 85_Fn_IIFE.js, 86_IQ.js, 87_Default_Parameter.js, 88_Rest_Parameters_Fn.js, 89_IQ_Fn.JS, 90_Spead_Fn.js, 91_Return_Fn.js, 92_Hoisting_Fn.js, 93_Scope_Fn.js, 94_Closure.js, 95_Closure_Part2.js, 96_Closures_Part2.js, 97_Closure_Part4.js, 98_Higher_Order_Fn.js, 99_Pure_Fn.js, 100_Callback_Fn.js, 101_Callback_me.js"
+                  - listitem [ref=e840]:
+                    - strong [ref=e841]: Key Concepts
+                    - text: ":"
+                    - list [ref=e842]:
+                      - listitem [ref=e843]: Writing reusable logic with parameters and return values
+                      - listitem [ref=e844]: Function declarations, expressions, and arrow functions
+                      - listitem [ref=e845]: Scope, hoisting, closures, and execution context
+                      - listitem [ref=e846]: Higher-order functions, pure functions, and callback patterns
+                - generic [ref=e847]:
+                  - 'heading "Chapter 10: Strings" [level=3] [ref=e848]'
+                  - 'link "Permalink: Chapter 10: Strings" [ref=e849] [cursor=pointer]':
+                    - /url: "#chapter-10-strings"
+                    - img [ref=e850]
+                - list [ref=e852]:
+                  - listitem [ref=e853]:
+                    - strong [ref=e854]: Topics
+                    - text: ": String creation, properties, searching and checking, string transformations, and type conversion"
+                  - listitem [ref=e855]:
+                    - strong [ref=e856]: Files
+                    - text: ": 102_Strings.js, 103_String_Properties.js, 104_Strings_Search_Check.js, 105_Strings_P2.js, 106_Transforming_Strings.js, 107_String_Conversion.js"
+                  - listitem [ref=e857]:
+                    - strong [ref=e858]: Key Concepts
+                    - text: ":"
+                    - list [ref=e859]:
+                      - listitem [ref=e860]: Creating strings with single quotes, double quotes, and template literals
+                      - listitem [ref=e861]: Working with string length, indexing, and immutability
+                      - listitem [ref=e862]:
+                        - text: Searching with
+                        - code [ref=e863]: includes()
+                        - text: ","
+                        - code [ref=e864]: indexOf()
+                        - text: ", and related checks"
+                      - listitem [ref=e865]: Transforming strings with trim, replace, split, join, and conversion methods
+                - generic [ref=e866]:
+                  - heading "Playwright Lectures" [level=2] [ref=e867]
+                  - 'link "Permalink: Playwright Lectures" [ref=e868] [cursor=pointer]':
+                    - /url: "#playwright-lectures"
+                    - img [ref=e869]
+                - generic [ref=e871]:
+                  - heading "Lecture - Playwright MCP" [level=3] [ref=e872]
+                  - 'link "Permalink: Lecture - Playwright MCP" [ref=e873] [cursor=pointer]':
+                    - /url: "#lecture---playwright-mcp"
+                    - img [ref=e874]
+                - list [ref=e876]:
+                  - listitem [ref=e877]:
+                    - strong [ref=e878]: Topics
+                    - text: ": MCP protocol, Playwright MCP, Jira MCP, Document MCP, full STLC automation pipeline"
+                  - listitem [ref=e879]:
+                    - strong [ref=e880]: Folder
+                    - text: ": Lecture_Playwright_MCP/"
+                  - listitem [ref=e881]:
+                    - strong [ref=e882]: Key Concepts
+                    - text: ": Model Context Protocol architecture, AI-driven test automation, mock Jira integration, custom HTML reporting"
+                - generic [ref=e883]:
+                  - heading "Lecture - Playwright AI Agents" [level=3] [ref=e884]
+                  - 'link "Permalink: Lecture - Playwright AI Agents" [ref=e885] [cursor=pointer]':
+                    - /url: "#lecture---playwright-ai-agents"
+                    - img [ref=e886]
+                - list [ref=e888]:
+                  - listitem [ref=e889]:
+                    - strong [ref=e890]: Topics
+                    - text: ": AI agents in testing, Playwright's 3 built-in agents (Planner, Generator, Healer), prompt engineering, self-healing tests"
+                  - listitem [ref=e891]:
+                    - strong [ref=e892]: Folder
+                    - text: ": Lecture_Playwright_AI_Agents/"
+                  - listitem [ref=e893]:
+                    - strong [ref=e894]: Key Concepts
+                    - text: ": Agentic testing, Plan → Generate → Heal workflow, agent prompt engineering, using agents with LLMs"
+                  - listitem [ref=e895]:
+                    - strong [ref=e896]: 7 AI Projects
+                    - text: ": Natural Language Test Writer, Self-Healing Locators, AI Visual Regression, Smart Test Reporter, Accessibility Audit Agent, Autonomous Explorer, AI API Testing"
+                - generic [ref=e897]:
+                  - heading "Lecture - Playwright CLI" [level=3] [ref=e898]
+                  - 'link "Permalink: Lecture - Playwright CLI" [ref=e899] [cursor=pointer]':
+                    - /url: "#lecture---playwright-cli"
+                    - img [ref=e900]
+                - list [ref=e902]:
+                  - listitem [ref=e903]:
+                    - strong [ref=e904]: Topics
+                    - text: ": All Playwright CLI commands, codegen, UI mode, debug mode, trace viewer, browser management, CI/CD integration"
+                  - listitem [ref=e905]:
+                    - strong [ref=e906]: Folder
+                    - text: ": Lecture_Playwright_CLI/"
+                  - listitem [ref=e907]:
+                    - strong [ref=e908]: Key Concepts
+                    - text: ": Command-line mastery, test recording, debugging, trace analysis, GitHub Actions integration"
+                - generic [ref=e909]:
+                  - heading "Additional Resources" [level=2] [ref=e910]
+                  - 'link "Permalink: Additional Resources" [ref=e911] [cursor=pointer]':
+                    - /url: "#additional-resources"
+                    - img [ref=e912]
+                - list [ref=e914]:
+                  - listitem [ref=e915]:
+                    - strong [ref=e916]: Interview Questions
+                    - text: ": Task_Interview_Coding_Questions/ - Practical coding challenges (grade calculator, FizzBuzz, etc.)"
+                  - listitem [ref=e917]:
+                    - strong [ref=e918]: Playwright Tests
+                    - text: ": PW_JS_Test_1/ - Test automation examples"
+                - generic [ref=e919]:
+                  - heading "Prerequisites" [level=2] [ref=e920]
+                  - 'link "Permalink: Prerequisites" [ref=e921] [cursor=pointer]':
+                    - /url: "#prerequisites"
+                    - img [ref=e922]
+                - list [ref=e924]:
+                  - listitem [ref=e925]: Node.js (14+ recommended)
+                  - listitem [ref=e926]: npm or yarn
+                - generic [ref=e927]:
+                  - heading "Quick Start" [level=2] [ref=e928]
+                  - 'link "Permalink: Quick Start" [ref=e929] [cursor=pointer]':
+                    - /url: "#quick-start"
+                    - img [ref=e930]
+                - list [ref=e932]:
+                  - listitem [ref=e933]:
+                    - strong [ref=e934]: Install dependencies
+                    - text: ":"
+                - generic [ref=e935]:
+                  - generic [ref=e936]: npm install npm install -D @playwright/test
+                  - button "Copy" [ref=e938] [cursor=pointer]:
+                    - img [ref=e939]
+                - list [ref=e942]:
+                  - listitem [ref=e943]:
+                    - strong [ref=e944]: Install Playwright browsers
+                    - text: "(if using Playwright):"
+                - generic [ref=e945]:
+                  - generic [ref=e946]: npx playwright install
+                  - button "Copy" [ref=e948] [cursor=pointer]:
+                    - img [ref=e949]
+                - list [ref=e952]:
+                  - listitem [ref=e953]:
+                    - strong [ref=e954]: Run Playwright tests
+                    - text: "(if applicable):"
+                - generic [ref=e955]:
+                  - generic [ref=e956]: npx playwright test
+                  - button "Copy" [ref=e958] [cursor=pointer]:
+                    - img [ref=e959]
+                - list [ref=e962]:
+                  - listitem [ref=e963]:
+                    - strong [ref=e964]: Run JavaScript examples
+                    - text: ":"
+                - generic [ref=e965]:
+                  - generic [ref=e966]: node chapter_01_Basics/01_basic.js node chapter_02_Java_Concepts/07_var_let_const.js node chapter_08_Arrays/63_Arrays_Creation.js node chapter_09_Functions/76_Functions.js node chapter_10_Strings/102_Strings.js
+                  - button "Copy" [ref=e968] [cursor=pointer]:
+                    - img [ref=e969]
+                - generic [ref=e972]:
+                  - heading "Learning Path" [level=2] [ref=e973]
+                  - 'link "Permalink: Learning Path" [ref=e974] [cursor=pointer]':
+                    - /url: "#learning-path"
+                    - img [ref=e975]
+                - paragraph [ref=e977]: "Follow chapters 1-10 sequentially to build a solid foundation in JavaScript fundamentals:"
+                - list [ref=e978]:
+                  - listitem [ref=e979]: Start with Chapter 1 for environment setup
+                  - listitem [ref=e980]: Master variable concepts in Chapter 2
+                  - listitem [ref=e981]: Learn identifiers and operators in Chapters 3-4
+                  - listitem [ref=e982]: Understand control flow with Chapters 5-6
+                  - listitem [ref=e983]: Practice iteration with Chapter 7
+                  - listitem [ref=e984]: Build confidence with arrays in Chapter 8
+                  - listitem [ref=e985]: Learn reusable logic and closures in Chapter 9
+                  - listitem [ref=e986]: Work with text handling in Chapter 10
+                  - listitem [ref=e987]: Apply knowledge to interview questions and Playwright examples
+                - generic [ref=e988]:
+                  - heading "License" [level=2] [ref=e989]
+                  - 'link "Permalink: License" [ref=e990] [cursor=pointer]':
+                    - /url: "#license"
+                    - img [ref=e991]
+                - paragraph [ref=e993]: ISC
+        - generic [ref=e997]:
+          - generic [ref=e1000]:
+            - heading "About" [level=2] [ref=e1001]
+            - paragraph [ref=e1002]: LearningPlaywrightBatch
+            - heading "Resources" [level=3] [ref=e1003]
+            - link "Readme" [ref=e1005] [cursor=pointer]:
+              - /url: "#readme-ov-file"
+              - img [ref=e1006]
+              - text: Readme
+            - link "Activity" [ref=e1009] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/activity
+              - img [ref=e1010]
+              - text: Activity
+            - heading "Stars" [level=3] [ref=e1012]
+            - link "6 stars" [ref=e1014] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/stargazers
+              - img [ref=e1015]
+              - strong [ref=e1017]: "6"
+              - text: stars
+            - heading "Watchers" [level=3] [ref=e1018]
+            - link "1 watching" [ref=e1020] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/watchers
+              - img [ref=e1021]
+              - strong [ref=e1023]: "1"
+              - text: watching
+            - heading "Forks" [level=3] [ref=e1024]
+            - link "8 forks" [ref=e1026] [cursor=pointer]:
+              - /url: /PramodDutta/LearningPlaywrightBatch/forks
+              - img [ref=e1027]
+              - strong [ref=e1029]: "8"
+              - text: forks
+            - link "Report repository" [ref=e1031] [cursor=pointer]:
+              - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FPramodDutta%2FLearningPlaywrightBatch&report=PramodDutta+%28user%29
+          - generic [ref=e1033]:
+            - heading "Releases" [level=2] [ref=e1034]:
+              - link "Releases" [ref=e1035] [cursor=pointer]:
+                - /url: /PramodDutta/LearningPlaywrightBatch/releases
+            - generic [ref=e1036]: No releases published
+          - generic [ref=e1038]:
+            - heading "Packages" [level=2] [ref=e1039]:
+              - link "Packages" [ref=e1040] [cursor=pointer]:
+                - /url: /users/PramodDutta/packages?repo_name=LearningPlaywrightBatch
+            - generic [ref=e1041]: No packages published
+          - generic [ref=e1043]:
+            - heading "Contributors 2" [level=2] [ref=e1044]:
+              - link "Contributors 2" [ref=e1045] [cursor=pointer]:
+                - /url: /PramodDutta/LearningPlaywrightBatch/graphs/contributors
+                - text: Contributors
+                - generic "2" [ref=e1046]
+            - list [ref=e1047]:
+              - listitem [ref=e1048]:
+                - link "@PramodDutta" [ref=e1049] [cursor=pointer]:
+                  - /url: https://github.com/PramodDutta
+                  - img "@PramodDutta" [ref=e1050]
+                - link "PramodDutta Promode" [ref=e1052] [cursor=pointer]:
+                  - /url: https://github.com/PramodDutta
+                  - strong [ref=e1053]: PramodDutta
+                  - text: Promode
+              - listitem [ref=e1054]:
+                - link "@claude" [ref=e1055] [cursor=pointer]:
+                  - /url: https://github.com/claude
+                  - img "@claude" [ref=e1056]
+                - link "claude Claude" [ref=e1058] [cursor=pointer]:
+                  - /url: https://github.com/claude
+                  - strong [ref=e1059]: claude
+                  - text: Claude
+          - generic [ref=e1061]:
+            - heading "Languages" [level=2] [ref=e1062]
+            - list [ref=e1068]:
+              - listitem [ref=e1069]:
+                - link "HTML 85.2%" [ref=e1070] [cursor=pointer]:
+                  - /url: /PramodDutta/LearningPlaywrightBatch/search?l=html
+                  - img [ref=e1071]
+                  - generic [ref=e1073]: HTML
+                  - generic [ref=e1074]: 85.2%
+              - listitem [ref=e1075]:
+                - link "JavaScript 14.4%" [ref=e1076] [cursor=pointer]:
+                  - /url: /PramodDutta/LearningPlaywrightBatch/search?l=javascript
+                  - img [ref=e1077]
+                  - generic [ref=e1079]: JavaScript
+                  - generic [ref=e1080]: 14.4%
+              - listitem [ref=e1081]:
+                - generic [ref=e1082]:
+                  - img [ref=e1083]
+                  - generic [ref=e1085]: Other
+                  - generic [ref=e1086]: 0.4%
+  - contentinfo [ref=e1088]:
+    - heading "Footer" [level=2] [ref=e1089]
+    - generic [ref=e1090]:
+      - generic [ref=e1091]:
+        - link "GitHub Homepage" [ref=e1092] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e1093]
+        - generic [ref=e1095]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e1096]:
+        - heading "Footer navigation" [level=3] [ref=e1097]
+        - list "Footer navigation" [ref=e1098]:
+          - listitem [ref=e1099]:
+            - link "Terms" [ref=e1100] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e1101]:
+            - link "Privacy" [ref=e1102] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e1103]:
+            - link "Security" [ref=e1104] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e1105]:
+            - link "Status" [ref=e1106] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e1107]:
+            - link "Community" [ref=e1108] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e1109]:
+            - link "Docs" [ref=e1110] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e1111]:
+            - link "Contact" [ref=e1112] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e1113]:
+            - button "Manage cookies" [ref=e1115] [cursor=pointer]
+          - listitem [ref=e1116]:
+            - button "Do not share my personal information" [ref=e1118] [cursor=pointer]
