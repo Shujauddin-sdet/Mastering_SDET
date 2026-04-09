@@ -278,8 +278,6 @@ console.log(city);
 
 ---
 
-![Var vs Let vs Const](Images/var_let_const.png)
-
 ### Easy Explanation of `var`, `let`, and `const`
 
 Here is a simple table showing the differences based on the image:
