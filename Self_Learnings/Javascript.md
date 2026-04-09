@@ -246,6 +246,35 @@ stepOne();
 
 ---
 
+### 🔷 Code Lifecycle: Declaration, Compile Time, and Runtime
+
+#### 1. Declaration
+Declaration is simply the act of telling the computer that a variable, function, or class exists and giving it a name. It’s like registering a name for a new baby—you haven't told the baby what to do yet, you've just given them a name so you can refer to them later. 
+
+- **In JS:** You use keywords like `let`, `const`, `var`, `function`, or `class`.
+- **Example:** `let myName;` (This is a declaration. You've introduced `myName` to the program). 
+
+#### 2. Compile Time
+Compile Time is the "pre-check" phase. It is when the computer reads your code to translate it into a language it can understand (machine code) before actually doing any of the work. 
+
+- **What happens:** The computer checks for Syntax Errors (typos). If it finds a missing bracket `}` or a misspelled keyword like `functin`, it will stop everything and show an error before the code even starts.
+- **Analogy:** This is like a chef reading a recipe. If the recipe says "add 2 cups of 🏁," the chef stops immediately because they don't know what "🏁" is. They haven't started cooking yet; they just found a mistake in the instructions. 
+
+#### 3. Runtime
+Runtime is the "execution" phase. This is when the program is actually running and doing the tasks you wrote. 
+
+- **What happens:** This is where the computer performs math, talks to databases, or handles user clicks. Runtime Errors (like dividing by zero or trying to read a property of `null`) happen here because the instructions were grammatically correct, but the task became impossible while trying to do it.
+- **Analogy:** This is the chef actually cooking. The recipe was readable (no compile errors), but while cooking, the chef realized they ran out of salt or the stove caught fire. The mistake was only discovered while "running" the recipe. 
+
+#### Summary Table
+| Stage | What it is | Key Event |
+| --- | --- | --- |
+| **Declaration** | Introducing a name. | `let x;` |
+| **Compile Time** | Translating/Checking code. | Catching a missing semicolon. |
+| **Runtime** | Running the program. | Processing data and handling user input. |
+
+---
+
 ## 2. Variables
 
 - What is a variable?
