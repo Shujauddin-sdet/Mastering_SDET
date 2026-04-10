@@ -772,76 +772,93 @@ data = "Hello";       // ❌ ERROR — type mismatch!
 | Flexibility | High | Low |
 
 ---
-### 🔷 Type Coercion
+### 🔷 Type Conversion (Implicit vs Explicit)
 
-**Type Coercion** is when JavaScript automatically (or you manually) converts one data type to another.
+**Type Conversion** is the process of changing a value from one data type to another (for example, turning the String `"5"` into the Number `5`). 
+
+In JavaScript, there are two ways this happens: **Implicitly** (automatically) and **Explicitly** (manually).
 
 ![Type Coercion](Images/Type_Coercion.png)
 
-#### Implicit Coercion — JS does it automatically
+#### 1. Implicit Conversion (Also known as Type Coercion)
 
-JavaScript quietly converts types behind the scenes. This can lead to **surprising results**:
+**The Meaning:** JavaScript attempts to be "helpful" by automatically converting types behind the scenes so the code doesn't crash.
+
+**Analogy:** It's like an **Automatic Transmission Car**. The car senses the speed and shifts gears automatically for you. You didn't tell it to shift, but it guessed what you needed.
+
+This can often lead to **surprising and confusing results**, which is why many developers dislike it!
 
 ```javascript
-// + with a string → JS converts number to string (concatenation)
-console.log("5" + 1);    // "51"  ← NOT 6! string wins with +
+// + operator with a string → JS converts number to string (concatenation)
+console.log("5" + 1);    // "51"  ← NOT 6! JS says: "Oh, you have text, I'll just combine them."
 
-// - always does math → JS converts string to number
-console.log("5" - 1);    // 4    ← string becomes number
+// - operator always does math → JS converts string to number
+console.log("5" - 1);    // 4    ← JS says: "You can't subtract text, I'll turn '5' into a number."
 
 // boolean converts to number
 console.log(true + 1);   // 2    ← true becomes 1
 console.log(false + 1);  // 1    ← false becomes 0
 
-// == triggers coercion (this is why === is preferred)
+// == triggers implicit conversion (this is why === is preferred)
 console.log(5 == "5");   // true  ← number and string treated as equal!
-console.log(5 === "5");  // false ← strict, no coercion
+console.log(5 === "5");  // false ← strict, NO automatic conversion allowed
 ```
 
-#### Explicit Coercion — you control it
+#### 2. Explicit Conversion (Also known as Type Casting)
 
-You convert types yourself using built-in functions — safer and clearer:
+**The Meaning:** You manually tell JavaScript exactly what type you want using built-in functions. 
+
+**Analogy:** It's like a **Manual Transmission Car**. *You* are in full control and intentionally shift the gears. The car only does what you explicitly instruct it to do.
+
+This is much safer and clearer because the intent is obvious.
 
 ```javascript
-// Convert to Number
+// Manually convert to Number
 console.log(Number("42"));     // 42
-console.log(Number(""));       // 0
-console.log(Number("hello"));  // NaN (can't convert text)
+console.log(Number("hello"));  // NaN (can't convert random text to a number)
 console.log(Number(true));     // 1
-console.log(Number(false));    // 0
 
-// Convert to String
+// Manually convert to String
 console.log(String(42));       // "42"
 console.log(String(true));     // "true"
-console.log(String(null));     // "null"
 
-// Convert to Boolean
+// Manually convert to Boolean
 console.log(Boolean(0));       // false
 console.log(Boolean(""));      // false
 console.log(Boolean("hello")); // true
-console.log(Boolean(1));       // true
 ```
 
-#### Where you use this in real code
+#### 🏢 Real-World Use Cases (SDET / Automation)
 
-**Getting input from a user (prompt returns a string):**
+**Handling User Inputs:**
+When you get input from a dialog box or form, it always comes back as a text string.
 ```javascript
-let age = prompt("Enter your age:"); // returns "25" as string
+let age = prompt("Enter your age:"); // user types 25, but JS receives "25"
 console.log(age + 1);               // "251" ← WRONG! string + number
-console.log(Number(age) + 1);       // 26   ← CORRECT! explicit conversion
+
+// The Fix! Use Explicit Conversion:
+console.log(Number(age) + 1);       // 26   ← CORRECT!
 ```
 
-**In SDET — reading values from the DOM:**
+**In Test Automation (Scraping Data):**
+If you automate a browser to read a price from Amazon, it comes as text. You must explicitly convert it before comparing.
 ```javascript
-let priceText = "499";   // text scraped from a webpage
-let price = Number(priceText);
+let priceText = "499";   // Text scraped directly from the web page
+let price = Number(priceText); // Explicit conversion
 
 if (price > 100) {
-    console.log("Expensive item"); // works correctly after conversion
+    console.log("Expensive item detected!"); // Works perfectly
 }
 ```
 
-> ⚠️ **Rule of thumb:** Always use `===` to avoid coercion surprises. Use explicit conversion (`Number()`, `String()`, `Boolean()`) when you need to change types intentionally.
+#### Summary Table
+
+| Stage | What it is | Example | Analogy |
+| --- | --- | --- | --- |
+| **Implicit Conversion** | JS automatically changes the type. | `"5" - 1` becomes `4` | Automatic Car (Shifts for you) |
+| **Explicit Conversion** | You manually change the type. | `Number("5")` | Manual Car (You shift) |
+
+> ⚠️ **Rule of thumb:** Always use `===` to stop JavaScript from converting types unexpectedly (Implicit). Whenever you need to change data types, always do it yourself (Explicit) using `Number()`, `String()`, or `Boolean()`.
 
 ---
 
@@ -1257,6 +1274,62 @@ let retries = config.retries ?? 3;    // default 3 only if retries is absent
 ```
 
 > 💡 **Rule:** Use `??` when `0`, `""`, or `false` are valid values you want to keep. Use `||` when ANY falsy value should trigger the fallback.
+
+---
+
+### 12. String Operators (+, +=)
+
+**Meaning:** Used to concatenate (join) two or more strings together.
+
+- `+` Concatenates two strings
+- `+=` Appends a string to the end of an existing string variable
+
+**Example:**
+
+```javascript
+let firstName = "John";
+let lastName = "Doe";
+
+console.log(firstName + " " + lastName); // Output: "John Doe"
+
+let greeting = "Hello";
+greeting += " World"; // Same as: greeting = greeting + " World"
+console.log(greeting); // Output: "Hello World"
+```
+
+> ⚠️ **Note on Type Conversion:** If you use the `+` operator with a string and a number, JavaScript will implicitly convert the number to a string and concatenate them (Implicit Coercion).
+```javascript
+console.log("Age: " + 25); // Output: "Age: 25"
+```
+
+### 13. Bitwise Operators (&, |, ^, ~, <<, >>, >>>)
+
+**Meaning:** Used to perform operations on the binary representation (0s and 1s) of numbers. JavaScript treats the numbers as 32-bit integers, performs the bitwise operation, and returns a standard number. This inherently involves **Type Conversion**, as JavaScript temporarily converts the number into a 32-bit binary integer behind the scenes.
+
+- `&` Bitwise AND - Returns a 1 in each bit position where both bits are 1
+- `|` Bitwise OR - Returns a 1 if at least one of the bits is 1
+- `^` Bitwise XOR - Returns a 1 if the bits are different
+- `~` Bitwise NOT - Inverts all bits (flips 0s to 1s and vice versa)
+- `<<` Left Shift - Shifts bits to the left, adding zeros from the right
+- `>>` Right Shift - Shifts bits to the right
+- `>>>` Unsigned Right Shift - Shifts bits to the right, adding zeros from the left
+
+**Example:**
+
+```javascript
+let a = 5;  // Binary: 0101
+let b = 1;  // Binary: 0001
+
+console.log(a & b); // Output: 1  (Binary: 0001)
+console.log(a | b); // Output: 5  (Binary: 0101)
+console.log(a ^ b); // Output: 4  (Binary: 0100)
+console.log(~a);    // Output: -6 (Inverts 5 to get -(5 + 1))
+
+console.log(a << 1); // Output: 10 (Binary: 1010) - effectively multiplies by 2
+console.log(a >> 1); // Output: 2  (Binary: 0010) - effectively divides by 2
+```
+
+> 💡 **Where you use this:** In general web development or SDET automation, bitwise operators are very rare. They are primarily used in low-level programming, graphics processing, or cryptography.
 
 ---
 
