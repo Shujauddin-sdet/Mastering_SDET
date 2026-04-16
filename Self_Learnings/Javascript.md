@@ -1155,6 +1155,12 @@ let john = new Person("John");
 console.log(john instanceof Person);    // Output: true (john is instance of Person)
 ```
 
+> **💡 Why is `message instanceof String` false?**
+> In JavaScript, `instanceof` only works on Objects. When you do `let message = "Hello"`, it creates a *primitive* string. It's just raw data, not an actual string object created with the `new` keyword (like `new String("Hello")`). Since it is not an object wrapper, `instanceof` returns false. 
+> 
+> To check if a primitive variable is a string, you should always use the `typeof` operator instead:
+> `console.log(typeof message === "string"); // Output: true`
+
 ![instanceof Operator](Images/Instanceof_Operator.png)
 
 ---
