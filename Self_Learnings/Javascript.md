@@ -1378,7 +1378,44 @@ let retries = config.retries ?? 3;    // default 3 only if retries is absent
 
 ---
 
-### 12. String Operators (+, +=)
+### 12. Optional Chaining Operator (?.)
+
+**Meaning:** Used to safely read the value of a property located deep within an object without having to check if every step in the chain actually exists. If it hits a `null` or `undefined`, it stops and returns `undefined` instead of throwing a massive error and crashing your script.
+
+> In simple words: **"Does this exist? If yes, keep going. If no, just return `undefined` and don't crash!"**
+
+**Why is it useful?**
+In automation (or whenever making API calls), you often receive massive JSON objects. You cannot guarantee that every property is always there.
+
+Without `?.`, you'd have to write ugly, defensive code to prevent "Cannot read properties of undefined" errors:
+```javascript
+let user = { profile: { name: "Shujauddin" } };
+
+// Without Optional Chaining (Ugly & Long)
+let city;
+if (user && user.profile && user.profile.address && user.profile.address.city) {
+    city = user.profile.address.city;
+}
+```
+
+With **Optional Chaining (`?.`)**, this becomes a clean one-liner:
+```javascript
+// With Optional Chaining (Clean!)
+let city = user?.profile?.address?.city; 
+
+console.log(city); // Output: undefined (No Crash!)
+```
+
+**The Power Combo:** SDETs constantly pair `?.` and `??` together to grab a deep property and provide a safe fallback if it's missing!
+```javascript
+// Grab the city. If any part of that chain is missing, default to "Unknown"
+let finalCity = user?.profile?.address?.city ?? "Unknown";
+console.log(finalCity); // Output: "Unknown"
+```
+
+---
+
+### 13. String Operators (+, +=)
 
 **Meaning:** Used to concatenate (join) two or more strings together.
 
