@@ -862,6 +862,40 @@ if (price > 100) {
 
 ---
 
+### 🔷 Edge Cases in JavaScript (The Weird Parts)
+
+JavaScript has some infamous "edge cases" where the language behaves in very unexpected ways, largely due to **Implicit Type Coercion**. Knowing these will save you hours of debugging!
+
+**1. The `+` operator favors Strings, but `-` favors Numbers**
+```javascript
+console.log("5" + 3);  // "53" (Converts 3 to a string and concatenates)
+console.log("5" - 3);  // 2    (Converts "5" to a number and subtracts)
+console.log("5" * "3"); // 15  (Converts both to numbers)
+```
+
+**2. Arrays and Math**
+```javascript
+console.log([] + []);  // "" (Empty string! Arrays convert to "" before addition)
+console.log([] + {});  // "[object Object]" 
+console.log({} + []);  // 0 (Depending on the engine, {} is sometimes read as an empty code block)
+```
+
+**3. `null` vs `0` in Comparisons**
+`null` acts like `0` in math, but in comparisons, it behaves weirdly:
+```javascript
+console.log(null > 0);  // false
+console.log(null == 0); // false (null is only loosely equal to undefined)
+console.log(null >= 0); // true  🤯 (Wat?! Math comparison forces it to 0, so 0 >= 0 is true)
+```
+
+**4. The unexpected `typeof NaN`**
+As mentioned in previous sections, `NaN` stands for "Not a Number", but...
+```javascript
+console.log(typeof NaN); // "number" 🤯 (It technically means an "Invalid Number" data type)
+```
+
+> 🛡️ **How to securely avoid these edge cases?** 
+> Edge cases almost exclusively trigger when you mix different data types without manually converting them first. By sticking to **Strict Equality (`===`)** and always explicitly converting your variables (e.g. `Number(age)`), you will bypass 99% of these weird JavaScript traps!
 
 ---
 
@@ -1686,7 +1720,55 @@ switch (day) {
 
 ![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
-**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`
+**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
+
+### 🧪 When to use `switch` (SDET Use Cases)
+As an SDET (Software Development Engineer in Test), you shouldn't use `switch` statements for complex math logic (like `if age > 18`). **You should only use `switch` when you are checking one specific variable against a list of exact, known textbook values.**
+
+Here are the most common ways Software Testers use `switch` in automation:
+
+**1. Choosing Test Environments (QA vs STAGE vs PROD):**
+When your automation framework starts, it needs to know which server URL to test perfectly.
+```javascript
+let environment = "QA";
+let baseUrl;
+
+switch (environment) {
+    case "QA":
+        baseUrl = "https://qa.testingacademy.com";
+        break;
+    case "STAGE":
+        baseUrl = "https://stage.testingacademy.com";
+        break;
+    case "PROD":
+        baseUrl = "https://testingacademy.com";
+        break;
+    default:
+        console.error("Unknown environment! Defaulting to QA.");
+        baseUrl = "https://qa.testingacademy.com";
+}
+```
+
+**2. Selecting a Browser for Automation (Playwright / Selenium):**
+```javascript
+let browserType = "chromium";
+
+switch (browserType) {
+    case "chromium":
+        // Code to launch Google Chrome / Microsoft Edge
+        break;
+    case "firefox":
+        // Code to launch Mozilla Firefox
+        break;
+    case "webkit":
+        // Code to launch Apple Safari
+        break;
+    default:
+        console.error("Browser not supported!");
+}
+```
+
+> 💡 **Summary Rule:** Use `if-else` when you have complex conditions or ranges (`price > 100 && fastShipping`). Use `switch` when you have a single variable acting like a multiple-choice setting (`QA`, `STAGE`, `PROD`).
 
 ---
 
