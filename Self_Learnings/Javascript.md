@@ -1017,6 +1017,67 @@ console.log(!isSunny);                // Output: true (inverts false to true)
 
 ![Logical_Operators](Images/Logical_Operators.png)
 
+---
+
+### 🛑 The 6 "Falsy" Values in JavaScript
+Before understanding how logical operators work at an advanced level, you must know that JavaScript always considers exactly **6 values to be "Falsy"**. Everything else in JavaScript is "Truthy".
+
+The 6 Falsy values are:
+1. `false` (The boolean itself)
+2. `0` (The number zero)
+3. `""` (An empty string)
+4. `null` (The intentional absence of a value)
+5. `undefined` (A declared variable with no set value)
+6. `NaN` (Not a Number)
+
+*If an expression evaluates to any of these 6 values, JavaScript treats it essentially as `false`.*
+
+---
+
+### ⚡ Short-circuit Evaluation
+Short-circuit Evaluation is a fancy name for a simple shortcut JavaScript takes when checking conditions. It means **JavaScript stops looking at an expression as soon as it knows the final answer.** Think of it like a "Lazy Judge."
+
+#### 1. The AND (`&&`) Short-circuit
+For an `&&` to be true, BOTH sides must be true. If the first part is `false` (or Falsy), JavaScript doesn't even bother looking at the second part because the whole statement is already "ruined."
+
+**Rule:** If the first value is falsy, it returns that value and stops.
+
+**Real World Use:** "Only show the user's name IF they are logged in."
+```javascript
+let isLoggedIn = false;
+
+// If isLoggedIn is false, JS stops and doesn't run the console.log
+isLoggedIn && console.log("Welcome User!"); 
+```
+
+#### 2. The OR (`||`) Short-circuit
+For an `||` to be true, only ONE side needs to be true. If the first part is `true` (or Truthy), JavaScript stops immediately because it already has what it needs.
+
+**Rule:** If the first value is truthy, it returns that value and stops.
+
+**Real World Use:** "Set a default value if the first one is missing."
+```javascript
+let userName = ""; // empty string is "falsy"
+let displayName = userName || "Guest"; 
+
+console.log(displayName); // "Guest"
+```
+
+#### 3. Summary Table
+| Operator | How it Short-circuits | "Lazy" Behavior |
+|----------|-----------------------|-----------------|
+| `&&` (AND) | Stops at the first False | "I found a false, so I'm done!" |
+| `\|\|` (OR) | Stops at the first True | "I found a true, so I'm done!" |
+
+**Why is this useful for an SDET?**
+You’ll see this a lot in automation frameworks to handle settings. For example:
+```javascript
+let timeout = config.timeout || 5000;
+```
+*(This means: Use the timeout from the config file, but if it's missing or undefined, just use 5000ms as a fallback default.)*
+
+---
+
 ### 4. Assignment Operators (=, +=, -=, *=, /=, %=)
 
 **Meaning:** Used to assign or update values to variables.
@@ -1720,7 +1781,9 @@ switch (day) {
 
 ![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
-**Key Note:** The `break` keyword is essential to stop the execution from "falling through" to the next case. The `default` case acts like an `else`.
+### 🛑 Two essential parts of a `switch`:
+1. **`break`**: This tells JavaScript to *stop checking and exit*. If you forget to write `break`, JavaScript will "fall through" and automatically run the code for the cases below it too!
+2. **`default`**: This acts exactly like an `else` statement. It is the "safety net" catch-all code that runs if the variable did *not match* any of the specific `case` values above.
 
 ### 🧪 When to use `switch` (SDET Use Cases)
 As an SDET (Software Development Engineer in Test), you shouldn't use `switch` statements for complex math logic (like `if age > 18`). **You should only use `switch` when you are checking one specific variable against a list of exact, known textbook values.**
