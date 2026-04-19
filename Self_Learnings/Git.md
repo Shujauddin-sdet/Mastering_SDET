@@ -60,16 +60,19 @@
     - [Keeping Your Fork in Sync](#keeping-your-fork-in-sync)
 16. [Tagging](#16-tagging)
 17. [Cherry-Pick](#17-cherry-pick)
-18. [Git Hooks](#18-git-hooks)
-19. [Common Branching Strategies](#19-common-branching-strategies)
+18. [Git Blame](#18-git-blame)
+19. [Git Aliases (Shortcuts)](#19-git-aliases-shortcuts)
+20. [Git Hooks](#20-git-hooks)
+21. [Common Branching Strategies](#21-common-branching-strategies)
     - [Git Flow](#git-flow)
     - [GitHub Flow](#github-flow)
     - [Trunk-Based Development](#trunk-based-development)
-20. [SSH vs HTTPS](#20-ssh-vs-https)
-21. [GitHub Actions — CI/CD Basics](#21-github-actions--cicd-basics)
-22. [Best Practices](#22-best-practices)
-23. [Common Mistakes & How to Fix Them](#23-common-mistakes--how-to-fix-them)
-24. [Complete Git Cheat Sheet](#24-complete-git-cheat-sheet-)
+22. [SSH vs HTTPS](#22-ssh-vs-https)
+23. [GitHub Actions — CI/CD Basics](#23-github-actions--cicd-basics)
+24. [Best Practices](#24-best-practices)
+25. [Common Mistakes & How to Fix Them](#25-common-mistakes--how-to-fix-them)
+26. [Terminal / Shell Commands (macOS)](#26-terminal--shell-commands-macos)
+27. [Complete Git Cheat Sheet](#27-complete-git-cheat-sheet-)
 
 ---
 
@@ -97,13 +100,33 @@ A Version Control System (VCS) solves all of this by:
 
 ### Types of Version Control Systems
 
-| Type | How It Works | Examples | Drawback |
-|------|-------------|----------|----------|
-| **Local VCS** | Saves versions in a local database on your computer | RCS | Only works on one machine, no collaboration |
-| **Centralized VCS (CVCS)** | One central server stores all versions; everyone connects to it | SVN, Perforce | If the central server goes down, nobody can work |
-| **Distributed VCS (DVCS)** | Every person has a **full copy** of the entire project history | **Git**, Mercurial | Slightly more complex to learn (but worth it!) |
+| Type | Full Form | How It Works | Examples | Drawback |
+|------|-----------|-------------|----------|----------|
+| **Local VCS** | Local Version Control System | Saves versions in a local database on your computer | RCS (Revision Control System) | Only works on one machine, no collaboration |
+| **CVCS** | Centralized Version Control System | One central server stores all versions; everyone connects to it | SVN (SubVersioN), Perforce | If the central server goes down, nobody can work |
+| **DVCS** | Distributed Version Control System | Every person has a **full copy** of the entire project history | **Git**, Mercurial | Slightly more complex to learn (but worth it!) |
 
-> 💡 **Git is a Distributed VCS** — this means even if the server crashes, every team member has a complete backup of the entire project history on their own computer!
+> 💡 **Git is a DVCS (Distributed Version Control System)** — this means even if the server crashes, every team member has a complete backup of the entire project history on their own computer!
+
+#### 📖 Full Forms of All Abbreviations
+
+| Short Form | Full Form | What It Is |
+|------------|-----------|------------|
+| **VCS** | Version Control System | A tool that tracks changes to files over time |
+| **CVCS** | Centralized Version Control System | One central server holds all the code |
+| **DVCS** | Distributed Version Control System | Everyone has a full copy of the code |
+| **RCS** | Revision Control System | An old local-only version control tool |
+| **SVN** | SubVersioN (Apache Subversion) | A popular centralized version control system |
+| **GPL** | General Public License | A free software license — means anyone can use, share, and modify the software for free |
+| **SHA-1** | Secure Hash Algorithm 1 | A math formula that turns any data into a unique 40-character code (like a fingerprint for your files) |
+| **CI/CD** | Continuous Integration / Continuous Deployment | Automatically testing and releasing code every time you push |
+| **SSH** | Secure Shell | A secure way to connect to a remote computer without typing a password each time |
+| **HTTPS** | HyperText Transfer Protocol Secure | The secure version of HTTP — how websites communicate safely |
+| **URL** | Uniform Resource Locator | A web address (like `https://github.com`) |
+| **PR** | Pull Request | A request to merge your code changes into someone else's project |
+| **MR** | Merge Request | GitLab's name for a Pull Request (same thing, different name) |
+| **IDE** | Integrated Development Environment | Your code editor (like VS Code, IntelliJ) |
+| **API** | Application Programming Interface | A way for two programs to talk to each other |
 
 ---
 
@@ -113,9 +136,9 @@ A Version Control System (VCS) solves all of this by:
 
 ### A Brief History
 
-In 2005, the Linux kernel team was using a proprietary tool called BitKeeper for version control. When the free license was revoked, Linus Torvalds decided to build his own system with these goals:
+In 2005, the Linux kernel team was using a paid/private tool called BitKeeper for version control. When the free license was taken away, Linus Torvalds decided to build his own system with these goals:
 - ⚡ **Speed** — Operations should be lightning fast
-- 🔒 **Data Integrity** — Every change is checksummed (using SHA-1 hashing)
+- 🔒 **Data Integrity** — Every change gets a unique fingerprint (using SHA-1 — a math formula that creates a unique 40-character code for any piece of data). If even one letter changes, the fingerprint changes, so Git always knows if something was tampered with.
 - 🌿 **Branching Support** — Creating branches should be instant and cheap
 - 📦 **Distributed** — Everyone gets a full copy; no central point of failure
 
@@ -130,12 +153,12 @@ He built the first working version of Git in just **10 days**!
 | Feature | What It Means |
 |---------|--------------|
 | **Distributed** | Every contributor has a full copy of the repository, including the complete history |
-| **Snapshots, not Diffs** | Git stores the state of the entire project at each commit, not just the differences |
-| **Integrity** | Every file and commit is checksummed with SHA-1. It's impossible to change anything without Git knowing |
+| **Snapshots, not Diffs** | Git takes a "photo" of your entire project at each commit, not just the things that changed |
+| **Integrity** | Every file and commit gets a unique fingerprint (SHA-1 hash). If anything changes, Git will know immediately |
 | **Branching is Cheap** | Creating a new branch takes milliseconds and barely any disk space |
 | **Staging Area** | A unique "preparation zone" where you can review changes before committing |
-| **Speed** | Almost every operation is performed locally, so it's extremely fast |
-| **Free & Open Source** | Licensed under GPL v2 — anyone can use, modify, and distribute it |
+| **Speed** | Almost every operation is performed locally (on your computer), so it's extremely fast |
+| **Free & Open Source** | Licensed under GPL v2 (General Public License) — anyone can use, modify, and share it for free |
 
 ---
 
@@ -287,7 +310,7 @@ The Staging Area is like a **preview room** or a **shopping cart**. When you run
 ### 3. Local Repository (.git)
 When you run `git commit`, the changes move from the Staging Area into the Local Repository. This is the hidden `.git` folder inside your project. It contains the **complete history** of your project — every commit, every branch, everything.
 
-- **What happens:** Git takes a "snapshot" (photo) of all staged files and saves it permanently with a unique ID (SHA-1 hash), your name, email, timestamp, and your commit message.
+- **What happens:** Git takes a "snapshot" (photo) of all staged files and saves it permanently with a unique ID (a 40-character fingerprint called a SHA-1 hash — think of it like a barcode for that exact version of your code), your name, email, timestamp, and your commit message.
 - **Analogy:** This is the **filing cabinet** in your office. Once documents are filed, they are saved permanently and can be retrieved anytime.
 
 ### 4. Remote Repository
@@ -392,14 +415,25 @@ git status -s
 
 **Understanding the short status flags:**
 
-| Symbol | Meaning |
-|--------|---------|
-| `??` | Untracked (new file) |
-| `A` | Added to staging |
-| `M` | Modified |
-| `D` | Deleted |
-| `R` | Renamed |
-| `MM` | Modified, staged, then modified again |
+The output of `git status -s` shows **two columns** before each filename. The **left column** shows the status in the **Staging Area** and the **right column** shows the status in the **Working Directory**.
+
+| Symbol | Full Form / Meaning | Example Scenario |
+|--------|--------------------|-----------------|
+| `??` | **Untracked** — brand new file Git has never seen | You just created `newfile.js` |
+| `A` | **Added** — new file added to staging | You ran `git add newfile.js` on a new file |
+| `M` | **Modified** — file was changed | You edited an existing tracked file |
+| `D` | **Deleted** — file was removed | You deleted a tracked file |
+| `R` | **Renamed** — file was renamed | You renamed `old.js` to `new.js` |
+| `C` | **Copied** — file was copied | You copied a file (rare, needs `--find-copies` flag) |
+| `U` | **Unmerged** — file has a merge conflict | Two branches changed the same file and Git doesn't know which to keep |
+| `!` | **Ignored** — file is listed in `.gitignore` | Only shows with `git status --ignored` |
+| `MM` | **Modified twice** — changed, staged, then changed again | You edited → staged → edited the same file again |
+| `AM` | **Added then Modified** — new file staged, then changed again | You added a new file, staged it, then made more edits |
+| `UU` | **Both Modified (Conflict)** — both branches changed this file | During a merge, both sides edited the same file |
+| ` M` | (space + M) **Modified in Working Dir only** — not staged yet | You changed a file but haven't run `git add` |
+| `M ` | (M + space) **Modified and Staged** — ready to commit | You changed a file and ran `git add` |
+
+> 💡 **Quick tip:** If you see `U` or `UU`, it means you have a **merge conflict** that needs to be resolved before you can commit!
 
 ---
 
@@ -436,7 +470,7 @@ git add -p
 
 ### git commit — Saving a Snapshot
 
-`git commit` takes everything in the Staging Area and saves it as a **permanent snapshot** in the Local Repository. Each commit gets a unique SHA-1 hash (like a fingerprint).
+`git commit` takes everything in the Staging Area and saves it as a **permanent snapshot** in the Local Repository. Each commit gets a unique ID — a 40-character code called a SHA-1 hash (think of it like a **fingerprint** or **barcode** — no two commits will ever have the same one).
 
 ```bash
 # Commit with a message (most common)
@@ -1329,7 +1363,170 @@ git cherry-pick --abort      # cancel and go back
 
 ---
 
-# 18. Git Hooks
+# 18. Git Blame
+
+`git blame` shows you **who wrote each line** of a file, **when** they wrote it, and **which commit** it was part of. It's like a detective tool — when you find a confusing or broken line of code, you can trace it back to the exact person and commit that introduced it.
+
+**Analogy:** Imagine every line of code has a name tag attached to it saying "Written by [Name] on [Date]". That's exactly what `git blame` shows you. The name "blame" sounds harsh, but it's not about blaming someone for bad code — it's just about finding out **who** to ask if you have questions about that code!
+
+```bash
+# Show who last changed each line in a file
+git blame index.html
+```
+
+**Example output:**
+```text
+3a7f2b1c (Shujauddin  2026-04-15 10:30:25 +0530  1) <!DOCTYPE html>
+3a7f2b1c (Shujauddin  2026-04-15 10:30:25 +0530  2) <html>
+9c8d4e2a (Pramod      2026-04-16 14:20:10 +0530  3) <head><title>My App</title></head>
+f1b2c3d4 (Shujauddin  2026-04-17 09:15:45 +0530  4) <body>
+f1b2c3d4 (Shujauddin  2026-04-17 09:15:45 +0530  5)   <h1>Welcome!</h1>
+9c8d4e2a (Pramod      2026-04-16 14:20:10 +0530  6)   <p>Hello World</p>
+```
+
+**How to read it:**
+- `3a7f2b1c` — The commit hash (fingerprint) of the commit that last changed this line
+- `Shujauddin` — The person who wrote/changed this line
+- `2026-04-15 10:30:25` — The exact date and time
+- `1)` — The line number
+- Everything after — The actual code on that line
+
+```bash
+# Blame a specific range of lines (e.g., lines 10 to 20)
+git blame -L 10,20 index.html
+
+# Show the email instead of the name
+git blame -e index.html
+
+# Ignore whitespace-only changes (useful when formatting was changed)
+git blame -w index.html
+
+# Show the original author even if lines were copied from another file
+git blame -C index.html
+```
+
+**When to use `git blame`:**
+- 🐛 **Debugging:** You found a bug on line 42 — use blame to see who wrote it and when, so you can understand the original intent
+- ❓ **Understanding code:** You don't understand what a function does — blame tells you who wrote it so you can ask them
+- 📜 **Tracking changes:** You want to find out when a specific line was added or changed
+- 🔍 **Code review:** Checking the history of a line to understand why a certain approach was taken
+
+> 💡 **Tip:** In VS Code, you can install the **GitLens** extension to see blame information directly inside your editor — it shows who wrote each line right next to the code, without needing to type any command!
+
+---
+
+# 19. Git Aliases (Shortcuts)
+
+An **alias** in Git is a **shortcut** or **nickname** for a longer command. Just like how you might save a contact name in your phone instead of memorizing their full number, Git aliases let you type short words instead of long commands.
+
+**Analogy:** Imagine you go to a coffee shop every day and order "Large Caramel Macchiato with Extra Foam and Oat Milk". Wouldn't it be easier to just say "My Usual"? That's what an alias is — a short name for something you type often.
+
+### How to Create Aliases
+
+You create aliases using the `git config` command. The `--global` flag makes them available in **all** your projects:
+
+```bash
+# The format is:
+# git config --global alias.<shortcut> "<full command>"
+
+# Example: Create a shortcut 'st' for 'status'
+git config --global alias.st status
+# Now you can type: git st   (instead of: git status)
+```
+
+### Recommended Aliases for Beginners
+
+Here are the most useful shortcuts to set up right now:
+
+```bash
+# Quick status check
+git config --global alias.st status
+
+# Switch branches faster
+git config --global alias.co checkout
+
+# List branches faster  
+git config --global alias.br branch
+
+# Commit faster
+git config --global alias.ci commit
+
+# Beautiful visual log with branches (this one is amazing!)
+git config --global alias.lg "log --oneline --graph --all --decorate"
+
+# See your last commit quickly
+git config --global alias.last "log -1 HEAD"
+
+# Unstage a file (remove from staging area)
+git config --global alias.unstage "reset HEAD --"
+
+# Undo the last commit but keep changes
+git config --global alias.undo "reset --soft HEAD~1"
+
+# Short diff view
+git config --global alias.df diff
+
+# Quick add all and commit
+git config --global alias.ac "!git add -A && git commit"
+```
+
+### Using Your Aliases
+
+After setting them up, you can use the shortcuts:
+
+```bash
+# BEFORE aliases (long way)
+git status
+git checkout main
+git branch
+git log --oneline --graph --all --decorate
+git log -1 HEAD
+
+# AFTER aliases (short way — same results!)
+git st
+git co main
+git br
+git lg
+git last
+```
+
+### How to See, Edit, or Remove Aliases
+
+```bash
+# See all your current aliases
+git config --global --get-regexp alias
+# Output:
+# alias.st status
+# alias.co checkout
+# alias.br branch
+# ...
+
+# Remove a specific alias
+git config --global --unset alias.st
+
+# OR: Edit your global config file directly in your editor
+git config --global --edit
+# This opens the ~/.gitconfig file where aliases are stored under [alias]
+```
+
+**What the config file looks like:**
+```ini
+# ~/.gitconfig
+[user]
+    name = Shujauddin
+    email = your.email@example.com
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    lg = log --oneline --graph --all --decorate
+```
+
+> 💡 **Why use aliases?** They save you hundreds of keystrokes every day. Professional developers almost always have aliases set up. Start with `st`, `co`, `br`, and `lg` — these four alone will make a huge difference!
+
+---
+
+# 20. Git Hooks
 
 Git Hooks are **scripts that run automatically** when specific Git events occur (before commit, after push, etc.). They're stored in the `.git/hooks/` directory.
 
@@ -1360,7 +1557,7 @@ echo "✅ No TODOs found. Proceeding with commit."
 
 ---
 
-# 19. Common Branching Strategies
+# 21. Common Branching Strategies
 
 Teams follow specific strategies for organizing their branches. Here are the three most popular:
 
@@ -1434,7 +1631,7 @@ main ── commit ── commit ── commit ── commit ── (continuous 
 
 ---
 
-# 20. SSH vs HTTPS
+# 22. SSH vs HTTPS
 
 When connecting to GitHub/GitLab, you have two options:
 
@@ -1477,9 +1674,9 @@ git clone git@github.com:username/repo.git
 
 ---
 
-# 21. GitHub Actions — CI/CD Basics
+# 23. GitHub Actions — CI/CD Basics
 
-**CI/CD** stands for **Continuous Integration / Continuous Deployment**. It means automatically testing and deploying your code every time you push.
+**CI/CD** stands for **Continuous Integration / Continuous Deployment** (CI = test your code automatically, CD = release it automatically). In simple words, it means **every time you push code, a robot automatically tests it and (optionally) puts it live on a website** — no manual work needed!
 
 **GitHub Actions** is GitHub's built-in CI/CD tool. You define workflows in `.yml` files inside a `.github/workflows/` directory.
 
@@ -1525,7 +1722,7 @@ jobs:
 
 ---
 
-# 22. Best Practices
+# 24. Best Practices
 
 ### Commit Best Practices
 - ✅ Commit **early and often** — small, frequent commits are easier to review and debug
@@ -1555,7 +1752,7 @@ jobs:
 
 ---
 
-# 23. Common Mistakes & How to Fix Them
+# 25. Common Mistakes & How to Fix Them
 
 ### Mistake 1: "I committed to the wrong branch!"
 ```bash
@@ -1633,7 +1830,146 @@ git push --force --all
 
 ---
 
-# 24. Complete Git Cheat Sheet 📋
+# 26. Terminal / Shell Commands (macOS)
+
+Before using Git, you need to know some basic **terminal commands**. The terminal (also called **shell** or **command line**) is a text-based way to talk to your computer. Instead of clicking through folders, you type commands.
+
+> 💡 **How to open Terminal on macOS:** Press `Cmd + Space`, type "Terminal", and press Enter. Or go to Applications → Utilities → Terminal.
+
+### 📂 Navigating Folders (Directories)
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `pwd` | **Print Working Directory** — shows where you currently are | `pwd` → `/Users/shujauddinms/Desktop` |
+| `ls` | **List** — shows all files and folders in the current location | `ls` |
+| `ls -la` | **List All** — shows everything including hidden files (like `.git`) with details | `ls -la` |
+| `cd <folder>` | **Change Directory** — move into a folder | `cd Desktop` |
+| `cd ..` | **Go Back** — move up one level (parent folder) | `cd ..` (goes from `/Desktop/project` to `/Desktop`) |
+| `cd ~` | **Go Home** — go to your home folder | `cd ~` → `/Users/shujauddinms` |
+| `cd /` | **Go to Root** — go to the very top of the file system | `cd /` |
+| `cd -` | **Go to Previous** — jump back to the last folder you were in | `cd -` |
+
+```bash
+# Example: Navigate to your project
+pwd                           # /Users/shujauddinms
+cd Desktop                    # moved to Desktop
+cd "Shujaudin's Lobby"        # use quotes for folders with spaces
+cd Learning_JS_Pramod         # moved into the project
+pwd                           # /Users/shujauddinms/Desktop/Shujaudin's Lobby/Learning_JS_Pramod
+```
+
+> 💡 **Tip:** Press `Tab` while typing a folder name to **auto-complete** it. This saves a lot of typing!
+
+---
+
+### 📁 Creating & Deleting Files and Folders
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `mkdir <name>` | **Make Directory** — creates a new folder | `mkdir my-project` |
+| `mkdir -p a/b/c` | **Make Nested Directories** — creates multiple folders at once | `mkdir -p src/components/header` |
+| `touch <name>` | **Create a File** — creates a new empty file | `touch index.html` |
+| `touch a.js b.js` | Create **multiple files** at once | `touch style.css script.js` |
+| `rm <file>` | **Remove** — deletes a file (⚠️ permanent, no Trash!) | `rm old-file.txt` |
+| `rm -r <folder>` | **Remove Recursively** — deletes a folder and everything inside it | `rm -r old-project` |
+| `rm -rf <folder>` | **Force Remove** — deletes without asking confirmation (⚠️ DANGEROUS) | `rm -rf node_modules` |
+| `rmdir <folder>` | **Remove Directory** — deletes an **empty** folder only | `rmdir empty-folder` |
+
+```bash
+# Example: Create a new project with folders and files
+mkdir my-project              # Create the project folder
+cd my-project                 # Move into it
+mkdir src css js              # Create 3 subfolders
+touch index.html              # Create the main HTML file
+touch css/style.css           # Create a CSS file inside the css folder
+touch js/script.js            # Create a JS file inside the js folder
+ls                            # See what you created: css  index.html  js  src
+```
+
+---
+
+### 📋 Copying, Moving, and Renaming
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `cp <source> <dest>` | **Copy** — copies a file | `cp index.html backup.html` |
+| `cp -r <folder> <dest>` | **Copy Recursively** — copies a folder with all its contents | `cp -r src/ src-backup/` |
+| `mv <source> <dest>` | **Move** — moves a file to another location | `mv file.txt Documents/` |
+| `mv <old> <new>` | **Rename** — rename a file (move it to the same location with a new name) | `mv old-name.js new-name.js` |
+
+```bash
+# Rename a file
+mv index.htm index.html
+
+# Move a file into a subfolder
+mv style.css css/style.css
+
+# Copy a folder
+cp -r my-project/ my-project-backup/
+```
+
+---
+
+### 📖 Viewing File Contents
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `cat <file>` | **Concatenate** — prints the entire file content to the terminal | `cat index.html` |
+| `head <file>` | Shows the **first 10 lines** of a file | `head index.html` |
+| `tail <file>` | Shows the **last 10 lines** of a file | `tail index.html` |
+| `less <file>` | Opens the file in a scrollable viewer (press `q` to exit) | `less package.json` |
+| `wc -l <file>` | **Word Count (Lines)** — shows how many lines are in a file | `wc -l index.html` → `42 index.html` |
+
+---
+
+### 🔍 Searching
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `find . -name "*.js"` | **Find** — searches for files matching a pattern | Find all `.js` files in the current folder |
+| `grep "text" <file>` | **Grep** — searches for text inside a file | `grep "TODO" script.js` |
+| `grep -r "text" .` | **Grep Recursively** — searches in all files in all subfolders | `grep -r "console.log" .` |
+
+---
+
+### 🖥️ Other Handy Commands
+
+| Command | What It Does | Example |
+|---------|-------------|---------|
+| `clear` | Clears the terminal screen | `clear` |
+| `history` | Shows all commands you've typed previously | `history` |
+| `open .` | **Opens the current folder** in Finder (macOS only) | `open .` |
+| `open <file>` | Opens a file with the default app | `open index.html` |
+| `code .` | Opens the current folder in **VS Code** | `code .` |
+| `which <command>` | Shows where a command is installed | `which git` → `/usr/bin/git` |
+| `echo "text"` | Prints text to the terminal | `echo "Hello World"` |
+| `echo "text" > file` | Writes text to a file (overwrites!) | `echo "Hello" > greeting.txt` |
+| `echo "text" >> file` | **Appends** text to a file (adds to end) | `echo "World" >> greeting.txt` |
+
+> 💡 **Pro Tip for macOS:** You can drag a folder from Finder directly into the Terminal window to paste its full path — saves you from typing long paths!
+
+### Quick Summary Cheat Sheet
+
+```bash
+pwd                  # Where am I?
+ls                   # What's here?
+cd folder            # Go into folder
+cd ..                # Go back
+mkdir folder         # Create folder
+touch file.txt       # Create file
+rm file.txt          # Delete file
+rm -r folder         # Delete folder
+cp file.txt copy.txt # Copy file
+mv old.txt new.txt   # Rename/Move file
+cat file.txt         # View file content
+clear                # Clear screen
+open .               # Open in Finder
+code .               # Open in VS Code
+```
+
+---
+
+# 27. Complete Git Cheat Sheet 📋
 
 ## 🔧 Setup & Configuration
 
@@ -1812,7 +2148,7 @@ git push --force --all
 
 ## ⚡ Useful Aliases (Shortcuts)
 
-Set these up once to save time every day:
+> 📖 For a full explanation of what aliases are and how to set them up, see [Section 19: Git Aliases (Shortcuts)](#19-git-aliases-shortcuts)
 
 ```bash
 git config --global alias.st status
@@ -1874,3 +2210,5 @@ Want to contribute to someone else's project?
 ---
 
 > 📝 **Last Updated:** April 2026
+>
+> 🚀 **Remember:** Git is a skill that improves with practice. The more you use it, the more natural it becomes. Don't be afraid to experiment — as long as you've committed your work, you can always go back!
