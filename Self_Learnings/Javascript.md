@@ -2036,4 +2036,75 @@ console.log(firstTwo);
 
 > 💡 Useful when you need to check or extract specific characters — like initials from a name or validating the format of a code.
 
+## 7. Loops
+
+### Meaning of loops
+A **loop** is nothing but a way to call a block of code again and again until a specific condition is met.
+
+> 💡 **In simple words:** "Keep doing this specific task until I tell you to stop, or until a certain condition is met."
+
+In automation (like Playwright), you use loops to do things like:
+- *"Check every link on this page"*
+- *"Wait for a button to appear 10 times before giving up"*
+
+---
+
+### 🌍 Real-World Example: The "Staircase" Analogy
+
+Imagine you are standing at the bottom of a flight of 10 stairs. Your goal is to reach the top.
+
+- **The Task:** Step up one stair.
+- **The Condition:** "Am I at the 10th stair yet?"
+- **The Loop:** You repeat the "Step up" task over and over. Each time, you ask yourself if you've reached the top. Once the answer is "Yes," you stop.
+
+```mermaid
+graph TD
+    A[Start at bottom] --> B{"Am I at 10th stair?"}
+    B -- No --> C[Task: Step up 1 stair]
+    C --> B
+    B -- Yes --> D((Stop: Reached Top!))
+    
+    style A fill:#d4edda,stroke:#28a745,stroke-width:2px;
+    style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
+    style C fill:#cce5ff,stroke:#007bff,stroke-width:2px;
+    style D fill:#f8d7da,stroke:#dc3545,stroke-width:2px;
+```
+
+**Another example is an Alarm Clock:**
+- **The Task:** Ring the bell.
+- **The Condition:** "Has the user pressed the 'Snooze' button?"
+- **The Loop:** The alarm rings every 5 minutes until you finally hit 'Stop'.
+
+---
+
+### 💻 How it looks in Code
+
+Since you are learning JavaScript/TypeScript, here is the most common loop (the `for` loop) using that staircase example:
+
+```javascript
+// Start at step 1; Stop at step 10; Move 1 step at a time
+for (let step = 1; step <= 10; step++) {
+    console.log("I am currently on step number: " + step);
+}
+
+console.log("I have reached the top!");
+```
+
+#### 🧩 The 3 Parts of a Loop:
+1. **The Start** (`let step = 1`): Where do we begin?
+2. **The Goal** (`step <= 10`): As long as this condition is true, keep going.
+3. **The Step** (`step++`): How do we move forward? *(This adds 1 to the count each time).*
+
+---
+
+### 🛠️ Why do SDETs need this?
+
+Imagine you are testing an E-commerce website. You have a list of **50 products**, and you want to make sure none of them have a "Price" of `$0`.
+
+- **Without a loop:** You would have to write 50 individual lines of code to check each product.
+- **With a loop:** You write **3 lines of code** that tells Playwright: *"Go through every product in this list and check the price."*
+
+---
+
+### Types of Loops in JavaScript
 
