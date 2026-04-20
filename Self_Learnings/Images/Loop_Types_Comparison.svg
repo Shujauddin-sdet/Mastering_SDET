@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 480" width="850" height="480" style="font-family:Arial,Helvetica,sans-serif">
+  <rect width="850" height="480" fill="white"/>
+  
+  <!-- Title -->
+  <text x="425" y="35" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a2e">Types of Loops in JavaScript</text>
+  
+  <!-- Column 1: for loop -->
+  <rect x="15" y="55" width="155" height="35" rx="6" fill="#2196F3"/>
+  <text x="92" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">for loop</text>
+  <rect x="15" y="90" width="155" height="380" rx="0 0 6 6" fill="#E3F2FD" stroke="#BBDEFB" stroke-width="1"/>
+  <rect x="40" y="110" width="105" height="32" rx="5" fill="#BBDEFB" stroke="#90CAF9" stroke-width="1"/>
+  <text x="92" y="131" text-anchor="middle" font-size="12" fill="#1565C0" font-weight="bold">① Initialize</text>
+  <text x="92" y="160" text-anchor="middle" font-size="14" fill="#333">↓</text>
+  <rect x="40" y="170" width="105" height="32" rx="5" fill="#BBDEFB" stroke="#90CAF9" stroke-width="1"/>
+  <text x="92" y="191" text-anchor="middle" font-size="12" fill="#1565C0" font-weight="bold">② Check</text>
+  <text x="92" y="220" text-anchor="middle" font-size="14" fill="#333">↓</text>
+  <rect x="40" y="230" width="105" height="32" rx="5" fill="#BBDEFB" stroke="#90CAF9" stroke-width="1"/>
+  <text x="92" y="251" text-anchor="middle" font-size="12" fill="#1565C0" font-weight="bold">③ Execute</text>
+  <text x="92" y="280" text-anchor="middle" font-size="14" fill="#333">↓</text>
+  <rect x="40" y="290" width="105" height="32" rx="5" fill="#BBDEFB" stroke="#90CAF9" stroke-width="1"/>
+  <text x="92" y="311" text-anchor="middle" font-size="12" fill="#1565C0" font-weight="bold">④ Update</text>
+  <text x="92" y="340" text-anchor="middle" font-size="14" fill="#1565C0">↺ Loop back</text>
+  <text x="92" y="380" text-anchor="middle" font-size="11" fill="#555">Use when you</text>
+  <text x="92" y="395" text-anchor="middle" font-size="11" fill="#555">know exactly</text>
+  <text x="92" y="410" text-anchor="middle" font-size="11" fill="#555">how many times</text>
+  <text x="92" y="425" text-anchor="middle" font-size="11" fill="#555">to repeat</text>
+  <text x="92" y="455" text-anchor="middle" font-size="11" fill="#1565C0" font-weight="bold">Most Common ⭐</text>
+  
+  <!-- Column 2: while loop -->
+  <rect x="180" y="55" width="155" height="35" rx="6" fill="#4CAF50"/>
+  <text x="257" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">while loop</text>
+  <rect x="180" y="90" width="155" height="380" fill="#E8F5E9" stroke="#C8E6C9" stroke-width="1"/>
+  <rect x="205" y="110" width="105" height="32" rx="5" fill="#C8E6C9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="257" y="131" text-anchor="middle" font-size="12" fill="#2E7D32" font-weight="bold">① Check FIRST</text>
+  <text x="257" y="160" text-anchor="middle" font-size="14" fill="#333">↓</text>
+  <rect x="205" y="170" width="105" height="32" rx="5" fill="#C8E6C9" stroke="#A5D6A7" stroke-width="1"/>
+  <text x="257" y="191" text-anchor="middle" font-size="12" fill="#2E7D32" font-weight="bold">② Execute</text>
+  <text x="257" y="220" text-anchor="middle" font-size="14" fill="#2E7D32">↺ Loop back</text>
+  <text x="257" y="280" text-anchor="middle" font-size="11" fill="#555">Use when you</text>
+  <text x="257" y="295" text-anchor="middle" font-size="11" fill="#555">DON'T know</text>
+  <text x="257" y="310" text-anchor="middle" font-size="11" fill="#555">how many times</text>
+  <text x="257" y="340" text-anchor="middle" font-size="11" fill="#555">Might run</text>
+  <text x="257" y="355" text-anchor="middle" font-size="11" fill="#D32F2F" font-weight="bold">0 times!</text>
+  <text x="257" y="395" text-anchor="middle" font-size="11" fill="#555">"Wait for</text>
+  <text x="257" y="410" text-anchor="middle" font-size="11" fill="#555">element to load"</text>
+  
+  <!-- Column 3: do...while loop -->
+  <rect x="345" y="55" width="155" height="35" rx="6" fill="#FF9800"/>
+  <text x="422" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">do...while</text>
+  <rect x="345" y="90" width="155" height="380" fill="#FFF3E0" stroke="#FFE0B2" stroke-width="1"/>
+  <rect x="370" y="110" width="105" height="32" rx="5" fill="#FFE0B2" stroke="#FFCC80" stroke-width="1"/>
+  <text x="422" y="126" text-anchor="middle" font-size="11" fill="#E65100" font-weight="bold">① Execute</text>
+  <text x="422" y="139" text-anchor="middle" font-size="11" fill="#E65100" font-weight="bold">FIRST!</text>
+  <text x="422" y="160" text-anchor="middle" font-size="14" fill="#333">↓</text>
+  <rect x="370" y="170" width="105" height="32" rx="5" fill="#FFE0B2" stroke="#FFCC80" stroke-width="1"/>
+  <text x="422" y="191" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">② Then Check</text>
+  <text x="422" y="220" text-anchor="middle" font-size="14" fill="#E65100">↺ Loop back</text>
+  <text x="422" y="280" text-anchor="middle" font-size="11" fill="#555">Always runs</text>
+  <text x="422" y="295" text-anchor="middle" font-size="11" fill="#E65100" font-weight="bold">at least ONCE</text>
+  <text x="422" y="330" text-anchor="middle" font-size="11" fill="#555">"Show menu,</text>
+  <text x="422" y="345" text-anchor="middle" font-size="11" fill="#555">then ask if</text>
+  <text x="422" y="360" text-anchor="middle" font-size="11" fill="#555">they want</text>
+  <text x="422" y="375" text-anchor="middle" font-size="11" fill="#555">to continue"</text>
+  
+  <!-- Column 4: for...in loop -->
+  <rect x="510" y="55" width="155" height="35" rx="6" fill="#9C27B0"/>
+  <text x="587" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">for...in</text>
+  <rect x="510" y="90" width="155" height="380" fill="#F3E5F5" stroke="#E1BEE7" stroke-width="1"/>
+  <rect x="535" y="120" width="105" height="50" rx="5" fill="#E1BEE7" stroke="#CE93D8" stroke-width="1"/>
+  <text x="587" y="143" text-anchor="middle" font-size="12" fill="#6A1B9A" font-weight="bold">Iterate over</text>
+  <text x="587" y="161" text-anchor="middle" font-size="12" fill="#6A1B9A" font-weight="bold">Object KEYS</text>
+  <text x="587" y="210" text-anchor="middle" font-size="11" fill="#555">Gets property</text>
+  <text x="587" y="225" text-anchor="middle" font-size="11" fill="#555">names (keys)</text>
+  <text x="587" y="260" text-anchor="middle" font-size="11" fill="#6A1B9A" font-weight="bold">{ name: "Ali" }</text>
+  <text x="587" y="280" text-anchor="middle" font-size="11" fill="#555">→ "name"</text>
+  <text x="587" y="320" text-anchor="middle" font-size="11" fill="#D32F2F" font-weight="bold">⚠ NOT for arrays</text>
+  <text x="587" y="350" text-anchor="middle" font-size="11" fill="#555">Use for reading</text>
+  <text x="587" y="365" text-anchor="middle" font-size="11" fill="#555">config, API</text>
+  <text x="587" y="380" text-anchor="middle" font-size="11" fill="#555">responses</text>
+  
+  <!-- Column 5: for...of loop -->
+  <rect x="675" y="55" width="160" height="35" rx="6" fill="#00897B"/>
+  <text x="755" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">for...of</text>
+  <rect x="675" y="90" width="160" height="380" fill="#E0F2F1" stroke="#B2DFDB" stroke-width="1"/>
+  <rect x="700" y="120" width="110" height="50" rx="5" fill="#B2DFDB" stroke="#80CBC4" stroke-width="1"/>
+  <text x="755" y="143" text-anchor="middle" font-size="12" fill="#00695C" font-weight="bold">Iterate over</text>
+  <text x="755" y="161" text-anchor="middle" font-size="12" fill="#00695C" font-weight="bold">Array VALUES</text>
+  <text x="755" y="210" text-anchor="middle" font-size="11" fill="#555">Gets actual</text>
+  <text x="755" y="225" text-anchor="middle" font-size="11" fill="#555">values directly</text>
+  <text x="755" y="260" text-anchor="middle" font-size="11" fill="#00695C" font-weight="bold">["a","b","c"]</text>
+  <text x="755" y="280" text-anchor="middle" font-size="11" fill="#555">→ "a", "b", "c"</text>
+  <text x="755" y="320" text-anchor="middle" font-size="11" fill="#00695C" font-weight="bold">✅ Best for arrays</text>
+  <text x="755" y="350" text-anchor="middle" font-size="11" fill="#555">Essential for</text>
+  <text x="755" y="365" text-anchor="middle" font-size="11" fill="#555">Playwright</text>
+  <text x="755" y="380" text-anchor="middle" font-size="11" fill="#555">NodeLists</text>
+  <text x="755" y="455" text-anchor="middle" font-size="11" fill="#00695C" font-weight="bold">SDET Favourite ⭐</text>
+</svg>

@@ -19,6 +19,17 @@
 5. [Truthy and Falsy Values](#truthy-and-falsy-values)
 6. [Conditional Statements](#5-conditional-statements)
 7. [JavaScript Input/Output Methods](#6-javascript-inputoutput-methods)
+8. [Loops](#7-loops)
+   - [for Loop](#a-for-loop-the-classic)
+   - [while Loop](#b-while-loop)
+   - [do...while Loop](#c-dowhile-loop)
+   - [for...in Loop](#d-forin-loop)
+   - [for...of Loop](#e-forof-loop)
+9. [Loop Control Statements](#8-loop-control-statements)
+   - [break](#a-break-statement)
+   - [continue](#b-continue-statement)
+   - [Labels](#c-labels-with-break-and-continue)
+10. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -2038,66 +2049,50 @@ console.log(firstTwo);
 
 ## 7. Loops
 
-### Meaning of loops
-A **loop** is nothing but a way to call a block of code again and again until a specific condition is met.
+### What is a Loop?
+
+A **loop** is a way to repeat a block of code again and again until a specific condition is met — like climbing a staircase one step at a time until you reach the top.
 
 > 💡 **In simple words:** "Keep doing this specific task until I tell you to stop, or until a certain condition is met."
 
 In automation (like Playwright), you use loops to do things like:
 - *"Check every link on this page"*
 - *"Wait for a button to appear 10 times before giving up"*
+- *"Go through all rows of a table and verify the data"*
 
 ---
 
-### 🌍 Real-World Example: The "Staircase" Analogy
+### 🌍 Real-World Examples
+
+**The "Staircase" Analogy:**
 
 Imagine you are standing at the bottom of a flight of 10 stairs. Your goal is to reach the top.
-
 - **The Task:** Step up one stair.
 - **The Condition:** "Am I at the 10th stair yet?"
 - **The Loop:** You repeat the "Step up" task over and over. Each time, you ask yourself if you've reached the top. Once the answer is "Yes," you stop.
 
-```mermaid
-graph TD
-    A[Start at bottom] --> B{"Am I at 10th stair?"}
-    B -- No --> C[Task: Step up 1 stair]
-    C --> B
-    B -- Yes --> D((Stop: Reached Top!))
-    
-    style A fill:#d4edda,stroke:#28a745,stroke-width:2px;
-    style B fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
-    style C fill:#cce5ff,stroke:#007bff,stroke-width:2px;
-    style D fill:#f8d7da,stroke:#dc3545,stroke-width:2px;
-```
-
-**Another example is an Alarm Clock:**
+**The "Alarm Clock" Analogy:**
 - **The Task:** Ring the bell.
-- **The Condition:** "Has the user pressed the 'Snooze' button?"
+- **The Condition:** "Has the user pressed the 'Stop' button?"
 - **The Loop:** The alarm rings every 5 minutes until you finally hit 'Stop'.
 
----
-
-### 💻 How it looks in Code
-
-Since you are learning JavaScript/TypeScript, here is the most common loop (the `for` loop) using that staircase example:
-
-```javascript
-// Start at step 1; Stop at step 10; Move 1 step at a time
-for (let step = 1; step <= 10; step++) {
-    console.log("I am currently on step number: " + step);
-}
-
-console.log("I have reached the top!");
-```
-
-#### 🧩 The 3 Parts of a Loop:
-1. **The Start** (`let step = 1`): Where do we begin?
-2. **The Goal** (`step <= 10`): As long as this condition is true, keep going.
-3. **The Step** (`step++`): How do we move forward? *(This adds 1 to the count each time).*
+![How a Loop Works](Images/Loop_Flowchart.svg)
 
 ---
 
-### 🛠️ Why do SDETs need this?
+### 🧩 The 3 Parts of Every Loop
+
+Before learning the different types of loops, understand that every loop has these 3 core parts:
+
+1. **The Start (Initialization):** Where do we begin? *(e.g., `let i = 0`)*
+2. **The Condition (Test):** Should we keep going? As long as this is `true`, the loop repeats. *(e.g., `i < 10`)*
+3. **The Update (Step):** How do we move forward? *(e.g., `i++` adds 1 each time)*
+
+> ⚠️ **Critical Rule:** If you forget the **Update** step, the condition will never become `false`, and your loop will run forever (an **infinite loop** — more on this later).
+
+---
+
+### 🛠️ Why do SDETs need Loops?
 
 Imagine you are testing an E-commerce website. You have a list of **50 products**, and you want to make sure none of them have a "Price" of `$0`.
 
@@ -2107,4 +2102,856 @@ Imagine you are testing an E-commerce website. You have a list of **50 products*
 ---
 
 ### Types of Loops in JavaScript
+
+![Types of Loops in JavaScript](Images/Loop_Types_Comparison.svg)
+
+JavaScript gives you **5 types of loops**. Each one is best suited for a different situation:
+
+| Loop Type | Best Used When... |
+|-----------|------------------|
+| **`for`** | You know **exactly** how many times to repeat |
+| **`while`** | You **don't know** how many times — keep going until a condition changes |
+| **`do...while`** | Same as `while`, but **always runs at least once** |
+| **`for...in`** | You want to loop through an **Object's keys** (property names) |
+| **`for...of`** | You want to loop through an **Array's values** (or NodeList in Playwright) |
+
+---
+
+### **A) `for` Loop (The Classic)**
+
+**Meaning:** The most common loop. Use it when you **know exactly how many times** you need to repeat something.
+
+**Syntax:**
+```javascript
+for (start; condition; step) {
+    // code to repeat
+}
+```
+
+**Example — The Staircase:**
+```javascript
+// Start at step 1; Stop at step 10; Move 1 step at a time
+for (let step = 1; step <= 10; step++) {
+    console.log("I am currently on step number: " + step);
+}
+
+console.log("I have reached the top!");
+```
+
+**Output:**
+```
+I am currently on step number: 1
+I am currently on step number: 2
+... (continues)
+I am currently on step number: 10
+I have reached the top!
+```
+
+**How it works step by step:**
+1. `let step = 1` → Create a counter variable, start at 1.
+2. `step <= 10` → Is 1 less than or equal to 10? **Yes** → Run the code inside `{ }`.
+3. `step++` → Add 1 to step (step becomes 2).
+4. `step <= 10` → Is 2 ≤ 10? **Yes** → Run again.
+5. ...repeat until step becomes 11...
+6. `step <= 10` → Is 11 ≤ 10? **No** → **STOP. Exit the loop.**
+
+#### 🧪 Real-World SDET Example:
+
+**Checking a list of prices on an E-commerce page:**
+```javascript
+let prices = [29.99, 49.99, 0, 15.00, 99.99];
+
+for (let i = 0; i < prices.length; i++) {
+    if (prices[i] === 0) {
+        console.log("🚨 BUG FOUND! Product at index " + i + " has a price of $0!");
+    } else {
+        console.log("✅ Product " + i + " price is valid: $" + prices[i]);
+    }
+}
+```
+
+**Output:**
+```
+✅ Product 0 price is valid: $29.99
+✅ Product 1 price is valid: $49.99
+🚨 BUG FOUND! Product at index 2 has a price of $0!
+✅ Product 3 price is valid: $15
+✅ Product 4 price is valid: $99.99
+```
+
+> 💡 **`prices.length`** gives the total number of items in the array (5 in this case). We start at index `0` because arrays are zero-indexed.
+
+---
+
+### **B) `while` Loop**
+
+**Meaning:** Keeps repeating **as long as a condition is true**. Use it when you **don't know in advance** how many times the loop needs to run.
+
+> Think of it as: "Keep trying until it works."
+
+**Syntax:**
+```javascript
+while (condition) {
+    // code to repeat
+    // IMPORTANT: update something so condition eventually becomes false!
+}
+```
+
+**Example:**
+```javascript
+let count = 1;
+
+while (count <= 5) {
+    console.log("Attempt number: " + count);
+    count++; // Don't forget this! Without it, infinite loop!
+}
+
+console.log("Done!");
+```
+
+**Output:**
+```
+Attempt number: 1
+Attempt number: 2
+Attempt number: 3
+Attempt number: 4
+Attempt number: 5
+Done!
+```
+
+#### `for` vs `while` — When to use which?
+
+| Situation | Use `for` | Use `while` |
+|-----------|-----------|-------------|
+| "Loop exactly 10 times" | ✅ | |
+| "Loop through an array" | ✅ | |
+| "Keep polling until element appears" | | ✅ |
+| "Wait for API response" | | ✅ |
+| "Retry until success" | | ✅ |
+
+#### 🧪 Real-World SDET Example:
+
+**Waiting for a button to appear on a page (retry logic):**
+```javascript
+let buttonFound = false;
+let attempts = 0;
+let maxAttempts = 10;
+
+while (!buttonFound && attempts < maxAttempts) {
+    attempts++;
+    console.log("Attempt " + attempts + ": Looking for submit button...");
+
+    // Simulating checking if button exists
+    // In real Playwright: buttonFound = await page.locator('.submit-btn').isVisible();
+    if (attempts === 7) {
+        buttonFound = true; // Simulating: button appears on 7th try
+    }
+}
+
+if (buttonFound) {
+    console.log("✅ Button found after " + attempts + " attempts!");
+} else {
+    console.log("❌ Button NOT found after " + maxAttempts + " attempts. Test failed!");
+}
+```
+
+**Output:**
+```
+Attempt 1: Looking for submit button...
+Attempt 2: Looking for submit button...
+... (continues)
+Attempt 7: Looking for submit button...
+✅ Button found after 7 attempts!
+```
+
+> 💡 **Important:** Always include a **maximum attempts limit** (like `maxAttempts`) in a `while` loop to prevent infinite loops if the condition never becomes true!
+
+---
+
+### **C) `do...while` Loop**
+
+**Meaning:** Almost identical to `while`, but with **one crucial difference** — it **always executes at least once** before checking the condition.
+
+> Think of it as: "Do this first, then check if you should keep doing it."
+
+**Syntax:**
+```javascript
+do {
+    // code to run (runs AT LEAST once!)
+} while (condition);
+```
+
+> ⚠️ **Note the semicolon** `;` after `while(condition)` — this is required for `do...while` but NOT for regular `while`.
+
+**Example:**
+```javascript
+let number = 1;
+
+do {
+    console.log("Number is: " + number);
+    number++;
+} while (number <= 5);
+```
+
+**Output:**
+```
+Number is: 1
+Number is: 2
+Number is: 3
+Number is: 4
+Number is: 5
+```
+
+**The Key Difference — runs even if condition is false from the start:**
+```javascript
+// while loop — runs 0 times
+let x = 100;
+while (x < 5) {
+    console.log("while: " + x); // Never prints! Condition is false from the start.
+}
+
+// do...while loop — runs 1 time
+let y = 100;
+do {
+    console.log("do...while: " + y); // Prints once! Runs before checking.
+} while (y < 5);
+```
+
+**Output:**
+```
+do...while: 100
+```
+
+> The `while` loop checked the condition FIRST (100 < 5 is false) and never ran. The `do...while` loop ran the code FIRST, printed `100`, then checked (100 < 5 is false) and stopped.
+
+#### 🧪 Real-World SDET Example:
+
+**A menu-driven test runner:**
+```javascript
+let choice;
+
+do {
+    console.log("\n--- Test Menu ---");
+    console.log("1. Run Login Tests");
+    console.log("2. Run Cart Tests");
+    console.log("3. Run Checkout Tests");
+    console.log("4. Exit");
+
+    choice = 4; // Simulating user input (in real code: prompt() or readline)
+
+    switch (choice) {
+        case 1: console.log("Running Login Tests..."); break;
+        case 2: console.log("Running Cart Tests..."); break;
+        case 3: console.log("Running Checkout Tests..."); break;
+        case 4: console.log("Exiting..."); break;
+        default: console.log("Invalid choice!");
+    }
+} while (choice !== 4);
+```
+
+> 💡 The menu **must show at least once** before asking the user — that's why `do...while` is perfect here.
+
+---
+
+### **D) `for...in` Loop**
+
+**Meaning:** Used to iterate over the **keys (property names)** of an object. It gives you the **key**, not the value.
+
+> Think of it as: "For each label/key in this object, do something."
+
+**Syntax:**
+```javascript
+for (let key in object) {
+    // key = property name (string)
+    // object[key] = property value
+}
+```
+
+**Example:**
+```javascript
+let testConfig = {
+    browser: "chromium",
+    headless: true,
+    timeout: 5000,
+    retries: 3
+};
+
+for (let key in testConfig) {
+    console.log(key + ": " + testConfig[key]);
+}
+```
+
+**Output:**
+```
+browser: chromium
+headless: true
+timeout: 5000
+retries: 3
+```
+
+**How it works:**
+- First iteration: `key` = `"browser"`, `testConfig[key]` = `"chromium"`
+- Second iteration: `key` = `"headless"`, `testConfig[key]` = `true`
+- ...and so on for each property.
+
+#### 🧪 Real-World SDET Example:
+
+**Checking API response fields:**
+```javascript
+let apiResponse = {
+    status: 200,
+    message: "Success",
+    userId: 42,
+    email: "test@example.com",
+    role: null // Bug! Role should not be null
+};
+
+for (let field in apiResponse) {
+    if (apiResponse[field] === null || apiResponse[field] === undefined) {
+        console.log("🚨 BUG! Field '" + field + "' is " + apiResponse[field]);
+    } else {
+        console.log("✅ " + field + ": " + apiResponse[field]);
+    }
+}
+```
+
+**Output:**
+```
+✅ status: 200
+✅ message: Success
+✅ userId: 42
+✅ email: test@example.com
+🚨 BUG! Field 'role' is null
+```
+
+> ⚠️ **Warning:** Do NOT use `for...in` with arrays! It iterates over property names (indices as strings), not values, and can include inherited properties. Use `for...of` for arrays instead.
+
+```javascript
+// ❌ DON'T do this
+let colors = ["red", "green", "blue"];
+for (let key in colors) {
+    console.log(key);     // "0", "1", "2" — these are string indices, not values!
+    console.log(typeof key); // "string" — not "number"!
+}
+
+// ✅ DO this instead
+for (let color of colors) {
+    console.log(color); // "red", "green", "blue" — actual values!
+}
+```
+
+---
+
+### **E) `for...of` Loop**
+
+**Meaning:** Used to iterate over the **values** of an iterable (Arrays, Strings, NodeLists, Maps, Sets). It directly gives you the **value**, not the index.
+
+> Think of it as: "For each item in this list, do something."
+
+**Syntax:**
+```javascript
+for (let value of iterable) {
+    // value = the actual item
+}
+```
+
+**Example:**
+```javascript
+let fruits = ["Apple", "Banana", "Cherry"];
+
+for (let fruit of fruits) {
+    console.log("I like " + fruit);
+}
+```
+
+**Output:**
+```
+I like Apple
+I like Banana
+I like Cherry
+```
+
+#### `for...in` vs `for...of` — The Key Difference
+
+| Feature | `for...in` | `for...of` |
+|---------|-----------|-----------|
+| Iterates over | **Keys** (property names) | **Values** (actual items) |
+| Best for | **Objects** `{ }` | **Arrays** `[ ]`, Strings, NodeLists |
+| Returns | `"name"`, `"age"`, `"0"`, `"1"` | `"John"`, `30`, `"red"`, `"green"` |
+| Use in automation | Reading config objects | Looping through elements on page |
+
+```javascript
+let testBrowsers = ["chromium", "firefox", "webkit"];
+
+// for...in gives INDICES (keys)
+for (let i in testBrowsers) {
+    console.log(i);           // "0", "1", "2"
+}
+
+// for...of gives VALUES
+for (let browser of testBrowsers) {
+    console.log(browser);     // "chromium", "firefox", "webkit"
+}
+```
+
+#### 🧪 Real-World SDET Example:
+
+**Checking all links on a page (Playwright):**
+```javascript
+// Getting all links from a page
+let links = ["https://example.com", "https://test.com/broken", "https://shop.com"];
+
+for (let link of links) {
+    if (link.includes("broken")) {
+        console.log("🚨 Broken link found: " + link);
+    } else {
+        console.log("✅ Link is valid: " + link);
+    }
+}
+```
+
+**Output:**
+```
+✅ Link is valid: https://example.com
+🚨 Broken link found: https://test.com/broken
+✅ Link is valid: https://shop.com
+```
+
+**Looping through characters in a string:**
+```javascript
+let password = "MyP@ss123";
+
+let hasSpecialChar = false;
+for (let char of password) {
+    if ("!@#$%^&*".includes(char)) {
+        hasSpecialChar = true;
+        console.log("Found special character: " + char);
+    }
+}
+
+console.log("Password valid:", hasSpecialChar); // true
+```
+
+> 💡 **SDET Tip:** In Playwright, when you use `page.locator('.product').all()`, it returns an array of elements. You loop through them with `for...of` to check each one!
+
+---
+
+### Quick Comparison of All Loops
+
+```javascript
+// All 5 loops doing similar things:
+
+// 1. for — when you know the count
+for (let i = 0; i < 3; i++) {
+    console.log("for:", i);       // 0, 1, 2
+}
+
+// 2. while — when you don't know the count
+let j = 0;
+while (j < 3) {
+    console.log("while:", j);     // 0, 1, 2
+    j++;
+}
+
+// 3. do...while — always runs at least once
+let k = 0;
+do {
+    console.log("do-while:", k);  // 0, 1, 2
+    k++;
+} while (k < 3);
+
+// 4. for...in — for object keys
+let obj = { a: 1, b: 2, c: 3 };
+for (let key in obj) {
+    console.log("for-in:", key);  // "a", "b", "c"
+}
+
+// 5. for...of — for array values
+let arr = [1, 2, 3];
+for (let val of arr) {
+    console.log("for-of:", val);  // 1, 2, 3
+}
+```
+
+---
+
+## 8. Loop Control Statements
+
+Sometimes you need more control over your loops — like stopping early when you find what you're looking for, or skipping certain items. That's where **`break`**, **`continue`**, and **Labels** come in.
+
+![break vs continue in Loops](Images/Break_vs_Continue.svg)
+
+---
+
+### **A) `break` Statement**
+
+**Meaning:** Immediately **exits the entire loop**. No more iterations will run. The code continues after the loop.
+
+> Think of it as: "I found what I need. Stop everything and move on."
+
+**Syntax:**
+```javascript
+for (...) {
+    if (someCondition) {
+        break; // EXIT the loop completely
+    }
+}
+```
+
+**Example:**
+```javascript
+let numbers = [10, 20, 30, 40, 50];
+
+for (let i = 0; i < numbers.length; i++) {
+    if (numbers[i] === 30) {
+        console.log("Found 30 at index " + i + "! Stopping search.");
+        break; // Stop looping — we found it!
+    }
+    console.log("Checking: " + numbers[i]);
+}
+```
+
+**Output:**
+```
+Checking: 10
+Checking: 20
+Found 30 at index 2! Stopping search.
+```
+
+> Notice: 40 and 50 were **never checked** because `break` exited the loop immediately.
+
+#### 🧪 Real-World SDET Example:
+
+**Finding the first broken link on a page:**
+```javascript
+let links = [
+    { url: "/home", status: 200 },
+    { url: "/about", status: 200 },
+    { url: "/pricing", status: 404 },  // Broken!
+    { url: "/contact", status: 200 }
+];
+
+for (let link of links) {
+    if (link.status !== 200) {
+        console.log("🚨 BROKEN LINK: " + link.url + " (Status: " + link.status + ")");
+        console.log("Stopping test — first failure found.");
+        break;
+    }
+    console.log("✅ " + link.url + " is OK");
+}
+```
+
+---
+
+### **B) `continue` Statement**
+
+**Meaning:** Skips **only the current iteration** and jumps to the next one. The loop itself continues running.
+
+> Think of it as: "Skip this one, but keep checking the rest."
+
+**Syntax:**
+```javascript
+for (...) {
+    if (someCondition) {
+        continue; // SKIP this iteration, go to the next one
+    }
+    // code here will NOT run for skipped iterations
+}
+```
+
+**Example:**
+```javascript
+for (let i = 1; i <= 5; i++) {
+    if (i === 3) {
+        console.log("Skipping " + i);
+        continue; // Skip the rest of the code for i=3
+    }
+    console.log("Processing: " + i);
+}
+```
+
+**Output:**
+```
+Processing: 1
+Processing: 2
+Skipping 3
+Processing: 4
+Processing: 5
+```
+
+> Notice: `i = 3` was skipped, but the loop continued with `i = 4` and `i = 5`.
+
+#### 🧪 Real-World SDET Example:
+
+**Skipping disabled products while testing:**
+```javascript
+let products = [
+    { name: "Laptop", enabled: true, price: 999 },
+    { name: "Phone", enabled: false, price: 699 },   // Disabled — skip
+    { name: "Tablet", enabled: true, price: 499 },
+    { name: "Watch", enabled: false, price: 299 },    // Disabled — skip
+    { name: "Speaker", enabled: true, price: 149 }
+];
+
+for (let product of products) {
+    if (!product.enabled) {
+        console.log("⏭️ Skipping disabled product: " + product.name);
+        continue; // Skip to next product
+    }
+    console.log("🧪 Testing: " + product.name + " — Price: $" + product.price);
+}
+```
+
+**Output:**
+```
+🧪 Testing: Laptop — Price: $999
+⏭️ Skipping disabled product: Phone
+🧪 Testing: Tablet — Price: $499
+⏭️ Skipping disabled product: Watch
+🧪 Testing: Speaker — Price: $149
+```
+
+---
+
+### **C) Labels (with `break` and `continue`)**
+
+**Meaning:** Labels give a **name** to a loop so you can `break` or `continue` a specific **outer loop** from inside a nested (inner) loop.
+
+> Without labels, `break` and `continue` only affect the **innermost** loop they're inside.
+
+**Syntax:**
+```javascript
+outerLoop: for (...) {
+    innerLoop: for (...) {
+        if (condition) {
+            break outerLoop;    // Exits the OUTER loop entirely
+            // OR
+            continue outerLoop; // Skips to next iteration of OUTER loop
+        }
+    }
+}
+```
+
+**Example — Without a label (default behavior):**
+```javascript
+for (let i = 1; i <= 3; i++) {
+    for (let j = 1; j <= 3; j++) {
+        if (j === 2) break; // Only breaks the INNER loop
+        console.log("i=" + i + ", j=" + j);
+    }
+}
+// Output: i=1,j=1 → i=2,j=1 → i=3,j=1  (inner loop breaks at j=2 each time)
+```
+
+**Example — With a label:**
+```javascript
+outerLoop: for (let i = 1; i <= 3; i++) {
+    for (let j = 1; j <= 3; j++) {
+        if (i === 2 && j === 2) {
+            console.log("Breaking OUTER loop at i=" + i + ", j=" + j);
+            break outerLoop; // Breaks the OUTER loop entirely!
+        }
+        console.log("i=" + i + ", j=" + j);
+    }
+}
+```
+
+**Output:**
+```
+i=1, j=1
+i=1, j=2
+i=1, j=3
+i=2, j=1
+Breaking OUTER loop at i=2, j=2
+```
+
+> The loop stopped at `i=2, j=2` and **never reached** `i=3` because `break outerLoop` exited the entire outer loop.
+
+#### 🧪 Real-World SDET Example:
+
+**Searching for a specific cell in a Web Table:**
+```javascript
+let table = [
+    ["Name",    "Price", "Stock"],
+    ["Laptop",  "999",   "Yes"],
+    ["Phone",   "0",     "No"],     // Bug: price is $0
+    ["Tablet",  "499",   "Yes"]
+];
+
+searchTable: for (let row = 1; row < table.length; row++) {
+    for (let col = 0; col < table[row].length; col++) {
+        if (table[row][col] === "0") {
+            console.log("🚨 Found $0 price at Row " + row + ", Col " + col);
+            console.log("   Product: " + table[row][0]);
+            break searchTable; // Found the bug, exit everything
+        }
+    }
+}
+```
+
+> 💡 **When to use Labels:** Labels are rarely needed, but they shine when working with **nested loops** like web tables (rows inside columns) where you want to exit everything at once.
+
+---
+
+### Quick Reference: `break` vs `continue`
+
+| Feature | `break` | `continue` |
+|---------|---------|-----------|
+| What it does | **Exits** the entire loop | **Skips** current iteration only |
+| Loop continues? | ❌ No — loop is done | ✅ Yes — next iteration runs |
+| Use case | "Found it! Stop searching." | "Skip this one, check the rest." |
+| With labels | Exits a specific outer loop | Skips to next iteration of outer loop |
+
+---
+
+## 9. Advanced Loop Concepts & Safety
+
+### ⚠️ Infinite Loops
+
+An **infinite loop** is a loop where the condition **never becomes `false`**, so the loop runs forever. This will freeze your browser, crash your terminal, or hang your test suite.
+
+![Infinite Loop Warning](Images/Infinite_Loop_Warning.svg)
+
+**How it happens:**
+```javascript
+// ❌ DANGER — Infinite Loop!
+let x = 1;
+while (x > 0) {
+    console.log("Running..."); // x is always > 0, this NEVER stops!
+}
+
+// ❌ DANGER — Forgot to update the counter!
+let count = 1;
+while (count <= 10) {
+    console.log(count);
+    // Missing: count++; → count is always 1, always <= 10!
+}
+
+// ❌ DANGER — Condition can never be met!
+for (let i = 10; i >= 0; i++) { // i starts at 10 and goes UP, never < 0
+    console.log(i);
+}
+```
+
+**How to prevent it:**
+```javascript
+// ✅ SAFE — Counter is updated
+let count = 1;
+while (count <= 10) {
+    console.log(count);
+    count++; // This ensures count eventually reaches 11, making condition false
+}
+
+// ✅ SAFE — Always use a maximum attempts limit
+let attempts = 0;
+let maxAttempts = 100; // Safety net!
+
+while (someCondition && attempts < maxAttempts) {
+    attempts++;
+    // do work...
+}
+```
+
+> 💡 **SDET Safety Tip:** Always add a `maxAttempts` or `timeout` when using `while` loops in test automation. If an element never appears, you don't want your test to run forever!
+
+---
+
+### 🏎️ Loop Performance — Choosing the Right Loop
+
+For most daily work, all loops perform similarly. But when dealing with **large datasets** (like validating 10,000 API responses), the choice matters:
+
+| Loop | Speed | Best For |
+|------|-------|----------|
+| `for` | ⚡ Fastest | Large arrays, performance-critical code |
+| `while` | ⚡ Fast | Conditional repetition |
+| `for...of` | ✅ Fast enough | Arrays, clean readable code |
+| `for...in` | ⚠️ Slowest | Objects only (avoid on arrays) |
+| `forEach` (array method) | ✅ Fast enough | Functional style, no break/continue |
+
+> 💡 **Rule of Thumb:** Use `for...of` for clean code. Switch to a classic `for` loop only if you need maximum speed or need the index.
+
+---
+
+### 🧪 SDET Special: Common Automation Patterns
+
+#### 1. Handling Web Tables (Rows & Columns)
+```javascript
+// Simulating a Playwright web table
+let tableRows = [
+    { product: "Laptop", price: 999, stock: true },
+    { product: "Phone", price: 699, stock: true },
+    { product: "Charger", price: 0, stock: false },  // Bug!
+    { product: "Case", price: 29, stock: true }
+];
+
+console.log("--- Web Table Validation ---");
+for (let row of tableRows) {
+    if (row.price === 0) {
+        console.log("🚨 " + row.product + ": Price is $0!");
+    }
+    if (!row.stock) {
+        console.log("⚠️ " + row.product + ": Out of stock");
+    }
+}
+```
+
+#### 2. Handling Pagination (Multiple Pages)
+```javascript
+// Testing all pages of search results
+let currentPage = 1;
+let totalPages = 5;
+
+while (currentPage <= totalPages) {
+    console.log("📄 Testing page " + currentPage + " of " + totalPages);
+
+    // In real Playwright:
+    // await page.goto(`/products?page=${currentPage}`);
+    // let items = await page.locator('.product-card').all();
+    // for (let item of items) { ... validate each item ... }
+
+    currentPage++;
+}
+console.log("✅ All " + totalPages + " pages tested!");
+```
+
+#### 3. Retry Logic (Flaky Tests)
+```javascript
+let testPassed = false;
+let retries = 0;
+let maxRetries = 3;
+
+while (!testPassed && retries < maxRetries) {
+    retries++;
+    console.log("🔄 Attempt " + retries + " of " + maxRetries);
+
+    // Simulating a flaky test that passes on 3rd try
+    if (retries === 3) {
+        testPassed = true;
+        console.log("✅ Test PASSED on attempt " + retries);
+    } else {
+        console.log("❌ Test failed, retrying...");
+    }
+}
+
+if (!testPassed) {
+    console.log("🚨 Test FAILED after " + maxRetries + " attempts!");
+}
+```
+
+---
+
+### Summary Cheat Sheet
+
+| What You Want To Do | Loop To Use |
+|---------------------|------------|
+| Repeat exactly N times | `for` |
+| Loop through an array's values | `for...of` |
+| Loop through an object's keys | `for...in` |
+| Repeat until a condition changes | `while` |
+| Run at least once, then check | `do...while` |
+| Stop looping early | `break` |
+| Skip one item and continue | `continue` |
+| Exit a nested loop entirely | `break labelName` |
+
+> 💡 **Golden Rule for SDETs:** When automating with Playwright, `for...of` is your best friend. It works perfectly with arrays of elements, NodeLists, and test data. Pair it with `break` for "find first" searches and `continue` for "skip invalid items" logic.
 

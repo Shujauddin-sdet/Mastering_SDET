@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 520" width="650" height="520" style="font-family:Arial,Helvetica,sans-serif">
+  <rect width="650" height="520" fill="white"/>
+  
+  <!-- Title -->
+  <text x="325" y="35" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a2e">break vs continue in Loops</text>
+  
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#D32F2F"/>
+    </marker>
+    <marker id="arrAmber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#F57F17"/>
+    </marker>
+  </defs>
+  
+  <!-- ============ LEFT: break ============ -->
+  <rect x="20" y="55" width="290" height="35" rx="6" fill="#EF5350"/>
+  <text x="165" y="78" text-anchor="middle" fill="white" font-size="16" font-weight="bold">break</text>
+  <rect x="20" y="90" width="290" height="420" fill="#FFEBEE" stroke="#FFCDD2" stroke-width="1" rx="0 0 6 6"/>
+  
+  <!-- Loop header -->
+  <rect x="65" y="110" width="200" height="35" rx="6" fill="#90CAF9" stroke="#64B5F6" stroke-width="1"/>
+  <text x="165" y="133" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">Loop: for each item</text>
+  <line x1="165" y1="145" x2="165" y2="170" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  
+  <!-- Condition diamond -->
+  <polygon points="165,175 235,210 165,245 95,210" fill="#FFF9C4" stroke="#FDD835" stroke-width="1.5"/>
+  <text x="165" y="213" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">Found it?</text>
+  
+  <!-- No path -->
+  <line x1="95" y1="210" x2="55" y2="210" stroke="#333" stroke-width="1.5"/>
+  <text x="72" y="203" font-size="10" fill="#388E3C" font-weight="bold">No</text>
+  <line x1="55" y1="210" x2="55" y2="110" stroke="#333" stroke-width="1.5"/>
+  <line x1="55" y1="110" x2="55" y2="127" stroke="#333" stroke-width="1.5"/>
+  <line x1="55" y1="127" x2="65" y2="127" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="42" y="160" font-size="10" fill="#666">next</text>
+  
+  <!-- Yes path → break EXIT -->
+  <line x1="235" y1="210" x2="280" y2="210" stroke="#D32F2F" stroke-width="2.5"/>
+  <text x="254" y="203" font-size="10" fill="#D32F2F" font-weight="bold">Yes</text>
+  
+  <!-- break box -->
+  <rect x="215" y="260" width="80" height="30" rx="5" fill="#D32F2F"/>
+  <text x="255" y="280" text-anchor="middle" fill="white" font-size="13" font-weight="bold">break;</text>
+  <line x1="255" y1="245" x2="255" y2="260" stroke="#D32F2F" stroke-width="2" marker-end="url(#arrRed)"/>
+  <path d="M280 210 L280 260" stroke="#D32F2F" stroke-width="2"/>
+  
+  <!-- EXIT arrow -->
+  <line x1="255" y1="290" x2="255" y2="340" stroke="#D32F2F" stroke-width="3" marker-end="url(#arrRed)"/>
+  <text x="275" y="320" font-size="14" fill="#D32F2F" font-weight="bold">EXIT</text>
+  
+  <!-- Exit result -->
+  <rect x="90" y="345" width="170" height="50" rx="8" fill="#FFCDD2" stroke="#EF9A9A" stroke-width="1.5"/>
+  <text x="175" y="367" text-anchor="middle" font-size="12" fill="#C62828" font-weight="bold">Loop ENDS</text>
+  <text x="175" y="384" text-anchor="middle" font-size="12" fill="#C62828" font-weight="bold">immediately 🛑</text>
+  
+  <text x="165" y="430" text-anchor="middle" font-size="11" fill="#555">Skips ALL remaining</text>
+  <text x="165" y="445" text-anchor="middle" font-size="11" fill="#555">iterations</text>
+  <text x="165" y="475" text-anchor="middle" font-size="12" fill="#C62828" font-weight="bold">"I found what I need.</text>
+  <text x="165" y="490" text-anchor="middle" font-size="12" fill="#C62828" font-weight="bold">Stop everything."</text>
+  
+  <!-- ============ RIGHT: continue ============ -->
+  <rect x="340" y="55" width="290" height="35" rx="6" fill="#FFA726"/>
+  <text x="485" y="78" text-anchor="middle" fill="white" font-size="16" font-weight="bold">continue</text>
+  <rect x="340" y="90" width="290" height="420" fill="#FFF8E1" stroke="#FFECB3" stroke-width="1" rx="0 0 6 6"/>
+  
+  <!-- Loop header -->
+  <rect x="385" y="110" width="200" height="35" rx="6" fill="#90CAF9" stroke="#64B5F6" stroke-width="1"/>
+  <text x="485" y="133" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">Loop: for each item</text>
+  <line x1="485" y1="145" x2="485" y2="170" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  
+  <!-- Condition diamond -->
+  <polygon points="485,175 555,210 485,245 415,210" fill="#FFF9C4" stroke="#FDD835" stroke-width="1.5"/>
+  <text x="485" y="213" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">Skip this?</text>
+  
+  <!-- No path → execute -->
+  <line x1="485" y1="245" x2="485" y2="270" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="500" y="262" font-size="10" fill="#388E3C" font-weight="bold">No</text>
+  <rect x="420" y="275" width="130" height="30" rx="5" fill="#A5D6A7" stroke="#81C784" stroke-width="1"/>
+  <text x="485" y="295" text-anchor="middle" font-size="12" fill="#2E7D32" font-weight="bold">Execute code</text>
+  
+  <!-- Yes path → continue SKIP -->
+  <line x1="555" y1="210" x2="595" y2="210" stroke="#F57F17" stroke-width="2.5"/>
+  <text x="570" y="203" font-size="10" fill="#F57F17" font-weight="bold">Yes</text>
+  
+  <!-- continue box -->
+  <rect x="540" y="250" width="85" height="28" rx="5" fill="#FFA726"/>
+  <text x="582" y="269" text-anchor="middle" fill="white" font-size="12" font-weight="bold">continue;</text>
+  <path d="M595 210 L595 250" stroke="#F57F17" stroke-width="2"/>
+  
+  <!-- SKIP arrow looping back to top -->
+  <path d="M595 278 L595 320 Q595 340 575 340 L370 340 Q355 340 355 320 L355 127 L385 127" stroke="#F57F17" stroke-width="2.5" fill="none" stroke-dasharray="6,3" marker-end="url(#arrAmber)"/>
+  <text x="590" y="310" font-size="13" fill="#F57F17" font-weight="bold">SKIP</text>
+  <text x="370" y="358" font-size="11" fill="#F57F17" font-weight="bold">→ Next iteration</text>
+  
+  <!-- Result -->
+  <rect x="400" y="380" width="170" height="50" rx="8" fill="#FFECB3" stroke="#FFD54F" stroke-width="1.5"/>
+  <text x="485" y="402" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">Loop CONTINUES</text>
+  <text x="485" y="419" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">with next item ⏭️</text>
+  
+  <text x="485" y="455" text-anchor="middle" font-size="11" fill="#555">Skips ONLY this one</text>
+  <text x="485" y="470" text-anchor="middle" font-size="11" fill="#555">iteration</text>
+  <text x="485" y="495" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">"Skip this one, but</text>
+  <text x="485" y="510" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">keep checking others."</text>
+</svg>
