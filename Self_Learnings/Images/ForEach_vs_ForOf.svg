@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 460" width="660" height="460" style="font-family:Arial,Helvetica,sans-serif">
+  <rect width="660" height="460" fill="white"/>
+  <text x="330" y="35" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a2e">forEach() vs for...of</text>
+
+  <!-- LEFT: forEach -->
+  <rect x="20" y="55" width="295" height="35" rx="6" fill="#FF9800"/>
+  <text x="167" y="78" text-anchor="middle" fill="white" font-size="15" font-weight="bold">forEach()</text>
+  <rect x="20" y="90" width="295" height="290" fill="#FFF3E0" stroke="#FFE0B2" stroke-width="1"/>
+
+  <text x="167" y="115" text-anchor="middle" font-size="12" fill="#555">Syntax:</text>
+  <rect x="35" y="120" width="265" height="50" rx="5" fill="#263238"/>
+  <text x="167" y="141" text-anchor="middle" font-size="11" fill="#FFAB91" font-family="monospace">arr.forEach((item) =&gt; {</text>
+  <text x="167" y="161" text-anchor="middle" font-size="11" fill="#FFAB91" font-family="monospace">  console.log(item);</text>
+  <text x="60" y="178" font-size="11" fill="#FFAB91" font-family="monospace">});</text>
+
+  <text x="50" y="205" font-size="13" fill="#E65100">✅ Cleaner syntax</text>
+  <text x="50" y="225" font-size="13" fill="#E65100">✅ Great for simple actions</text>
+  <text x="50" y="245" font-size="13" fill="#D32F2F">❌ Cannot use break</text>
+  <text x="50" y="265" font-size="13" fill="#D32F2F">❌ Cannot use continue</text>
+  <text x="50" y="285" font-size="13" fill="#D32F2F">❌ Awkward with async/await</text>
+  <text x="50" y="305" font-size="13" fill="#D32F2F">❌ No early exit possible</text>
+
+  <rect x="35" y="325" width="265" height="45" rx="5" fill="#FFE0B2"/>
+  <text x="167" y="345" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">Best for: Simple logging,</text>
+  <text x="167" y="362" text-anchor="middle" font-size="12" fill="#E65100" font-weight="bold">transforming every item</text>
+
+  <!-- RIGHT: for...of -->
+  <rect x="345" y="55" width="295" height="35" rx="6" fill="#00897B"/>
+  <text x="492" y="78" text-anchor="middle" fill="white" font-size="15" font-weight="bold">for...of</text>
+  <rect x="345" y="90" width="295" height="290" fill="#E0F2F1" stroke="#B2DFDB" stroke-width="1"/>
+
+  <text x="492" y="115" text-anchor="middle" font-size="12" fill="#555">Syntax:</text>
+  <rect x="360" y="120" width="265" height="50" rx="5" fill="#263238"/>
+  <text x="492" y="141" text-anchor="middle" font-size="11" fill="#80CBC4" font-family="monospace">for (let item of arr) {</text>
+  <text x="492" y="161" text-anchor="middle" font-size="11" fill="#80CBC4" font-family="monospace">  console.log(item);</text>
+  <text x="375" y="178" font-size="11" fill="#80CBC4" font-family="monospace">}</text>
+
+  <text x="375" y="205" font-size="13" fill="#00695C">✅ Works with break ✅</text>
+  <text x="375" y="225" font-size="13" fill="#00695C">✅ Works with continue ✅</text>
+  <text x="375" y="245" font-size="13" fill="#00695C">✅ Works with async/await ✅</text>
+  <text x="375" y="265" font-size="13" fill="#00695C">✅ Can exit early anytime</text>
+  <text x="375" y="285" font-size="13" fill="#00695C">✅ More flexible overall</text>
+  <text x="375" y="305" font-size="13" fill="#00695C">✅ SDET's preferred choice</text>
+
+  <rect x="360" y="325" width="265" height="45" rx="5" fill="#B2DFDB"/>
+  <text x="492" y="345" text-anchor="middle" font-size="12" fill="#00695C" font-weight="bold">Best for: Playwright, async tests,</text>
+  <text x="492" y="362" text-anchor="middle" font-size="12" fill="#00695C" font-weight="bold">any loop needing break/continue</text>
+
+  <!-- Bottom shared note -->
+  <rect x="20" y="395" width="620" height="55" rx="10" fill="#ECEFF1" stroke="#B0BEC5" stroke-width="1.5"/>
+  <text x="330" y="418" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Both iterate over array values — the difference is flexibility</text>
+  <text x="330" y="440" text-anchor="middle" font-size="13" fill="#555">Use <tspan font-weight="bold">forEach()</tspan> for simple read-only loops. Use <tspan font-weight="bold">for...of</tspan> when you need control (break, async).</text>
+</svg>

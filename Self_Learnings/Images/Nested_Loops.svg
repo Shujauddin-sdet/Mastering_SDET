@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 520" width="600" height="520" style="font-family:Arial,Helvetica,sans-serif">
+  <rect width="600" height="520" fill="white"/>
+  <text x="300" y="35" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a2e">Nested Loops — Loop Inside a Loop</text>
+
+  <!-- Outer loop label -->
+  <rect x="15" y="80" width="50" height="200" rx="6" fill="#BBDEFB" stroke="#2196F3" stroke-width="2"/>
+  <text x="40" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#1565C0" transform="rotate(-90,40,180)">Outer Loop  (i = 1, 2, 3)</text>
+  <line x1="65" y1="130" x2="75" y2="130" stroke="#2196F3" stroke-width="2" marker-end="url(#ab)"/>
+  <line x1="65" y1="180" x2="75" y2="180" stroke="#2196F3" stroke-width="2" marker-end="url(#ab)"/>
+  <line x1="65" y1="230" x2="75" y2="230" stroke="#2196F3" stroke-width="2" marker-end="url(#ab)"/>
+
+  <!-- Inner loop header -->
+  <rect x="75" y="58" width="510" height="30" rx="6" fill="#C8E6C9" stroke="#4CAF50" stroke-width="2"/>
+  <text x="330" y="78" text-anchor="middle" font-size="13" font-weight="bold" fill="#2E7D32">Inner Loop (j = 1, 2, 3) →</text>
+
+  <!-- Grid rows -->
+  <!-- Row 1 -->
+  <rect x="75" y="88" width="170" height="84" rx="4" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
+  <text x="160" y="125" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">i=1, j=1</text>
+  <text x="160" y="145" text-anchor="middle" font-size="11" fill="#555">1st outer, 1st inner</text>
+
+  <rect x="245" y="88" width="170" height="84" rx="4" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
+  <text x="330" y="125" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">i=1, j=2</text>
+  <text x="330" y="145" text-anchor="middle" font-size="11" fill="#555">1st outer, 2nd inner</text>
+
+  <rect x="415" y="88" width="170" height="84" rx="4" fill="#E3F2FD" stroke="#90CAF9" stroke-width="1.5"/>
+  <text x="500" y="125" text-anchor="middle" font-size="13" fill="#1565C0" font-weight="bold">i=1, j=3</text>
+  <text x="500" y="145" text-anchor="middle" font-size="11" fill="#555">1st outer, 3rd inner</text>
+
+  <!-- Row 2 -->
+  <rect x="75" y="172" width="170" height="84" rx="4" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1.5"/>
+  <text x="160" y="209" text-anchor="middle" font-size="13" fill="#6A1B9A" font-weight="bold">i=2, j=1</text>
+  <text x="160" y="229" text-anchor="middle" font-size="11" fill="#555">2nd outer, 1st inner</text>
+
+  <rect x="245" y="172" width="170" height="84" rx="4" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1.5"/>
+  <text x="330" y="209" text-anchor="middle" font-size="13" fill="#6A1B9A" font-weight="bold">i=2, j=2</text>
+  <text x="330" y="229" text-anchor="middle" font-size="11" fill="#555">2nd outer, 2nd inner</text>
+
+  <rect x="415" y="172" width="170" height="84" rx="4" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1.5"/>
+  <text x="500" y="209" text-anchor="middle" font-size="13" fill="#6A1B9A" font-weight="bold">i=2, j=3</text>
+  <text x="500" y="229" text-anchor="middle" font-size="11" fill="#555">2nd outer, 3rd inner</text>
+
+  <!-- Row 3 -->
+  <rect x="75" y="256" width="170" height="84" rx="4" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1.5"/>
+  <text x="160" y="293" text-anchor="middle" font-size="13" fill="#2E7D32" font-weight="bold">i=3, j=1</text>
+  <text x="160" y="313" text-anchor="middle" font-size="11" fill="#555">3rd outer, 1st inner</text>
+
+  <rect x="245" y="256" width="170" height="84" rx="4" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1.5"/>
+  <text x="330" y="293" text-anchor="middle" font-size="13" fill="#2E7D32" font-weight="bold">i=3, j=2</text>
+  <text x="330" y="313" text-anchor="middle" font-size="11" fill="#555">3rd outer, 2nd inner</text>
+
+  <rect x="415" y="256" width="170" height="84" rx="4" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="1.5"/>
+  <text x="500" y="293" text-anchor="middle" font-size="13" fill="#2E7D32" font-weight="bold">i=3, j=3</text>
+  <text x="500" y="313" text-anchor="middle" font-size="11" fill="#555">3rd outer, 3rd inner</text>
+
+  <!-- Key -->
+  <rect x="30" y="365" width="540" height="140" rx="10" fill="#FFF8E1" stroke="#FFE082" stroke-width="1.5"/>
+  <text x="300" y="390" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">🔑 Key Rule</text>
+  <text x="300" y="415" text-anchor="middle" font-size="13" fill="#333">Outer Loop runs <tspan font-weight="bold">3 times</tspan>. Each time, Inner Loop runs <tspan font-weight="bold">3 times</tspan>.</text>
+  <text x="300" y="438" text-anchor="middle" font-size="13" fill="#333">Total executions = <tspan font-weight="bold" fill="#D32F2F">3 × 3 = 9</tspan></text>
+  <text x="300" y="462" text-anchor="middle" font-size="12" fill="#666">Think of it like a multiplication table or reading every cell in a spreadsheet.</text>
+  <text x="300" y="488" text-anchor="middle" font-size="12" fill="#0277BD" font-weight="bold">Used for: Web Tables, Matrices, Comparing lists, Validating rows &amp; columns</text>
+
+  <defs>
+    <marker id="ab" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2196F3"/>
+    </marker>
+  </defs>
+</svg>

@@ -29,7 +29,17 @@
    - [break](#a-break-statement)
    - [continue](#b-continue-statement)
    - [Labels](#c-labels-with-break-and-continue)
+9. [Loop Control Statements](#8-loop-control-statements)
+   - [break](#a-break-statement)
+   - [continue](#b-continue-statement)
+   - [Labels](#c-labels-with-break-and-continue)
 10. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
+11. [Nested Loops](#10-nested-loops-loop-inside-a-loop)
+12. [Counting Down — Reverse Loops](#11-counting-down--reverse-loops-i--)
+13. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
+14. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
+15. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
+16. [for...of with Map and Set](#15-forof-with-map-and-set)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -2940,18 +2950,560 @@ if (!testPassed) {
 
 ---
 
-### Summary Cheat Sheet
+---
 
-| What You Want To Do | Loop To Use |
-|---------------------|------------|
-| Repeat exactly N times | `for` |
-| Loop through an array's values | `for...of` |
-| Loop through an object's keys | `for...in` |
+## 10. Nested Loops (Loop Inside a Loop)
+
+A **nested loop** is simply a loop placed **inside another loop**. The inner loop runs **completely** every time the outer loop runs once.
+
+> Think of it like reading a book: the **outer loop** turns each page. The **inner loop** reads every word on that page.
+
+![Nested Loops — Loop Inside a Loop](Images/Nested_Loops.svg)
+
+**Syntax:**
+```javascript
+for (let i = 1; i <= 3; i++) {          // Outer loop — runs 3 times
+    for (let j = 1; j <= 3; j++) {      // Inner loop — runs 3 times PER outer run
+        console.log("i=" + i + ", j=" + j);
+    }
+}
+```
+
+**Output:**
+```
+i=1, j=1 → i=1, j=2 → i=1, j=3
+i=2, j=1 → i=2, j=2 → i=2, j=3
+i=3, j=1 → i=3, j=2 → i=3, j=3
+```
+
+**🔑 Key Rule: Multiply the counts**
+- Outer runs **3 times**, inner runs **3 times each** → **3 × 3 = 9 total executions**
+- For outer=10, inner=10 → 10 × 10 = **100 total executions**
+
+> ⚠️ **Warning:** Nested loops can get slow quickly with large data. Keep nesting to 2 levels maximum where possible.
+
+#### 🧪 Real-World SDET Example:
+
+**Validating every cell in a web table (rows × columns):**
+```javascript
+let table = [
+    ["Product",  "Price", "Stock"],   // Header row (index 0)
+    ["Laptop",   "999",   "Yes"],
+    ["Phone",    "0",     "No"],      // Bug: price is $0!
+    ["Tablet",   "499",   "Yes"]
+];
+
+// Start at row 1 to skip the header
+for (let row = 1; row < table.length; row++) {
+    for (let col = 0; col < table[row].length; col++) {
+        let cell = table[row][col];
+
+        if (cell === "0") {
+            console.log("🚨 BUG at Row " + row + ", Col " + col + ": value is 0!");
+        } else if (cell === "No") {
+            console.log("⚠️ Row " + row + ", Col " + col + ": Out of stock");
+        } else {
+            console.log("✅ Row " + row + ", Col " + col + ": " + cell);
+        }
+    }
+}
+```
+
+**Output:**
+```
+✅ Row 1, Col 0: Laptop
+✅ Row 1, Col 1: 999
+✅ Row 1, Col 2: Yes
+✅ Row 2, Col 0: Phone
+🚨 BUG at Row 2, Col 1: value is 0!
+⚠️ Row 2, Col 2: Out of stock
+✅ Row 3, Col 0: Tablet
+✅ Row 3, Col 1: 499
+✅ Row 3, Col 2: Yes
+```
+
+> 💡 **Common variable naming:** Use `i` for the outer loop and `j` for the inner loop — this is the universally accepted convention you'll see in every codebase.
+
+---
+
+## 11. Counting Down — Reverse Loops (i--)
+
+Every loop example so far has counted **up** (`i++`). But you can just as easily loop **backwards** using `i--` (subtract 1 each time).
+
+![Counting Down — Reverse Loop](Images/Reverse_Loop.svg)
+
+**The pattern — just 3 changes from a normal loop:**
+
+| Part | Count Up | Count Down |
+|------|----------|------------|
+| **Start** | `let i = 1` | `let i = 5` (start at the end) |
+| **Condition** | `i <= 5` | `i >= 1` (stop when you reach 1) |
+| **Update** | `i++` | `i--` (subtract instead of add) |
+
+**Example — Countdown:**
+```javascript
+// Count DOWN from 5 to 1
+for (let i = 5; i >= 1; i--) {
+    console.log(i);
+}
+console.log("🚀 Launch!");
+```
+
+**Output:**
+```
+5
+4
+3
+2
+1
+🚀 Launch!
+```
+
+**Example — Loop through array in reverse:**
+```javascript
+let browsers = ["Chrome", "Firefox", "Safari", "Edge"];
+
+// Loop from last index to 0
+for (let i = browsers.length - 1; i >= 0; i--) {
+    console.log("Testing: " + browsers[i]);
+}
+```
+
+**Output:**
+```
+Testing: Edge
+Testing: Safari
+Testing: Firefox
+Testing: Chrome
+```
+
+> 💡 **`browsers.length - 1`** is the last index. Since the array has 4 items (indices 0–3), `length - 1 = 3`, which is the last item "Edge".
+
+#### 🧪 Real-World SDET Example:
+
+**Removing failed tests from a list (safest to loop backwards when deleting):**
+```javascript
+let testResults = ["PASS", "FAIL", "PASS", "FAIL", "PASS"];
+
+// Loop BACKWARDS when removing items — avoids index shifting issues
+for (let i = testResults.length - 1; i >= 0; i--) {
+    if (testResults[i] === "FAIL") {
+        console.log("Removing failed test at index " + i);
+        testResults.splice(i, 1); // Remove this item
+    }
+}
+
+console.log("Remaining:", testResults); // ["PASS", "PASS", "PASS"]
+```
+
+> ⚠️ **Important:** When removing items from an array inside a loop, always loop **backwards**. If you loop forwards and remove an item, the indices shift and you'll skip the next item!
+
+---
+
+## 12. `for...of` with Index — Array.entries()
+
+A common frustration with `for...of` is that you get the **value** but not the **position number (index)**. The fix is `.entries()`.
+
+![Array.entries() — Index AND Value](Images/Array_Entries.svg)
+
+**The Problem:**
+```javascript
+let products = ["Laptop", "Phone", "Tablet"];
+
+for (let product of products) {
+    console.log(product);   // "Laptop", "Phone", "Tablet"
+    // But which NUMBER is this? We don't know!
+}
+```
+
+**The Solution — `.entries()`:**
+```javascript
+let products = ["Laptop", "Phone", "Tablet"];
+
+for (let [index, product] of products.entries()) {
+    console.log(index + ": " + product);
+}
+```
+
+**Output:**
+```
+0: Laptop
+1: Phone
+2: Tablet
+```
+
+**How it works:**
+- `products.entries()` converts the array into pairs: `[0, "Laptop"]`, `[1, "Phone"]`, `[2, "Tablet"]`
+- `let [index, product]` — this is called **destructuring**: it unpacks each pair into two named variables
+- Now you have **both** the index number AND the value in every iteration
+
+**Comparison — 3 ways to loop with index:**
+```javascript
+let colors = ["red", "green", "blue"];
+
+// Way 1: classic for — verbose
+for (let i = 0; i < colors.length; i++) {
+    console.log(i + ": " + colors[i]);
+}
+
+// Way 2: for...of with entries — clean & modern ✅ RECOMMENDED
+for (let [i, color] of colors.entries()) {
+    console.log(i + ": " + color);
+}
+
+// Way 3: forEach — no break/continue
+colors.forEach((color, i) => {
+    console.log(i + ": " + color);
+});
+```
+
+> All three produce the same output: `0: red`, `1: green`, `2: blue`
+
+#### 🧪 Real-World SDET Example:
+
+**Reporting exactly which row number failed in a test:**
+```javascript
+let testCases = [
+    { name: "Login Test",    status: "PASS" },
+    { name: "Checkout Test", status: "FAIL" },   // Row 1 failed
+    { name: "Search Test",   status: "PASS" },
+    { name: "Profile Test",  status: "FAIL" }    // Row 3 failed
+];
+
+for (let [rowNumber, test] of testCases.entries()) {
+    if (test.status === "FAIL") {
+        console.log("❌ Row " + rowNumber + " FAILED: " + test.name);
+    } else {
+        console.log("✅ Row " + rowNumber + " passed: " + test.name);
+    }
+}
+```
+
+**Output:**
+```
+✅ Row 0 passed: Login Test
+❌ Row 1 FAILED: Checkout Test
+✅ Row 2 passed: Search Test
+❌ Row 3 FAILED: Profile Test
+```
+
+> 💡 Without `.entries()`, you'd only know "Checkout Test failed" — with it, you know **exactly which row** failed. Much better bug reports!
+
+---
+
+## 13. `forEach()` — The Array Method Loop
+
+`forEach()` is not a `for` loop — it's a **built-in array method** that loops through every item. You'll see it constantly in JavaScript code.
+
+![forEach() vs for...of](Images/ForEach_vs_ForOf.svg)
+
+**Syntax:**
+```javascript
+array.forEach(function(item) {
+    // code to run for each item
+});
+
+// Modern arrow function version (same thing, shorter):
+array.forEach((item) => {
+    // code to run for each item
+});
+```
+
+**Basic Example:**
+```javascript
+let fruits = ["Apple", "Banana", "Cherry"];
+
+fruits.forEach((fruit) => {
+    console.log("🍎 " + fruit);
+});
+```
+
+**Output:**
+```
+🍎 Apple
+🍎 Banana
+🍎 Cherry
+```
+
+**Getting the index with forEach:**
+```javascript
+let fruits = ["Apple", "Banana", "Cherry"];
+
+fruits.forEach((fruit, index) => {
+    console.log(index + ": " + fruit);
+});
+// Output: 0: Apple | 1: Banana | 2: Cherry
+```
+
+> `forEach` automatically passes two arguments to your function: the **item** and its **index**. You don't need `.entries()`.
+
+**forEach vs for...of — When to use which:**
+
+| Feature | `forEach()` | `for...of` |
+|---------|------------|-----------|
+| Syntax | Shorter, callback style | Slightly longer |
+| `break` / `continue` | ❌ **Cannot use** | ✅ Works fine |
+| `async/await` | ❌ Doesn't work as expected | ✅ Works perfectly |
+| Getting index | ✅ Built-in (2nd param) | Need `.entries()` |
+| Use in Playwright async tests | ❌ Avoid | ✅ Use this |
+
+**The crucial limitation — no `break`:**
+```javascript
+let numbers = [1, 2, 3, 4, 5];
+
+// ❌ This does NOT work — break inside forEach has no effect!
+numbers.forEach((num) => {
+    if (num === 3) break; // SyntaxError: Illegal break statement
+    console.log(num);
+});
+
+// ✅ Use for...of when you need break
+for (let num of numbers) {
+    if (num === 3) break; // Works perfectly!
+    console.log(num);
+}
+// Output: 1, 2
+```
+
+**The async/await problem:**
+```javascript
+let urls = ["/api/user", "/api/orders", "/api/cart"];
+
+// ❌ WRONG — forEach does NOT wait for async operations
+urls.forEach(async (url) => {
+    let data = await fetch(url);  // This won't be awaited properly!
+    console.log(data);
+});
+
+// ✅ CORRECT — for...of awaits each one properly
+for (let url of urls) {
+    let data = await fetch(url);  // This waits correctly
+    console.log(data);
+}
+```
+
+#### 🧪 Real-World SDET Example:
+
+**✅ Good use of forEach — simple logging:**
+```javascript
+let testNames = ["Login", "Checkout", "Search", "Profile"];
+
+// Simple, clean — just printing every test name
+testNames.forEach((test) => {
+    console.log("📋 Registered test: " + test);
+});
+```
+
+**✅ Good use of for...of — async Playwright test:**
+```javascript
+let productUrls = ["/products/1", "/products/2", "/products/3"];
+
+// In Playwright (async context) — for...of is correct!
+for (let url of productUrls) {
+    await page.goto(url);
+    let title = await page.title();
+    console.log("📄 " + url + " → " + title);
+}
+```
+
+> 💡 **Simple rule:** If you need `break`, `continue`, or `async/await` → use `for...of`. If it's a simple action on every item with no early exit → `forEach` is fine.
+
+---
+
+## 14. Loop Variable Scope — `let` vs `var` Gotcha
+
+This is one of the most common beginner bugs in JavaScript loops. It's important to understand before you move on.
+
+![let vs var in Loops — Scope Gotcha](Images/Loop_Var_Scope.svg)
+
+**`var` in loops — The OLD way (leaks out!):**
+```javascript
+for (var i = 0; i < 3; i++) {
+    console.log(i);  // 0, 1, 2
+}
+
+// ❌ i is STILL accessible here — it leaked out!
+console.log("After loop, i =", i);  // "After loop, i = 3"
+```
+
+**`let` in loops — The MODERN way (stays inside!):**
+```javascript
+for (let i = 0; i < 3; i++) {
+    console.log(i);  // 0, 1, 2
+}
+
+// ✅ i is NOT accessible here — safely trapped inside the loop!
+console.log("After loop, i =", i);  // ❌ ReferenceError: i is not defined
+```
+
+**Why does this matter? — The Closure Bug:**
+```javascript
+// ❌ BUG with var — classic infamous JavaScript bug
+for (var i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i);  // Prints 3, 3, 3 — NOT 0, 1, 2!
+    }, 100);
+}
+// Because by the time setTimeout runs, i has already reached 3!
+
+// ✅ FIXED with let — each iteration gets its OWN copy of i
+for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i);  // Prints 0, 1, 2 — correct! ✅
+    }, 100);
+}
+```
+
+> ⚠️ This `var` closure bug has confused JavaScript developers for decades! The fix is simply: **always use `let`**.
+
+**The golden rule:**
+
+| Rule | Explanation |
+|------|------------|
+| `var` | **Function-scoped** — leaks out of loops, causes bugs |
+| `let` | **Block-scoped** — stays inside `{ }`, safe |
+| `const` | Use when the variable never changes (rare in loops) |
+
+> 💡 **For SDETs:** If you ever see old test code using `var` in loops, replace it with `let`. It will behave more predictably in async automation code.
+
+---
+
+## 15. `for...of` with `Map` and `Set`
+
+`for...of` doesn't just work on arrays. It works on any **iterable** — including the `Map` and `Set` data structures which are very useful in test data management.
+
+### `Set` — A list with NO duplicates
+
+A `Set` is like an array but automatically **removes duplicate values**. Perfect for storing unique test results.
+
+```javascript
+// Create a Set — no duplicates allowed
+let uniqueStatuses = new Set(["PASS", "FAIL", "PASS", "PASS", "FAIL", "SKIP"]);
+
+console.log(uniqueStatuses);
+// Set { "PASS", "FAIL", "SKIP" } — duplicates removed automatically!
+
+// Loop through a Set with for...of
+for (let status of uniqueStatuses) {
+    console.log("Status found: " + status);
+}
+```
+
+**Output:**
+```
+Status found: PASS
+Status found: FAIL
+Status found: SKIP
+```
+
+#### 🧪 SDET Example — Finding all unique browsers tested:
+```javascript
+let browserLog = ["chromium", "firefox", "chromium", "webkit", "firefox", "chromium"];
+
+let uniqueBrowsers = new Set(browserLog); // Removes duplicates
+
+console.log("Unique browsers tested: " + uniqueBrowsers.size);
+
+for (let browser of uniqueBrowsers) {
+    console.log("  → " + browser);
+}
+```
+
+**Output:**
+```
+Unique browsers tested: 3
+  → chromium
+  → firefox
+  → webkit
+```
+
+---
+
+### `Map` — Like an object but with MORE power
+
+A `Map` stores **key-value pairs**, just like an object, but keys can be ANY type (not just strings). When you loop a `Map` with `for...of`, you get `[key, value]` pairs.
+
+```javascript
+// Create a Map
+let testResults = new Map();
+testResults.set("login",    "PASS");
+testResults.set("checkout", "FAIL");
+testResults.set("search",   "PASS");
+testResults.set("profile",  "SKIP");
+
+// Loop through a Map — get both key AND value
+for (let [testName, result] of testResults) {
+    console.log(testName + ": " + result);
+}
+```
+
+**Output:**
+```
+login: PASS
+checkout: FAIL
+search: PASS
+profile: SKIP
+```
+
+> 💡 Notice: `for (let [testName, result] of testResults)` — this is **destructuring** again, unpacking each `[key, value]` pair automatically.
+
+#### 🧪 SDET Example — Test results summary with Map:
+```javascript
+let suiteResults = new Map([
+    ["Login Suite",    "PASS"],
+    ["Payment Suite",  "FAIL"],
+    ["Search Suite",   "PASS"],
+    ["Profile Suite",  "PASS"]
+]);
+
+let passed = 0;
+let failed = 0;
+
+for (let [suite, status] of suiteResults) {
+    if (status === "PASS") {
+        passed++;
+        console.log("✅ " + suite);
+    } else {
+        failed++;
+        console.log("❌ " + suite + " — needs attention!");
+    }
+}
+
+console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
+```
+
+**Output:**
+```
+✅ Login Suite
+❌ Payment Suite — needs attention!
+✅ Search Suite
+✅ Profile Suite
+
+📊 Summary: 3 passed, 1 failed
+```
+
+---
+
+### Summary Cheat Sheet — Complete Loops Reference
+
+| What You Want To Do | Best Approach |
+|---------------------|--------------|
+| Repeat exactly N times | `for (let i = 0; i < N; i++)` |
+| Loop through an array's **values** | `for...of` |
+| Loop through an array's **values + index** | `for...of` with `.entries()` |
+| Loop through an **object's keys** | `for...in` |
 | Repeat until a condition changes | `while` |
 | Run at least once, then check | `do...while` |
+| Loop **backwards** through a list | `for (let i = arr.length-1; i >= 0; i--)` |
+| Loop inside a loop (tables, grids) | Nested `for` loops |
 | Stop looping early | `break` |
-| Skip one item and continue | `continue` |
-| Exit a nested loop entirely | `break labelName` |
+| Skip one item, keep going | `continue` |
+| Exit a nested loop from inside | `break labelName` |
+| Simple action on every item (no break) | `forEach()` |
+| Loop with `async/await` in Playwright | `for...of` |
+| Loop through a `Set` (unique items) | `for...of` |
+| Loop through a `Map` (key-value pairs) | `for...of` with destructuring |
+| Always use `___` not `var` in loops | `let` |
 
-> 💡 **Golden Rule for SDETs:** When automating with Playwright, `for...of` is your best friend. It works perfectly with arrays of elements, NodeLists, and test data. Pair it with `break` for "find first" searches and `continue` for "skip invalid items" logic.
+> 💡 **Golden Rule for SDETs:** `for...of` is your workhorse for Playwright. It handles arrays, NodeLists, Sets, Maps, and works perfectly with `async/await`. Use `break` and `continue` inside it freely. Only switch to `forEach` for simple, non-async, read-every-item tasks.
 

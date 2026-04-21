@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 380" width="650" height="380" style="font-family:Arial,Helvetica,sans-serif">
+  <rect width="650" height="380" fill="white"/>
+  <text x="325" y="35" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a1a2e">Counting Down — Reverse Loop (i--)</text>
+
+  <defs>
+    <marker id="ra2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- Count-up vs count-down comparison -->
+  <!-- LEFT: Count Up -->
+  <rect x="20" y="55" width="285" height="35" rx="6" fill="#4CAF50"/>
+  <text x="162" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">⬆️ Counting UP (i++)</text>
+  <rect x="20" y="90" width="285" height="175" fill="#E8F5E9" stroke="#C8E6C9" stroke-width="1"/>
+
+  <text x="162" y="115" text-anchor="middle" font-size="12" fill="#333" font-family="monospace">for (let i = 1; i &lt;= 5; i++)</text>
+  <rect x="50" y="125" width="225" height="120" rx="5" fill="#263238"/>
+  <text x="162" y="147" text-anchor="middle" font-size="12" fill="#80CBC4" font-family="monospace">i=1 → prints 1</text>
+  <text x="162" y="167" text-anchor="middle" font-size="12" fill="#80CBC4" font-family="monospace">i=2 → prints 2</text>
+  <text x="162" y="187" text-anchor="middle" font-size="12" fill="#80CBC4" font-family="monospace">i=3 → prints 3</text>
+  <text x="162" y="207" text-anchor="middle" font-size="12" fill="#80CBC4" font-family="monospace">i=4 → prints 4</text>
+  <text x="162" y="227" text-anchor="middle" font-size="12" fill="#80CBC4" font-family="monospace">i=5 → prints 5</text>
+  <text x="162" y="255" text-anchor="middle" font-size="13" fill="#2E7D32" font-weight="bold">Output: 1, 2, 3, 4, 5 →</text>
+
+  <!-- RIGHT: Count Down -->
+  <rect x="345" y="55" width="285" height="35" rx="6" fill="#F44336"/>
+  <text x="487" y="78" text-anchor="middle" fill="white" font-size="14" font-weight="bold">⬇️ Counting DOWN (i--)</text>
+  <rect x="345" y="90" width="285" height="175" fill="#FFEBEE" stroke="#FFCDD2" stroke-width="1"/>
+
+  <text x="487" y="115" text-anchor="middle" font-size="12" fill="#333" font-family="monospace">for (let i = 5; i &gt;= 1; i--)</text>
+  <rect x="375" y="125" width="225" height="120" rx="5" fill="#263238"/>
+  <text x="487" y="147" text-anchor="middle" font-size="12" fill="#FFAB91" font-family="monospace">i=5 → prints 5</text>
+  <text x="487" y="167" text-anchor="middle" font-size="12" fill="#FFAB91" font-family="monospace">i=4 → prints 4</text>
+  <text x="487" y="187" text-anchor="middle" font-size="12" fill="#FFAB91" font-family="monospace">i=3 → prints 3</text>
+  <text x="487" y="207" text-anchor="middle" font-size="12" fill="#FFAB91" font-family="monospace">i=2 → prints 2</text>
+  <text x="487" y="227" text-anchor="middle" font-size="12" fill="#FFAB91" font-family="monospace">i=1 → prints 1</text>
+  <text x="487" y="255" text-anchor="middle" font-size="13" fill="#C62828" font-weight="bold">Output: 5, 4, 3, 2, 1 ←</text>
+
+  <!-- Legend box -->
+  <rect x="20" y="285" width="610" height="80" rx="10" fill="#F3E5F5" stroke="#CE93D8" stroke-width="1.5"/>
+  <text x="325" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#333">🔑 The Only Change: Start Value + Condition + i-- instead of i++</text>
+  <text x="325" y="332" text-anchor="middle" font-size="13" fill="#555">Count Up: <tspan font-family="monospace" fill="#2E7D32">let i = 1; i &lt;= 5; i++</tspan>  →  Count Down: <tspan font-family="monospace" fill="#C62828">let i = 5; i &gt;= 1; i--</tspan></text>
+  <text x="325" y="355" text-anchor="middle" font-size="12" fill="#6A1B9A" font-weight="bold">SDET Use: Processing error list in reverse, countdown timers, reverse pagination</text>
+</svg>
