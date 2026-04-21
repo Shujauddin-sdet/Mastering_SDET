@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" width="760" height="520" style="font-family:Arial,Helvetica,sans-serif">
+  <!-- Background -->
+  <rect width="760" height="520" fill="#0d1b2a"/>
+
+  <!-- Title -->
+  <text x="380" y="38" text-anchor="middle" font-size="22" font-weight="bold" fill="white">JavaScript Execution Context</text>
+
+  <!-- ─── PHASE 1: CREATION PHASE ─── -->
+  <rect x="30" y="58" width="310" height="340" rx="14" fill="#1a3a4a" stroke="#38bdf8" stroke-width="2"/>
+  <!-- Header -->
+  <rect x="30" y="58" width="310" height="58" rx="14" fill="#0ea5e9"/>
+  <rect x="30" y="96" width="310" height="20" fill="#0ea5e9"/>
+  <text x="185" y="83" text-anchor="middle" font-size="11" fill="#e0f2fe">PHASE 1:</text>
+  <text x="185" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="white">CREATION PHASE</text>
+
+  <!-- Bullet points -->
+  <circle cx="58" cy="138" r="4" fill="#38bdf8"/>
+  <text x="72" y="143" font-size="13" fill="#e0f2fe">Memory is allocated</text>
+  <circle cx="58" cy="165" r="4" fill="#38bdf8"/>
+  <text x="72" y="170" font-size="13" fill="#e0f2fe">Variables set to <tspan font-family="monospace" fill="#fbbf24">undefined</tspan></text>
+  <circle cx="58" cy="192" r="4" fill="#38bdf8"/>
+  <text x="72" y="197" font-size="13" fill="#e0f2fe">Function declarations stored in full</text>
+
+  <!-- Code box -->
+  <rect x="48" y="214" width="274" height="110" rx="8" fill="#0d1b2a" stroke="#1e40af" stroke-width="1"/>
+  <text x="62" y="236" font-size="11.5" fill="#fbbf24" font-family="monospace">var</text>
+  <text x="82" y="236" font-size="11.5" fill="#e0f2fe" font-family="monospace"> name = </text>
+  <text x="155" y="236" font-size="11.5" fill="#f87171" font-family="monospace">undefined</text>
+  <text x="62" y="255" font-size="11.5" fill="#fbbf24" font-family="monospace">var</text>
+  <text x="82" y="255" font-size="11.5" fill="#e0f2fe" font-family="monospace"> age  = </text>
+  <text x="148" y="255" font-size="11.5" fill="#f87171" font-family="monospace">undefined</text>
+  <text x="62" y="274" font-size="11.5" fill="#fbbf24" font-family="monospace">function</text>
+  <text x="117" y="274" font-size="11.5" fill="#6ee7b7" font-family="monospace"> greet() {</text>
+  <text x="75" y="293" font-size="11.5" fill="#9ca3af" font-family="monospace">  ... [stored fully]</text>
+  <text x="62" y="312" font-size="11.5" fill="#6ee7b7" font-family="monospace">}</text>
+
+  <!-- Bottom label -->
+  <rect x="60" y="340" width="262" height="40" rx="8" fill="#0c4a6e"/>
+  <text x="191" y="366" text-anchor="middle" font-size="14" font-weight="bold" fill="#38bdf8">🧠 Hoisting happens here.</text>
+
+  <!-- ─── THEN ARROW ─── -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+  </defs>
+  <line x1="380" y1="155" x2="380" y2="265" stroke="#64748b" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="350" y="195" width="60" height="28" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+  <text x="380" y="213" text-anchor="middle" font-size="12" font-weight="bold" fill="#94a3b8">THEN</text>
+
+  <!-- ─── PHASE 2: EXECUTION PHASE ─── -->
+  <rect x="420" y="58" width="310" height="340" rx="14" fill="#1a3a2a" stroke="#4ade80" stroke-width="2"/>
+  <!-- Header -->
+  <rect x="420" y="58" width="310" height="58" rx="14" fill="#16a34a"/>
+  <rect x="420" y="96" width="310" height="20" fill="#16a34a"/>
+  <text x="575" y="83" text-anchor="middle" font-size="11" fill="#dcfce7">PHASE 2:</text>
+  <text x="575" y="104" text-anchor="middle" font-size="15" font-weight="bold" fill="white">EXECUTION PHASE</text>
+
+  <!-- Bullet points -->
+  <circle cx="448" cy="138" r="4" fill="#4ade80"/>
+  <text x="462" y="143" font-size="13" fill="#dcfce7">Code runs line by line, top to bottom</text>
+  <circle cx="448" cy="165" r="4" fill="#4ade80"/>
+  <text x="462" y="170" font-size="13" fill="#dcfce7">Variables get their actual values</text>
+  <circle cx="448" cy="192" r="4" fill="#4ade80"/>
+  <text x="462" y="197" font-size="13" fill="#dcfce7">Functions get called / executed</text>
+
+  <!-- Code box -->
+  <rect x="438" y="214" width="274" height="110" rx="8" fill="#0d1b2a" stroke="#14532d" stroke-width="1"/>
+  <text x="452" y="236" font-size="11.5" fill="#e0f2fe" font-family="monospace">name = </text>
+  <text x="510" y="236" font-size="11.5" fill="#fde68a" font-family="monospace">'Shuja'</text>
+  <text x="452" y="258" font-size="11.5" fill="#e0f2fe" font-family="monospace">age  = </text>
+  <text x="505" y="258" font-size="11.5" fill="#fbbf24" font-family="monospace">25</text>
+  <text x="452" y="280" font-size="11.5" fill="#6ee7b7" font-family="monospace">greet()</text>
+  <text x="507" y="280" font-size="11.5" fill="#9ca3af" font-family="monospace"> is called</text>
+  <text x="452" y="310" font-size="11.5" fill="#818cf8" font-family="monospace">// Your code actually runs!</text>
+
+  <!-- Bottom label -->
+  <rect x="450" y="340" width="262" height="40" rx="8" fill="#14532d"/>
+  <text x="581" y="366" text-anchor="middle" font-size="14" font-weight="bold" fill="#4ade80">▶ Your logic runs here.</text>
+
+  <!-- ─── CALL STACK ILLUSTRATION ─── -->
+  <rect x="30" y="415" width="700" height="92" rx="12" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+  <text x="380" y="440" text-anchor="middle" font-size="13" font-weight="bold" fill="#94a3b8">📚 The Call Stack</text>
+
+  <!-- Stack boxes -->
+  <rect x="55" y="450" width="160" height="44" rx="6" fill="#0ea5e9" opacity="0.2" stroke="#0ea5e9" stroke-width="1"/>
+  <text x="135" y="477" text-anchor="middle" font-size="12" fill="#38bdf8">Global Execution Context</text>
+
+  <text x="235" y="477" font-size="18" fill="#475569">→</text>
+
+  <rect x="260" y="450" width="160" height="44" rx="6" fill="#16a34a" opacity="0.2" stroke="#4ade80" stroke-width="1"/>
+  <text x="340" y="477" text-anchor="middle" font-size="12" fill="#4ade80">greet() Context</text>
+
+  <text x="440" y="477" font-size="18" fill="#475569">→</text>
+
+  <rect x="465" y="450" width="183" height="44" rx="6" fill="#7c3aed" opacity="0.2" stroke="#a78bfa" stroke-width="1"/>
+  <text x="556" y="467" text-anchor="middle" font-size="11" fill="#c4b5fd">Any nested function</text>
+  <text x="556" y="484" text-anchor="middle" font-size="11" fill="#c4b5fd">creates its own context</text>
+</svg>

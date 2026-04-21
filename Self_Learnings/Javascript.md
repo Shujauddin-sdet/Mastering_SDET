@@ -14,6 +14,7 @@
    - [BigInt](#-bigint)
    - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
    - [Type Coercion](#-type-coercion)
+3.5 [Execution Context — Creation & Execution Phase](#35-execution-context)
 4. [Operators](#4-operators)
    - [Nullish Coalescing (??) vs ||](#11-nullish-coalescing-operator-)
 5. [Truthy and Falsy Values](#truthy-and-falsy-values)
@@ -917,6 +918,101 @@ console.log(typeof NaN); // "number" 🤯 (It technically means an "Invalid Numb
 
 > 🛡️ **How to securely avoid these edge cases?** 
 > Edge cases almost exclusively trigger when you mix different data types without manually converting them first. By sticking to **Strict Equality (`===`)** and always explicitly converting your variables (e.g. `Number(age)`), you will bypass 99% of these weird JavaScript traps!
+
+---
+
+## 3.5 Execution Context
+
+Every time JavaScript runs your code, it doesn't just "start reading" randomly. It goes through a very specific two-step process inside something called an **Execution Context**.
+
+Think of an Execution Context as a **room where your code lives and runs**. Before any of your code does anything, JavaScript prepares that room.
+
+---
+
+### What is an Execution Context?
+
+An Execution Context is the environment in which JavaScript code is **evaluated and executed**. There are two types:
+
+| Type | When it's created |
+|---|---|
+| **Global Execution Context** | Created once when your script first loads |
+| **Function Execution Context** | Created every time a function is **called** |
+
+Both types go through the **same two phases**:
+
+---
+
+### Phase 1: The Creation Phase 🧠
+
+Before a single line of your code runs, JavaScript scans through it and **sets up memory**:
+
+- **Variables** declared with `var` are stored in memory and given the initial value of `undefined`
+- **Function declarations** (`function greet() {}`) are stored in memory **in full** — the complete function body
+- `let` and `const` are noted but kept in a "Temporal Dead Zone" (TDZ) — they exist but cannot be accessed yet
+
+This is exactly what causes **Hoisting** — the reason you can call a `function` before it's written, but can't use a `var` variable before its line (it'll be `undefined`).
+
+```javascript
+console.log(name);  // undefined  ← var was hoisted, set to undefined
+console.log(greet); // [Function: greet] ← full function was hoisted
+
+var name = "Shuja";
+function greet() { return "Hello!"; }
+```
+
+---
+
+### Phase 2: The Execution Phase ▶️
+
+Only after the Creation Phase completes does JavaScript actually **run your code** — line by line, top to bottom:
+
+- Variables get assigned their **real values**
+- Functions get **called** where you invoke them
+- Logic runs, conditions are checked, loops execute
+
+```javascript
+var name = "Shuja";   // Now 'name' gets the actual value
+var age  = 25;         // Now 'age'  gets the actual value
+
+function greet() {
+  return "Hello " + name;
+}
+
+console.log(greet()); // "Hello Shuja" — executed here
+```
+
+---
+
+### Visual Overview
+
+![JavaScript Execution Context](Images/Execution_Context.svg)
+
+---
+
+### The Call Stack
+
+Every time a function is called, JavaScript creates a **new Execution Context** for it and pushes it onto the **Call Stack**. When the function finishes, that context is removed (popped off).
+
+```javascript
+function outer() {
+  function inner() {
+    console.log("I'm inner!"); // inner's Execution Context runs here
+  }
+  inner(); // Creates a new Execution Context for inner()
+}
+outer(); // Creates a new Execution Context for outer()
+```
+
+Call Stack at the moment `inner()` runs:
+```
+[ inner() Execution Context ]  ← currently running
+[ outer() Execution Context ]
+[ Global Execution Context   ]
+```
+
+---
+
+> 🧪 **SDET Takeaway:** Understanding the Creation Phase explains **why hoisting causes flaky bugs**. If you use a `var` before its assignment line — expecting a value but getting `undefined` — that's the Creation Phase giving you the "not yet assigned" default. Always use `const` and `let` to avoid this trap, and remember that test setup functions run in their own Execution Context.
 
 ---
 
