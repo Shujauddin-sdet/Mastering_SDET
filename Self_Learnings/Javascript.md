@@ -41,6 +41,7 @@
 14. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
 15. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
 16. [for...of with Map and Set](#15-forof-with-map-and-set)
+17. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -3603,3 +3604,84 @@ console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
 
 > 💡 **Golden Rule for SDETs:** `for...of` is your workhorse for Playwright. It handles arrays, NodeLists, Sets, Maps, and works perfectly with `async/await`. Use `break` and `continue` inside it freely. Only switch to `forEach` for simple, non-async, read-every-item tasks.
 
+---
+
+## 17. Map and Set Commands (Cheat Sheet for SDETs)
+
+As an SDET, you will frequently need to store unique values (like test IDs) or map keys to values (like storing test data). Let's learn the exact commands to manage `Set` and `Map` easily.
+
+### 🔷 The `Set` Commands
+A `Set` is a collection of **unique** values. If you try to add a duplicate, it just ignores it.
+
+1. **`new Set()`** — Create an empty Set (or from an array).
+2. **`.add(value)`** — Add a new item to the Set.
+3. **`.has(value)`** — Check if an item exists (returns `true` or `false`).
+4. **`.delete(value)`** — Remove an item from the Set.
+5. **`.clear()`** — Empty the entire Set.
+6. **`.size`** — Find out how many items are in the Set (not `.length`!).
+
+```javascript
+// 1. Create a Set
+let failedTests = new Set();
+
+// 2. Add items
+failedTests.add("test_login");
+failedTests.add("test_checkout");
+failedTests.add("test_login"); // 👈 Ignored! Already exists.
+
+// 3. Check if exists
+console.log(failedTests.has("test_login")); // true
+console.log(failedTests.has("test_payment")); // false
+
+// 4. Check size
+console.log(failedTests.size); // 2
+
+// 5. Delete an item
+failedTests.delete("test_login");
+console.log(failedTests.has("test_login")); // false
+
+// 6. Clear everything
+failedTests.clear();
+console.log(failedTests.size); // 0
+```
+
+### 🔷 The `Map` Commands
+A `Map` is like a dictionary. It holds **Key-Value pairs**. You use a Key to save and find a Value.
+
+1. **`new Map()`** — Create an empty Map.
+2. **`.set(key, value)`** — Add or update a key-value pair.
+3. **`.get(key)`** — Retrieve the value for a specific key.
+4. **`.has(key)`** — Check if a key exists (returns `true` or `false`).
+5. **`.delete(key)`** — Remove a key-value pair.
+6. **`.clear()`** — Empty the entire Map.
+7. **`.size`** — Find out how many pairs are in the Map.
+
+```javascript
+// 1. Create a Map
+let userRoles = new Map();
+
+// 2. Set (Add / Update)
+userRoles.set("admin_user", "password123");
+userRoles.set("guest_user", "guest123");
+userRoles.set("admin_user", "new_password!"); // 👈 Updates the existing key!
+
+// 3. Get value
+console.log(userRoles.get("admin_user")); // "new_password!"
+console.log(userRoles.get("unknown_user")); // undefined
+
+// 4. Check if key exists
+console.log(userRoles.has("guest_user")); // true
+
+// 5. Check size
+console.log(userRoles.size); // 2
+
+// 6. Delete a key
+userRoles.delete("guest_user");
+
+// 7. Clear everything
+userRoles.clear();
+```
+
+> 💡 **SDET Quick Tip:**
+> - Use **`Set`** when you want to easily remove duplicates from an array: `let uniqueArray = [...new Set(arrayWithDuplicates)];`
+> - Use **`Map`** when you need to link things together (like linking an element locator string to its expected text on a webpage).
