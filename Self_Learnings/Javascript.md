@@ -42,6 +42,8 @@
 15. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
 16. [for...of with Map and Set](#15-forof-with-map-and-set)
 17. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
+18. [Escape Characters](#18-escape-characters-in-strings)
+19. [String Methods](#19-string-methods-in-js)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -3685,3 +3687,495 @@ userRoles.clear();
 > 💡 **SDET Quick Tip:**
 > - Use **`Set`** when you want to easily remove duplicates from an array: `let uniqueArray = [...new Set(arrayWithDuplicates)];`
 > - Use **`Map`** when you need to link things together (like linking an element locator string to its expected text on a webpage).
+
+---
+## Strings (Overview)
+
+A **String** is a data type used to represent text. It is essentially a sequence of characters—like letters, numbers, or symbols—all grouped together. 
+
+### 1. How to Create a String
+You can create a string by wrapping text in three types of "wrappers": 
+*   **Single Quotes**: `'Hello'`
+*   **Double Quotes**: `"Hello"`
+*   **Backticks (Template Literals)**: `` `Hello` `` — These are special because they allow you to easily insert variables. 
+
+### 2. Key Characteristics
+*   **Immutable**: You cannot change a single letter in an existing string (e.g., you can't just swap 'H' for 'J' in "Hello"). To change it, you must create a brand-new string.
+*   **Zero-based Indexing**: Like an array, you can access individual characters by their position, starting at `0`.
+*   **Case-Sensitive**: JavaScript treats `"Hello"` and `"hello"` as two completely different strings. 
+
+### 3. Common Operations
+JavaScript provides built-in methods to handle strings easily: 
+*   **Length**: `.length` tells you how many characters are in the string.
+*   **Concatenation**: Joining strings together using the `+` operator or template literals.
+*   **Case Conversion**: `.toUpperCase()` or `.toLowerCase()` changes the entire string's case.
+*   **Searching**: `.includes()` or `.indexOf()` helps find specific words or letters inside a string.
+
+## 18. Escape Characters in Strings
+
+When you write a string in JavaScript, you use quotes around it — either `"double"` or `'single'`. But what if the text you want to print **contains** a quote, a new line, or a tab? That's where **escape characters** come in.
+
+### 🔷 What is an Escape Character?
+
+An escape character is a **backslash `\`** followed by a special letter. The backslash tells JavaScript:
+
+> "Hey, the next character is NOT normal text — treat it as a special instruction."
+
+**Analogy:** Think of the backslash as a **secret code prefix**. Just like `Ctrl + C` doesn't type the letter C on screen (it copies text), `\n` doesn't print the letter `n` on screen — it creates a **new line**.
+
+---
+
+### 🔷 All Escape Character Types
+
+#### 1. `\'` — Single Quote
+Use when your string is wrapped in single quotes and you need a single quote inside it.
+```javascript
+let message = 'It\'s a beautiful day!';
+console.log(message); // It's a beautiful day!
+```
+
+#### 2. `\"` — Double Quote
+Use when your string is wrapped in double quotes and you need a double quote inside it.
+```javascript
+let quote = "He said \"Hello\" to everyone.";
+console.log(quote); // He said "Hello" to everyone.
+```
+
+#### 3. `\\` — Backslash itself
+Since `\` is the escape character, to print an actual backslash you need to escape it with another backslash.
+```javascript
+let filePath = "C:\\Users\\Shuja\\Documents";
+console.log(filePath); // C:\Users\Shuja\Documents
+```
+
+#### 4. `\n` — New Line
+Moves the text to the **next line**. This is the most commonly used escape character.
+```javascript
+let greeting = "Hello!\nWelcome to JavaScript.";
+console.log(greeting);
+// Output:
+// Hello!
+// Welcome to JavaScript.
+```
+
+#### 5. `\t` — Tab (Horizontal)
+Adds a **tab space** (like pressing the Tab key). Great for aligning output.
+```javascript
+let report = "Name\tAge\tCity";
+console.log(report);
+// Output: Name    Age     City
+```
+
+#### 6. `\r` — Carriage Return
+Moves the cursor to the **beginning of the current line** (without going to a new line). Rarely used in modern code, but you may encounter it in files from Windows (Windows uses `\r\n` for new lines).
+```javascript
+console.log("Hello\rWorld");
+// Output: World  ("World" overwrites "Hello" because \r moved cursor to start)
+```
+
+#### 7. `\b` — Backspace
+Deletes the **previous character**. Rarely used in practice.
+```javascript
+console.log("Hello\b!");
+// Output: Hell!  (the 'o' was "backspaced" and replaced by '!')
+```
+
+#### 8. `\f` — Form Feed
+A legacy character used in old printers to jump to the **next page**. You'll almost never use this, but it exists.
+```javascript
+console.log("Page1\fPage2");
+// Behavior depends on the environment — mostly seen in old documents
+```
+
+#### 9. `\0` — Null Character
+Represents the **null character** (not the `null` value). Used internally in low-level programming.
+```javascript
+console.log("Hello\0World");
+// May display as: Hello World (with an invisible character in between)
+```
+
+#### 10. `\uXXXX` — Unicode Character
+Lets you insert **any character from any language** using its Unicode code. The `XXXX` is a 4-digit hex code.
+```javascript
+console.log("\u0048\u0065\u006C\u006C\u006F"); // Hello
+console.log("\u2764");  // ❤ (heart symbol)
+console.log("\u0928\u092E\u0938\u094D\u0924\u0947"); // नमस्ते (Namaste in Hindi)
+```
+
+---
+
+### 🔷 Escape Characters Cheat Sheet
+
+| Escape Sequence | Name | What It Does | Used Often? |
+|---|---|---|---|
+| `\'` | Single Quote | Prints `'` inside single-quoted strings | ✅ Yes |
+| `\"` | Double Quote | Prints `"` inside double-quoted strings | ✅ Yes |
+| `\\` | Backslash | Prints a literal `\` | ✅ Yes |
+| `\n` | New Line | Moves text to the next line | ✅ Very Often |
+| `\t` | Tab | Adds a tab space | ✅ Yes |
+| `\r` | Carriage Return | Moves cursor to start of line | ⚠️ Rare |
+| `\b` | Backspace | Deletes previous character | ⚠️ Rare |
+| `\f` | Form Feed | Page break (legacy printers) | ❌ Almost Never |
+| `\0` | Null Character | Inserts a null character | ❌ Almost Never |
+| `\uXXXX` | Unicode | Inserts a character by its Unicode code | ✅ Sometimes |
+
+---
+
+### 🔷 Template Literals — The Modern Alternative
+
+With ES6, JavaScript introduced **template literals** (backtick strings `` ` ``). These solve many problems that escape characters were needed for:
+
+```javascript
+// OLD way — using escape characters
+let old = "Hello!\nMy name is \"Shuja\".\n\tI am learning JS.";
+
+// NEW way — using template literals (backticks)
+let name = "Shuja";
+let modern = `Hello!
+My name is "${name}".
+	I am learning JS.`;
+
+console.log(modern);
+// Output:
+// Hello!
+// My name is "Shuja".
+//     I am learning JS.
+```
+
+> 💡 With template literals:
+> - **No need** to escape `"` or `'` — backticks handle both.
+> - **No need** for `\n` — just press Enter inside the backticks for a real new line.
+> - You can **embed variables** directly using `${variableName}`.
+
+---
+
+### 🧪 SDET Example — Escape Characters in Test Automation
+
+As an SDET, you'll encounter escape characters when:
+
+**1. Building XPath or CSS selectors with quotes:**
+```javascript
+// XPath that contains double quotes — escape them
+let xpath = "//button[@aria-label=\"Submit Form\"]";
+console.log(xpath);
+// Output: //button[@aria-label="Submit Form"]
+
+// Or use template literals to avoid escaping entirely
+let xpath2 = `//button[@aria-label="Submit Form"]`;
+```
+
+**2. Logging multi-line test reports:**
+```javascript
+let testReport = `Test Results:
+\t✅ Login Test — PASSED
+\t❌ Checkout Test — FAILED
+\t✅ Search Test — PASSED
+
+Total: 2 Passed, 1 Failed`;
+
+console.log(testReport);
+// Output:
+// Test Results:
+//     ✅ Login Test — PASSED
+//     ❌ Checkout Test — FAILED
+//     ✅ Search Test — PASSED
+//
+// Total: 2 Passed, 1 Failed
+```
+
+**3. Working with file paths (Windows):**
+```javascript
+// Windows file paths use backslashes — must escape them
+let screenshotPath = "C:\\test-results\\screenshots\\login_test.png";
+console.log(screenshotPath);
+// Output: C:\test-results\screenshots\login_test.png
+```
+
+> 💡 **SDET Tip:** Prefer **template literals** (backticks) in your test code whenever possible. They are cleaner, easier to read, and you won't need to escape quotes. Save `\n` and `\t` for when you need precise control over formatting in logs or reports.
+
+
+## 19. String Methods in JS
+
+![String_Methods](Images/String_methods_1.png)
+![String_Methods](Images/String_methods_2.png)
+
+> 💡 **Golden Rule:** String methods **never change the original string**. They always return a **new string**. Always save the result: `text = text.trim();`
+
+---
+
+### 🔍 1. Searching & Checking — `includes`, `startsWith`, `endsWith`
+
+These return `true` or `false` — they tell you **if** something exists.
+
+```javascript
+let msg = "Payment failed: invalid card.";
+
+msg.includes("failed");      // true  — is "failed" anywhere inside?
+msg.startsWith("Payment");   // true  — does it begin with "Payment"?
+msg.endsWith("card.");        // true  — does it end with "card."?
+
+// Text NOT there? They just return false — no crash!
+msg.includes("success");     // false
+msg.startsWith("Error");     // false
+```
+> 🎯 **SDET:** Verify a success toast shows, or that a URL begins with `https`.
+
+---
+
+### 📍 2. Finding Position — `indexOf` & `lastIndexOf`
+
+These return the **index number** of where the text was found, or **`-1`** if it's not there.
+
+```javascript
+let s = "cat sat on a cat mat";
+
+s.indexOf("cat");     // 0  — first "cat" starts at index 0
+s.lastIndexOf("cat"); // 14 — last "cat" starts at index 14
+s.indexOf("dog");     // -1 ← NOT FOUND
+```
+
+> 🎯 **SDET "not there" check:** `-1` means the text is absent. Use this to assert something is *not* on the page.
+> ```javascript
+> if (pageText.indexOf("Error") === -1) {
+>     console.log("✅ No error — test passed!");
+> }
+> ```
+
+---
+
+### ✂️ 3. Extracting Text — `slice` & `substring`
+
+Both cut out a piece of a string. The `end` index is **not included** in either.
+
+```javascript
+let msg = "Order #12345 placed";
+
+// slice — supports negative indexes
+msg.slice(7, 12);    // "12345"
+msg.slice(-6);       // "placed" ← negative counts from the END
+
+// substring — no negative indexes (treats negative as 0)
+msg.substring(7, 12); // "12345"
+msg.substring(12);    // "placed"
+```
+
+**`slice` vs `substring` — quick comparison:**
+
+| Feature | `.slice(s, e)` | `.substring(s, e)` |
+|---|---|---|
+| Negative indexes? | ✅ Yes — counts from end | ❌ No — treated as `0` |
+| Swaps args if s > e? | ❌ Returns empty string | ✅ Yes — swaps automatically |
+| Use in SDET? | ✅ Preferred (more flexible) | ✅ Fine for simple extractions |
+
+> 🎯 **SDET:** Use `slice` as your default — it's more flexible. `substring` is fine when you know both indexes are positive.
+
+---
+
+### 🔄 4. Replacing — `replace` & `replaceAll`
+
+```javascript
+let s = "I love apples. apples are great.";
+
+s.replace("apples", "mango");    // "I love mango. apples are great."  ← first only
+s.replaceAll("apples", "mango"); // "I love mango. mango are great."   ← all of them
+
+// Strip a character by replacing with empty string ""
+"$49.99".replace("$", ""); // "49.99"
+```
+> 🎯 **SDET:** Strip `$`, `₹`, `%` before converting scraped text to a number.
+
+---
+
+### 🧹 5. Trimming Spaces — `trim`, `trimStart`, `trimEnd`
+
+Web pages often return text with hidden spaces.
+
+```javascript
+let name = "   John Doe   ";
+
+name.trim();      // "John Doe"    — both sides
+name.trimStart(); // "John Doe   " — left side only
+name.trimEnd();   // "   John Doe" — right side only
+```
+
+---
+
+### 🔤 6. Changing Case — `toUpperCase` & `toLowerCase`
+
+```javascript
+"PaSsEd".toUpperCase(); // "PASSED"
+"PaSsEd".toLowerCase(); // "passed"
+```
+> 🎯 **SDET:** Always lowercase both sides before comparing to avoid case-mismatch failures.
+> ```javascript
+> actual.toLowerCase() === expected.toLowerCase(); // safe comparison
+> ```
+
+---
+
+### 🔪 7. Split & Join
+
+These are **opposites** — `split` turns a string into an array, `join` turns an array back into a string.
+
+```javascript
+// String → Array
+let csv = "chrome,firefox,safari";
+let browsers = csv.split(","); // ["chrome", "firefox", "safari"]
+
+// Array → String
+browsers.join(" | "); // "chrome | firefox | safari"
+browsers.join("");    // "chromefirefoxsafari"
+```
+> 🎯 **SDET:** Split a test-data config string into an array, loop over it, then join results into a report.
+
+---
+
+### 🔢 8. Converting Types — `toString`, `parseInt`, `parseFloat`
+
+```javascript
+// Number → String
+(42).toString(); // "42"
+String(99);      // "99"
+
+// String → Whole number (stops at first non-digit)
+parseInt("42px");   // 42
+parseInt("abc");    // NaN
+
+// String → Decimal number
+parseFloat("3.14rem"); // 3.14
+parseFloat("99");      // 99
+```
+> 🎯 **SDET Pipeline:** `"$49.99"` → `.replace("$","")` → `parseFloat()` → compare to expected price.
+
+---
+
+### 🧩 9. Regex & Pattern Matching — `.match()`
+
+**Regex** = a mini language for finding **patterns** in text. Written between two slashes: `/pattern/`.
+
+```javascript
+let text = "Order 123 placed. Ref: 456.";
+
+// Find all numbers (\d+ = one or more digits, g = find all)
+text.match(/\d+/g); // ["123", "456"]
+
+// Case-insensitive search (i flag)
+"Hello World".match(/hello/i); // ["Hello"]  ← matched despite different case
+
+// Check if email-like pattern exists
+"user@test.com".match(/@/); // truthy — "@" was found
+```
+> 🎯 **SDET:** Verify a field only contains numbers, or extract all prices from a product listing page.
+
+---
+
+### 🔢 10. Padding — `padStart` & `padEnd`
+
+**Padding** means adding extra characters to the **beginning** or **end** of a string until it reaches a specific total length. Think of it like filling a box to a fixed size.
+
+```
+padStart — adds padding on the LEFT side
+padEnd   — adds padding on the RIGHT side
+
+Syntax: string.padStart(totalLength, "fillChar")
+        string.padEnd(totalLength,   "fillChar")
+```
+
+#### Visual: What is padding?
+
+```
+──────────────────────────────────────────────────────────
+  ORIGINAL:  "5"        (length = 1)
+──────────────────────────────────────────────────────────
+
+  padStart(4, "0")  →  "0005"   ← zeros added on the LEFT
+  ┌───┬───┬───┬───┐
+  │ 0 │ 0 │ 0 │ 5 │    total length = 4
+  └───┴───┴───┴───┘
+      ↑↑↑ padding    ↑ original
+
+  padEnd(4, "0")    →  "5000"   ← zeros added on the RIGHT
+  ┌───┬───┬───┬───┐
+  │ 5 │ 0 │ 0 │ 0 │    total length = 4
+  └───┴───┴───┴───┘
+  ↑ original  ↑↑↑ padding
+──────────────────────────────────────────────────────────
+```
+
+#### Examples
+
+```javascript
+// Pad with zeros on the LEFT (most common use case)
+"5".padStart(4, "0");   // "0005"
+"42".padStart(4, "0");  // "0042"
+"999".padStart(4, "0"); // "0999"
+
+// Pad with spaces on the RIGHT (for table alignment)
+"Pass".padEnd(10, " ");  // "Pass      "
+"Fail".padEnd(10, " ");  // "Fail      "
+
+// Pad with any character
+"hi".padStart(6, "*");  // "****hi"
+"hi".padEnd(6, "-");    // "hi----"
+
+// If string is already long enough — nothing changes
+"Hello".padStart(3, "0"); // "Hello"  ← already longer than 3, unchanged
+```
+
+#### SDET Use — Formatting Test Report Output
+
+Without padding, your report columns look messy. With padding, they align neatly:
+
+```javascript
+let results = [
+    { test: "Login",    status: "PASS" },
+    { test: "Checkout", status: "FAIL" },
+    { test: "Search",   status: "PASS" },
+];
+
+for (let r of results) {
+    // padEnd makes test name column always 12 chars wide
+    // padStart makes status right-aligned in 6 chars
+    console.log(r.test.padEnd(12) + r.status.padStart(6));
+}
+```
+
+**Output (nicely aligned!):**
+```
+Login          PASS
+Checkout       FAIL
+Search         PASS
+```
+
+> 🎯 **SDET Use:** Pad order numbers / IDs with leading zeros so `"5"` becomes `"0005"` — useful when comparing IDs from a database that always stores them as 4-digit strings.
+
+---
+
+### 📋 String Methods Cheat Sheet
+
+| Method | What it does | Returns |
+|---|---|---|
+| `.includes("x")` | Does the string contain "x"? | `boolean` |
+| `.startsWith("x")` | Does it start with "x"? | `boolean` |
+| `.endsWith("x")` | Does it end with "x"? | `boolean` |
+| `.indexOf("x")` | Position of first "x" (`-1` = not found) | `number` |
+| `.lastIndexOf("x")` | Position of last "x" | `number` |
+| `.slice(s, e)` | Extract characters from index `s` to `e` | `string` |
+| `.substring(s, e)` | Extract characters from `s` to `e` (no negatives) | `string` |
+| `.replace("a","b")` | Replace **first** "a" with "b" | `string` |
+| `.replaceAll("a","b")` | Replace **all** "a" with "b" | `string` |
+| `.trim()` | Remove spaces from both ends | `string` |
+| `.trimStart()` | Remove spaces from left only | `string` |
+| `.trimEnd()` | Remove spaces from right only | `string` |
+| `.padStart(n, "x")` | Add "x" on the **LEFT** until length = n | `string` |
+| `.padEnd(n, "x")` | Add "x" on the **RIGHT** until length = n | `string` |
+| `.toUpperCase()` | Convert to ALL CAPS | `string` |
+| `.toLowerCase()` | Convert to all lowercase | `string` |
+| `.split("x")` | Break string into an array at "x" | `array` |
+| `.join("x")` | Merge array into string with "x" between | `string` |
+| `.match(/regex/)` | Find pattern(s) using regex | `array` or `null` |
+| `.toString()` | Convert number/value to string | `string` |
+| `parseInt("x")` | Convert string → whole number | `number` |
+| `parseFloat("x")` | Convert string → decimal number | `number` |
+| `.length` | Count characters (no `()` — it's a property!) | `number` |
+
