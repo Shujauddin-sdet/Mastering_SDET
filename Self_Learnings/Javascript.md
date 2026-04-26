@@ -4364,7 +4364,8 @@ for (let price of prices){
 console.log(`Total amount is ${sum}`)
 
 ```
-### How to find percentage in Array
+
+### Discount Scenario (Modifying Array)
 
 ```javascript 
 
@@ -4432,6 +4433,8 @@ let taxRate = 15; // 15%
 
 let taxAmount = (taxRate / 100) * totalCart; 
 console.log(taxAmount); // Output: 30
+
+
 Scenario 2: You need to find "What percentage is this part?"
 The Goal: You have a part and a whole, and you want to know the percentage. This is everywhere in QA automation (Example: "My test suite has 50 tests. 45 passed. What is my pass rate percentage?")
 
