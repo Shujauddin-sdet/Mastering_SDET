@@ -4179,3 +4179,270 @@ Search         PASS
 | `parseFloat("x")` | Convert string → decimal number | `number` |
 | `.length` | Count characters (no `()` — it's a property!) | `number` |
 
+
+### Array
+
+Arrays is collection of items.
+Arrays let you store multiple values in a single variable.
+ we use index instead of keys.
+If we see the type of then it will return objects. because arrays are objects in Javascript.
+It is mutable. i.e. its value can be changed.
+
+```javascript
+// Single values
+let price = 49.99;
+let isLoggedIn = true;
+
+// Multiple values in one variable
+let prices = [29.99, 59.99, 89.99];
+let statuses = ["PASS", "FAIL", "PASS", "SKIP"];
+let user1 = { name: "John", role: "admin" };
+let user2 = { name: "Jane", role: "user" };
+let users = [user1, user2];
+```
+
+---
+
+### 1. Array Creation - "Declaration" 🏗️
+
+Arrays are declared in two ways:
+1. Array literal
+2. Array constructor
+
+
+#### Array literal
+
+```javascript
+let prices = [29.99, 59.99, 89.99];
+let statuses = ["PASS", "FAIL", "PASS", "SKIP"];
+let user1 = { name: "John", role: "admin" };
+let user2 = { name: "Jane", role: "user" };
+let users = [user1, user2];
+```
+
+#### Array constructor
+
+```javascript
+// Empty array
+let prices = new Array();
+
+// Array with pre-defined length
+let statuses = new Array(4);
+
+// Array with initial values
+let users = new Array("John", "Jane", "Bob");
+```
+### Array Literals vs Array Constructor
+
+```javascript
+// Array literal -preferred way
+let prices = [29.99, 59.99, 89.99];
+
+// Array constructor - not recommended
+let prices2 = new Array(29.99, 59.99, 89.99);
+```
+
+### Array Indices
+
+```javascript
+let prices = [29.99, 59.99, 89.99];
+//          index:0     1     2
+//         length:3
+console.log(prices[0]); // 29.99
+console.log(prices[1]); // 59.99
+console.log(prices[2]); // 89.99
+console.log(prices[3]); // undefined
+console.log(prices.length); // 3
+
+If we try to get the index which is not present in the array then it will return undefined.
+```
+
+### Array Values - Any Data Type 
+
+```javascript
+let mixed = [10, "apple", true, null, undefined, { name: "John" }, [1, 2, 3]];
+console.log(mixed[0]); // 10
+console.log(mixed[1]); // "apple"
+console.log(mixed[2]); // true
+console.log(mixed[3]); // null
+console.log(mixed[4]); // undefined
+console.log(mixed[5]); // { name: "John" }
+console.log(mixed[6]); // [1, 2, 3]
+console.log(mixed.length); // 7
+```
+
+### How to Check Array Type
+
+```javascript
+console.log(Array.isArray(mixed)); // true
+console.log(typeof mixed); // object - this is why we use Array.isArray()
+```
+
+### How to Chnage Array Values
+
+```javascript
+let prices = [29.99, 59.99, 89.99];
+prices[0] = 100;
+console.log(prices); // [100, 59.99, 89.99]
+
+
+```
+### Looping over an Array
+
+```javascript
+// length is to know when to stop the loop.
+// i is the index of the array.
+// prices[i] is the value of the array at index i.
+
+// for loop
+let price = [29.99, 59.99, 89.99];
+for (let i = 0; i < prices.length; i++) {
+    console.log(prices[i]);
+}
+
+// for...of loop (recommended)
+let price = [29.99, 59.99, 89.99];
+for (let price of prices) {
+    console.log(price);
+}
+
+// for...in loop
+let price = [29.99, 59.99, 89.99];
+for (let price in prices) {
+    console.log(prices[price]);
+}
+
+// forEach loop
+let price = [29.99, 59.99, 89.99];
+prices.forEach((price) => {
+    console.log(price);
+});
+```
+ ### How to Add, Subtract,Multiply and Divide Array Values
+
+ ```javascript
+ // add all the array values
+
+ let prices = [29.99, 59.99, 89.99];
+
+//  For of loop
+
+let sum = 0;
+for (let price of prices){
+    sum += price // short cut of sum = sum + price
+}
+console.log(`Total amount is ${sum}`)
+
+```
+``` javascript
+// subtract all the array values
+let prices = [29.99, 59.99, 89.99];
+let sum = 0;
+for (let price of prices){
+    sum -= price // short cut of sum = sum - prices
+}
+console.log(`Total amount is ${sum}`)
+
+```
+``` javascript
+// Multiply all the array values
+let prices = [29.99, 59.99, 89.99];
+let sum = 1;
+for (let price of prices){
+    sum *= price // short cut of sum = sum * prices
+}
+console.log(`Total amount is ${sum}`)
+
+```
+```javascript
+// Divide all the array values
+let prices = [29.99, 59.99, 89.99];
+let sum = 1;
+for (let price of prices){
+    sum /= price // short cut of sum = sum / prices
+}
+console.log(`Total amount is ${sum}`)
+
+```
+### How to find percentage in Array
+
+```javascript 
+
+# Modifying Arrays in JavaScript: The Discount Scenario
+
+## The Goal
+Given an array of prices, apply a 10% discount to every item and update the array with the new final prices.
+
+## The Rule: `for...of` vs Classic `for`
+* **`for...of`** gives you a *copy* of the data. It cannot change the original array.
+* **Classic `for`** gives you the *index* (`i`). You must use the index to directly target and change the items inside the array.
+
+## The Code Solution
+
+
+let prices = [250, 645, 300, 900, 50];
+
+// Loop through the array using the index (i)
+for (let i = 0; i < prices.length; i++) {
+    
+    // THE LONG WAY:
+    // let discount = prices[i] * 0.10;
+    // prices[i] = prices[i] - discount;
+
+    // THE PRO SHORTCUT:
+    // Multiplying by 0.9 directly calculates 90% of the original price (a 10% discount).
+    prices[i] = prices[i] * 0.9;
+}
+
+console.log(prices); // Output: [ 225, 580.5, 270, 810, 45 ]
+```
+### How to find the largest and smallest value in an Array
+
+``` javascript
+let prices = [250, 645, 300, 900, 50];
+
+let largest = prices[0];
+let smallest = prices[0];
+
+for (let i = 1; i < prices.length; i++) {
+    if (prices[i] > largest) {
+        largest = prices[i];
+    }
+    if (prices[i] < smallest) {
+        smallest = prices[i];
+    }
+}
+
+console.log(largest);
+console.log(smallest);
+```
+### How to find percentage 
+
+```javascript
+Scenario 1: You need to find "X% of a number"
+The Goal: You have a total amount, and you need to figure out what a specific percentage of it is. (Example: "What is a 15% tax on a 200 rupee cart total?")
+
+The Formula: (Percentage / 100) * TotalAmount
+
+The Code:
+
+JavaScript
+let totalCart = 200;
+let taxRate = 15; // 15%
+
+let taxAmount = (taxRate / 100) * totalCart; 
+console.log(taxAmount); // Output: 30
+Scenario 2: You need to find "What percentage is this part?"
+The Goal: You have a part and a whole, and you want to know the percentage. This is everywhere in QA automation (Example: "My test suite has 50 tests. 45 passed. What is my pass rate percentage?")
+
+The Formula: (Part / Whole) * 100
+
+The Code:
+
+JavaScript
+let totalTests = 50;
+let passedTests = 45;
+
+let passRate = (passedTests / totalTests) * 100;
+console.log(passRate + "%"); // Output: "90%"
+```
