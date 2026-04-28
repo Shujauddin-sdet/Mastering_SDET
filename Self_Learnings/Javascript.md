@@ -5025,19 +5025,55 @@ console.log(original); // [1, 2, 3] ← original safe ✅
 console.log(copy1);    // [1, 2, 3, 99]
 ```
 
-### Shallow vs Deep Copy
-```javascript
-// ⚠️ Shallow Copy — nested objects/arrays still reference original
-let original = [[1, 2], [3, 4]];
-let shallowCopy = [...original];
-shallowCopy[0].push(99); // Modify nested array
-console.log(original[0]); // [1, 2, 99] ← nested array changed!
+### 🌊 Shallow vs Deep Copy — Explained Simply
 
-// ✅ Deep Copy — completely independent
-let deepCopy = JSON.parse(JSON.stringify(original));
-deepCopy[0].push(99);
-console.log(original[0]); // [1, 2] ← original safe ✅
+Imagine you are copying a **test data folder**:
+- **Shallow Copy:** You duplicate the folder, but any shortcuts inside still point to the original files. If you change a file through the shortcut, the original file is changed!
+- **Deep Copy:** You duplicate the folder AND all the files inside. It is a completely independent, safe copy.
+
+In JavaScript, if your array contains **other arrays or objects** (nested data), you must be careful:
+
+#### ⚠️ Shallow Copy (The problem with nested data)
+Methods like `...spread` and `.slice()` only copy the **first level**. Nested items are still linked!
+
+```javascript
+// Test data with a nested array (e.g., tags)
+let originalTests = [
+    "LoginTest", 
+    ["P1", "Smoke"] // Nested array!
+];
+
+// Let's make a shallow copy
+let shallowCopy = [...originalTests]; 
+
+// We modify the nested array in the COPY
+shallowCopy[1].push("Regression"); 
+
+// BUG! The original was also modified because the nested array was shared!
+console.log(originalTests[1]); // ["P1", "Smoke", "Regression"] ❌ 
 ```
+
+#### ✅ Deep Copy (The safe way for nested data)
+To completely detach the copy, we convert the entire thing to a string (JSON) and back to an object.
+
+```javascript
+let originalTests = [
+    "LoginTest", 
+    ["P1", "Smoke"]
+];
+
+// Make a Deep Copy using JSON methods
+let deepCopy = JSON.parse(JSON.stringify(originalTests));
+
+// Modify the copy
+deepCopy[1].push("Regression");
+
+// The original is SAFE!
+console.log(originalTests[1]); // ["P1", "Smoke"] ✅
+console.log(deepCopy[1]);      // ["P1", "Smoke", "Regression"]
+```
+
+> 🎯 **SDET Golden Rule:** If your array is flat (just strings/numbers), use `[...array]`. If your array contains **objects or other arrays** (like API JSON responses), use `JSON.parse(JSON.stringify(array))` to copy it safely before modifying it!
 
 ---
 
