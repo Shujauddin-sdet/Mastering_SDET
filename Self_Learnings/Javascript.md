@@ -44,6 +44,26 @@
 17. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
 18. [Escape Characters](#18-escape-characters-in-strings)
 19. [String Methods](#19-string-methods-in-js)
+20. [Arrays — Comprehensive Guide](#20-arrays--comprehensive-guide)
+    - [Array Creation](#️-array-creation)
+    - [Accessing & Modifying](#️-accessing--modifying)
+    - [Adding & Removing](#️-adding--removing)
+    - [Searching](#️-searching)
+    - [Iterating Through Arrays](#️-iterating-through-arrays)
+    - [Transforming Arrays](#️-transforming-arrays)
+    - [Sorting](#️-sorting)
+    - [Slicing & Combining](#️-slicing--combining)
+    - [Checking & Validation](#️-checking--validation)
+    - [Copying Arrays](#-copying-arrays)
+    - [Array Destructuring](#️-array-destructuring)
+    - [Pure vs Impure Methods](#️-pure-vs-impure-methods--quick-reference)
+21. [Multi-Dimensional Arrays](#21-multi-dimensional-arrays)
+    - [2D Arrays (Matrices)](#2d-arrays-matrices)
+    - [Accessing & Modifying 2D](#accessing--modifying-2d-arrays)
+    - [Iterating 2D Arrays](#iterating-through-2d-arrays)
+    - [Common 2D Operations](#common-2d-operations)
+    - [3D Arrays](#3d-arrays)
+    - [Pattern Generation](#pattern-generation)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -4182,18 +4202,19 @@ Search         PASS
 
 ### Array
 
-Arrays is collection of items.
-Arrays let you store multiple values in a single variable.
- we use index instead of keys.
-If we see the type of then it will return objects. because arrays are objects in Javascript.
-It is mutable. i.e. its value can be changed.
+--Arrays is collection of items.
+--Arrays let you store multiple values in a single variable.
+ -- we use index instead of keys.
+--If we see the type of then it will return objects. because arrays are objects in Javascript.
+--It is mutable. i.e. its value can be changed.
+--It is Hytrogenies and not Homogenous.(Hytrogenies means it can store multiple data types, Homogenous means it can store only one data type).
 
 ```javascript
-// Single values
+--Single values
 let price = 49.99;
 let isLoggedIn = true;
 
-// Multiple values in one variable
+--Multiple values in one variable
 let prices = [29.99, 59.99, 89.99];
 let statuses = ["PASS", "FAIL", "PASS", "SKIP"];
 let user1 = { name: "John", role: "admin" };
@@ -4242,20 +4263,67 @@ let prices = [29.99, 59.99, 89.99];
 let prices2 = new Array(29.99, 59.99, 89.99);
 ```
 
-### Array Indices
+### Array Indices & Accessing Items
+
+Every item in an array has a **position number** called an **index**, starting at `0`.
 
 ```javascript
-let prices = [29.99, 59.99, 89.99];
-//          index:0     1     2
-//         length:3
-console.log(prices[0]); // 29.99
-console.log(prices[1]); // 59.99
-console.log(prices[2]); // 89.99
-console.log(prices[3]); // undefined
-console.log(prices.length); // 3
+let status = ["pass", "fail", "skip"];
+//  index:       0       1       2
+//  length = 3
 
-If we try to get the index which is not present in the array then it will return undefined.
+console.log(status[0]);  // "pass"      ← first item
+console.log(status[1]);  // "fail"
+console.log(status[2]);  // "skip"      ← last item
+console.log(status[3]);  // undefined   ← out of bounds, no crash
 ```
+
+---
+
+#### ⚠️ JavaScript Does NOT Support Negative Indexes (directly)
+
+In Python you can do `list[-1]` to get the last item. In JavaScript, **this does NOT work the same way**:
+
+```javascript
+let status = ["pass", "fail", "skip"];
+
+console.log(status[-1]); // undefined ← NOT "skip"! JavaScript doesn't understand negative indexes.
+```
+
+> 💡 `status[-1]` doesn't crash — it just silently returns `undefined`. This is a **common trap** for beginners coming from Python.
+
+**How to get the LAST item — 3 ways:**
+
+```javascript
+let status = ["pass", "fail", "skip"];
+
+// Way 1: Use length - 1
+console.log(status[status.length - 1]); // "skip" ✅
+
+// Way 2: Use .at() — the modern clean way (ES2022)
+console.log(status.at(-1));  // "skip" ✅  ← -1 means last
+console.log(status.at(-2));  // "fail" ✅  ← -2 means second from end
+console.log(status.at(0));   // "pass" ✅  ← works like normal index too
+
+// Way 3: slice
+console.log(status.slice(-1)[0]); // "skip" (less clean, avoid this)
+```
+
+**Visual — how `.at()` counts:**
+```
+let status = ["pass", "fail", "skip"];
+
+ Forward:   0       1       2
+           ["pass","fail","skip"]
+ Backward: -3      -2      -1
+
+status.at(0)  → "pass"   (same as status[0])
+status.at(-1) → "skip"   (last item)
+status.at(-2) → "fail"   (second from end)
+```
+
+> 🎯 **SDET Tip:** Use `.at(-1)` when you want the **last element** — for example, the last URL in a navigation history, or the latest log entry in a results array.
+
 
 ### Array Values - Any Data Type 
 
@@ -4365,6 +4433,682 @@ console.log(`Total amount is ${sum}`)
 
 ```
 
+---
+
+# 20. Arrays — Comprehensive Guide
+
+Arrays are **ordered collections** of values that can hold any data type. They are one of the most fundamental data structures in JavaScript and essential for SDET work.
+
+## 📊 Introduction to Arrays
+
+An **array** is like a **list** or **container** that holds multiple values in order. Each value has a position called an **index** (starting from 0).
+
+```javascript
+let testSuites = ["login", "checkout", "payment"];
+//                   0         1          2       ← indices
+
+console.log(testSuites[0]); // "login" (first item)
+console.log(testSuites.length); // 3 (total items)
+```
+
+> **Key Point:** Arrays are **mutable** — you can change them after creation. Arrays are **objects** in JavaScript, so they are **Pass by Reference**.
+
+---
+
+## 1️⃣ Array Creation
+
+### Literal Syntax (Preferred)
+```javascript
+let empty = [];  // Empty array
+let browsers = ["Chrome", "Firefox", "Safari"];
+let mixed = [1, "hello", true, null, undefined]; // Any type
+```
+
+### Array Constructor
+```javascript
+// Be careful! n means empty array of size n
+let scores = new Array(5); // [empty x 5] — creates 5 empty slots
+
+// If you pass values, it creates array with those values
+let numbers = new Array(10, 20, 30); // [10, 20, 30]
+```
+
+### `Array.of()` — Create Array with Explicit Values
+Like constructor, but **always creates array with the values you pass** (safer than constructor).
+```javascript
+let vals = Array.of(1);    // [1] — creates array with value 1
+let vals2 = Array.of(5);   // [5] — creates array with value 5
+
+// Compare to constructor:
+let arr = new Array(5);    // [empty x 5] — creates empty array of size 5
+```
+
+### `Array.from()` — Convert Iterable to Array
+Converts strings, Sets, Maps, NodeLists (from DOM), or any iterable into an array.
+```javascript
+// From string
+let chars = Array.from("hello");
+console.log(chars); // ["h", "e", "l", "l", "o"]
+
+// From Set
+let unique = Array.from(new Set([1, 2, 2, 3]));
+console.log(unique); // [1, 2, 3]
+
+// With mapping function (second parameter)
+let nums = Array.from([1, 2, 3], n => n * 2);
+console.log(nums); // [2, 4, 6]
+
+// SDET use: Get all elements from DOM and convert to array
+let buttons = Array.from(document.querySelectorAll("button"));
+```
+
+---
+
+## 2️⃣ Accessing & Modifying
+
+### Access by Index
+```javascript
+let tests = ["login", "checkout", "logout"];
+console.log(tests[0]); // "login"
+console.log(tests[2]); // "logout"
+console.log(tests[5]); // undefined (out of bounds)
+```
+
+### Using `.at()` — Negative Indices (Modern Syntax — ES2022)
+```javascript
+let tests = ["login", "checkout", "logout"];
+console.log(tests.at(-1));  // "logout" ← last item (perfect for testing!)
+console.log(tests.at(-2));  // "checkout" ← second from end
+console.log(tests.at(0));   // "login" ← regular index works too
+```
+
+> 💡 **SDET Tip:** `.at(-1)` is perfect when you need the **last test result** or **last notification** without counting!
+
+### Length Property
+```javascript
+let steps = ["login", "search", "checkout"];
+console.log(steps.length); // 3
+
+// You can set length to truncate the array
+steps.length = 2;
+console.log(steps); // ["login", "search"] ← checkout removed!
+```
+
+### Modify Element
+```javascript
+let statuses = ["pass", "fail", "skip"];
+statuses[1] = "blocked"; // Change index 1
+console.log(statuses); // ["pass", "blocked", "skip"]
+```
+
+---
+
+## 3️⃣ Adding & Removing
+
+### `push()` — Add to END
+```javascript
+let tests = ["login"];
+tests.push("checkout");
+tests.push("payment", "logout"); // Add multiple at once
+console.log(tests); // ["login", "checkout", "payment", "logout"]
+console.log(tests.push("new")); // Returns NEW length: 5
+```
+
+### `pop()` — Remove from END
+```javascript
+let tests = ["login", "checkout", "logout"];
+let last = tests.pop();
+console.log(last);  // "logout" ← removed item
+console.log(tests); // ["login", "checkout"]
+```
+
+### `unshift()` — Add to BEGINNING
+```javascript
+let tests = ["checkout"];
+tests.unshift("login");
+tests.unshift("setup"); // Add multiple at beginning
+console.log(tests); // ["setup", "login", "checkout"]
+```
+
+### `shift()` — Remove from BEGINNING
+```javascript
+let tests = ["setup", "login", "checkout"];
+let first = tests.shift();
+console.log(first); // "setup"
+console.log(tests); // ["login", "checkout"]
+```
+
+### `splice()` — Add/Remove/Replace Anywhere
+Syntax: `splice(startIndex, deleteCount, item1, item2, ...)`
+```javascript
+let tests = ["login", "search", "checkout", "logout"];
+
+// ❌ REMOVE: delete items
+let removed = tests.splice(1, 2); // Remove 2 items starting at index 1
+console.log(removed); // ["search", "checkout"] ← what was deleted
+console.log(tests);   // ["login", "logout"]
+
+// ➕ ADD: insert items (deleteCount = 0)
+let steps = ["login", "logout"];
+steps.splice(1, 0, "search", "checkout");
+console.log(steps); // ["login", "search", "checkout", "logout"]
+
+// 🔄 REPLACE: remove and insert at same time
+let envs = ["dev", "staging", "prod"];
+envs.splice(1, 1, "qa", "uat"); // Remove 1, insert 2
+console.log(envs); // ["dev", "qa", "uat", "prod"]
+```
+
+---
+
+## 4️⃣ Searching
+
+### `includes(item)` — Check if Item Exists
+Returns `true` or `false`.
+```javascript
+let browsers = ["chrome", "firefox", "safari"];
+console.log(browsers.includes("firefox")); // true
+console.log(browsers.includes("edge"));    // false
+
+// SDET: Confirm browser is in matrix
+if (!browsers.includes("IE")) {
+    console.log("✅ IE is not in test suite (removed)");
+}
+```
+
+### `indexOf(item)` — Find Position (First Occurrence)
+Returns **index** of first match, or `-1` if not found.
+```javascript
+let results = ["pass", "fail", "pass", "fail"];
+console.log(results.indexOf("fail"));   // 1 ← first pass position
+console.log(results.indexOf("error"));  // -1 ← not found
+```
+
+### `lastIndexOf(item)` — Find Position (Last Occurrence)
+Searches from the **end** and returns index of **last** match.
+```javascript
+let results = ["pass", "fail", "pass", "fail"];
+console.log(results.lastIndexOf("fail")); // 3 ← last position
+console.log(results.lastIndexOf("pass")); // 2 ← second pass
+
+// SDET use: What was the last failure?
+let lastFail = results.lastIndexOf("fail");
+console.log("Last failure at index:", lastFail);
+```
+
+### `find(fn)` — Get First Item Matching Condition
+Returns the **actual item** (not index). Returns `undefined` if not found.
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+];
+
+let failedTest = tests.find(t => t.status === "FAIL");
+console.log(failedTest); // { name: "Checkout", status: "FAIL" }
+
+let crashed = tests.find(t => t.status === "CRASH");
+console.log(crashed); // undefined
+```
+
+### `findIndex(fn)` — Get Position of First Match
+Returns **index** of first match, or `-1` if not found.
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+];
+
+let failPosition = tests.findIndex(t => t.status === "FAIL");
+console.log(failPosition);        // 1
+console.log(tests[failPosition]); // { name: "Checkout", status: "FAIL" }
+```
+
+### `findLast(fn)` — Get Last Item Matching Condition (ES2023)
+Like `find`, but searches from **end** of array.
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Payment",  status: "FAIL" },
+];
+
+let lastFail = tests.findLast(t => t.status === "FAIL");
+console.log(lastFail.name); // "Payment" ← LAST failure
+```
+
+### `findLastIndex(fn)` — Get Position of Last Match (ES2023)
+Returns **index** of last match, or `-1` if not found.
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Payment",  status: "FAIL" },
+];
+
+let lastFailIdx = tests.findLastIndex(t => t.status === "FAIL");
+console.log(lastFailIdx); // 2 (Payment is at index 2)
+```
+
+### 📊 Searching Methods Comparison Table
+
+| Method | Searches From | Returns | Not Found |
+|---|---|---|---|
+| `includes(item)` | Start | `true`/`false` | `false` |
+| `indexOf(item)` | Start | **Index** | `-1` |
+| `lastIndexOf(item)` | **End** | **Index** | `-1` |
+| `find(fn)` | Start | **Item** | `undefined` |
+| `findIndex(fn)` | Start | **Index** | `-1` |
+| `findLast(fn)` | **End** | **Item** | `undefined` |
+| `findLastIndex(fn)` | **End** | **Index** | `-1` |
+
+---
+
+## 5️⃣ Iterating Through Arrays
+
+### Classic `for` Loop
+```javascript
+let tests = ["login", "checkout", "logout"];
+for (let i = 0; i < tests.length; i++) {
+    console.log(`${i}: ${tests[i]}`);
+}
+// 0: login
+// 1: checkout
+// 2: logout
+```
+
+### `for...of` Loop (Cleanest for Values)
+```javascript
+let tests = ["login", "checkout", "logout"];
+for (let test of tests) {
+    console.log(test); // ← gives you the VALUE
+}
+// login
+// checkout
+// logout
+```
+
+### `forEach()` — Run Function on Each Item
+```javascript
+let tests = ["login", "checkout", "logout"];
+tests.forEach((test, index) => {
+    console.log(`Running: ${index + 1}. ${test}`);
+});
+// Running: 1. login
+// Running: 2. checkout
+// Running: 3. logout
+```
+
+### `.entries()` — Get Index AND Value
+```javascript
+let tests = ["login", "checkout", "logout"];
+for (let [index, test] of tests.entries()) {
+    console.log(`${index}: ${test}`);
+}
+// 0: login
+// 1: checkout
+// 2: logout
+```
+
+### `for...in` Loop (Not Recommended for Arrays)
+```javascript
+let tests = ["login", "checkout"];
+for (let i in tests) {
+    console.log(i, tests[i]); // i is STRING, not number!
+}
+// ⚠️ Gives you KEYS (as strings), not values
+```
+
+---
+
+## 6️⃣ Transforming Arrays
+
+### `map()` — Transform Every Item (Create NEW Array)
+```javascript
+let prices = [100, 200, 300];
+
+// Apply 10% discount
+let discounted = prices.map(p => p * 0.9);
+console.log(discounted); // [90, 180, 270]
+console.log(prices);     // [100, 200, 300] ← original safe ✅
+
+// SDET: Extract field from array of objects
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+];
+let names = tests.map(t => t.name);
+console.log(names); // ["Login", "Checkout"]
+```
+
+### `filter()` — Keep Only Items Matching Condition
+```javascript
+let scores = [45, 82, 91, 60, 73];
+let passing = scores.filter(s => s >= 70);
+console.log(passing); // [82, 91, 73]
+
+// SDET: Get only failed tests
+let results = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Payment",  status: "FAIL" },
+];
+let failures = results.filter(r => r.status === "FAIL");
+console.log(failures.length); // 2
+```
+
+### `reduce()` — Combine All Items Into One Value
+Syntax: `reduce((accumulator, current) => ..., initialValue)`
+```javascript
+let prices = [29.99, 59.99, 89.99];
+
+// Add up all prices
+let total = prices.reduce((sum, price) => sum + price, 0);
+console.log(total); // 179.97
+
+// SDET: Count passed tests
+let results = ["PASS", "FAIL", "PASS", "PASS"];
+let passCount = results.reduce((count, status) => {
+    return status === "PASS" ? count + 1 : count;
+}, 0);
+console.log(passCount); // 3
+
+// Create object from array
+let browsers = ["chrome", "firefox"];
+let config = browsers.reduce((obj, b) => ({...obj, [b]: true}), {});
+console.log(config); // { chrome: true, firefox: true }
+```
+
+### `flat()` — Flatten Nested Arrays (ES2019)
+```javascript
+let nested = [[1, 2], [3, 4], [5]];
+console.log(nested.flat()); // [1, 2, 3, 4, 5]
+
+// Flatten multiple levels
+let deepNested = [[1, [2, 3]], [4, [5, 6]]];
+console.log(deepNested.flat(1)); // [1, [2, 3], 4, [5, 6]] ← 1 level
+console.log(deepNested.flat(2)); // [1, 2, 3, 4, 5, 6] ← 2 levels
+console.log(deepNested.flat()); // Defaults to 1 level
+
+// Remove empty slots
+let withGaps = [1, , 3]; // has empty slot at index 1
+console.log(withGaps.flat()); // [1, 3] ← empty removed
+```
+
+---
+
+## 7️⃣ Sorting
+
+### `sort()` — Sort Array In Place
+⚠️ **Default** sorts as **strings** alphabetically! For numbers, use a compare function.
+
+```javascript
+// STRINGS — works fine by default
+let fruits = ["banana", "apple", "cherry"];
+fruits.sort();
+console.log(fruits); // ["apple", "banana", "cherry"]
+
+// NUMBERS — MUST use compare function
+let scores = [100, 25, 50, 8, 300];
+scores.sort((a, b) => a - b); // Ascending ↑
+console.log(scores); // [8, 25, 50, 100, 300]
+
+scores.sort((a, b) => b - a); // Descending ↓
+console.log(scores); // [300, 100, 50, 25, 8]
+
+// Sort objects by property
+let tests = [
+    { name: "Login", time: 5 },
+    { name: "Checkout", time: 2 },
+    { name: "Payment", time: 8 },
+];
+tests.sort((a, b) => a.time - b.time); // Sort by time ascending
+```
+
+### `reverse()` — Reverse Array In Place
+```javascript
+let steps = ["login", "checkout", "logout"];
+steps.reverse();
+console.log(steps); // ["logout", "checkout", "login"]
+// ⚠️ Original is changed!
+
+// Safe reverse (copy + reverse)
+let safe = steps.slice().reverse();
+console.log(steps); // original untouched ✅
+```
+
+---
+
+## 8️⃣ Slicing & Combining
+
+### `slice(start, end)` — Copy a Portion (Pure)
+Returns **new array**, original **untouched**. End index is **NOT included**.
+```javascript
+let tests = ["a", "b", "c", "d", "e"];
+console.log(tests.slice(1, 3)); // ["b", "c"] ← indices 1,2 (not 3)
+console.log(tests.slice(2));     // ["c", "d", "e"] ← from index 2 to end
+console.log(tests.slice(-2));    // ["d", "e"] ← last 2 items
+console.log(tests); // ["a", "b", "c", "d", "e"] ← original untouched ✅
+
+// Copy entire array (common technique)
+let copy = tests.slice();
+```
+
+### `concat()` — Join Arrays (Pure)
+```javascript
+let suite1 = ["login", "search"];
+let suite2 = ["checkout"];
+let suite3 = ["logout"];
+
+let all = suite1.concat(suite2, suite3);
+console.log(all); // ["login", "search", "checkout", "logout"]
+console.log(suite1); // original untouched ✅
+
+// Add items with concat
+let tests = ["login"];
+let combined = tests.concat("logout", "admin");
+console.log(combined); // ["login", "logout", "admin"]
+```
+
+### Spread Operator `...` — Modern Array Combining
+```javascript
+let a = [1, 2];
+let b = [3, 4];
+let combined = [...a, ...b];
+console.log(combined); // [1, 2, 3, 4]
+
+// Add items
+let tests = ["login", ...["search", "checkout"], "logout"];
+console.log(tests); // ["login", "search", "checkout", "logout"]
+
+// Copy array (modern alternative to slice)
+let copy = [...tests];
+```
+
+### `join()` — Convert Array to String (Pure)
+```javascript
+let frameworks = ["Playwright", "Cypress", "Selenium"];
+let result = frameworks.join(", ");
+console.log(result); // "Playwright, Cypress, Selenium"
+
+// With different separator
+console.log(frameworks.join(" | ")); // "Playwright | Cypress | Selenium"
+console.log(frameworks.join("")); // "PlaywrightCypressSelenium"
+
+// Default separator is comma
+console.log(frameworks.join()); // "Playwright,Cypress,Selenium"
+```
+
+---
+
+## 9️⃣ Checking & Validation
+
+### `Array.isArray()` — Verify It's an Array
+```javascript
+console.log(Array.isArray([1, 2, 3])); // true
+console.log(Array.isArray("hello"));   // false
+console.log(Array.isArray({a: 1}));    // false
+
+// SDET: Validate API response is array
+let response = []; // or some API data
+if (Array.isArray(response)) {
+    console.log("✅ Response is array, has", response.length, "items");
+} else {
+    console.log("❌ Response is not array!");
+}
+```
+
+### `every()` — Test if ALL Elements Pass
+Returns `true` only if **ALL** items pass the condition.
+```javascript
+let scores = [80, 90, 85];
+console.log(scores.every(s => s >= 70)); // true (all >= 70)
+
+let mixed = [80, 60, 85];
+console.log(mixed.every(s => s >= 70)); // false (60 < 70)
+
+// SDET: Check if all tests passed
+let results = ["PASS", "PASS", "PASS"];
+if (results.every(r => r === "PASS")) {
+    console.log("✅ All tests passed!");
+}
+```
+
+### `some()` — Test if AT LEAST ONE Element Passes
+Returns `true` if **at least one** item passes the condition.
+```javascript
+let scores = [80, 60, 85];
+console.log(scores.some(s => s < 70)); // true (60 < 70)
+
+let allHigh = [80, 90, 85];
+console.log(allHigh.some(s => s < 70)); // false (all >= 70)
+
+// SDET: Check if any test failed
+let results = ["PASS", "FAIL", "PASS"];
+if (results.some(r => r === "FAIL")) {
+    console.log("❌ At least one test failed!");
+}
+```
+
+### 📊 `every()` vs `some()` Comparison
+
+| Condition | `every()` | `some()` |
+|---|---|---|
+| All A's | `true` | `true` |
+| Some A's, Some B's | `false` | `true` |
+| All B's | `false` | `false` |
+| Empty array | `true` | `false` |
+
+---
+
+## 🔟 Copying Arrays
+
+### Reference vs Copy (Important!)
+```javascript
+let original = [1, 2, 3];
+
+// ❌ Reference — points to SAME array
+let ref = original;
+ref.push(4);
+console.log(original); // [1, 2, 3, 4] ← both changed!
+
+// ✅ Shallow Copy — separate arrays (values stay same)
+let copy1 = [...original]; // Spread operator
+let copy2 = original.slice();
+let copy3 = Array.from(original);
+let copy4 = original.concat();
+
+copy1.push(99);
+console.log(original); // [1, 2, 3] ← original safe ✅
+console.log(copy1);    // [1, 2, 3, 99]
+```
+
+### Shallow vs Deep Copy
+```javascript
+// ⚠️ Shallow Copy — nested objects/arrays still reference original
+let original = [[1, 2], [3, 4]];
+let shallowCopy = [...original];
+shallowCopy[0].push(99); // Modify nested array
+console.log(original[0]); // [1, 2, 99] ← nested array changed!
+
+// ✅ Deep Copy — completely independent
+let deepCopy = JSON.parse(JSON.stringify(original));
+deepCopy[0].push(99);
+console.log(original[0]); // [1, 2] ← original safe ✅
+```
+
+---
+
+## 1️⃣1️⃣ Array Destructuring
+
+### Basic Destructuring
+```javascript
+let [a, b, c] = [10, 20, 30];
+console.log(a); // 10
+console.log(b); // 20
+console.log(c); // 30
+
+// Skip elements
+let [first, , third] = [10, 20, 30];
+console.log(first);  // 10
+console.log(third);  // 30 (second is skipped)
+```
+
+### Rest Operator with Destructuring
+```javascript
+let [first, second, ...rest] = [10, 20, 30, 40, 50];
+console.log(first);  // 10
+console.log(second); // 20
+console.log(rest);   // [30, 40, 50]
+
+// SDET: Separate test cases
+let [head, ...tail] = ["setup", "login", "checkout", "logout"];
+console.log(head);   // "setup"
+console.log(tail);   // ["login", "checkout", "logout"]
+```
+
+### Swapping Values
+```javascript
+let a = 1, b = 2;
+[a, b] = [b, a]; // Swap!
+console.log(a, b); // 2, 1
+```
+
+---
+
+## 1️⃣2️⃣ Pure vs Impure Methods — Quick Reference
+
+| Method | Pure | Impure | Returns |
+|---|---|---|---|
+| `push()` | ❌ | ✅ | New length |
+| `pop()` | ❌ | ✅ | Removed item |
+| `unshift()` | ❌ | ✅ | New length |
+| `shift()` | ❌ | ✅ | Removed item |
+| `splice()` | ❌ | ✅ | Removed items |
+| `sort()` | ❌ | ✅ | Sorted array |
+| `reverse()` | ❌ | ✅ | Reversed array |
+| `slice()` | ✅ | - | New array |
+| `concat()` | ✅ | - | New array |
+| `map()` | ✅ | - | New array |
+| `filter()` | ✅ | - | New array |
+| `reduce()` | ✅ | - | Single value |
+| `forEach()` | ❌* | - | `undefined` |
+| `find()` | ✅ | - | Item or `undefined` |
+| `findIndex()` | ✅ | - | Index or `-1` |
+| `includes()` | ✅ | - | Boolean |
+| `indexOf()` | ✅ | - | Index or `-1` |
+| `every()` | ✅ | - | Boolean |
+| `some()` | ✅ | - | Boolean |
+| `sort()` | ❌ | ✅ | Sorted array |
+| `join()` | ✅ | - | String |
+| `flat()` | ✅ | - | New array |
+
+> *`forEach` doesn't modify the array itself, but doesn't return anything.
+
+---
+
 ### Discount Scenario (Modifying Array)
 
 ```javascript 
@@ -4394,8 +5138,16 @@ for (let i = 0; i < prices.length; i++) {
     // Multiplying by 0.9 directly calculates 90% of the original price (a 10% discount).
     prices[i] = prices[i] * 0.9;
 }
-
+-----------------------------------------------------------
 console.log(prices); // Output: [ 225, 580.5, 270, 810, 45 ]
+
+let items =  [250, 645, 300, 900, 50];
+
+for (let i = 0;i < items.length; i++){
+    let offer = items[i] / 10
+    items[i] -= offer;
+}
+console.log(items)
 ```
 ### How to find the largest and smallest value in an Array
 
@@ -4449,3 +5201,978 @@ let passedTests = 45;
 let passRate = (passedTests / totalTests) * 100;
 console.log(passRate + "%"); // Output: "90%"
 ```
+
+### Array Methods
+
+```javascript
+There are 2 types of Array methods:
+1. Pure Methods (Non-Mutating): These methods do NOT change the original array. They return a new array with the results.
+2. Impure Methods (Mutating): These methods modify (change) the original array directly.
+```
+### Array Methods Examples
+
+```javascript
+let numbers = [1, 2, 3, 4, 5];
+
+// 1. Pure Methods
+// map: Creates a NEW array with modified values
+let doubled = numbers.map(n => n * 2); 
+console.log(doubled); // [2, 4, 6, 8, 10]
+console.log(numbers); // Original array is unchanged: [1, 2, 3, 4, 5]
+
+// filter: Creates a NEW array with filtered values
+let evens = numbers.filter(n => n % 2 === 0);
+console.log(evens); // [2, 4]
+
+// 2. Impure Methods
+// splice: Modifies the ORIGINAL array (removes items)
+let removed = numbers.splice(1, 2); // Removes 2 items starting from index 1
+console.log(removed); // [2, 3]
+console.log(numbers); // Original array is CHAGNED: [1, 4, 5]
+``` 
+
+---
+
+### 📋 Array Methods — Quick Reference Table
+
+| Method | What it does | Pure / Impure | Returns |
+|---|---|---|---|
+| `.push(item)` | Add to the **END** | ❌ Impure | New length |
+| `.pop()` | Remove from the **END** | ❌ Impure | Removed item |
+| `.unshift(item)` | Add to the **BEGINNING** | ❌ Impure | New length |
+| `.shift()` | Remove from the **BEGINNING** | ❌ Impure | Removed item |
+| `.splice(start, del, ...items)` | Add / Remove / Replace at any position | ❌ Impure | Removed items array |
+| `.sort()` | Sort items in place | ❌ Impure | Sorted array |
+| `.reverse()` | Reverse items in place | ❌ Impure | Reversed array |
+| `.forEach(fn)` | Run a function on each item (no return) | ❌ Impure* | `undefined` |
+| `.slice(start, end)` | Copy a portion (original untouched) | ✅ Pure | New array |
+| `.concat(...arrays)` | Join multiple arrays | ✅ Pure | New array |
+| `.toString()` | Convert to comma-separated string | ✅ Pure | String |
+| `.includes(item)` | Is this item in the array? | ✅ Pure | `true` / `false` |
+| `.indexOf(item)` | Position of item (`-1` = not found) | ✅ Pure | Index number |
+| `.find(fn)` | First **item** matching a condition | ✅ Pure | Item or `undefined` |
+| `.findIndex(fn)` | First **index** matching a condition | ✅ Pure | Index or `-1` |
+| `.map(fn)` | Transform every item into a new value | ✅ Pure | New array |
+| `.filter(fn)` | Keep only items that pass a condition | ✅ Pure | New array |
+| `.reduce(fn, start)` | Boil array down to a single value | ✅ Pure | Single value |
+
+> 💡 **Pure vs Impure:**
+> - **Pure** — original array is **safe**, result is returned.
+> - **Impure** — original array is **changed** directly. Be careful!
+> - *`forEach` doesn't modify the array itself, but doesn't return anything either.
+
+---
+
+### 🔴 Impure Methods (Change the Original Array)
+
+#### `push()` — Add to the END
+```javascript
+let tests = ["Login", "Search"];
+tests.push("Checkout");
+console.log(tests); // ["Login", "Search", "Checkout"] ← Checkout added at end
+```
+
+#### `pop()` — Remove from the END
+```javascript
+let tests = ["Login", "Search", "Checkout"];
+let last = tests.pop();
+console.log(last);  // "Checkout" ← the removed item is returned
+console.log(tests); // ["Login", "Search"] ← original changed
+```
+
+#### `unshift()` — Add to the BEGINNING
+```javascript
+let tests = ["Search", "Checkout"];
+tests.unshift("Login");
+console.log(tests); // ["Login", "Search", "Checkout"] ← Login added at front
+```
+
+#### `shift()` — Remove from the BEGINNING
+```javascript
+let tests = ["Login", "Search", "Checkout"];
+let first = tests.shift();
+console.log(first); // "Login" ← removed item returned
+console.log(tests); // ["Search", "Checkout"] ← original changed
+```
+
+#### `splice()` — Add / Remove / Replace Anywhere
+Syntax: `splice(startIndex, deleteCount, item1, item2, ...)`
+
+```javascript
+let tests = ["Login", "Search", "Checkout", "Profile"];
+
+// ✂️ REMOVE — delete 2 items starting at index 1
+let removed = tests.splice(1, 2);
+console.log(removed); // ["Search", "Checkout"] ← what was removed
+console.log(tests);   // ["Login", "Profile"]   ← original changed
+
+// ➕ ADD — insert without removing (deleteCount = 0)
+let steps = ["Login", "Checkout"];
+steps.splice(1, 0, "Search", "Cart"); // insert at index 1
+console.log(steps); // ["Login", "Search", "Cart", "Checkout"]
+
+// 🔄 REPLACE — remove 1 and put a new item in its place
+let envs = ["dev", "staging", "prod"];
+envs.splice(1, 1, "qa"); // remove 1 at index 1, insert "qa"
+console.log(envs); // ["dev", "qa", "prod"]
+```
+
+---
+
+### 🟢 Pure Methods (Original Array Is Safe)
+
+#### `slice()` — Copy a Portion (or the Whole Array)
+Syntax: `slice(startIndex, endIndex)` — end is **not included**
+
+```javascript
+let tests = ["Login", "Search", "Checkout", "Profile", "Logout"];
+
+tests.slice(1, 3);  // ["Search", "Checkout"] ← index 1 and 2 only
+tests.slice(2);     // ["Checkout", "Profile", "Logout"] ← from index 2 to end
+tests.slice(-2);    // ["Profile", "Logout"] ← last 2 items
+
+// Copy the entire array (common trick)
+let copy = tests.slice();
+console.log(tests); // original untouched ✅
+```
+
+#### `concat()` — Join Multiple Arrays
+```javascript
+let suite1 = ["Login", "Search"];
+let suite2 = ["Checkout", "Payment"];
+let suite3 = ["Logout"];
+
+let allTests = suite1.concat(suite2, suite3);
+console.log(allTests);
+// ["Login", "Search", "Checkout", "Payment", "Logout"]
+
+console.log(suite1); // original untouched ✅
+```
+
+#### `toString()` — Convert Array to String
+```javascript
+let browsers = ["chrome", "firefox", "safari"];
+let result = browsers.toString();
+console.log(result); // "chrome,firefox,safari"
+// Note: save it to a variable OR pass it to console.log — original array unchanged
+```
+
+#### `includes()` — Check if Item Exists
+```javascript
+let browsers = ["chrome", "firefox", "safari"];
+
+browsers.includes("firefox"); // true
+browsers.includes("edge");    // false
+
+// SDET use: check if a required browser is in your test matrix
+if (!browsers.includes("edge")) {
+    console.log("⚠️ Edge not in test suite!");
+}
+```
+
+#### `findIndex()` — Find Position by Condition
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+];
+
+let failIdx = tests.findIndex(t => t.status === "FAIL");
+console.log(failIdx);        // 1
+console.log(tests[failIdx]); // { name: "Checkout", status: "FAIL" }
+
+// If NOT found, returns -1
+let crashIdx = tests.findIndex(t => t.status === "CRASH");
+console.log(crashIdx); // -1
+```
+
+---
+
+> ⚠️ **SDET Critical Tip — Leading Zeros:**
+> Whenever you automate a test and see a number on screen that **starts with a zero** (like `09`, `007`, `02345`), always save it as a **String**.
+> ```javascript
+> // ❌ WRONG — JavaScript will drop the leading zero!
+> let orderId = 007;
+> console.log(orderId); // 7 ← "00" is gone! Your test assertion will FAIL.
+>
+> // ✅ CORRECT — Wrap it in quotes to keep the zeros
+> let orderId = "007";
+> console.log(orderId); // "007" ← safe!
+> ```
+
+---
+
+### 🟡 More Essential Pure Methods
+
+#### `indexOf()` — Find Position of an Item
+Like `findIndex` but for a **direct value** (not a condition). Returns `-1` if not found.
+```javascript
+let browsers = ["chrome", "firefox", "safari", "firefox"];
+
+browsers.indexOf("firefox");   // 1 ← first occurrence
+browsers.indexOf("edge");      // -1 ← not found
+
+// SDET use: confirm an item is NOT in the list
+if (browsers.indexOf("IE") === -1) {
+    console.log("✅ IE is not in the test suite");
+}
+```
+
+#### `find()` — Get the Actual Item (not the index)
+`findIndex` gives you the position. `find` gives you the **item itself**.
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+];
+
+// findIndex → gives the index number (1)
+let idx = tests.findIndex(t => t.status === "FAIL"); // 1
+
+// find → gives the actual object
+let failedTest = tests.find(t => t.status === "FAIL");
+console.log(failedTest); // { name: "Checkout", status: "FAIL" }
+
+// If nothing matches, returns undefined
+let crash = tests.find(t => t.status === "CRASH");
+console.log(crash); // undefined
+```
+
+#### `map()` — Transform Every Item
+Creates a **brand new array** by applying a function to every item. Original is safe.
+```javascript
+let prices = [100, 200, 300];
+
+// Apply 10% discount to all prices
+let discounted = prices.map(p => p * 0.9);
+console.log(discounted); // [90, 180, 270]
+console.log(prices);     // [100, 200, 300] ← original unchanged ✅
+
+// SDET use: extract one field from an array of objects
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+];
+let names = tests.map(t => t.name);
+console.log(names); // ["Login", "Checkout"]
+```
+
+#### `filter()` — Keep Only Items That Pass a Condition
+Creates a **new array** with only the items where the condition is `true`.
+```javascript
+let results = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+    { name: "Profile",  status: "FAIL" },
+];
+
+let failures = results.filter(r => r.status === "FAIL");
+console.log(failures);
+// [{ name: "Checkout", status: "FAIL" }, { name: "Profile", status: "FAIL" }]
+
+let passes = results.filter(r => r.status === "PASS");
+console.log(passes.length); // 2
+```
+
+#### `forEach()` — Run a Function on Every Item (No Return)
+`forEach` loops through every item and runs a function. It does **NOT** return anything — use it for side effects like `console.log` or updating something outside.
+```javascript
+let tests = ["Login", "Checkout", "Search"];
+
+// Just print each test
+tests.forEach(test => {
+    console.log("🧪 Running: " + test);
+});
+// 🧪 Running: Login
+// 🧪 Running: Checkout
+// 🧪 Running: Search
+
+// forEach vs map — key difference:
+let result = tests.forEach(t => t.toUpperCase()); // Returns undefined!
+console.log(result); // undefined ← forEach never returns a new array
+
+let result2 = tests.map(t => t.toUpperCase()); // Returns new array!
+console.log(result2); // ["LOGIN", "CHECKOUT", "SEARCH"]
+```
+
+#### `reduce()` — Boil the Whole Array Down to One Value
+`reduce` takes all items and combines them into a **single result** (total, string, object, etc.).
+Syntax: `reduce((accumulator, currentItem) => ..., startingValue)`
+```javascript
+let prices = [29.99, 59.99, 89.99];
+
+// Add up all prices
+let total = prices.reduce((sum, price) => sum + price, 0);
+console.log(total); // 179.97
+
+// SDET use: count how many tests passed
+let results = ["PASS", "FAIL", "PASS", "PASS", "FAIL"];
+let passCount = results.reduce((count, status) => {
+    return status === "PASS" ? count + 1 : count;
+}, 0);
+console.log(passCount); // 3
+```
+
+---
+
+### 🔴 Impure Methods — `sort()` & `reverse()`
+
+#### `sort()` — Sort the Array In Place
+> ⚠️ By default `sort()` converts items to **strings** and sorts alphabetically. For numbers you **must** provide a compare function.
+```javascript
+// Strings — works fine by default
+let browsers = ["safari", "chrome", "firefox"];
+browsers.sort();
+console.log(browsers); // ["chrome", "firefox", "safari"]
+
+// Numbers — MUST use a compare function
+let scores = [100, 25, 50, 8, 300];
+scores.sort((a, b) => a - b); // ascending ↑
+console.log(scores); // [8, 25, 50, 100, 300]
+
+scores.sort((a, b) => b - a); // descending ↓
+console.log(scores); // [300, 100, 50, 25, 8]
+```
+
+#### `reverse()` — Reverse the Array In Place
+```javascript
+let steps = ["Login", "Search", "Checkout", "Logout"];
+steps.reverse();
+console.log(steps); // ["Logout", "Checkout", "Search", "Login"]
+// ⚠️ Original is changed!
+
+// Safe reverse (use slice first to copy, then reverse)
+let safeReversed = steps.slice().reverse();
+console.log(steps);        // original untouched ✅
+console.log(safeReversed); // reversed copy
+```
+
+
+### Accessing and Modifying
+
+---
+
+### 🔍 Searching Methods — `includes`, `find`, `findIndex`, `findLast`, `findLastIndex`
+
+These are all **Pure** — they never change the original array.
+
+---
+
+#### `includes(item)` — Does This Item Exist? Returns a **boolean**
+
+The simplest search. Just tells you YES (`true`) or NO (`false`).
+
+```javascript
+let browsers = ["chrome", "firefox", "safari"];
+
+console.log(browsers.includes("firefox")); // true
+console.log(browsers.includes("edge"));    // false
+
+// SDET use: check if a required browser is in your test list
+if (!browsers.includes("edge")) {
+    console.log("⚠️ Edge not in test suite! Adding it.");
+    browsers.push("edge");
+}
+```
+
+> 📌 **Remember:** `includes()` always returns `true` or `false` — it is a **boolean**. Nothing else.
+
+---
+
+#### `find(fn)` — Get the First **Item** That Matches
+
+You give it a condition (a function). It returns the **actual item** — not the index.
+If nothing matches, returns `undefined`.
+
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+    { name: "Payment",  status: "FAIL" },
+];
+
+let firstFail = tests.find(t => t.status === "FAIL");
+console.log(firstFail); // { name: "Checkout", status: "FAIL" } ← stops at FIRST match
+
+// If not found:
+let crashed = tests.find(t => t.status === "CRASH");
+console.log(crashed); // undefined
+```
+
+---
+
+#### `findIndex(fn)` — Get the **Index** of the First Match
+
+Same as `find`, but returns the **position number** instead of the item.
+Returns `-1` if nothing matches.
+
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+];
+
+let failIdx = tests.findIndex(t => t.status === "FAIL");
+console.log(failIdx);        // 1
+console.log(tests[failIdx]); // { name: "Checkout", status: "FAIL" }
+
+let crashIdx = tests.findIndex(t => t.status === "CRASH");
+console.log(crashIdx); // -1 ← means NOT found
+```
+
+> 📊 **`find` vs `findIndex` in one line:**
+> - `find` → gives you the **item** (the object/value itself)
+> - `findIndex` → gives you the **position number** (where it is)
+
+---
+
+#### `findLast(fn)` — Get the **Last** Item That Matches (ES2023)
+
+Exactly like `find`, but **searches from the END** instead of the beginning.
+Useful when you want the most recent match.
+
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+    { name: "Payment",  status: "FAIL" },
+];
+
+// find → returns FIRST FAIL (Checkout)
+let firstFail = tests.find(t => t.status === "FAIL");
+console.log(firstFail.name); // "Checkout"
+
+// findLast → returns LAST FAIL (Payment)
+let lastFail = tests.findLast(t => t.status === "FAIL");
+console.log(lastFail.name); // "Payment"
+```
+
+> 🎯 **SDET Use:** "What was the **last** test that failed in this run?"
+
+---
+
+#### `findLastIndex(fn)` — Index of the **Last** Match (ES2023)
+
+Like `findIndex` but searches from the END. Returns `-1` if not found.
+
+```javascript
+let tests = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+    { name: "Payment",  status: "FAIL" },
+];
+
+let lastFailIdx = tests.findLastIndex(t => t.status === "FAIL");
+console.log(lastFailIdx);        // 3
+console.log(tests[lastFailIdx]); // { name: "Payment", status: "FAIL" }
+```
+
+---
+
+#### 📋 Quick Comparison — All Searching Methods
+
+| Method | Searches From | Returns | Not Found Returns |
+|---|---|---|---|
+| `includes(item)` | Start | `true` or `false` | `false` |
+| `find(fn)` | Start | The **item** | `undefined` |
+| `findIndex(fn)` | Start | The **index** | `-1` |
+| `findLast(fn)` | **End** | The **item** (last match) | `undefined` |
+| `findLastIndex(fn)` | **End** | The **index** (last match) | `-1` |
+
+---
+
+### 🟢 `filter()` — Keep Only What You Need
+
+`filter` creates a **brand new array** containing only the items where your condition is `true`. The original array is **never changed**.
+
+**Simple analogy:** Imagine you have a basket of fruits. `filter` lets you pick out only the apples and puts them in a new basket. The original basket still has everything.
+
+```javascript
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Keep only even numbers
+let evens = numbers.filter(n => n % 2 === 0);
+console.log(evens);   // [2, 4, 6, 8, 10]
+console.log(numbers); // [1,2,3,4,5,6,7,8,9,10] ← original untouched ✅
+```
+
+**SDET Example — Filter failed tests from results:**
+
+```javascript
+let results = [
+    { name: "Login",    status: "PASS" },
+    { name: "Checkout", status: "FAIL" },
+    { name: "Search",   status: "PASS" },
+    { name: "Payment",  status: "FAIL" },
+    { name: "Profile",  status: "PASS" },
+];
+
+// Get only failed tests
+let failures = results.filter(r => r.status === "FAIL");
+console.log(failures);
+// [
+//   { name: "Checkout", status: "FAIL" },
+//   { name: "Payment",  status: "FAIL" }
+// ]
+
+// Get only passed tests
+let passes = results.filter(r => r.status === "PASS");
+console.log("✅ Passed:", passes.length); // ✅ Passed: 3
+console.log("❌ Failed:", failures.length); // ❌ Failed: 2
+```
+
+**Chain filter with map — powerful SDET pattern:**
+
+```javascript
+// Get just the NAMES of failed tests
+let failedNames = results
+    .filter(r => r.status === "FAIL")  // keep only failures
+    .map(r => r.name);                  // extract their names
+
+console.log(failedNames); // ["Checkout", "Payment"]
+```
+
+> 💡 **`filter` vs `find`:**
+> - `filter` → returns a **new array** with ALL matches
+> - `find` → returns the **first single item** that matches (not an array)
+> ```javascript
+> results.find(r => r.status === "FAIL");   // { name: "Checkout", ... }  ← one item
+> results.filter(r => r.status === "FAIL");  // [{ name: "Checkout",...}, { name:"Payment",...}] ← all
+> ```
+
+---
+
+# 21. Multi-Dimensional Arrays
+
+Multi-dimensional arrays are arrays **containing other arrays**. Think of them as **grids, tables, or spreadsheets**. Essential for SDET when dealing with test data tables, API responses with nested structures, or visual grid testing.
+
+## 2D Arrays (Matrices)
+
+A **2D array** is an array of arrays — like a **table with rows and columns**.
+
+### Creating a 2D Array
+
+```javascript
+// Basic 2D array (3x3 matrix)
+let matrix = [
+    [1, 2, 3],      // row 0
+    [4, 5, 6],      // row 1
+    [7, 8, 9]       // row 2
+];
+
+// Visual representation:
+// Col:  0  1  2
+// Row 0: 1  2  3
+// Row 1: 4  5  6
+// Row 2: 7  8  9
+
+// Rectangular array (3 rows, 4 columns)
+let grid = [
+    [10, 20, 30, 40],
+    [50, 60, 70, 80],
+    [90, 100, 110, 120]
+];
+
+// SDET: Test results table
+let testResults = [
+    ["login",    "pass",  200],
+    ["checkout", "fail",  404],
+    ["payment",  "pass",  201]
+];
+```
+
+### Visual Grid Representation
+
+```
+Matrix:          testResults:
+  0  1  2        Test         Status  Code
+0[1][2][3]  0   ["login"   ]  "pass"  200
+1[4][5][6]  1   ["checkout"]  "fail"  404
+2[7][8][9]  2   ["payment" ]  "pass"  201
+```
+
+---
+
+## Accessing & Modifying 2D Arrays
+
+Access using **[row][column]** syntax.
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+// ✅ GET values using [row][col]
+console.log(matrix[0][0]); // 1 (top-left)
+console.log(matrix[1][1]); // 5 (center)
+console.log(matrix[2][2]); // 9 (bottom-right)
+console.log(matrix[2][1]); // 8
+
+// ✅ MODIFY values
+matrix[0][0] = 99;
+console.log(matrix[0][0]); // 99
+
+// ✅ Get last element
+let rows = matrix.length;           // 3
+let cols = matrix[0].length;        // 3
+console.log(matrix[rows - 1][cols - 1]); // 9 (matrix[2][2])
+```
+
+### Common Mistakes
+
+```javascript
+// ❌ WRONG — Will give you entire row, not single element
+matrix[0]; // [1, 2, 3]
+
+// ✅ CORRECT — Both indices required
+matrix[0][0]; // 1
+
+// ❌ WRONG — Out of bounds
+matrix[5][5]; // undefined
+```
+
+---
+
+## Iterating Through 2D Arrays
+
+### Classic `for` Loop (Best for Operations)
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+for (let i = 0; i < matrix.length; i++) {          // outer: rows
+    for (let j = 0; j < matrix[i].length; j++) {   // inner: columns
+        console.log(matrix[i][j]);
+    }
+}
+// Output: 1 2 3 4 5 6 7 8 9
+```
+
+### `for...of` Loop (Clean & Simple)
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6]
+];
+
+for (let row of matrix) {           // each row is an array
+    for (let cell of row) {         // each cell in row
+        console.log(cell);
+    }
+}
+```
+
+### `forEach()` (Modern & Readable)
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6]
+];
+
+matrix.forEach(row => {
+    row.forEach(cell => {
+        process.stdout.write(cell + " ");
+    });
+    console.log(); // new line
+});
+// Output:
+// 1 2 3
+// 4 5 6
+```
+
+---
+
+## Common 2D Operations
+
+### 1️⃣ Sum Each Row
+
+```javascript
+let scores = [
+    [85, 90, 78],
+    [60, 45, 70],
+    [95, 88, 92]
+];
+
+// Get sum of each row
+let rowSums = scores.map(row => row.reduce((a, b) => a + b, 0));
+console.log(rowSums); // [253, 175, 275]
+
+// Which student has the highest total?
+let maxSum = Math.max(...rowSums);
+console.log(maxSum); // 275
+```
+
+### 2️⃣ Filter/Find Specific Elements
+
+```javascript
+let suiteResults = [
+    ["login-pass",    "register-pass", "logout-pass"],
+    ["search-pass",   "filter-fail",   "sort-pass"],
+    ["checkout-fail", "payment-fail",  "confirm-pass"]
+];
+
+// Find all failures
+for (let i = 0; i < suiteResults.length; i++) {
+    for (let j = 0; j < suiteResults[i].length; j++) {
+        if (suiteResults[i][j].includes("fail")) {
+            console.log(`Row ${i}, Col ${j}: ${suiteResults[i][j]}`);
+        }
+    }
+}
+// Row 1, Col 1: filter-fail
+// Row 2, Col 0: checkout-fail
+// Row 2, Col 1: payment-fail
+```
+
+### 3️⃣ Get Column (Extract All Values from One Column)
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+// Extract column 1 (middle column)
+let col1 = matrix.map(row => row[1]);
+console.log(col1); // [2, 5, 8]
+
+// SDET: Get all statuses from test results
+let tests = [
+    ["login",    "pass"],
+    ["checkout", "fail"],
+    ["payment",  "pass"]
+];
+let statuses = tests.map(test => test[1]);
+console.log(statuses); // ["pass", "fail", "pass"]
+```
+
+### 4️⃣ Flatten 2D Array
+
+```javascript
+let matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+];
+
+// Convert to 1D
+let flat = matrix.flat();
+console.log(flat); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+// Or manually
+let flattened = [];
+for (let row of matrix) {
+    for (let cell of row) {
+        flattened.push(cell);
+    }
+}
+```
+
+---
+
+## 3D Arrays
+
+A **3D array** is an array of 2D arrays — like **multiple sheets/layers**.
+
+```javascript
+// 3D array: 2 sheets, each with 2x2 matrix
+let data = [
+    // Sheet 0
+    [
+        [1, 2],
+        [3, 4]
+    ],
+    // Sheet 1
+    [
+        [5, 6],
+        [7, 8]
+    ]
+];
+
+// Access: [sheet][row][col]
+console.log(data[0][0][0]); // 1 (sheet 0, row 0, col 0)
+console.log(data[1][1][1]); // 8 (sheet 1, row 1, col 1)
+
+// Visual:
+// data[0]     data[1]
+// 1  2        5  6
+// 3  4        7  8
+
+// Iterate 3D
+for (let sheet of data) {          // each 2D sheet
+    for (let row of sheet) {       // each row in sheet
+        for (let cell of row) {    // each cell in row
+            console.log(cell);
+        }
+    }
+}
+```
+
+### SDET Use Case: Multi-Environment Test Results
+
+```javascript
+// Test results: different browsers, multiple environments, each test
+let results = [
+    // Chrome
+    [
+        ["dev", "pass", 120],
+        ["staging", "pass", 150]
+    ],
+    // Firefox
+    [
+        ["dev", "fail", 95],
+        ["staging", "pass", 160]
+    ]
+];
+
+// Access: Which status for Firefox in Staging?
+console.log(results[1][1][1]); // "pass"
+```
+
+---
+
+## Pattern Generation
+
+Pattern generation is common in coding interviews and useful for understanding nested loops.
+
+### Right Triangle
+
+```javascript
+// Expected output:
+// *
+// * *
+// * * *
+
+let n = 3;
+for (let i = 1; i <= n; i++) {
+    let row = "";
+    for (let j = 1; j <= i; j++) {
+        row += "* ";
+    }
+    console.log(row.trim());
+}
+```
+
+### Left Triangle (Reverse)
+
+```javascript
+// Expected output:
+// *****
+// ****
+// ***
+// **
+// *
+
+let n = 5;
+for (let i = n; i >= 1; i--) {
+    let row = "";
+    for (let j = 1; j <= i; j++) {
+        row += "*";
+    }
+    console.log(row);
+}
+```
+
+### Pyramid (Diamond-like)
+
+```javascript
+// Expected output:
+//   *
+//  ***
+// *****
+
+let n = 3;
+for (let i = 1; i <= n; i++) {
+    let row = "";
+    
+    // Spaces
+    for (let j = 1; j <= n - i; j++) {
+        row += " ";
+    }
+    
+    // Stars
+    for (let j = 1; j <= 2 * i - 1; j++) {
+        row += "*";
+    }
+    
+    console.log(row);
+}
+```
+
+### Hollow Square
+
+```javascript
+// Expected output:
+// * * * * *
+// *       *
+// *       *
+// *       *
+// * * * * *
+
+let n = 5;
+for (let i = 1; i <= n; i++) {
+    let row = "";
+    for (let j = 1; j <= n; j++) {
+        if (i === 1 || i === n || j === 1 || j === n) {
+            row += "* ";
+        } else {
+            row += "  ";
+        }
+    }
+    console.log(row);
+}
+```
+
+---
+
+## Quick Reference: 2D Array Operations
+
+| Operation | Code | Result |
+|---|---|---|
+| **Create 2D** | `[[1,2],[3,4]]` | 2x2 matrix |
+| **Access** | `matrix[0][1]` | Element at row 0, col 1 |
+| **Modify** | `matrix[0][1] = 99` | Changes element |
+| **Get rows** | `matrix.length` | Number of rows |
+| **Get columns** | `matrix[0].length` | Number of columns in row 0 |
+| **Sum row** | `row.reduce((a,b) => a+b, 0)` | Total of row values |
+| **Get column** | `matrix.map(r => r[i])` | All values from column i |
+| **Flatten** | `matrix.flat()` | Convert 2D to 1D |
+| **Iterate rows** | `for (let row of matrix)` | Loop each row |
+| **Iterate all** | `for (let r of m) for (let c of r)` | Loop each cell |
+
+---
+
+### Quick Comparison: 1D vs 2D vs 3D
+
+```javascript
+// 1D — Simple list
+let arr1D = [1, 2, 3, 4];
+console.log(arr1D[0]); // 1
+
+// 2D — Table/Matrix
+let arr2D = [[1, 2], [3, 4]];
+console.log(arr2D[0][1]); // 2
+
+// 3D — Multiple tables
+let arr3D = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]];
+console.log(arr3D[0][1][0]); // 3
+```
+
+---
+
