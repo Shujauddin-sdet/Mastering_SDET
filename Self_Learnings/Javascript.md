@@ -5785,6 +5785,87 @@ console.log(failedNames); // ["Checkout", "Payment"]
 
 ---
 
+# 20.5 Understanding Rows and Columns
+
+Before learning about multi-dimensional arrays, understand how **rows** and **columns** work. Think of a Google Sheet:
+
+| Name | Email | Status |
+|------|-------|--------|
+| Alice | alice@test.com | Active |
+| Bob | bob@test.com | Active |
+| Charlie | charlie@test.com | Inactive |
+
+**Rows** = Horizontal lines (each person is one row)  
+**Columns** = Vertical lines (Name, Email, Status are columns)
+
+### Example 1: Test Results Sheet
+
+```
+Columns:  Test Name    |  Result  |  Duration
+Rows:
+   1     Login Test    |  PASS    |  1.2s
+   2     Search Test   |  FAIL    |  0.8s
+   3     Checkout Test |  PASS    |  2.5s
+```
+
+In JavaScript:
+```javascript
+let testResults = [
+  ["Login Test",    "PASS", "1.2s"],    // Row 1
+  ["Search Test",   "FAIL", "0.8s"],    // Row 2
+  ["Checkout Test", "PASS", "2.5s"]     // Row 3
+];
+
+// Access first row: testResults[0] → ["Login Test", "PASS", "1.2s"]
+// Access column (test names): testResults[0][0], testResults[1][0], testResults[2][0]
+```
+
+### Example 2: Student Grades Sheet
+
+```
+Columns:  Student  |  Math | English | Science
+   1      Alice    |   90  |   85    |   92
+   2      Bob      |   75  |   88    |   80
+   3      Charlie  |   88  |   92    |   91
+```
+
+In JavaScript:
+```javascript
+let grades = [
+  ["Alice",   90, 85, 92],     // Row 1
+  ["Bob",     75, 88, 80],     // Row 2
+  ["Charlie", 88, 92, 91]      // Row 3
+];
+
+// Get Alice's math grade: grades[0][1] → 90
+// Get all math grades (column 1): grades[0][1], grades[1][1], grades[2][1]
+```
+
+### Example 3: User Account Data Sheet
+
+```
+Columns:  Username | Age | Country | Premium
+   1      john_doe |  28 | USA     | true
+   2      jane_smith| 34 | UK      | false
+   3      pak_user | 25 | Pakistan | true
+```
+
+In JavaScript:
+```javascript
+let users = [
+  ["john_doe",   28, "USA",       true],      // Row 1
+  ["jane_smith", 34, "UK",        false],     // Row 2
+  ["pak_user",   25, "Pakistan",  true]       // Row 3
+];
+
+// Access John's age: users[0][1] → 28
+// Access all ages (column 2): users[0][1], users[1][1], users[2][1]
+```
+
+**Key Point:** Rows go **down** (first bracket), columns go **right** (second bracket).
+
+---
+
 # 21. Multi-Dimensional Arrays
 
 Multi-dimensional arrays are arrays **containing other arrays**. Think of them as **grids, tables, or spreadsheets**. Essential for SDET when dealing with test data tables, API responses with nested structures, or visual grid testing.
