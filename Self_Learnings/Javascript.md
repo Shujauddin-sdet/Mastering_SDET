@@ -6293,3 +6293,30 @@ console.log(arr3D[0][1][0]); // 3
 
 ---
 
+### Printing on the Same Line in Node.js (Pattern Building)
+
+When building patterns or formatting terminal output, standard `console.log()` automatically adds a new line (an invisible "Enter" key press) at the end of every print. 
+
+To print multiple items side-by-side on the exact same line, you must use Node's `process.stdout.write()`.
+
+```javascript
+let m = 3;
+
+// OUTER LOOP: Controls the Rows (Top to Bottom)
+for (let i = 1; i <= m; i++) {
+    
+    // INNER LOOP: Controls the Columns (Left to Right)
+    for (let j = 1; j <= i; j++) {
+        
+        // 🛑 process.stdout.write(): 
+        // Prints the string BUT leaves the cursor exactly where it finished. 
+        // This forces the next star to be printed right next to it horizontally.
+        process.stdout.write("* "); 
+    }
+    
+    // 🟢 console.log() (Empty):
+    // Once the inner loop is done building the row, we use an empty console.log().
+    // This simply acts like hitting the "Enter" key to drop the cursor down to the next line for the next row.
+    console.log(); 
+}
+```
