@@ -28,3 +28,25 @@ const getResult = (score) => {
     if (score >= 70) return "pass";
     return "fail";
 };
+
+console.log("-------")
+
+// sum function -normal and arrow function 
+
+function sum(a, b) {
+    return a + b;
+}
+
+let arraowSum = (a, b) => a + b;
+console.log(arraowSum(10, 20))
+
+
+//multiplication
+
+
+function multiplication(a, b) {
+    return a * b;
+}
+
+let arraowMultiplication = (a, b) => a * b;  
+console.log(arraowMultiplication(10, 20)) 

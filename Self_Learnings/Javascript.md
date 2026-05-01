@@ -4778,6 +4778,7 @@ for (let i in tests) {
 ## 6️⃣ Transforming Arrays
 
 ### `map()` — Transform Every Item (Create NEW Array)
+![Map Method](Images/Map.png)
 ```javascript
 let prices = [100, 200, 300];
 
@@ -4796,6 +4797,7 @@ console.log(names); // ["Login", "Checkout"]
 ```
 
 ### `filter()` — Keep Only Items Matching Condition
+![Filter Method](Images/Filter.png)
 ```javascript
 let scores = [45, 82, 91, 60, 73];
 let passing = scores.filter(s => s >= 70);
@@ -4812,6 +4814,7 @@ console.log(failures.length); // 2
 ```
 
 ### `reduce()` — Combine All Items Into One Value
+![Reduce Method](Images/Reduce.png)
 Syntax: `reduce((accumulator, current) => ..., initialValue)`
 ```javascript
 let prices = [29.99, 59.99, 89.99];
@@ -6390,4 +6393,212 @@ for (let i = 1; i <= m; i++) {
     // This simply acts like hitting the "Enter" key to drop the cursor down to the next line for the next row.
     console.log(); 
 }
+```
+### Functions
+``` javascript
+Function is block of code that can be called and reuse it. It can be invoked (call) whenever needed.
+
+![Functions](Images/Functions.png)
+
+Functions are of two types
+1. Function statement (Normal Function)
+2. Arrow Function
+
+1. Function Statement:
+
+Function statement is a function that is declared using the keyword function. It is also known as a normal function.
+
+function functionName(parameters) {
+    // code to be executed
+}
+
+2. Arrow Function:
+
+Arrow function is a function that is declared using the arrow syntax =>. It is also known as an anonymous function.
+
+const functionName = (parameters) => {
+    // code to be executed
+}
+
+// sum function -normal and arrow function 
+
+function sum(a, b) {
+    return a + b;
+}
+
+let arraowSum = (a, b) => a + b;
+console.log(arraowSum(10, 20))
+
+
+//multiplication
+
+
+function multiplication(a, b) {
+    return a * b;
+}
+
+let arraowMultiplication = (a, b) => a * b;  
+console.log(arraowMultiplication(10, 20)) 
+
+
+// Function Statement:
+
+
+function getResult(score) {
+    return score >= 70 ? "pass" : "fail";
+}
+
+getResult(85);  // "pass"
+getResult(45);  // "fail"
+
+console.log("------")
+
+function a (){
+    console.log("hello World")
+}
+ a();
+
+ function b (hie){ //hie is parameter
+    console.log(hie)
+ }
+ b("hi from shuja") // shuja is argument
+
+//Arrow Function
+
+// 1. Basic Arrow Function
+//Syntax: const functionName = (parameter1, parameter2) => {
+//    // code to be executed
+//}
+
+// Withh no parameters
+
+let arrow = () => {
+    console.log("Hello")
+}
+arrow();
+
+let add = (a,b) => {
+    return a + b;
+}
+
+console.log(add(2, 5));  // 7
+
+let multiply = (a,b) => {
+    return a * b;
+}
+
+console.log(multiply(2, 5));  // 10
+
+function sum(x, y){
+    let s = x + y;
+    return s; // return is optional if not present function will return undefined. The meaning of return is to return the value to the caller. we can only have one return statement in a function.
+}
+sum(10, 20); // 30
+
+```
+```javascript
+
+function calculateBoth(x, y) {
+    let s = x + y;
+    let m = x * y;
+    
+    // 1. Pack your backpack (an Array!)
+    let myAnswers = [s, m]; 
+    
+    // 2. Carry the single backpack out the exit door
+    return myAnswers; 
+}
+
+// 3. Catch the backpack
+let results = calculateBoth(10, 20);
+
+console.log(results);    // Output: [ 30, 200 ]
+console.log(results[0]); // Output: 30 (Just the sum)
+console.log(results[1]); // Output: 200 (Just the multiplication)
+```
+```javascript
+Function parameters are like local variables of functions. and they are blocked scoped.
+```
+```javascript
+Methods
+- It is  a function inside a property.
+
+example
+
+const calculator = {
+    add: function(a, b) {  // add is property and function is value and add is a method of calculator object. In this case add is not the real function. it is just a property.
+        return a + b;
+    },
+    subtract: function(a, b) {
+        return a - b;
+    }
+}
+
+console.log(calculator.add(10, 20))
+```
+
+### For each loops
+
+![for-each-loops](Images/For_each_loops_Fn.png)
+We use for each loops when we need to work on each element of an array.
+In for each in callback function we can use 3 parameters which is (value, index, array)
+It can also be called as Higher Order Function because it takes a function as a parameter. and also Higher order Method because it is a method of an array.
+
+example with 3 parameters
+1. value: its value of current element.
+2. index: its index of current element.
+3. array: its array of current element.
+
+```javascript 
+const array = [10,20,30,40,50];
+
+array.forEach(function(value,index,array){
+    console.log("value:" + value + " index:" + index + " array:" + array);
+}); 
+
+output:
+value:10 index:0 array:[10, 20, 30, 40, 50]
+value:20 index:1 array:[10, 20, 30, 40, 50]
+value:30 index:2 array:[10, 20, 30, 40, 50]
+value:40 index:3 array:[10, 20, 30, 40, 50]
+value:50 index:4 array:[10, 20, 30, 40, 50]
+```
+```javascript
+Array objects have built in function called for each which is very useful to iterate over array elements.
+
+const fruits = ["apple", "banana", "cherry", "orange", "mango"];
+
+fruits.forEach(function(fruit) {
+  console.log(fruit);
+});
+
+// Using Arrow Function (ES6) — More concise!
+fruits.forEach(fruit => console.log(fruit));
+
+let arr = [1, 2, 3, 4, 5, 6];
+
+arr.forEach ((val) => {
+    console.log(val)
+});
+
+let arr = [1, 2, 3, 4, 5, 6]
+
+arr.forEach((val) => {
+    console.log(val * val)
+});
+
+let arr = [1, 2, 3, 4, 5, 6]
+
+let total = (num) => {
+    console.log(num * num)
+}
+arr.forEach(total)
+```
+```javascript 
+###Higher Order Functions
+- Functions are first class citizens.
+- Functions can be passed as arguments to other functions.
+- Functions can be returned from other functions.
+
+example
 ```
