@@ -4817,10 +4817,12 @@ console.log(failures.length); // 2
 ![Reduce Method](Images/Reduce.png)
 Syntax: `reduce((accumulator, current) => ..., initialValue)`
 ```javascript
-let prices = [29.99, 59.99, 89.99];
+let prices = [29.99, 59.99, 89.99]; // This is a easy example than in the Image.
 
 // Add up all prices
-let total = prices.reduce((sum, price) => sum + price, 0);
+let total = prices.reduce((sum, price) => {
+return sum + price
+});
 console.log(total); // 179.97
 
 // SDET: Count passed tests
@@ -6594,11 +6596,139 @@ let total = (num) => {
 }
 arr.forEach(total)
 ```
-```javascript 
-###Higher Order Functions
-- Functions are first class citizens.
-- Functions can be passed as arguments to other functions.
-- Functions can be returned from other functions.
+### Higher Order Functions
+- **Functions are first-class citizens**: They can be treated like any other variable.
+- **Can be passed as arguments**: You can pass a function into another function (called a callback).
+- **Can be returned**: A function can return another function.
 
-example
+**Example: Passing a function as an argument**
+```javascript
+// A simple function
+function sayHello(name) {
+    return `Hello, ${name}!`;
+}
+
+// Higher Order Function (Takes a function as an argument)
+function processUser(userName, callbackFn) {
+    console.log(callbackFn(userName)); 
+}
+
+processUser("Pramod", sayHello); // Output: Hello, Pramod!
+```
+
+### Higher Order Method 
+A **Higher Order Method** is just a Higher Order Function that is built into an object (like an Array). 
+
+Methods like `.forEach()`, `.map()`, `.filter()`, and `.reduce()` are all higher-order methods because they accept a function as their parameter.
+
+**Example: `.map()` is a higher-order method**
+```javascript
+let numbers = [1, 2, 3];
+
+// .map() takes an arrow function as an argument
+let doubled = numbers.map(num => num * 2);
+
+console.log(doubled); // Output: [2, 4, 6]
+```
+```javascript
+
+Map function
+
+- It is a higher order method.
+- Map Function is used to transform each element of an array. and it always returns a new array. 
+- It will not modify the original array.
+
+let a = [1, 2, 3, 4]
+
+a.map ((val) => {
+    console.log(val)
+});
+// To create a new Array in map fn we have to return the value from the callback function.
+
+let a1 = [1,2,3,4,5];
+
+let a2 = a.map ((val) => { // let is Blocled scope so please do use a differnet variable
+    return val
+});
+
+console.log(a1); //  The original Array stays the same and we get a new array 
+console.log(a2); // [1,2,3,4,5]
+```
+```javascript
+
+### Filter function
+- It is a higher order method.
+- Filter Function is used to filter each element of an array. and it always returns a new array.
+- It will not modify the original array.
+
+// All even Elements from array
+
+let arr = [1, 2, 3, 4]
+
+let even_Arr = arr.filter((val) => {
+    return val % 2 === 0
+
+})
+console.log(even_Arr) // [2,4]
+```
+```javascript
+
+### Reduce function
+- It is a higher order method.
+- Reduce Function is used to reduce each element of an array. and it always returns a new array.
+- It will not modify the original array.
+
+let a = [1, 2, 3, 4]
+
+a.reduce ((val) => {
+    console.log(val)
+});
+// To create a new Array in map fn we have to return the value from the callback function.
+
+let a1 = [1,2,3,4,5];
+
+let a2 = a.reduce ((val) => { // let is Blocled scope so please do use a differnet variable
+    return val
+});
+
+console.log(a1); //  The original Array stays the same and we get a new array 
+console.log(a2); // [1,2,3,4,5]
+
+### Find out the largest number in array or viseversa
+
+let arr = [1, 2, 3, 4]
+ let largest = arr.reduce((val, val2) => {
+    return val > val2 ? val : val2
+ })
+ console.log(largest);
+```
+```javascript
+// to add two numnbers in array using reduce
+
+let arr = [1,2,3,4]
+ let add = arr.reduce((val, val2) => {
+    return val + val2
+ })
+ console.log(add);
+```
+```javascript 
+// Find the largest and smallest number in array and add them together
+
+
+let arr = [1, 2, 3, 4];
+
+// Find the largest number
+let largest = arr.reduce((val1, val2) => {
+    return val1 > val2 ? val1 : val2;
+}); 
+console.log("Largest:", largest);
+
+// Find the smallest number
+let smallest = arr.reduce((val1, val2) => {
+    return val1 < val2 ? val1 : val2;
+}); 
+console.log("Smallest:", smallest);
+
+// Add them together
+console.log("Sum of both:", largest + smallest);
 ```
