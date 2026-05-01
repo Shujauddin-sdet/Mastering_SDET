@@ -4473,6 +4473,18 @@ let scores = new Array(5); // [empty x 5] — creates 5 empty slots
 let numbers = new Array(10, 20, 30); // [10, 20, 30]
 ```
 
+### `fill()` — Populate Empty Slots
+Used to fill an array with static values. Perfect for creating dummy test data.
+```javascript
+let dummyTests = new Array(5).fill("PASS");
+console.log(dummyTests); // ["PASS", "PASS", "PASS", "PASS", "PASS"]
+
+// Fill specific portion: fill(value, startIndex, endIndex)
+let scores = [10, 20, 30, 40];
+scores.fill(0, 1, 3); 
+console.log(scores); // [10, 0, 0, 40]
+```
+
 ### `Array.of()` — Create Array with Explicit Values
 Like constructor, but **always creates array with the values you pass** (safer than constructor).
 ```javascript
@@ -4821,6 +4833,14 @@ let config = browsers.reduce((obj, b) => ({...obj, [b]: true}), {});
 console.log(config); // { chrome: true, firefox: true }
 ```
 
+### `reduceRight()` — Combine from Right to Left
+Works exactly like `reduce()`, but processes the array starting from the last item.
+```javascript
+let words = ["world", " ", "hello"];
+let sentence = words.reduceRight((acc, current) => acc + current, "");
+console.log(sentence); // "hello world"
+```
+
 ### `flat()` — Flatten Nested Arrays (ES2019)
 ```javascript
 let nested = [[1, 2], [3, 4], [5]];
@@ -4835,6 +4855,20 @@ console.log(deepNested.flat()); // Defaults to 1 level
 // Remove empty slots
 let withGaps = [1, , 3]; // has empty slot at index 1
 console.log(withGaps.flat()); // [1, 3] ← empty removed
+```
+
+### `flatMap()` — Map and Flatten in One Step
+Combines `.map()` and `.flat()` (with depth 1) into a single, highly efficient method.
+```javascript
+let sentences = ["Hello world", "Learning JS"];
+
+// If we just use map(), we get an array of arrays:
+let wordsNested = sentences.map(s => s.split(" ")); 
+console.log(wordsNested); // [["Hello", "world"], ["Learning", "JS"]]
+
+// Using flatMap() gives us a single flat array of words!
+let wordsFlat = sentences.flatMap(s => s.split(" "));
+console.log(wordsFlat); // ["Hello", "world", "Learning", "JS"]
 ```
 
 ---
@@ -5137,11 +5171,48 @@ console.log(a, b); // 2, 1
 | `indexOf()` | ✅ | - | Index or `-1` |
 | `every()` | ✅ | - | Boolean |
 | `some()` | ✅ | - | Boolean |
-| `sort()` | ❌ | ✅ | Sorted array |
 | `join()` | ✅ | - | String |
 | `flat()` | ✅ | - | New array |
+| `flatMap()` | ✅ | - | New array |
+| `reduceRight()`| ✅ | - | Single value |
 
 > *`forEach` doesn't modify the array itself, but doesn't return anything.
+
+---
+
+## 1️⃣3️⃣ The New ES2023 Pure Methods 🚀
+
+JavaScript developers used to hate that `sort()`, `reverse()`, and `splice()` modified the original array because mutating data can cause bugs.
+
+In 2023, JavaScript introduced **Pure** versions of these methods. They do the exact same thing, but they **create a brand new array** and leave the original completely untouched!
+
+| Old Mutating Method | New Pure Method (ES2023) | What it does |
+|---|---|---|
+| `sort()` | **`toSorted()`** | Returns a new sorted array. |
+| `reverse()` | **`toReversed()`** | Returns a new reversed array. |
+| `splice()` | **`toSpliced()`** | Returns a new array with items added/removed. |
+| `arr[index] = val` | **`with(index, val)`** | Returns a new array with the item replaced. |
+
+### ES2023 Code Examples:
+```javascript
+let months = ["Jan", "Mar", "Apr"];
+
+// 1. toSorted()
+let sortedMonths = months.toSorted(); 
+// sortedMonths is ["Apr", "Jan", "Mar"]
+// months is STILL ["Jan", "Mar", "Apr"] ✅
+
+// 2. toReversed()
+let reversedMonths = months.toReversed(); 
+// reversedMonths is ["Apr", "Mar", "Jan"]
+
+// 3. toSpliced(index, deleteCount, item)
+let insertedMonths = months.toSpliced(1, 0, "Feb");
+// insertedMonths is ["Jan", "Feb", "Mar", "Apr"]
+
+// 4. with(index, newValue) — Replace without mutating
+let fixedMonths = months.with(1, "March"); 
+// fixedMonths is ["Jan", "March", "Apr"]
 
 ---
 
