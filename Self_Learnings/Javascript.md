@@ -5185,6 +5185,54 @@ console.log(a, b); // 2, 1
 
 ---
 
+## 🚀 JavaScript Array Methods: When to use what
+
+### 1. `forEach` (The Inspector)
+* **Goal:** To **do an action** for every single item (like printing to the screen or clicking a button).
+* **Returns:** `undefined` (Nothing).
+* **Rule:** Never try to save it to a variable.
+```javascript
+// Example: Just looking at the data
+arr.forEach((val) => {
+    console.log(val); 
+});
+```
+
+### 2. `map` (The Factory)
+* **Goal:** To create a **brand new array** by transforming every single item in the original array.
+* **Returns:** A New Array (exact same size as the original).
+* **Rule:** You must return the new value you want to build.
+```javascript
+// Example: Multiply everything by 2
+let doubled = arr.map((val) => {
+    return val * 2; 
+});
+```
+
+### 3. `filter` (The Bouncer)
+* **Goal:** To create a **smaller array** by only keeping items that pass a specific test.
+* **Returns:** A New Array (smaller, or empty if nothing passes).
+* **Rule:** You must return a True/False math condition.
+```javascript
+// Example: Keep only numbers greater than 10
+let winners = arr.filter((val) => {
+    return val > 10; 
+});
+```
+
+### 4. `reduce` (The Snowball)
+* **Goal:** To crush the entire array down into **one single value** (like a total sum, or a single Object backpack).
+* **Returns:** A Single Value.
+* **Rule:** You must use an accumulator (the snowball) and give it a starting value at the very end.
+```javascript
+// Example: Add all numbers together
+let totalSum = arr.reduce((acc, val) => {
+    return acc + val;
+}, 0); // <-- 0 is the starting value
+```
+
+---
+
 ## 1️⃣3️⃣ The New ES2023 Pure Methods 🚀
 
 JavaScript developers used to hate that `sort()`, `reverse()`, and `splice()` modified the original array because mutating data can cause bugs.
@@ -6397,8 +6445,9 @@ for (let i = 1; i <= m; i++) {
 }
 ```
 ### Functions
-``` javascript
-Function is block of code that can be called and reuse it. It can be invoked (call) whenever needed.
+
+- A function is a reusable block of code that performs a specific task. 
+- Instead of repeating logic, we define it once and call it when ever needed. It increases the code reusability.
 
 ![Functions](Images/Functions.png)
 
@@ -6406,45 +6455,285 @@ Functions are of two types
 1. Function statement (Normal Function)
 2. Arrow Function
 
-1. Function Statement:
+#### 1. Function Statement:
 
 Function statement is a function that is declared using the keyword function. It is also known as a normal function.
 
+```javascript
+//defination
 function functionName(parameters) {
     // code to be executed
 }
 
-2. Arrow Function:
+// calling
+functionName(arguments)
+```
 
-Arrow function is a function that is declared using the arrow syntax =>. It is also known as an anonymous function.
+-------------------------------------------------------------------------------------------
+- **Parameters** means name of variables which are used to store the values which are passed to the function.
+- **Arguments** means values which are passed to the function.
 
+for example in:
+```javascript
+functionName(parameters) {
+    // code to be executed
+}
+functionName(arguments)
+
+// 'a' and 'b' are PARAMETERS
+function add(a, b) {
+    return a + b;
+}
+
+// 5 and 10 are ARGUMENTS
+add(5, 10);
+//A simple way to remember: Parameters = definition, Arguments = call.
+```
+
+-------------------------------------------------------------------------------------------
+
+## What is Return?
+
+Think of a function like a **machine**:
+- You put something **in** (arguments)
+- It does some work
+- It gives something **back** to you (return)
+
+-------------------------------------------------------------------------------------------
+
+### Without Return
+The machine does the work but throws the result away:
+
+```javascript
+function add(a, b) {
+    console.log(a + b) // prints 8, but thrown away
+}
+
+let x = add(3, 5)  // x is undefined ❌
+console.log(x * 2) // NaN ❌ can't use it
+```
+
+-------------------------------------------------------------------------------------------
+
+### With Return
+The machine hands the result back to YOU:
+
+```javascript
+function add(a, b) {
+    return a + b // hands 8 back to whoever called it
+}
+
+let x = add(3, 5)  // x is 8 ✅
+console.log(x * 2) // 16 ✅ now you can use it
+```
+
+-------------------------------------------------------------------------------------------
+
+### One Important Rule
+Once `return` runs, the function stops. Anything after it is ignored:
+
+```javascript
+function add(a, b) {
+    return a + b
+    console.log("I will never run") // ❌ dead code
+}
+```
+
+-------------------------------------------------------------------------------------------
+
+### Quick Summary
+- `console.log()` inside = prints it, but **nobody gets it back**
+- `return` = **hands the value back** so you can use it elsewhere
+
+-----------------------------------------------------------------------------------------------------
+# Basic Functions in JavaScript
+
+Functions can be categorized based on two things:
+- Do they take arguments? (input)
+- Do they return a value? (output)
+
+-------------------------------------------------------------------------------------------
+
+## 1. No Parameters, No Return
+Only performs an action, returns nothing.
+
+```javascript
+function greet() {
+    console.log("Hello World")
+}
+
+greet() // Output: Hello World
+```
+
+-------------------------------------------------------------------------------------------
+
+## 2. With Parameters, No Return
+Takes input, but returns nothing.
+
+```javascript
+function greet(name) {
+    console.log("Hello " + name)
+}
+
+greet("Shuja") // Output: Hello Shuja
+```
+
+-------------------------------------------------------------------------------------------
+
+## 3. No Parameters, With Return
+Returns a value, but takes no input.
+
+```javascript
+function greet() {
+    return "Hello World"
+}
+
+console.log(greet()) // Output: Hello World
+```
+
+-------------------------------------------------------------------------------------------
+
+## 4. With Parameters, With Return
+Takes input AND returns a value. (Most common in real projects)
+
+```javascript
+function greet(name) {
+    return "Hello " + name
+}
+
+console.log(greet("Shuja")) // Output: Hello Shuja
+```
+
+-------------------------------------------------------------------------------------------
+
+## Quick Summary Table
+
+| Type | Parameters | Return | Example Call          |
+|------|------------|--------|-----------------------|
+| 1    | ❌ No      | ❌ No  | greet()               |
+| 2    | ✅ Yes     | ❌ No  | greet("Shuja")        |
+| 3    | ❌ No      | ✅ Yes | console.log(greet())  |
+| 4    | ✅ Yes     | ✅ Yes | console.log(greet("Shuja")) |
+-------------------------------------------------------------------------------------------
+
+## Function Expression
+
+In JavaScript, functions are treated as **values**. This means you can create a function and store it directly inside a variable. This is called a **Function Expression**.
+
+When a function does not have a name after the `function` keyword, it is called an **Anonymous Function**.
+
+### Normal Function vs. Function Expression
+The core difference between them is **Hoisting** (how JavaScript loads them into memory).
+
+#### 1. Normal Function (Function Declaration)
+Normal functions are **hoisted**. You can call them *before* they are defined in your code.
+```javascript
+console.log(greet1("Bob")); // ✅ Works!
+
+function greet1(name1) {
+    return `Hello, ${name1}!`;
+}
+```
+-------------------------------------------------------------------------------------------
+
+###  2. Function Expression
+
+A function expression is simply storing a function inside a variable.
+
+const greet = function(name) {
+    return `Hello, ${name}!`;
+};
+
+console.log(greet("Shuja")); // Output: Hello, Shuja!
+
+That's it. The function has no name — the variable IS the name.
+
+---
+
+### The Only Important Rule — No Hoisting
+
+// ❌ This will crash
+greet("Shuja"); // ERROR — greet doesn't exist yet
+
+const greet = function(name) {
+    return `Hello, ${name}!`;
+};
+
+// ✅ This works
+const greet = function(name) {
+    return `Hello, ${name}!`;
+};
+
+greet("Shuja"); // Define first, call after
+
+Simple rule: Define first, use after.
+
+---
+
+### Why Should an SDET Care?
+
+In test automation you will see this pattern constantly:
+
+// Passing a function as an argument (callback)
+const numbers = [1, 2, 3, 4, 5];
+
+const evenNumbers = numbers.filter(function(num) {
+    return num % 2 === 0;
+});
+
+console.log(evenNumbers); // [2, 4]
+
+.filter(), .map(), .forEach() — all of these accept a function as an argument.
+That function you pass in is a function expression.
+You will use this every single day in Playwright and JavaScript.
+
+---
+
+### Quick Summary
+
+| | Function Declaration | Function Expression |
+|---|---|---|
+| Has a name | ✅ Yes | ❌ No (variable is the name) |
+| Hoisted | ✅ Yes | ❌ No |
+| Use case | General functions | Callbacks, test helpers |
+
+-------------------------------------------------------------------------------------------
+
+#### 2. Arrow Function:
+
+Arrow function is a function that is declared using the arrow syntax `=>`. It is also known as an anonymous function.
+
+```javascript
 const functionName = (parameters) => {
     // code to be executed
 }
 
-// sum function -normal and arrow function 
+// sum function - normal and arrow function 
 
 function sum(a, b) {
     return a + b;
 }
 
-let arraowSum = (a, b) => a + b;
-console.log(arraowSum(10, 20))
+let arrowSum = (a, b) => a + b;
+console.log(arrowSum(10, 20))
 
 
-//multiplication
-
+// multiplication
 
 function multiplication(a, b) {
     return a * b;
 }
 
-let arraowMultiplication = (a, b) => a * b;  
-console.log(arraowMultiplication(10, 20)) 
+//double it with arrow function 
+
+const doubleIt = n => n * 2;
+console.log(doubleIt(20)); // prefered way to write as it is not bulky and concise.
+
+let arrowMultiplication = (a, b) => a * b;  
+console.log(arrowMultiplication(10, 20)) 
 
 
 // Function Statement:
-
 
 function getResult(score) {
     return score >= 70 ? "pass" : "fail";
@@ -6458,34 +6747,34 @@ console.log("------")
 function a (){
     console.log("hello World")
 }
- a();
+a();
 
- function b (hie){ //hie is parameter
+function b (hie){ //hie is parameter
     console.log(hie)
- }
- b("hi from shuja") // shuja is argument
+}
+b("hi from shuja") // shuja is argument
 
-//Arrow Function
+// Arrow Function
 
 // 1. Basic Arrow Function
-//Syntax: const functionName = (parameter1, parameter2) => {
+// Syntax: 
+// const functionName = (parameter1, parameter2) => {
 //    // code to be executed
-//}
+// }
 
-// Withh no parameters
-
+// With no parameters
 let arrow = () => {
     console.log("Hello")
 }
 arrow();
 
-let add = (a,b) => {
+let add = (a, b) => {
     return a + b;
 }
 
 console.log(add(2, 5));  // 7
 
-let multiply = (a,b) => {
+let multiply = (a, b) => {
     return a * b;
 }
 
@@ -6496,10 +6785,9 @@ function sum(x, y){
     return s; // return is optional if not present function will return undefined. The meaning of return is to return the value to the caller. we can only have one return statement in a function.
 }
 sum(10, 20); // 30
-
 ```
-```javascript
 
+```javascript
 function calculateBoth(x, y) {
     let s = x + y;
     let m = x * y;
@@ -6518,24 +6806,23 @@ console.log(results);    // Output: [ 30, 200 ]
 console.log(results[0]); // Output: 30 (Just the sum)
 console.log(results[1]); // Output: 200 (Just the multiplication)
 ```
-```javascript
-Function parameters are like local variables of functions. and they are blocked scoped.
-```
-```javascript
-Methods
-- It is  a function inside a property.
 
-example
+> **Note:** Function parameters are like local variables of functions, and they are block scoped.
 
+### Methods
+- It is a function inside a property.
+
+**Example:**
+```javascript
 const calculator = {
-    add: function(a, b) {  // add is property and function is value and add is a method of calculator object. In this case add is not the real function. it is just a property.
+    add: function(a, b) {  
+        // add is property and function is value. 'add' is a method of the calculator object.
         return a + b;
     },
     subtract: function(a, b) {
         return a - b;
     }
 }
-
 console.log(calculator.add(10, 20))
 ```
 
@@ -6596,7 +6883,7 @@ let total = (num) => {
 }
 arr.forEach(total)
 ```
-### Higher Order Functions
+### Higher Order bs
 - **Functions are first-class citizens**: They can be treated like any other variable.
 - **Can be passed as arguments**: You can pass a function into another function (called a callback).
 - **Can be returned**: A function can return another function.
