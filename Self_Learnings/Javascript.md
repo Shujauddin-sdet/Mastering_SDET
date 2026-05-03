@@ -14,7 +14,7 @@
    - [BigInt](#-bigint)
    - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
    - [Type Coercion](#-type-coercion)
-3.5 [Execution Context — Creation & Execution Phase](#35-execution-context)
+     3.5 [Execution Context — Creation & Execution Phase](#35-execution-context)
 4. [Operators](#4-operators)
    - [Nullish Coalescing (??) vs ||](#11-nullish-coalescing-operator-)
 5. [Truthy and Falsy Values](#truthy-and-falsy-values)
@@ -30,21 +30,21 @@
    - [break](#a-break-statement)
    - [continue](#b-continue-statement)
    - [Labels](#c-labels-with-break-and-continue)
-9. [Loop Control Statements](#8-loop-control-statements)
-   - [break](#a-break-statement)
-   - [continue](#b-continue-statement)
-   - [Labels](#c-labels-with-break-and-continue)
-10. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
-11. [Nested Loops](#10-nested-loops-loop-inside-a-loop)
-12. [Counting Down — Reverse Loops](#11-counting-down--reverse-loops-i--)
-13. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
-14. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
-15. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
-16. [for...of with Map and Set](#15-forof-with-map-and-set)
-17. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
-18. [Escape Characters](#18-escape-characters-in-strings)
-19. [String Methods](#19-string-methods-in-js)
-20. [Arrays — Comprehensive Guide](#20-arrays--comprehensive-guide)
+10. [Loop Control Statements](#8-loop-control-statements)
+    - [break](#a-break-statement)
+    - [continue](#b-continue-statement)
+    - [Labels](#c-labels-with-break-and-continue)
+11. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
+12. [Nested Loops](#10-nested-loops-loop-inside-a-loop)
+13. [Counting Down — Reverse Loops](#11-counting-down--reverse-loops-i--)
+14. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
+15. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
+16. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
+17. [for...of with Map and Set](#15-forof-with-map-and-set)
+18. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
+19. [Escape Characters](#18-escape-characters-in-strings)
+20. [String Methods](#19-string-methods-in-js)
+21. [Arrays — Comprehensive Guide](#20-arrays--comprehensive-guide)
     - [Array Creation](#️-array-creation)
     - [Accessing & Modifying](#️-accessing--modifying)
     - [Adding & Removing](#️-adding--removing)
@@ -57,13 +57,14 @@
     - [Copying Arrays](#-copying-arrays)
     - [Array Destructuring](#️-array-destructuring)
     - [Pure vs Impure Methods](#️-pure-vs-impure-methods--quick-reference)
-21. [Multi-Dimensional Arrays](#21-multi-dimensional-arrays)
+22. [Multi-Dimensional Arrays](#21-multi-dimensional-arrays)
     - [2D Arrays (Matrices)](#2d-arrays-matrices)
     - [Accessing & Modifying 2D](#accessing--modifying-2d-arrays)
     - [Iterating 2D Arrays](#iterating-through-2d-arrays)
     - [Common 2D Operations](#common-2d-operations)
     - [3D Arrays](#3d-arrays)
     - [Pattern Generation](#pattern-generation)
+
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -85,39 +86,48 @@ To understand how JavaScript works, it's important to understand the two main en
 ![Client vs Server Architecture](Images/client_server_architecture.png)
 
 #### 🖥️ Client-Side (Front-end)
-The **Client** refers to the user's device (laptop, phone) and the software they are using to view the web (like Chrome, Safari, Firefox). 
+
+The **Client** refers to the user's device (laptop, phone) and the software they are using to view the web (like Chrome, Safari, Firefox).
+
 - **What it does:** Displays the user interface, handles user interactions (clicks, scrolling), and makes the page look good.
 - **Technologies used:** HTML (Structure), CSS (Styling), and Client-Side JavaScript (Behavior).
 - **Example:** When you click a "Like" button and it turns blue immediately, that's client-side JavaScript reacting.
 
 #### 🗄️ Server-Side (Back-end)
+
 The **Server** is a powerful computer located somewhere else (in a data center) that listens for requests from clients, processes them, and sends data back.
+
 - **What it does:** Stores data in databases, handles security, processes payments, and runs complex business logic.
 - **Technologies used:** Node.js (Server-Side JavaScript), Python, Java, Databases (SQL, MongoDB), APIs.
 - **Example:** When you click that same "Like" button, the client sends a message to the server saying "Update the database to add 1 like". The server saves this so everyone else can see it.
 
-> **Why Node.js matters:** Historically, JavaScript *only* ran in the browser (Client-Side). Node.js was created to allow developers to run JavaScript on the Server-Side too. Now you can build the entire application using just one language!
+> **Why Node.js matters:** Historically, JavaScript _only_ ran in the browser (Client-Side). Node.js was created to allow developers to run JavaScript on the Server-Side too. Now you can build the entire application using just one language!
 
 ### What is Node.js?
 
-Node.js is not a new language or a framework—it is a **runtime environment** that allows JavaScript to run *outside* of a web browser. It takes the V8 JavaScript engine (the engine that powers Google Chrome) and runs it directly on your computer's operating system.
+Node.js is not a new language or a framework—it is a **runtime environment** that allows JavaScript to run _outside_ of a web browser. It takes the V8 JavaScript engine (the engine that powers Google Chrome) and runs it directly on your computer's operating system.
 
-> 🧠 **What is a "Runtime"?** 
-> Think of a runtime like a **translator and a toolbox combined**. JavaScript is just text (code). A runtime is the software that actually reads that text, understands it, and executes it. 
+> 🧠 **What is a "Runtime"?**
+> Think of a runtime like a **translator and a toolbox combined**. JavaScript is just text (code). A runtime is the software that actually reads that text, understands it, and executes it.
+>
 > - A **browser** provides a runtime that gives JavaScript tools to change HTML and CSS.
 > - **Node.js** provides a runtime that gives JavaScript tools to access your computer's files, databases, and network.
 
 #### ⚙️ Why is this important?
-Before Node.js, JavaScript was trapped inside the browser. It could only change colors, show popups, and interact with the webpage. 
+
+Before Node.js, JavaScript was trapped inside the browser. It could only change colors, show popups, and interact with the webpage.
 
 With Node.js, JavaScript broke free. Now JavaScript can:
+
 - **Write and read files** directly on your computer.
 - **Connect directly to databases** (like SQL or MongoDB).
 - **Run servers** that handle millions of HTTP requests (using tools like Express).
 - **Run Automation Scripts** (like API tests, Selenium, Playwright, or Cypress scripts directly from your terminal).
 
 #### 📦 NPM (Node Package Manager)
+
 When you install Node.js, you also get **NPM**. NPM is essential for modern development:
+
 - It's a massive online library containing over 1 million free code packages.
 - If you need to make an API call, you don't write it from scratch—you download a package (like `axios`).
 - If you need to write tests, you download a testing package (like `jest` or `playwright`).
@@ -132,32 +142,40 @@ When you install Node.js, you also get **NPM**. NPM is essential for modern deve
 When you're writing code, you need a way for your program to talk back to you—to show you the results of a calculation, tell you if something loaded correctly, or warn you if there's an error. That's exactly what the Console is for!
 
 ### 1. What is the Console?
+
 The `console` is a built-in tool that lets developers print messages and inspect data behind the scenes. Your users won't see these messages; they are strictly for **you**, the developer.
 
 You can find the console in two places:
+
 1. **The Web Browser:** (Press `F12` or Right-Click → Inspect, then go to the "Console" tab).
 2. **Node.js:** (When you run a JavaScript file in your terminal, the output appears right there).
 
 ---
 
 ### 2. `console.log()` – Your Best Friend
+
 `console.log()` is the most common command you will use. It literally means "log (print) this information to the console."
 
 **Basic Output:**
+
 ```javascript
 console.log("Hello, world!");
 ```
-*Output: Hello, world!*
+
+_Output: Hello, world!_
 
 **Printing Multiple Things Together:**
 You can give `console.log()` several pieces of information separated by commas, and it will print them with spaces in between.
+
 ```javascript
 console.log("My age is", 25, "and it is", true, "that I love coding.");
 ```
-*Output: My age is 25 and it is true that I love coding.*
+
+_Output: My age is 25 and it is true that I love coding._
 
 **Checking Variables:**
 This is how you investigate what value is currently stored inside a varying box (variable) in your code.
+
 ```javascript
 let currentScore = 1500;
 console.log("The current score is:", currentScore);
@@ -165,6 +183,7 @@ console.log("The current score is:", currentScore);
 ```
 
 #### 💡 String Substitution (The "printf" concept)
+
 In older programming languages like C, developers used a tool called `printf` (print formatted) to insert variables into text cleanly using placeholders. JavaScript allows you to do the exact same thing using `%` symbols!
 
 - `%s` is a placeholder for a **S**tring (text).
@@ -176,21 +195,25 @@ In older programming languages like C, developers used a tool called `printf` (p
 // This reads as: "Hello [text string placeholder], you have [number placeholder] new messages."
 console.log("Hello %s, you have %d new messages.", "Shujauddin", 5);
 ```
-*Output: Hello Shujauddin, you have 5 new messages.*
+
+_Output: Hello Shujauddin, you have 5 new messages._
 
 ---
 
 ### 3. Spotting Problems: `.error()` and `.warn()`
+
 Sometimes `console.log()` isn't enough. When things break, you want the message to stand out.
 
 **`console.error()`**
 Prints your message in bright red (in browsers) to loudly tell you that a major failure occurred.
+
 ```javascript
 console.error("Critical Failure: Could not connect to the database!");
 ```
 
 **`console.warn()`**
 Prints your message in yellow (in browsers). Use this when something isn't broken yet, but it might cause issues later (like using an outdated piece of code).
+
 ```javascript
 console.warn("Watch out! This system is going offline in 5 minutes.");
 ```
@@ -198,6 +221,7 @@ console.warn("Watch out! This system is going offline in 5 minutes.");
 ---
 
 ### 4. `console.table()` – Beautiful Data Display
+
 If you are looking at a large list of data (an Array) or a complex collection of information (an Object), `console.log()` can look messy. `console.table()` draws a clean, professional grid for you to read!
 
 ```javascript
@@ -210,7 +234,8 @@ const users = [
 console.table(users);
 ```
 
-*Output (in the console):*
+_Output (in the console):_
+
 ```text
 ┌─────────┬───────────┬─────┬──────────┐
 │ (index) │   name    │ age │   city   │
@@ -223,10 +248,12 @@ console.table(users);
 ---
 
 ### 5. Other Handy Tools
+
 As you get more advanced, you might need these specialized console tools:
 
 **`console.time()` & `console.timeEnd()`**
 Think of this as a stopwatch. It measures exactly how many milliseconds a piece of code takes to run. Great for testing performance!
+
 ```javascript
 console.time("loopTimer");
 for (let i = 0; i < 100000; i++) {
@@ -237,6 +264,7 @@ console.timeEnd("loopTimer"); // Output: loopTimer: 3.456ms
 
 **`console.count()`**
 Every time the code hits this line, it adds +1 to a counter and prints it. Useful to see exactly how many times a loop ran or a function was called.
+
 ```javascript
 function loginUser() {
   console.count("Login Attempt");
@@ -247,6 +275,7 @@ loginUser(); // Output: Login Attempt: 2
 
 **`console.group()` & `console.groupEnd()`**
 Indents your console logs cleanly into a folder-like structure so it doesn't look like a giant wall of text.
+
 ```javascript
 console.group("User Details");
 console.log("Name: Alice");
@@ -256,36 +285,42 @@ console.groupEnd(); // Closes the folder so next logs are un-indented
 
 **`console.info()` & `console.debug()`**
 `info()` prints an informational message (sometimes blue in browsers). `debug()` prints debug-level messages (often hidden by default in browsers unless you enable debug output).
+
 ```javascript
 console.info("System has finished booting.");
-console.debug("Variable x is currently manually set to 5."); 
+console.debug("Variable x is currently manually set to 5.");
 ```
 
 **`console.trace()`**
 Prints a stack trace to show you exactly which function called which function to get to this line. Essential for complex debugging!
-```javascript
-function stepOne() { stepTwo(); }
-function stepTwo() { console.trace("Trace to stepTwo"); }
 
-stepOne(); 
+```javascript
+function stepOne() {
+  stepTwo();
+}
+function stepTwo() {
+  console.trace("Trace to stepTwo");
+}
+
+stepOne();
 // Output will show that 'stepOne' called 'stepTwo'
 ```
 
 ### Summary Cheat Sheet
 
-| Command | What it does | When to use it |
-|---|---|---|
-| `log()` | General output (black text) | 90% of the time, general checking |
-| `error()` | Error messages (red, includes stack) | When an operation completely fails |
-| `warn()` | Warnings (yellow text) | When something is risky but not broken |
-| `table()` | Displays data in a neat grid | When looking at Arrays or Objects |
-| `info()` | Informational messages (blue) | Distinct updates you want separated from logs |
-| `debug()` | Debug output (often hidden) | Granular internal checks |
-| `group()` | Groups related logs together | Organizing large amounts of log output |
-| `time()` | Starts a stopwatch timer | When checking how fast code runs |
-| `timeEnd()` | Ends the timer and prints duration | Paired with `time()` |
-| `count()` | Counts occurrences | Finding out how many times a loop runs |
-| `trace()` | Prints a stack trace | Finding the exact path code took to get here |
+| Command     | What it does                         | When to use it                                |
+| ----------- | ------------------------------------ | --------------------------------------------- |
+| `log()`     | General output (black text)          | 90% of the time, general checking             |
+| `error()`   | Error messages (red, includes stack) | When an operation completely fails            |
+| `warn()`    | Warnings (yellow text)               | When something is risky but not broken        |
+| `table()`   | Displays data in a neat grid         | When looking at Arrays or Objects             |
+| `info()`    | Informational messages (blue)        | Distinct updates you want separated from logs |
+| `debug()`   | Debug output (often hidden)          | Granular internal checks                      |
+| `group()`   | Groups related logs together         | Organizing large amounts of log output        |
+| `time()`    | Starts a stopwatch timer             | When checking how fast code runs              |
+| `timeEnd()` | Ends the timer and prints duration   | Paired with `time()`                          |
+| `count()`   | Counts occurrences                   | Finding out how many times a loop runs        |
+| `trace()`   | Prints a stack trace                 | Finding the exact path code took to get here  |
 
 > **🚀 SDET Tip:** These methods will be your daily companions. When you start automating browsers with Playwright, you constantly use `console.log()` to check if you successfully clicked a button, or `console.error()` to figure out why an element couldn't be found.
 
@@ -294,29 +329,33 @@ stepOne();
 ### 🔷 Code Lifecycle: Declaration, Compile Time, and Runtime
 
 #### 1. Declaration
-Declaration is simply the act of telling the computer that a variable, function, or class exists and giving it a name. It’s like registering a name for a new baby—you haven't told the baby what to do yet, you've just given them a name so you can refer to them later. 
+
+Declaration is simply the act of telling the computer that a variable, function, or class exists and giving it a name. It’s like registering a name for a new baby—you haven't told the baby what to do yet, you've just given them a name so you can refer to them later.
 
 - **In JS:** You use keywords like `let`, `const`, `var`, `function`, or `class`.
-- **Example:** `let myName;` (This is a declaration. You've introduced `myName` to the program). 
+- **Example:** `let myName;` (This is a declaration. You've introduced `myName` to the program).
 
 #### 2. Compile Time
-Compile Time is the "pre-check" phase. It is when the computer reads your code to translate it into a language it can understand (machine code) before actually doing any of the work. 
+
+Compile Time is the "pre-check" phase. It is when the computer reads your code to translate it into a language it can understand (machine code) before actually doing any of the work.
 
 - **What happens:** The computer checks for Syntax Errors (typos). If it finds a missing bracket `}` or a misspelled keyword like `functin`, it will stop everything and show an error before the code even starts.
-- **Analogy:** This is like a chef reading a recipe. If the recipe says "add 2 cups of 🏁," the chef stops immediately because they don't know what "🏁" is. They haven't started cooking yet; they just found a mistake in the instructions. 
+- **Analogy:** This is like a chef reading a recipe. If the recipe says "add 2 cups of 🏁," the chef stops immediately because they don't know what "🏁" is. They haven't started cooking yet; they just found a mistake in the instructions.
 
 #### 3. Runtime
-Runtime is the "execution" phase. This is when the program is actually running and doing the tasks you wrote. 
+
+Runtime is the "execution" phase. This is when the program is actually running and doing the tasks you wrote.
 
 - **What happens:** This is where the computer performs math, talks to databases, or handles user clicks. Runtime Errors (like dividing by zero or trying to read a property of `null`) happen here because the instructions were grammatically correct, but the task became impossible while trying to do it.
-- **Analogy:** This is the chef actually cooking. The recipe was readable (no compile errors), but while cooking, the chef realized they ran out of salt or the stove caught fire. The mistake was only discovered while "running" the recipe. 
+- **Analogy:** This is the chef actually cooking. The recipe was readable (no compile errors), but while cooking, the chef realized they ran out of salt or the stove caught fire. The mistake was only discovered while "running" the recipe.
 
 #### Summary Table
-| Stage | What it is | Key Event |
-| --- | --- | --- |
-| **Declaration** | Introducing a name. | `let x;` |
-| **Compile Time** | Translating/Checking code. | Catching a missing semicolon. |
-| **Runtime** | Running the program. | Processing data and handling user input. |
+
+| Stage            | What it is                 | Key Event                                |
+| ---------------- | -------------------------- | ---------------------------------------- |
+| **Declaration**  | Introducing a name.        | `let x;`                                 |
+| **Compile Time** | Translating/Checking code. | Catching a missing semicolon.            |
+| **Runtime**      | Running the program.       | Processing data and handling user input. |
 
 ---
 
@@ -356,16 +395,17 @@ console.log(city);
 
 Here is a simple table showing the differences based on the image:
 
-| Feature | `var` | `let` | `const` |
-| --- | --- | --- | --- |
-| **Stored in Global Scope** | ✅ Yes | ❌ No | ❌ No |
-| **Function Scope** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Block Scope** | ❌ No | ✅ Yes | ✅ Yes |
-| **Can Be Reassigned?** | ✅ Yes | ✅ Yes | ❌ No |
-| **Can Be Redeclared?** | ✅ Yes | ❌ No | ❌ No |
-| **Can Be Hoisted?** | ✅ Yes | ❌ No | ❌ No |
+| Feature                    | `var`  | `let`  | `const` |
+| -------------------------- | ------ | ------ | ------- |
+| **Stored in Global Scope** | ✅ Yes | ❌ No  | ❌ No   |
+| **Function Scope**         | ✅ Yes | ✅ Yes | ✅ Yes  |
+| **Block Scope**            | ❌ No  | ✅ Yes | ✅ Yes  |
+| **Can Be Reassigned?**     | ✅ Yes | ✅ Yes | ❌ No   |
+| **Can Be Redeclared?**     | ✅ Yes | ❌ No  | ❌ No   |
+| **Can Be Hoisted?**        | ✅ Yes | ❌ No  | ❌ No   |
 
 **In simple words:**
+
 - **`var`** is the old way. It's too loose and can cause unexpected bugs because it can be redeclared, hoisted, and it leaks out of block scopes (like `if` statements or loops). You should generally **avoid** using it.
 - **`let`** is the modern way. Use this when you know the variable's value **will change** later (like a score or current age). It safely stays where you put it (Block Scope).
 - **`const`** is for constant values that **will NEVER change** (like someone's date of birth or a fixed URL). Once you set it, you cannot update or redeclare it.
@@ -406,11 +446,13 @@ In `const` we cannot update the value of the variable and we cannot redeclare th
 Not every name is a valid variable name in JavaScript. Here are the rules:
 
 **✅ Valid names:**
+
 - Can use letters, digits, `_`, and `$`
 - Must **start with** a letter, `_`, or `$` — NOT a number
 - Case-sensitive: `name` and `Name` are two different variables
 
 **❌ Invalid names:**
+
 ```javascript
 let 1name = "wrong";   // ❌ cannot start with a number
 let my-name = "wrong"; // ❌ hyphens not allowed
@@ -418,15 +460,17 @@ let let = "wrong";     // ❌ 'let' is a reserved keyword
 ```
 
 **✅ Valid names:**
+
 ```javascript
-let name = "John";      // ✅
-let _private = true;    // ✅ underscore is ok
-let $price = 99;        // ✅ dollar sign is ok
-let firstName = "Ali";  // ✅ camelCase — standard convention
-let age2 = 25;          // ✅ digit in middle/end is ok
+let name = "John"; // ✅
+let _private = true; // ✅ underscore is ok
+let $price = 99; // ✅ dollar sign is ok
+let firstName = "Ali"; // ✅ camelCase — standard convention
+let age2 = 25; // ✅ digit in middle/end is ok
 ```
 
 **Naming convention in JavaScript:** Use **camelCase** — first word lowercase, each next word starts uppercase.
+
 ```javascript
 // ✅ Good — camelCase
 let userAge = 25;
@@ -434,11 +478,12 @@ let totalPrice = 100;
 let isLoggedIn = true;
 
 // ❌ Bad — not conventional
-let user_age = 25;   // snake_case (used in Python, not JS)
-let UserAge = 25;    // PascalCase (used for class names, not variables)
+let user_age = 25; // snake_case (used in Python, not JS)
+let UserAge = 25; // PascalCase (used for class names, not variables)
 ```
 
 ---
+
 ## 2.1 Temporary Variable
 
 A temporary variable (often called temp) is a variable used to hold a value temporarily while you rearrange or swap other variables. It's like using an extra cup when you want to swap the contents of two cups – you pour one into the extra cup, then the other into the first, then the extra into the second.
@@ -456,9 +501,9 @@ javascript
 let a = 3;
 let b = 7;
 
-let temp = a;   // temp now holds 3 (original a)
-a = b;          // a becomes 7 (value of b)
-b = temp;       // b becomes 3 (value saved in temp)
+let temp = a; // temp now holds 3 (original a)
+a = b; // a becomes 7 (value of b)
+b = temp; // b becomes 3 (value saved in temp)
 
 console.log(a); // 7
 console.log(b); // 3
@@ -478,7 +523,7 @@ temp = a
 a = b
 b = temp
 
-------------
+---
 
 ## 3. Data Types
 
@@ -489,6 +534,7 @@ b = temp
 - Non-primitive data types
 
 ### 1. Primitive Data Types
+
 (Numbers, Strings, Booleans, Null, Undefined, Symbols)
 
 **The Meaning:** A primitive is a single, simple value that is "immutable" (it cannot be changed). When you assign a primitive to a variable, the variable holds the actual value.
@@ -502,10 +548,11 @@ b = temp
 ```javascript
 let x = 10;
 let y = x; // y gets a copy of the value 10
-y = 20;    // x is still 10
+y = 20; // x is still 10
 ```
 
 ### 2. Non-Primitive Data Types
+
 (Objects, Arrays, Functions)
 
 **The Meaning:** These are collections of values. A non-primitive variable doesn't actually hold the data itself; it holds a Reference (an address) to where the data is stored in memory.
@@ -520,16 +567,17 @@ y = 20;    // x is still 10
 let car1 = { color: "red" };
 let car2 = car1; // car2 now points to the SAME object as car1
 
-car2.color = "blue"; 
+car2.color = "blue";
 console.log(car1.color); // "blue" (It changed for both!)
 ```
 
 ### Summary Comparison
-| Feature | Primitive | Non-Primitive |
-| --- | --- | --- |
-| Storage | Holds the Value directly. | Holds a Reference (Address). |
-| Mutability | Immutable (Cannot be changed). | Mutable (Can be changed). |
-| Structure | Single, simple piece of data. | Complex collection of data. |
+
+| Feature    | Primitive                      | Non-Primitive                |
+| ---------- | ------------------------------ | ---------------------------- |
+| Storage    | Holds the Value directly.      | Holds a Reference (Address). |
+| Mutability | Immutable (Cannot be changed). | Mutable (Can be changed).    |
+| Structure  | Single, simple piece of data.  | Complex collection of data.  |
 
 ![JavaScript Data Types](Images/Data_Types_Overview.png)
 
@@ -539,11 +587,11 @@ console.log(car1.color); // "blue" (It changed for both!)
 
 Both mean "no value" — but they mean it in **different ways**:
 
-| | `undefined` | `null` |
-|---|---|---|
-| **Meaning** | Variable declared but never given a value | Intentionally set to empty by the developer |
-| **Who sets it?** | JavaScript sets it automatically | You set it yourself |
-| **typeof** | `"undefined"` | `"object"` ← (famous JS bug!) |
+|                  | `undefined`                               | `null`                                      |
+| ---------------- | ----------------------------------------- | ------------------------------------------- |
+| **Meaning**      | Variable declared but never given a value | Intentionally set to empty by the developer |
+| **Who sets it?** | JavaScript sets it automatically          | You set it yourself                         |
+| **typeof**       | `"undefined"`                             | `"object"` ← (famous JS bug!)               |
 
 > **Why is this a bug?** When JS was built in 1995, it checked the first few bits of a value (called a "type tag") to figure out its data type. The tag for an object was `000`. At that time, `null` was represented as a NULL pointer, which is basically just a bunch of zeros. Because `null` literally started with `000`, the system got tricked into thinking it was an object! They noticed the mistake later, but fixing it would have broken millions of websites that already relied on it, so they just had to leave it.
 
@@ -557,7 +605,7 @@ let loggedInUser = null; // no one is logged in yet
 console.log(loggedInUser); // null
 
 // checking the difference
-console.log(undefined == null);  // true  ← loose equality treats them the same
+console.log(undefined == null); // true  ← loose equality treats them the same
 console.log(undefined === null); // false ← strict equality — different types!
 ```
 
@@ -570,16 +618,16 @@ console.log(undefined === null); // false ← strict equality — different type
 `NaN` stands for **Not a Number**. It appears when you try to do a math operation on something that isn't a number.
 
 ```javascript
-console.log("hello" - 5);    // NaN  ← can't subtract from text
-console.log(Number("abc"));  // NaN  ← can't convert "abc" to a number
-console.log(0 / 0);          // NaN  ← undefined math
+console.log("hello" - 5); // NaN  ← can't subtract from text
+console.log(Number("abc")); // NaN  ← can't convert "abc" to a number
+console.log(0 / 0); // NaN  ← undefined math
 
 // NaN is weird — it never equals itself!
-console.log(NaN === NaN);    // false  ← only value in JS not equal to itself!
+console.log(NaN === NaN); // false  ← only value in JS not equal to itself!
 
 // Correct way to check for NaN
-console.log(isNaN("hello"));      // true  ← is it NaN?
-console.log(Number.isNaN(NaN));   // true  ← more reliable, only true for actual NaN
+console.log(isNaN("hello")); // true  ← is it NaN?
+console.log(Number.isNaN(NaN)); // true  ← more reliable, only true for actual NaN
 console.log(Number.isNaN("hello")); // false ← "hello" is not NaN, just non-numeric
 ```
 
@@ -592,17 +640,17 @@ console.log(Number.isNaN("hello")); // false ← "hello" is not NaN, just non-nu
 `typeof` tells you the data type of any value. Every beginner should know this table:
 
 ```javascript
-console.log(typeof "hello");     // "string"
-console.log(typeof 42);          // "number"
-console.log(typeof 3.14);        // "number"  ← floats are also "number"
-console.log(typeof true);        // "boolean"
-console.log(typeof undefined);   // "undefined"
-console.log(typeof null);        // "object"  ← 🐛 famous JS bug! null is NOT an object
-console.log(typeof Symbol());    // "symbol"
-console.log(typeof 42n);         // "bigint"
-console.log(typeof {});          // "object"
-console.log(typeof []);          // "object"  ← arrays are also objects!
-console.log(typeof function(){}); // "function"
+console.log(typeof "hello"); // "string"
+console.log(typeof 42); // "number"
+console.log(typeof 3.14); // "number"  ← floats are also "number"
+console.log(typeof true); // "boolean"
+console.log(typeof undefined); // "undefined"
+console.log(typeof null); // "object"  ← 🐛 famous JS bug! null is NOT an object
+console.log(typeof Symbol()); // "symbol"
+console.log(typeof 42n); // "bigint"
+console.log(typeof {}); // "object"
+console.log(typeof []); // "object"  ← arrays are also objects!
+console.log(typeof function () {}); // "function"
 ```
 
 > ⚠️ `typeof null === "object"` is a **historical bug** in JavaScript from 1995. It was never fixed to avoid breaking old code. To properly check for null use: `value === null`
@@ -623,9 +671,9 @@ When you assign a primitive to another variable, JavaScript makes a **full copy*
 
 ```javascript
 let a = 10;
-let b = a;   // b gets a COPY of a's value
+let b = a; // b gets a COPY of a's value
 
-b = 20;      // change b
+b = 20; // change b
 
 console.log(a); // 10  ← a is NOT affected, it has its own copy
 console.log(b); // 20
@@ -633,7 +681,7 @@ console.log(b); // 20
 
 ```javascript
 let name1 = "Alice";
-let name2 = name1;   // copy of "Alice"
+let name2 = name1; // copy of "Alice"
 
 name2 = "Bob";
 
@@ -649,7 +697,7 @@ When you assign an object or array to another variable, JavaScript does **NOT** 
 
 ```javascript
 let obj1 = { name: "John", age: 25 };
-let obj2 = obj1;   // NOT a copy — both point to the same object!
+let obj2 = obj1; // NOT a copy — both point to the same object!
 
 obj2.name = "Pete"; // change via obj2
 
@@ -660,7 +708,7 @@ console.log(obj2.name); // "Pete"
 ```javascript
 // Same with arrays
 let arr1 = [1, 2, 3];
-let arr2 = arr1;   // both point to the same array
+let arr2 = arr1; // both point to the same array
 
 arr2.push(4);
 
@@ -683,10 +731,11 @@ let copy = { ...original };
 copy.name = "Pete";
 
 console.log(original.name); // "John" ← safe, untouched ✅
-console.log(copy.name);     // "Pete"
+console.log(copy.name); // "Pete"
 ```
 
 #### 1. The Analogy (Understanding the Concept)
+
 Imagine you have a **Blue Toy Box** (`original`) with a "John" action figure inside.
 
 When you write `let copy = { ...original };`, you are actually doing two things at once:
@@ -698,6 +747,7 @@ When you write `let copy = { ...original };`, you are actually doing two things 
 So, why "Object B"? In my previous explanation, "Object B" was just a name I gave to that "New Red Box" to show it’s different from the Blue one. You didn't have to assign "B"; the curly braces `{ }` automatically created it in the computer's memory.
 
 #### Key Terms to Remember for Interviews:
+
 - **Object Literal Creation:** Using `{}` tells JavaScript to create a new object.
 - **Memory Allocation:** The computer sets aside a new "shelf" for the new object.
 - **Pass-by-Reference:** Objects aren't stored "in" the variable; the variable just holds the "address" to the shelf.
@@ -705,22 +755,20 @@ So, why "Object B"? In my previous explanation, "Object B" was just a name I gav
 
 **In short:** The `{ }` is the "Birth" of the new object. The `copy` variable is just the "Name" we give it.
 
-
 #### Quick Summary
 
-| | Primitives (Pass by Value) | Objects/Arrays (Pass by Reference) |
-|---|---|---|
-| What is copied? | The actual value | The memory address (pointer) |
-| Change affects original? | ❌ No | ✅ Yes |
-| Types | number, string, boolean, null, undefined, symbol, bigint | object, array, function |
-| Independent copy? | ✅ Always | ❌ Need spread `{...obj}` or `[...arr]` |
+|                          | Primitives (Pass by Value)                               | Objects/Arrays (Pass by Reference)      |
+| ------------------------ | -------------------------------------------------------- | --------------------------------------- |
+| What is copied?          | The actual value                                         | The memory address (pointer)            |
+| Change affects original? | ❌ No                                                    | ✅ Yes                                  |
+| Types                    | number, string, boolean, null, undefined, symbol, bigint | object, array, function                 |
+| Independent copy?        | ✅ Always                                                | ❌ Need spread `{...obj}` or `[...arr]` |
 
 > 💡 **Key Rule:** If it's a primitive → you get a copy. If it's an object/array → you get a reference to the same thing in memory.
 
 ---
 
 ### 🔷 Symbol
-
 
 A **Symbol** is a primitive data type introduced in ES6. Every Symbol created is **guaranteed to be unique** — even if two symbols have the exact same description, they are never equal to each other.
 
@@ -729,6 +777,7 @@ A **Symbol** is a primitive data type introduced in ES6. Every Symbol created is
 **Think of it like this:** Two keys that look exactly the same but open completely different locks — that's what Symbol does.
 
 **When to use Symbol:**
+
 - When you need a property key that will never clash with another key
 - For hidden/private-like properties in objects (symbols are skipped in `for...in` loops)
 - Used internally by JavaScript itself (e.g., `Symbol.iterator`)
@@ -737,18 +786,18 @@ A **Symbol** is a primitive data type introduced in ES6. Every Symbol created is
 const id1 = Symbol("id");
 const id2 = Symbol("id");
 
-console.log(id1 === id2);     // false — same description, but NOT the same!
-console.log(typeof id1);      // "symbol"
+console.log(id1 === id2); // false — same description, but NOT the same!
+console.log(typeof id1); // "symbol"
 console.log(id1.description); // "id"
 
 // Symbol as a unique object key
 const SECRET = Symbol("secret");
 const user = {
-    name: "Shujauddin",
-    [SECRET]: "internal-token-xyz"
+  name: "Shujauddin",
+  [SECRET]: "internal-token-xyz",
 };
 
-console.log(user.name);    // Shujauddin
+console.log(user.name); // Shujauddin
 console.log(user[SECRET]); // internal-token-xyz
 // Symbol key is hidden from for...in loops — acts like a private property
 ```
@@ -763,23 +812,24 @@ console.log(user[SECRET]); // internal-token-xyz
 JavaScript's `Number` type can only safely represent integers up to `9007199254740991`. Beyond that, it loses precision and gives wrong answers.
 
 ```javascript
-console.log(Number.MAX_SAFE_INTEGER);   // 9007199254740991
-console.log(9007199254740991 + 2);      // 9007199254740992 — WRONG answer!
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
+console.log(9007199254740991 + 2); // 9007199254740992 — WRONG answer!
 ```
 
 **BigInt fixes this** — just add `n` at the end of the number:
 
 ```javascript
 const big = 9007199254740991n;
-console.log(big + 2n);   // 9007199254740993n — correct!
+console.log(big + 2n); // 9007199254740993n — correct!
 console.log(typeof big); // "bigint"
 
 // ⚠️ You cannot mix BigInt with regular numbers
 // console.log(big + 5);         // ❌ TypeError!
-console.log(big + BigInt(5));    // ✅ Must convert first
+console.log(big + BigInt(5)); // ✅ Must convert first
 ```
 
 **When to use BigInt:**
+
 - Financial calculations with very large amounts
 - Cryptography (huge numbers)
 - Any calculation where accuracy beyond 9 quadrillion matters
@@ -794,9 +844,9 @@ console.log(big + BigInt(5));    // ✅ Must convert first
 
 ```javascript
 // JavaScript - dynamic typing
-let data = "Hello";   // type is string
-data = 42;            // now it's a number — no error!
-data = true;          // now it's a boolean — still fine!
+let data = "Hello"; // type is string
+data = 42; // now it's a number — no error!
+data = true; // now it's a boolean — still fine!
 
 console.log(typeof data); // "boolean"
 ```
@@ -809,17 +859,18 @@ int data = 42;        // must be a number always
 data = "Hello";       // ❌ ERROR — type mismatch!
 ```
 
-| | JavaScript (Dynamic) | Java/TypeScript (Static) |
-|---|---|---|
-| Type set by | Value at runtime | You at declaration |
-| Change type? | ✅ Yes | ❌ No |
-| Catches errors | At runtime | At compile time |
-| Flexibility | High | Low |
+|                | JavaScript (Dynamic) | Java/TypeScript (Static) |
+| -------------- | -------------------- | ------------------------ |
+| Type set by    | Value at runtime     | You at declaration       |
+| Change type?   | ✅ Yes               | ❌ No                    |
+| Catches errors | At runtime           | At compile time          |
+| Flexibility    | High                 | Low                      |
 
 ---
+
 ### 🔷 Type Conversion (Implicit vs Explicit)
 
-**Type Conversion** is the process of changing a value from one data type to another (for example, turning the String `"5"` into the Number `5`). 
+**Type Conversion** is the process of changing a value from one data type to another (for example, turning the String `"5"` into the Number `5`).
 
 In JavaScript, there are two ways this happens: **Implicitly** (automatically) and **Explicitly** (manually).
 
@@ -835,41 +886,41 @@ This can often lead to **surprising and confusing results**, which is why many d
 
 ```javascript
 // + operator with a string → JS converts number to string (concatenation)
-console.log("5" + 1);    // "51"  ← NOT 6! JS says: "Oh, you have text, I'll just combine them."
+console.log("5" + 1); // "51"  ← NOT 6! JS says: "Oh, you have text, I'll just combine them."
 
 // - operator always does math → JS converts string to number
-console.log("5" - 1);    // 4    ← JS says: "You can't subtract text, I'll turn '5' into a number."
+console.log("5" - 1); // 4    ← JS says: "You can't subtract text, I'll turn '5' into a number."
 
 // boolean converts to number
-console.log(true + 1);   // 2    ← true becomes 1
-console.log(false + 1);  // 1    ← false becomes 0
+console.log(true + 1); // 2    ← true becomes 1
+console.log(false + 1); // 1    ← false becomes 0
 
 // == triggers implicit conversion (this is why === is preferred)
-console.log(5 == "5");   // true  ← number and string treated as equal!
-console.log(5 === "5");  // false ← strict, NO automatic conversion allowed
+console.log(5 == "5"); // true  ← number and string treated as equal!
+console.log(5 === "5"); // false ← strict, NO automatic conversion allowed
 ```
 
 #### 2. Explicit Conversion (Also known as Type Casting)
 
-**The Meaning:** You manually tell JavaScript exactly what type you want using built-in functions. 
+**The Meaning:** You manually tell JavaScript exactly what type you want using built-in functions.
 
-**Analogy:** It's like a **Manual Transmission Car**. *You* are in full control and intentionally shift the gears. The car only does what you explicitly instruct it to do.
+**Analogy:** It's like a **Manual Transmission Car**. _You_ are in full control and intentionally shift the gears. The car only does what you explicitly instruct it to do.
 
 This is much safer and clearer because the intent is obvious.
 
 ```javascript
 // Manually convert to Number
-console.log(Number("42"));     // 42
-console.log(Number("hello"));  // NaN (can't convert random text to a number)
-console.log(Number(true));     // 1
+console.log(Number("42")); // 42
+console.log(Number("hello")); // NaN (can't convert random text to a number)
+console.log(Number(true)); // 1
 
 // Manually convert to String
-console.log(String(42));       // "42"
-console.log(String(true));     // "true"
+console.log(String(42)); // "42"
+console.log(String(true)); // "true"
 
 // Manually convert to Boolean
-console.log(Boolean(0));       // false
-console.log(Boolean(""));      // false
+console.log(Boolean(0)); // false
+console.log(Boolean("")); // false
 console.log(Boolean("hello")); // true
 ```
 
@@ -877,31 +928,33 @@ console.log(Boolean("hello")); // true
 
 **Handling User Inputs:**
 When you get input from a dialog box or form, it always comes back as a text string.
+
 ```javascript
 let age = prompt("Enter your age:"); // user types 25, but JS receives "25"
-console.log(age + 1);               // "251" ← WRONG! string + number
+console.log(age + 1); // "251" ← WRONG! string + number
 
 // The Fix! Use Explicit Conversion:
-console.log(Number(age) + 1);       // 26   ← CORRECT!
+console.log(Number(age) + 1); // 26   ← CORRECT!
 ```
 
 **In Test Automation (Scraping Data):**
 If you automate a browser to read a price from Amazon, it comes as text. You must explicitly convert it before comparing.
+
 ```javascript
-let priceText = "499";   // Text scraped directly from the web page
+let priceText = "499"; // Text scraped directly from the web page
 let price = Number(priceText); // Explicit conversion
 
 if (price > 100) {
-    console.log("Expensive item detected!"); // Works perfectly
+  console.log("Expensive item detected!"); // Works perfectly
 }
 ```
 
 #### Summary Table
 
-| Stage | What it is | Example | Analogy |
-| --- | --- | --- | --- |
+| Stage                   | What it is                         | Example               | Analogy                        |
+| ----------------------- | ---------------------------------- | --------------------- | ------------------------------ |
 | **Implicit Conversion** | JS automatically changes the type. | `"5" - 1` becomes `4` | Automatic Car (Shifts for you) |
-| **Explicit Conversion** | You manually change the type. | `Number("5")` | Manual Car (You shift) |
+| **Explicit Conversion** | You manually change the type.      | `Number("5")`         | Manual Car (You shift)         |
 
 > ⚠️ **Rule of thumb:** Always use `===` to stop JavaScript from converting types unexpectedly (Implicit). Whenever you need to change data types, always do it yourself (Explicit) using `Number()`, `String()`, or `Boolean()`.
 
@@ -912,34 +965,38 @@ if (price > 100) {
 JavaScript has some infamous "edge cases" where the language behaves in very unexpected ways, largely due to **Implicit Type Coercion**. Knowing these will save you hours of debugging!
 
 **1. The `+` operator favors Strings, but `-` favors Numbers**
+
 ```javascript
-console.log("5" + 3);  // "53" (Converts 3 to a string and concatenates)
-console.log("5" - 3);  // 2    (Converts "5" to a number and subtracts)
+console.log("5" + 3); // "53" (Converts 3 to a string and concatenates)
+console.log("5" - 3); // 2    (Converts "5" to a number and subtracts)
 console.log("5" * "3"); // 15  (Converts both to numbers)
 ```
 
 **2. Arrays and Math**
+
 ```javascript
-console.log([] + []);  // "" (Empty string! Arrays convert to "" before addition)
-console.log([] + {});  // "[object Object]" 
-console.log({} + []);  // 0 (Depending on the engine, {} is sometimes read as an empty code block)
+console.log([] + []); // "" (Empty string! Arrays convert to "" before addition)
+console.log([] + {}); // "[object Object]"
+console.log({} + []); // 0 (Depending on the engine, {} is sometimes read as an empty code block)
 ```
 
 **3. `null` vs `0` in Comparisons**
 `null` acts like `0` in math, but in comparisons, it behaves weirdly:
+
 ```javascript
-console.log(null > 0);  // false
+console.log(null > 0); // false
 console.log(null == 0); // false (null is only loosely equal to undefined)
 console.log(null >= 0); // true  🤯 (Wat?! Math comparison forces it to 0, so 0 >= 0 is true)
 ```
 
 **4. The unexpected `typeof NaN`**
 As mentioned in previous sections, `NaN` stands for "Not a Number", but...
+
 ```javascript
 console.log(typeof NaN); // "number" 🤯 (It technically means an "Invalid Number" data type)
 ```
 
-> 🛡️ **How to securely avoid these edge cases?** 
+> 🛡️ **How to securely avoid these edge cases?**
 > Edge cases almost exclusively trigger when you mix different data types without manually converting them first. By sticking to **Strict Equality (`===`)** and always explicitly converting your variables (e.g. `Number(age)`), you will bypass 99% of these weird JavaScript traps!
 
 ---
@@ -956,9 +1013,9 @@ Think of an Execution Context as a **room where your code lives and runs**. Befo
 
 An Execution Context is the environment in which JavaScript code is **evaluated and executed**. There are two types:
 
-| Type | When it's created |
-|---|---|
-| **Global Execution Context** | Created once when your script first loads |
+| Type                           | When it's created                           |
+| ------------------------------ | ------------------------------------------- |
+| **Global Execution Context**   | Created once when your script first loads   |
 | **Function Execution Context** | Created every time a function is **called** |
 
 Both types go through the **same two phases**:
@@ -976,11 +1033,13 @@ Before a single line of your code runs, JavaScript scans through it and **sets u
 This is exactly what causes **Hoisting** — the reason you can call a `function` before it's written, but can't use a `var` variable before its line (it'll be `undefined`).
 
 ```javascript
-console.log(name);  // undefined  ← var was hoisted, set to undefined
+console.log(name); // undefined  ← var was hoisted, set to undefined
 console.log(greet); // [Function: greet] ← full function was hoisted
 
 var name = "Shuja";
-function greet() { return "Hello!"; }
+function greet() {
+  return "Hello!";
+}
 ```
 
 ---
@@ -994,8 +1053,8 @@ Only after the Creation Phase completes does JavaScript actually **run your code
 - Logic runs, conditions are checked, loops execute
 
 ```javascript
-var name = "Shuja";   // Now 'name' gets the actual value
-var age  = 25;         // Now 'age'  gets the actual value
+var name = "Shuja"; // Now 'name' gets the actual value
+var age = 25; // Now 'age'  gets the actual value
 
 function greet() {
   return "Hello " + name;
@@ -1027,6 +1086,7 @@ outer(); // Creates a new Execution Context for outer()
 ```
 
 Call Stack at the moment `inner()` runs:
+
 ```
 [ inner() Execution Context ]  ← currently running
 [ outer() Execution Context ]
@@ -1041,7 +1101,6 @@ Call Stack at the moment `inner()` runs:
 
 ## 4. Operators
 
-
 - What is an operator?
 
 - An operator is a symbol that performs an operation on one or more operands.
@@ -1052,7 +1111,7 @@ Call Stack at the moment `inner()` runs:
 
 - In JavaScript, there are different types of operators:
 
-### 1. Arithmetic Operators (+, -, *, /, %, **)
+### 1. Arithmetic Operators (+, -, \*, /, %, \*\*)
 
 **Meaning:** Used to perform mathematical calculations on numbers.
 
@@ -1101,18 +1160,18 @@ let x = 10;
 let y = "10";
 let z = 5;
 
-console.log(x == y);   // Output: true (10 equals "10" after type conversion)
-console.log(x === y);  // Output: false (number 10 is NOT strictly equal to string "10")
-console.log(x != z);   // Output: true (10 is not equal to 5)
-console.log(x !== y);  // Output: true (different types: number vs string)
-console.log(x > z);    // Output: true (10 is greater than 5)
-console.log(x < z);    // Output: false (10 is not less than 5)
-console.log(x >= 10);  // Output: true (10 is greater than or equal to 10)
-console.log(z <= 5);   // Output: true (5 is less than or equal to 5)
+console.log(x == y); // Output: true (10 equals "10" after type conversion)
+console.log(x === y); // Output: false (number 10 is NOT strictly equal to string "10")
+console.log(x != z); // Output: true (10 is not equal to 5)
+console.log(x !== y); // Output: true (different types: number vs string)
+console.log(x > z); // Output: true (10 is greater than 5)
+console.log(x < z); // Output: false (10 is not less than 5)
+console.log(x >= 10); // Output: true (10 is greater than or equal to 10)
+console.log(z <= 5); // Output: true (5 is less than or equal to 5)
 ```
 
 - Comparison Operators (The Equality Trap)
-In SDET work, checking values correctly is the difference between a "Pass" and a "Fail" in your tests.
+  In SDET work, checking values correctly is the difference between a "Pass" and a "Fail" in your tests.
 
 A. Loose Equality (==)
 Rule: Checks only the Value.
@@ -1146,13 +1205,13 @@ let hasLicense = true;
 
 console.log(age >= 18 && hasLicense); // Output: true (age is 18+ AND has license)
 console.log(age >= 18 || hasLicense); // Output: true (at least one is true)
-console.log(!hasLicense);             // Output: false (inverts true to false)
+console.log(!hasLicense); // Output: false (inverts true to false)
 
 let isSunny = false;
 let isWarm = true;
-console.log(isSunny && isWarm);       // Output: false (NOT both are true)
-console.log(isSunny || isWarm);       // Output: true (at least one is true)
-console.log(!isSunny);                // Output: true (inverts false to true)
+console.log(isSunny && isWarm); // Output: false (NOT both are true)
+console.log(isSunny || isWarm); // Output: true (at least one is true)
+console.log(!isSunny); // Output: true (inverts false to true)
 ```
 
 ![Logical_Operators](Images/Logical_Operators.png)
@@ -1160,9 +1219,11 @@ console.log(!isSunny);                // Output: true (inverts false to true)
 ---
 
 ### 🛑 The 6 "Falsy" Values in JavaScript
+
 Before understanding how logical operators work at an advanced level, you must know that JavaScript always considers exactly **6 values to be "Falsy"**. Everything else in JavaScript is "Truthy".
 
 The 6 Falsy values are:
+
 1. `false` (The boolean itself)
 2. `0` (The number zero)
 3. `""` (An empty string)
@@ -1170,55 +1231,63 @@ The 6 Falsy values are:
 5. `undefined` (A declared variable with no set value)
 6. `NaN` (Not a Number)
 
-*If an expression evaluates to any of these 6 values, JavaScript treats it essentially as `false`.*
+_If an expression evaluates to any of these 6 values, JavaScript treats it essentially as `false`._
 
 ---
 
 ### ⚡ Short-circuit Evaluation
+
 Short-circuit Evaluation is a fancy name for a simple shortcut JavaScript takes when checking conditions. It means **JavaScript stops looking at an expression as soon as it knows the final answer.** Think of it like a "Lazy Judge."
 
 #### 1. The AND (`&&`) Short-circuit
+
 For an `&&` to be true, BOTH sides must be true. If the first part is `false` (or Falsy), JavaScript doesn't even bother looking at the second part because the whole statement is already "ruined."
 
 **Rule:** If the first value is falsy, it returns that value and stops.
 
 **Real World Use:** "Only show the user's name IF they are logged in."
+
 ```javascript
 let isLoggedIn = false;
 
 // If isLoggedIn is false, JS stops and doesn't run the console.log
-isLoggedIn && console.log("Welcome User!"); 
+isLoggedIn && console.log("Welcome User!");
 ```
 
 #### 2. The OR (`||`) Short-circuit
+
 For an `||` to be true, only ONE side needs to be true. If the first part is `true` (or Truthy), JavaScript stops immediately because it already has what it needs.
 
 **Rule:** If the first value is truthy, it returns that value and stops.
 
 **Real World Use:** "Set a default value if the first one is missing."
+
 ```javascript
 let userName = ""; // empty string is "falsy"
-let displayName = userName || "Guest"; 
+let displayName = userName || "Guest";
 
 console.log(displayName); // "Guest"
 ```
 
 #### 3. Summary Table
-| Operator | How it Short-circuits | "Lazy" Behavior |
-|----------|-----------------------|-----------------|
-| `&&` (AND) | Stops at the first False | "I found a false, so I'm done!" |
-| `\|\|` (OR) | Stops at the first True | "I found a true, so I'm done!" |
+
+| Operator    | How it Short-circuits    | "Lazy" Behavior                 |
+| ----------- | ------------------------ | ------------------------------- |
+| `&&` (AND)  | Stops at the first False | "I found a false, so I'm done!" |
+| `\|\|` (OR) | Stops at the first True  | "I found a true, so I'm done!"  |
 
 **Why is this useful for an SDET?**
 You’ll see this a lot in automation frameworks to handle settings. For example:
+
 ```javascript
 let timeout = config.timeout || 5000;
 ```
-*(This means: Use the timeout from the config file, but if it's missing or undefined, just use 5000ms as a fallback default.)*
+
+_(This means: Use the timeout from the config file, but if it's missing or undefined, just use 5000ms as a fallback default.)_
 
 ---
 
-### 4. Assignment Operators (=, +=, -=, *=, /=, %=)
+### 4. Assignment Operators (=, +=, -=, \*=, /=, %=)
 
 **Meaning:** Used to assign or update values to variables.
 
@@ -1234,22 +1303,22 @@ let timeout = config.timeout || 5000;
 ```javascript
 let score = 10;
 
-score = 20;    // Assigns 20 to score
+score = 20; // Assigns 20 to score
 console.log(score); // Output: 20
 
-score += 5;    // Same as: score = score + 5 (20 + 5)
+score += 5; // Same as: score = score + 5 (20 + 5)
 console.log(score); // Output: 25
 
-score -= 3;    // Same as: score = score - 3 (25 - 3)
+score -= 3; // Same as: score = score - 3 (25 - 3)
 console.log(score); // Output: 22
 
-score *= 2;    // Same as: score = score * 2 (22 * 2)
+score *= 2; // Same as: score = score * 2 (22 * 2)
 console.log(score); // Output: 44
 
-score /= 4;    // Same as: score = score / 4 (44 / 4)
+score /= 4; // Same as: score = score / 4 (44 / 4)
 console.log(score); // Output: 11
 
-score %= 5;    // Same as: score = score % 5 (remainder of 11/5)
+score %= 5; // Same as: score = score % 5 (remainder of 11/5)
 console.log(score); // Output: 1
 ```
 
@@ -1268,26 +1337,26 @@ console.log(score); // Output: 1
 ```javascript
 let count = 5;
 
-count++;           // Increases count by 1 (postfix)
+count++; // Increases count by 1 (postfix)
 console.log(count); // Output: 6
 
-++count;           // Increases count by 1 (prefix)
+++count; // Increases count by 1 (prefix)
 console.log(count); // Output: 7
 
-count--;           // Decreases count by 1 (postfix)
+count--; // Decreases count by 1 (postfix)
 console.log(count); // Output: 6
 
---count;           // Decreases count by 1 (prefix)
+--count; // Decreases count by 1 (prefix)
 console.log(count); // Output: 5
 
 // Difference between prefix and postfix:
 let a = 10;
-console.log(a++);  // Output: 10 (uses current value first, THEN increments)
-console.log(a);    // Output: 11 (now incremented)
+console.log(a++); // Output: 10 (uses current value first, THEN increments)
+console.log(a); // Output: 11 (now incremented)
 
 let b = 10;
-console.log(++b);  // Output: 11 (increments FIRST, then uses new value)
-console.log(b);    // Output: 11
+console.log(++b); // Output: 11 (increments FIRST, then uses new value)
+console.log(b); // Output: 11
 ```
 
 ![Pre vs Post Increment](Images/Pre_Post_Increment.png)
@@ -1330,11 +1399,11 @@ let isStudent = true;
 let salary = null;
 let address;
 
-console.log(typeof name);      // Output: "string" (text)
-console.log(typeof age);       // Output: "number" (numeric value)
+console.log(typeof name); // Output: "string" (text)
+console.log(typeof age); // Output: "number" (numeric value)
 console.log(typeof isStudent); // Output: "boolean" (true/false)
-console.log(typeof salary);    // Output: "object" (null is considered object - historical bug)
-console.log(typeof address);   // Output: "undefined" (value not assigned)
+console.log(typeof salary); // Output: "object" (null is considered object - historical bug)
+console.log(typeof address); // Output: "undefined" (value not assigned)
 console.log(typeof [1, 2, 3]); // Output: "object" (arrays are objects)
 ```
 
@@ -1350,16 +1419,16 @@ console.log(typeof [1, 2, 3]); // Output: "object" (arrays are objects)
 let person = {
   name: "John",
   age: 30,
-  city: "New York"
+  city: "New York",
 };
 
-console.log("name" in person);    // Output: true (property "name" exists)
-console.log("age" in person);     // Output: true (property "age" exists)
+console.log("name" in person); // Output: true (property "name" exists)
+console.log("age" in person); // Output: true (property "age" exists)
 console.log("country" in person); // Output: false (property "country" doesn't exist)
 
 let car = { brand: "Toyota", model: "Camry" };
-console.log("brand" in car);      // Output: true
-console.log("year" in car);       // Output: false
+console.log("brand" in car); // Output: true
+console.log("year" in car); // Output: false
 ```
 
 ![in Operator](Images/In_Operator.png)
@@ -1375,24 +1444,24 @@ let numbers = [1, 2, 3, 4];
 let today = new Date();
 let message = "Hello";
 
-console.log(numbers instanceof Array);  // Output: true (numbers is an array)
-console.log(today instanceof Date);     // Output: true (today is a Date object)
+console.log(numbers instanceof Array); // Output: true (numbers is an array)
+console.log(today instanceof Date); // Output: true (today is a Date object)
 console.log(message instanceof String); // Output: false (primitive string, not String object)
 
 let obj = { name: "Test" };
-console.log(obj instanceof Object);     // Output: true (obj is an object)
-console.log(obj instanceof Array);      // Output: false (obj is not an array)
+console.log(obj instanceof Object); // Output: true (obj is an object)
+console.log(obj instanceof Array); // Output: false (obj is not an array)
 
 function Person(name) {
   this.name = name;
 }
 let john = new Person("John");
-console.log(john instanceof Person);    // Output: true (john is instance of Person)
+console.log(john instanceof Person); // Output: true (john is instance of Person)
 ```
 
 > **💡 Why is `message instanceof String` false?**
-> In JavaScript, `instanceof` only works on Objects. When you do `let message = "Hello"`, it creates a *primitive* string. It's just raw data, not an actual string object created with the `new` keyword (like `new String("Hello")`). Since it is not an object wrapper, `instanceof` returns false. 
-> 
+> In JavaScript, `instanceof` only works on Objects. When you do `let message = "Hello"`, it creates a _primitive_ string. It's just raw data, not an actual string object created with the `new` keyword (like `new String("Hello")`). Since it is not an object wrapper, `instanceof` returns false.
+>
 > To check if a primitive variable is a string, you should always use the `typeof` operator instead:
 > `console.log(typeof message === "string"); // Output: true`
 
@@ -1420,41 +1489,41 @@ console.log(john instanceof Person);    // Output: true (john is instance of Per
 ```javascript
 // Unary Plus (+) - converts to number
 let str = "5";
-console.log(+str);        // Output: 5 (string "5" converted to number 5)
+console.log(+str); // Output: 5 (string "5" converted to number 5)
 console.log(typeof +str); // Output: "number"
 
 let bool = true;
-console.log(+bool);       // Output: 1 (true converted to 1)
-console.log(+false);      // Output: 0 (false converted to 0)
+console.log(+bool); // Output: 1 (true converted to 1)
+console.log(+false); // Output: 0 (false converted to 0)
 
 // Unary Minus (-) - negates the value
 let num = 10;
-console.log(-num);        // Output: -10 (makes positive number negative)
-console.log(-(-num));     // Output: 10 (double negative becomes positive)
+console.log(-num); // Output: -10 (makes positive number negative)
+console.log(-(-num)); // Output: 10 (double negative becomes positive)
 
 // Logical NOT (!) - inverts boolean
 let isActive = true;
-console.log(!isActive);   // Output: false (inverts true to false)
-console.log(!!isActive);  // Output: true (double negation returns original)
+console.log(!isActive); // Output: false (inverts true to false)
+console.log(!!isActive); // Output: true (double negation returns original)
 
 // Increment (++) and Decrement (--)
 let count = 5;
-console.log(++count);     // Output: 6 (increments first, then returns)
-console.log(count++);     // Output: 6 (returns first, then increments)
-console.log(count);       // Output: 7 (now incremented)
+console.log(++count); // Output: 6 (increments first, then returns)
+console.log(count++); // Output: 6 (returns first, then increments)
+console.log(count); // Output: 7 (now incremented)
 
 // typeof operator
-console.log(typeof "Hello");  // Output: "string"
-console.log(typeof 42);       // Output: "number"
+console.log(typeof "Hello"); // Output: "string"
+console.log(typeof 42); // Output: "number"
 
 // delete operator
 let person = { name: "John", age: 30 };
-delete person.age;            // Deletes the 'age' property
-console.log(person);          // Output: { name: "John" }
+delete person.age; // Deletes the 'age' property
+console.log(person); // Output: { name: "John" }
 
 // void operator
-console.log(void 0);          // Output: undefined
-console.log(void (2 + 2));    // Output: undefined (evaluates 2+2 but returns undefined)
+console.log(void 0); // Output: undefined
+console.log(void (2 + 2)); // Output: undefined (evaluates 2+2 but returns undefined)
 ```
 
 ---
@@ -1471,47 +1540,49 @@ console.log(void (2 + 2));    // Output: undefined (evaluates 2+2 but returns un
 
 ```javascript
 // ?? only triggers for null and undefined
-console.log(null ?? "default");      // "default"  ← null → use fallback
+console.log(null ?? "default"); // "default"  ← null → use fallback
 console.log(undefined ?? "default"); // "default"  ← undefined → use fallback
-console.log(0 ?? "default");         // 0          ← 0 is NOT null, keep it!
-console.log("" ?? "default");        // ""         ← empty string is NOT null, keep it!
-console.log(false ?? "default");     // false      ← false is NOT null, keep it!
+console.log(0 ?? "default"); // 0          ← 0 is NOT null, keep it!
+console.log("" ?? "default"); // ""         ← empty string is NOT null, keep it!
+console.log(false ?? "default"); // false      ← false is NOT null, keep it!
 ```
 
 ### ⚡ ?? vs || — The Key Difference
 
 This is where people get confused. Both look similar but behave very differently:
 
-| Situation | `??` result | `\|\|` result |
-|-----------|------------|--------------|
-| `null` | uses fallback ✅ | uses fallback ✅ |
-| `undefined` | uses fallback ✅ | uses fallback ✅ |
-| `0` | **keeps 0** ✅ | uses fallback ⚠️ |
-| `""` | **keeps ""** ✅ | uses fallback ⚠️ |
-| `false` | **keeps false** ✅ | uses fallback ⚠️ |
+| Situation   | `??` result        | `\|\|` result    |
+| ----------- | ------------------ | ---------------- |
+| `null`      | uses fallback ✅   | uses fallback ✅ |
+| `undefined` | uses fallback ✅   | uses fallback ✅ |
+| `0`         | **keeps 0** ✅     | uses fallback ⚠️ |
+| `""`        | **keeps ""** ✅    | uses fallback ⚠️ |
+| `false`     | **keeps false** ✅ | uses fallback ⚠️ |
 
 ```javascript
 let userScore = 0; // valid score of zero
 
 // Using || — WRONG behaviour for this case
-let score1 = userScore || 10;  // 10 ← 0 is falsy, gets replaced! Bug!
+let score1 = userScore || 10; // 10 ← 0 is falsy, gets replaced! Bug!
 
 // Using ?? — CORRECT behaviour
-let score2 = userScore ?? 10;  // 0  ← 0 is not null/undefined, kept! ✅
+let score2 = userScore ?? 10; // 0  ← 0 is not null/undefined, kept! ✅
 ```
 
 ### Where you use this in real code
 
 **Safe default for settings that might not exist:**
+
 ```javascript
 let fontSize = userSettings.fontSize ?? 16; // use 16 only if not set at all
-let username = user.name ?? "Guest";        // "Guest" only if name is null/undefined
+let username = user.name ?? "Guest"; // "Guest" only if name is null/undefined
 ```
 
 **In SDET — reading config values:**
+
 ```javascript
 let timeout = config.timeout ?? 5000; // default 5s only if timeout wasn't configured
-let retries = config.retries ?? 3;    // default 3 only if retries is absent
+let retries = config.retries ?? 3; // default 3 only if retries is absent
 ```
 
 > 💡 **Rule:** Use `??` when `0`, `""`, or `false` are valid values you want to keep. Use `||` when ANY falsy value should trigger the fallback.
@@ -1528,25 +1599,28 @@ let retries = config.retries ?? 3;    // default 3 only if retries is absent
 In automation (or whenever making API calls), you often receive massive JSON objects. You cannot guarantee that every property is always there.
 
 Without `?.`, you'd have to write ugly, defensive code to prevent "Cannot read properties of undefined" errors:
+
 ```javascript
 let user = { profile: { name: "Shujauddin" } };
 
 // Without Optional Chaining (Ugly & Long)
 let city;
 if (user && user.profile && user.profile.address && user.profile.address.city) {
-    city = user.profile.address.city;
+  city = user.profile.address.city;
 }
 ```
 
 With **Optional Chaining (`?.`)**, this becomes a clean one-liner:
+
 ```javascript
 // With Optional Chaining (Clean!)
-let city = user?.profile?.address?.city; 
+let city = user?.profile?.address?.city;
 
 console.log(city); // Output: undefined (No Crash!)
 ```
 
 **The Power Combo:** SDETs constantly pair `?.` and `??` together to grab a deep property and provide a safe fallback if it's missing!
+
 ```javascript
 // Grab the city. If any part of that chain is missing, default to "Unknown"
 let finalCity = user?.profile?.address?.city ?? "Unknown";
@@ -1576,6 +1650,7 @@ console.log(greeting); // Output: "Hello World"
 ```
 
 > ⚠️ **Note on Type Conversion:** If you use the `+` operator with a string and a number, JavaScript will implicitly convert the number to a string and concatenate them (Implicit Coercion).
+
 ```javascript
 console.log("Age: " + 25); // Output: "Age: 25"
 ```
@@ -1594,6 +1669,7 @@ In Binary (Base-2), each digit represents a power of 2. We use a "Double Up" cha
 
 **2. Let's build the number 5**
 To get 5, we look at our chart and ask: "Which of these numbers do I need to add up to make 5?"
+
 - Do we need an 8? No (too big) -> `0`
 - Do we need a 4? Yes -> `1`
 - Do we need a 2? No (4+2=6, too big) -> `0`
@@ -1602,6 +1678,7 @@ To get 5, we look at our chart and ask: "Which of these numbers do I need to add
 So, `5` in binary is `0101` (or just `101`).
 
 **3. Let's build the number 3**
+
 - Do we need an 8? No -> `0`
 - Do we need a 4? No -> `0`
 - Do we need a 2? Yes -> `1`
@@ -1619,35 +1696,37 @@ Now that you have the `0`s and `1`s, the Bitwise operator just compares them lik
 -----------
     0 0 0 1  <-- Only the last column has two 1s!
 ```
+
 The result is `0001`. If you look at our chart, `1` at the end just means the number `1`.
 
 **📝 Summary Cheat Sheet:**
+
 - `0` = Off
 - `1` = On
 - **Binary Chart:** `... 16 | 8 | 4 | 2 | 1`
 
 #### 📊 Bitwise Operators Cheat Sheet
 
-| Operator | Name | What It Does (The Rule) | Example | Binary Explanation |
-| :---: | --- | --- | --- | --- |
-| **`&`** | **AND** | Returns `1` ONLY if **BOTH** bits are `1` | `5 & 1` ➔ `1` | `0101 & 0001 = 0001` |
-| **`\|`** | **OR** | Returns `1` if **AT LEAST ONE** bit is `1` | `5 \| 1` ➔ `5` | `0101 \| 0001 = 0101` |
-| **`^`** | **XOR** | Returns `1` if the bits are **DIFFERENT** | `5 ^ 1` ➔ `4` | `0101 ^ 0001 = 0100` |
-| **`~`** | **NOT** | Flips all bits (`0` ➔ `1`, `1` ➔ `0`) | `~5` ➔ `-6` | `~0...0101 = 1...1010` |
-| **`<<`** | **Left Shift** | Shifts bits left (Multiplies by 2) | `5 << 1` ➔ `10` | `0101` becomes `1010` |
-| **`>>`** | **Right Shift** | Shifts bits right (Divides by 2) | `5 >> 1` ➔ `2` | `0101` becomes `0010` |
-| **`>>>`**| **Zero-Fill Right** | Shifts right, pushes `0`s from left | `5 >>> 1`➔ `2` | Same as `>>` for positive numbers |
+| Operator  | Name                | What It Does (The Rule)                    | Example         | Binary Explanation                |
+| :-------: | ------------------- | ------------------------------------------ | --------------- | --------------------------------- |
+|  **`&`**  | **AND**             | Returns `1` ONLY if **BOTH** bits are `1`  | `5 & 1` ➔ `1`   | `0101 & 0001 = 0001`              |
+| **`\|`**  | **OR**              | Returns `1` if **AT LEAST ONE** bit is `1` | `5 \| 1` ➔ `5`  | `0101 \| 0001 = 0101`             |
+|  **`^`**  | **XOR**             | Returns `1` if the bits are **DIFFERENT**  | `5 ^ 1` ➔ `4`   | `0101 ^ 0001 = 0100`              |
+|  **`~`**  | **NOT**             | Flips all bits (`0` ➔ `1`, `1` ➔ `0`)      | `~5` ➔ `-6`     | `~0...0101 = 1...1010`            |
+| **`<<`**  | **Left Shift**      | Shifts bits left (Multiplies by 2)         | `5 << 1` ➔ `10` | `0101` becomes `1010`             |
+| **`>>`**  | **Right Shift**     | Shifts bits right (Divides by 2)           | `5 >> 1` ➔ `2`  | `0101` becomes `0010`             |
+| **`>>>`** | **Zero-Fill Right** | Shifts right, pushes `0`s from left        | `5 >>> 1`➔ `2`  | Same as `>>` for positive numbers |
 
 **Example:**
 
 ```javascript
-let a = 5;  // Binary: 0101
-let b = 1;  // Binary: 0001
+let a = 5; // Binary: 0101
+let b = 1; // Binary: 0001
 
 console.log(a & b); // Output: 1  (Binary: 0001)
 console.log(a | b); // Output: 5  (Binary: 0101)
 console.log(a ^ b); // Output: 4  (Binary: 0100)
-console.log(~a);    // Output: -6 (Inverts 5 to get -(5 + 1))
+console.log(~a); // Output: -6 (Inverts 5 to get -(5 + 1))
 
 console.log(a << 1); // Output: 10 (Binary: 1010) - effectively multiplies by 2
 console.log(a >> 1); // Output: 2  (Binary: 0010) - effectively divides by 2
@@ -1658,7 +1737,6 @@ console.log(a >> 1); // Output: 2  (Binary: 0010) - effectively divides by 2
 ---
 
 ## Operator Classification by Number of Operands
-
 
 ### **1. Unary Operators** (One Operand)
 
@@ -1694,14 +1772,14 @@ When JavaScript checks a condition (like in an `if` statement), it doesn't just 
 
 These are the **only** values that act as `false` in a condition:
 
-| Value | Why it's falsy |
-|-------|---------------|
-| `false` | It's literally false |
-| `0` | Zero is nothing |
-| `""` | Empty string — no content |
-| `null` | Intentionally empty |
-| `undefined` | Never given a value |
-| `NaN` | Not a valid number |
+| Value       | Why it's falsy            |
+| ----------- | ------------------------- |
+| `false`     | It's literally false      |
+| `0`         | Zero is nothing           |
+| `""`        | Empty string — no content |
+| `null`      | Intentionally empty       |
+| `undefined` | Never given a value       |
+| `NaN`       | Not a valid number        |
 
 ### ✅ Truthy Values — everything else
 
@@ -1709,60 +1787,63 @@ If it's not in the 6 falsy values above, it's truthy. Including these that often
 
 ```javascript
 // These all count as TRUE in a condition
-if (1)         console.log("truthy"); // ✅ non-zero number
-if ("hello")   console.log("truthy"); // ✅ non-empty string
-if ([])        console.log("truthy"); // ✅ empty array (still truthy!)
-if ({})        console.log("truthy"); // ✅ empty object (still truthy!)
-if (-1)        console.log("truthy"); // ✅ negative number
+if (1) console.log("truthy"); // ✅ non-zero number
+if ("hello") console.log("truthy"); // ✅ non-empty string
+if ([]) console.log("truthy"); // ✅ empty array (still truthy!)
+if ({}) console.log("truthy"); // ✅ empty object (still truthy!)
+if (-1) console.log("truthy"); // ✅ negative number
 ```
 
 ### Code Example
 
 ```javascript
 // these are all FALSY - the if block will NOT run
-if (0)         console.log("runs"); // ❌ skipped
-if ("")        console.log("runs"); // ❌ skipped
-if (null)      console.log("runs"); // ❌ skipped
+if (0) console.log("runs"); // ❌ skipped
+if ("") console.log("runs"); // ❌ skipped
+if (null) console.log("runs"); // ❌ skipped
 if (undefined) console.log("runs"); // ❌ skipped
 
 // these are all TRUTHY - the if block WILL run
-if (1)         console.log("runs"); // ✅ prints
-if ("hi")      console.log("runs"); // ✅ prints
-if ([])        console.log("runs"); // ✅ prints (empty array is truthy!)
+if (1) console.log("runs"); // ✅ prints
+if ("hi") console.log("runs"); // ✅ prints
+if ([]) console.log("runs"); // ✅ prints (empty array is truthy!)
 ```
 
 ### Where you use this in real code
 
 **Checking if a user filled in a form field:**
+
 ```javascript
 let username = "";
 
 if (username) {
-    console.log("Welcome, " + username); // skipped — empty string is falsy
+  console.log("Welcome, " + username); // skipped — empty string is falsy
 } else {
-    console.log("Please enter your name!"); // this runs
+  console.log("Please enter your name!"); // this runs
 }
 ```
 
 **Checking if an API returned data:**
+
 ```javascript
 let apiResponse = null; // API failed
 
 if (apiResponse) {
-    console.log("Got data:", apiResponse); // skipped — null is falsy
+  console.log("Got data:", apiResponse); // skipped — null is falsy
 } else {
-    console.log("No data returned"); // this runs
+  console.log("No data returned"); // this runs
 }
 ```
 
 **In SDET / automation testing:**
+
 ```javascript
 let element = getElement(".submit-btn"); // returns null if not found
 
 if (element) {
-    element.click(); // only clicks if element exists (truthy)
+  element.click(); // only clicks if element exists (truthy)
 } else {
-    console.log("Button not found on page!");
+  console.log("Button not found on page!");
 }
 ```
 
@@ -1772,14 +1853,13 @@ if (element) {
 
 ## 5. Conditional Statements
 
-
 **What are Conditional Statements?**
 Conditional statements allow you to make decisions in your code based on conditions. Think of them as "if this happens, then do that."
 
 ![Conditional Statements Flow](Images/Conditional_Statements_Flow.png)
 
 ---
-  
+
 ### **A) IF Statement**
 
 **Rule:** Executes code ONLY if the condition is **true**. If false, nothing happens.
@@ -1788,7 +1868,7 @@ Conditional statements allow you to make decisions in your code based on conditi
 
 ```javascript
 if (condition) {
-    // code to execute if condition is true
+  // code to execute if condition is true
 }
 ```
 
@@ -1798,11 +1878,11 @@ if (condition) {
 let age = 20;
 
 if (age >= 18) {
-    console.log("You can vote!"); // This will print because age is 20
+  console.log("You can vote!"); // This will print because age is 20
 }
 
 if (age >= 21) {
-    console.log("You can drink!"); // This will NOT print (nothing happens)
+  console.log("You can drink!"); // This will NOT print (nothing happens)
 }
 ```
 
@@ -1816,9 +1896,9 @@ if (age >= 21) {
 
 ```javascript
 if (condition) {
-    // code if condition is true
+  // code if condition is true
 } else {
-    // code if condition is false
+  // code if condition is false
 }
 ```
 
@@ -1829,9 +1909,9 @@ let mode = "dark-mode";
 let color;
 
 if (mode === "dark-mode") {
-    color = "Black"; // This executes because mode is "dark-mode"
+  color = "Black"; // This executes because mode is "dark-mode"
 } else {
-    color = "White";
+  color = "White";
 }
 
 console.log(color); // Output: Black
@@ -1843,9 +1923,9 @@ console.log(color); // Output: Black
 let marks = 45;
 
 if (marks >= 50) {
-    console.log("Pass");
+  console.log("Pass");
 } else {
-    console.log("Fail"); // This executes because marks < 50
+  console.log("Fail"); // This executes because marks < 50
 }
 ```
 
@@ -1859,11 +1939,11 @@ if (marks >= 50) {
 
 ```javascript
 if (condition1) {
-    // code if condition1 is true
+  // code if condition1 is true
 } else if (condition2) {
-    // code if condition2 is true
+  // code if condition2 is true
 } else {
-    // code if none of the conditions are true
+  // code if none of the conditions are true
 }
 ```
 
@@ -1873,13 +1953,13 @@ if (condition1) {
 let marks = 75;
 
 if (marks >= 90) {
-    console.log("Grade: A");
+  console.log("Grade: A");
 } else if (marks >= 75) {
-    console.log("Grade: B"); // This executes because marks = 75
+  console.log("Grade: B"); // This executes because marks = 75
 } else if (marks >= 50) {
-    console.log("Grade: C");
+  console.log("Grade: C");
 } else {
-    console.log("Grade: F");
+  console.log("Grade: F");
 }
 
 // Output: Grade: B
@@ -1891,13 +1971,13 @@ if (marks >= 90) {
 let light = "yellow";
 
 if (light === "green") {
-    console.log("Go!");
+  console.log("Go!");
 } else if (light === "yellow") {
-    console.log("Slow down!"); // This executes
+  console.log("Slow down!"); // This executes
 } else if (light === "red") {
-    console.log("Stop!");
+  console.log("Stop!");
 } else {
-    console.log("Invalid light!");
+  console.log("Invalid light!");
 }
 
 // Output: Slow down!
@@ -1907,11 +1987,11 @@ if (light === "green") {
 
 ### **Quick Comparison:**
 
-| Statement | When to Use |
-| --------- | ----------- |
-| **if** | Execute code only when condition is true, otherwise skip |
-| **if-else** | Choose between 2 options (true or false) |
-| **if-else-if** | Choose between 3+ options (multiple conditions) |
+| Statement      | When to Use                                              |
+| -------------- | -------------------------------------------------------- |
+| **if**         | Execute code only when condition is true, otherwise skip |
+| **if-else**    | Choose between 2 options (true or false)                 |
+| **if-else-if** | Choose between 3+ options (multiple conditions)          |
 
 ---
 
@@ -1923,14 +2003,14 @@ if (light === "green") {
 
 ```javascript
 switch (expression) {
-    case value1:
-        // code to execute
-        break;
-    case value2:
-        // code to execute
-        break;
-    default:
-        // code if no case matches
+  case value1:
+    // code to execute
+    break;
+  case value2:
+    // code to execute
+    break;
+  default:
+  // code if no case matches
 }
 ```
 
@@ -1940,17 +2020,17 @@ switch (expression) {
 let day = 3;
 
 switch (day) {
-    case 1:
-        console.log("Monday");
-        break;
-    case 2:
-        console.log("Tuesday");
-        break;
-    case 3:
-        console.log("Wednesday"); // This executes because day is 3
-        break;
-    default:
-        console.log("Invalid day");
+  case 1:
+    console.log("Monday");
+    break;
+  case 2:
+    console.log("Tuesday");
+    break;
+  case 3:
+    console.log("Wednesday"); // This executes because day is 3
+    break;
+  default:
+    console.log("Invalid day");
 }
 
 // Output: Wednesday
@@ -1959,52 +2039,56 @@ switch (day) {
 ![Switch Statement Flow](Images/Switch_Statement_Flow.png)
 
 ### 🛑 Two essential parts of a `switch`:
-1. **`break`**: This tells JavaScript to *stop checking and exit*. If you forget to write `break`, JavaScript will "fall through" and automatically run the code for the cases below it too!
-2. **`default`**: This acts exactly like an `else` statement. It is the "safety net" catch-all code that runs if the variable did *not match* any of the specific `case` values above.
+
+1. **`break`**: This tells JavaScript to _stop checking and exit_. If you forget to write `break`, JavaScript will "fall through" and automatically run the code for the cases below it too!
+2. **`default`**: This acts exactly like an `else` statement. It is the "safety net" catch-all code that runs if the variable did _not match_ any of the specific `case` values above.
 
 ### 🧪 When to use `switch` (SDET Use Cases)
+
 As an SDET (Software Development Engineer in Test), you shouldn't use `switch` statements for complex math logic (like `if age > 18`). **You should only use `switch` when you are checking one specific variable against a list of exact, known textbook values.**
 
 Here are the most common ways Software Testers use `switch` in automation:
 
 **1. Choosing Test Environments (QA vs STAGE vs PROD):**
 When your automation framework starts, it needs to know which server URL to test perfectly.
+
 ```javascript
 let environment = "QA";
 let baseUrl;
 
 switch (environment) {
-    case "QA":
-        baseUrl = "https://qa.testingacademy.com";
-        break;
-    case "STAGE":
-        baseUrl = "https://stage.testingacademy.com";
-        break;
-    case "PROD":
-        baseUrl = "https://testingacademy.com";
-        break;
-    default:
-        console.error("Unknown environment! Defaulting to QA.");
-        baseUrl = "https://qa.testingacademy.com";
+  case "QA":
+    baseUrl = "https://qa.testingacademy.com";
+    break;
+  case "STAGE":
+    baseUrl = "https://stage.testingacademy.com";
+    break;
+  case "PROD":
+    baseUrl = "https://testingacademy.com";
+    break;
+  default:
+    console.error("Unknown environment! Defaulting to QA.");
+    baseUrl = "https://qa.testingacademy.com";
 }
 ```
 
 **2. Selecting a Browser for Automation (Playwright / Selenium):**
+
 ```javascript
 let browserType = "chromium";
 
 switch (browserType) {
-    case "chromium":
-        // Code to launch Google Chrome / Microsoft Edge
-        break;
-    case "firefox":
-        // Code to launch Mozilla Firefox
-        break;
-    case "webkit":
-        // Code to launch Apple Safari
-        break;
-    default:
-        console.error("Browser not supported!");
+  case "chromium":
+    // Code to launch Google Chrome / Microsoft Edge
+    break;
+  case "firefox":
+    // Code to launch Mozilla Firefox
+    break;
+  case "webkit":
+    // Code to launch Apple Safari
+    break;
+  default:
+    console.error("Browser not supported!");
 }
 ```
 
@@ -2016,13 +2100,13 @@ switch (browserType) {
 
 **Overview:** Different ways to get input from users and display output in JavaScript.
 
-| Feature | Works in Browser? | Works in VS Code/Node? | Recommended For |
-| ------- | ----------------- | ---------------------- | --------------- |
-| `console.log()` | ✅ Yes | ✅ Yes | Everything (Universal) |
-| `prompt()` | ✅ Yes | ❌ No | Learning Browser basics |
-| `alert()` | ✅ Yes | ❌ No | Visual web alerts |
-| `confirm()` | ✅ Yes | ❌ No | Yes/No questions in browser |
-| `process.argv` | ❌ No | ✅ Yes | SDET Command Line Tools |
+| Feature         | Works in Browser? | Works in VS Code/Node? | Recommended For             |
+| --------------- | ----------------- | ---------------------- | --------------------------- |
+| `console.log()` | ✅ Yes            | ✅ Yes                 | Everything (Universal)      |
+| `prompt()`      | ✅ Yes            | ❌ No                  | Learning Browser basics     |
+| `alert()`       | ✅ Yes            | ❌ No                  | Visual web alerts           |
+| `confirm()`     | ✅ Yes            | ❌ No                  | Yes/No questions in browser |
+| `process.argv`  | ❌ No             | ✅ Yes                 | SDET Command Line Tools     |
 
 ---
 
@@ -2084,9 +2168,9 @@ alert("Your form has been submitted!"); // Another popup
 let wantToDelete = confirm("Are you sure you want to delete?");
 
 if (wantToDelete) {
-    console.log("Item deleted!");
+  console.log("Item deleted!");
 } else {
-    console.log("Deletion cancelled.");
+  console.log("Deletion cancelled.");
 }
 ```
 
@@ -2115,12 +2199,12 @@ node test.js hello world 123
 
 ```javascript
 [
-  '/usr/local/bin/node',    // process.argv[0] - Node path
-  '/path/to/test.js',       // process.argv[1] - File path
-  'hello',                  // process.argv[2] - First argument
-  'world',                  // process.argv[3] - Second argument
-  '123'                     // process.argv[4] - Third argument
-]
+  "/usr/local/bin/node", // process.argv[0] - Node path
+  "/path/to/test.js", // process.argv[1] - File path
+  "hello", // process.argv[2] - First argument
+  "world", // process.argv[3] - Second argument
+  "123", // process.argv[4] - Third argument
+];
 ```
 
 **Practical example:**
@@ -2147,11 +2231,10 @@ console.log("Hello,", name);
 
 ## Appendix: Comparison Recap (== vs ===)
 
-
 - **`==` (Loose Equality)**: Checks only the value. It performs **type coercion** (automatically converts data types to match).
-  - *Example*: `5 == "5"` is `true`.
+  - _Example_: `5 == "5"` is `true`.
 - **`===` (Strict Equality)**: Checks both value AND data type. It does **not** perform type coercion.
-  - *Example*: `5 === "5"` is `false`.
+  - _Example_: `5 === "5"` is `false`.
 
 ---
 
@@ -2165,12 +2248,12 @@ In JavaScript, individual characters in a string can be accessed using **bracket
 ```javascript
 let greeting = "hello";
 
-console.log(greeting[0]);                    // "h" — first character
-console.log(greeting[1]);                    // "e" — second character
-console.log(greeting[greeting.length - 1]);  // "o" — last character
+console.log(greeting[0]); // "h" — first character
+console.log(greeting[1]); // "e" — second character
+console.log(greeting[greeting.length - 1]); // "o" — last character
 
 // Combine characters using bracket notation
-let firstTwo = greeting[0] + greeting[1];    // "he"
+let firstTwo = greeting[0] + greeting[1]; // "he"
 console.log(firstTwo);
 ```
 
@@ -2185,9 +2268,10 @@ A **loop** is a way to repeat a block of code again and again until a specific c
 > 💡 **In simple words:** "Keep doing this specific task until I tell you to stop, or until a certain condition is met."
 
 In automation (like Playwright), you use loops to do things like:
-- *"Check every link on this page"*
-- *"Wait for a button to appear 10 times before giving up"*
-- *"Go through all rows of a table and verify the data"*
+
+- _"Check every link on this page"_
+- _"Wait for a button to appear 10 times before giving up"_
+- _"Go through all rows of a table and verify the data"_
 
 ---
 
@@ -2196,11 +2280,13 @@ In automation (like Playwright), you use loops to do things like:
 **The "Staircase" Analogy:**
 
 Imagine you are standing at the bottom of a flight of 10 stairs. Your goal is to reach the top.
+
 - **The Task:** Step up one stair.
 - **The Condition:** "Am I at the 10th stair yet?"
 - **The Loop:** You repeat the "Step up" task over and over. Each time, you ask yourself if you've reached the top. Once the answer is "Yes," you stop.
 
 **The "Alarm Clock" Analogy:**
+
 - **The Task:** Ring the bell.
 - **The Condition:** "Has the user pressed the 'Stop' button?"
 - **The Loop:** The alarm rings every 5 minutes until you finally hit 'Stop'.
@@ -2213,9 +2299,9 @@ Imagine you are standing at the bottom of a flight of 10 stairs. Your goal is to
 
 Before learning the different types of loops, understand that every loop has these 3 core parts:
 
-1. **The Start (Initialization):** Where do we begin? *(e.g., `let i = 0`)*
-2. **The Condition (Test):** Should we keep going? As long as this is `true`, the loop repeats. *(e.g., `i < 10`)*
-3. **The Update (Step):** How do we move forward? *(e.g., `i++` adds 1 each time)*
+1. **The Start (Initialization):** Where do we begin? _(e.g., `let i = 0`)_
+2. **The Condition (Test):** Should we keep going? As long as this is `true`, the loop repeats. _(e.g., `i < 10`)_
+3. **The Update (Step):** How do we move forward? _(e.g., `i++` adds 1 each time)_
 
 > ⚠️ **Critical Rule:** If you forget the **Update** step, the condition will never become `false`, and your loop will run forever (an **infinite loop** — more on this later).
 
@@ -2226,7 +2312,7 @@ Before learning the different types of loops, understand that every loop has the
 Imagine you are testing an E-commerce website. You have a list of **50 products**, and you want to make sure none of them have a "Price" of `$0`.
 
 - **Without a loop:** You would have to write 50 individual lines of code to check each product.
-- **With a loop:** You write **3 lines of code** that tells Playwright: *"Go through every product in this list and check the price."*
+- **With a loop:** You write **3 lines of code** that tells Playwright: _"Go through every product in this list and check the price."_
 
 ---
 
@@ -2236,13 +2322,13 @@ Imagine you are testing an E-commerce website. You have a list of **50 products*
 
 JavaScript gives you **5 types of loops**. Each one is best suited for a different situation:
 
-| Loop Type | Best Used When... |
-|-----------|------------------|
-| **`for`** | You know **exactly** how many times to repeat |
-| **`while`** | You **don't know** how many times — keep going until a condition changes |
-| **`do...while`** | Same as `while`, but **always runs at least once** |
-| **`for...in`** | You want to loop through an **Object's keys** (property names) |
-| **`for...of`** | You want to loop through an **Array's values** (or NodeList in Playwright) |
+| Loop Type        | Best Used When...                                                          |
+| ---------------- | -------------------------------------------------------------------------- |
+| **`for`**        | You know **exactly** how many times to repeat                              |
+| **`while`**      | You **don't know** how many times — keep going until a condition changes   |
+| **`do...while`** | Same as `while`, but **always runs at least once**                         |
+| **`for...in`**   | You want to loop through an **Object's keys** (property names)             |
+| **`for...of`**   | You want to loop through an **Array's values** (or NodeList in Playwright) |
 
 ---
 
@@ -2251,23 +2337,26 @@ JavaScript gives you **5 types of loops**. Each one is best suited for a differe
 **Meaning:** The most common loop. Use it when you **know exactly how many times** you need to repeat something.
 
 **Syntax:**
+
 ```javascript
 for (start; condition; step) {
-    // code to repeat
+  // code to repeat
 }
 ```
 
 **Example — The Staircase:**
+
 ```javascript
 // Start at step 1; Stop at step 10; Move 1 step at a time
 for (let step = 1; step <= 10; step++) {
-    console.log("I am currently on step number: " + step);
+  console.log("I am currently on step number: " + step);
 }
 
 console.log("I have reached the top!");
 ```
 
 **Output:**
+
 ```
 I am currently on step number: 1
 I am currently on step number: 2
@@ -2277,6 +2366,7 @@ I have reached the top!
 ```
 
 **How it works step by step:**
+
 1. `let step = 1` → Create a counter variable, start at 1.
 2. `step <= 10` → Is 1 less than or equal to 10? **Yes** → Run the code inside `{ }`.
 3. `step++` → Add 1 to step (step becomes 2).
@@ -2287,19 +2377,21 @@ I have reached the top!
 #### 🧪 Real-World SDET Example:
 
 **Checking a list of prices on an E-commerce page:**
+
 ```javascript
-let prices = [29.99, 49.99, 0, 15.00, 99.99];
+let prices = [29.99, 49.99, 0, 15.0, 99.99];
 
 for (let i = 0; i < prices.length; i++) {
-    if (prices[i] === 0) {
-        console.log("🚨 BUG FOUND! Product at index " + i + " has a price of $0!");
-    } else {
-        console.log("✅ Product " + i + " price is valid: $" + prices[i]);
-    }
+  if (prices[i] === 0) {
+    console.log("🚨 BUG FOUND! Product at index " + i + " has a price of $0!");
+  } else {
+    console.log("✅ Product " + i + " price is valid: $" + prices[i]);
+  }
 }
 ```
 
 **Output:**
+
 ```
 ✅ Product 0 price is valid: $29.99
 ✅ Product 1 price is valid: $49.99
@@ -2319,26 +2411,29 @@ for (let i = 0; i < prices.length; i++) {
 > Think of it as: "Keep trying until it works."
 
 **Syntax:**
+
 ```javascript
 while (condition) {
-    // code to repeat
-    // IMPORTANT: update something so condition eventually becomes false!
+  // code to repeat
+  // IMPORTANT: update something so condition eventually becomes false!
 }
 ```
 
 **Example:**
+
 ```javascript
 let count = 1;
 
 while (count <= 5) {
-    console.log("Attempt number: " + count);
-    count++; // Don't forget this! Without it, infinite loop!
+  console.log("Attempt number: " + count);
+  count++; // Don't forget this! Without it, infinite loop!
 }
 
 console.log("Done!");
 ```
 
 **Output:**
+
 ```
 Attempt number: 1
 Attempt number: 2
@@ -2350,41 +2445,45 @@ Done!
 
 #### `for` vs `while` — When to use which?
 
-| Situation | Use `for` | Use `while` |
-|-----------|-----------|-------------|
-| "Loop exactly 10 times" | ✅ | |
-| "Loop through an array" | ✅ | |
-| "Keep polling until element appears" | | ✅ |
-| "Wait for API response" | | ✅ |
-| "Retry until success" | | ✅ |
+| Situation                            | Use `for` | Use `while` |
+| ------------------------------------ | --------- | ----------- |
+| "Loop exactly 10 times"              | ✅        |             |
+| "Loop through an array"              | ✅        |             |
+| "Keep polling until element appears" |           | ✅          |
+| "Wait for API response"              |           | ✅          |
+| "Retry until success"                |           | ✅          |
 
 #### 🧪 Real-World SDET Example:
 
 **Waiting for a button to appear on a page (retry logic):**
+
 ```javascript
 let buttonFound = false;
 let attempts = 0;
 let maxAttempts = 10;
 
 while (!buttonFound && attempts < maxAttempts) {
-    attempts++;
-    console.log("Attempt " + attempts + ": Looking for submit button...");
+  attempts++;
+  console.log("Attempt " + attempts + ": Looking for submit button...");
 
-    // Simulating checking if button exists
-    // In real Playwright: buttonFound = await page.locator('.submit-btn').isVisible();
-    if (attempts === 7) {
-        buttonFound = true; // Simulating: button appears on 7th try
-    }
+  // Simulating checking if button exists
+  // In real Playwright: buttonFound = await page.locator('.submit-btn').isVisible();
+  if (attempts === 7) {
+    buttonFound = true; // Simulating: button appears on 7th try
+  }
 }
 
 if (buttonFound) {
-    console.log("✅ Button found after " + attempts + " attempts!");
+  console.log("✅ Button found after " + attempts + " attempts!");
 } else {
-    console.log("❌ Button NOT found after " + maxAttempts + " attempts. Test failed!");
+  console.log(
+    "❌ Button NOT found after " + maxAttempts + " attempts. Test failed!",
+  );
 }
 ```
 
 **Output:**
+
 ```
 Attempt 1: Looking for submit button...
 Attempt 2: Looking for submit button...
@@ -2404,25 +2503,28 @@ Attempt 7: Looking for submit button...
 > Think of it as: "Do this first, then check if you should keep doing it."
 
 **Syntax:**
+
 ```javascript
 do {
-    // code to run (runs AT LEAST once!)
+  // code to run (runs AT LEAST once!)
 } while (condition);
 ```
 
 > ⚠️ **Note the semicolon** `;` after `while(condition)` — this is required for `do...while` but NOT for regular `while`.
 
 **Example:**
+
 ```javascript
 let number = 1;
 
 do {
-    console.log("Number is: " + number);
-    number++;
+  console.log("Number is: " + number);
+  number++;
 } while (number <= 5);
 ```
 
 **Output:**
+
 ```
 Number is: 1
 Number is: 2
@@ -2432,21 +2534,23 @@ Number is: 5
 ```
 
 **The Key Difference — runs even if condition is false from the start:**
+
 ```javascript
 // while loop — runs 0 times
 let x = 100;
 while (x < 5) {
-    console.log("while: " + x); // Never prints! Condition is false from the start.
+  console.log("while: " + x); // Never prints! Condition is false from the start.
 }
 
 // do...while loop — runs 1 time
 let y = 100;
 do {
-    console.log("do...while: " + y); // Prints once! Runs before checking.
+  console.log("do...while: " + y); // Prints once! Runs before checking.
 } while (y < 5);
 ```
 
 **Output:**
+
 ```
 do...while: 100
 ```
@@ -2456,25 +2560,35 @@ do...while: 100
 #### 🧪 Real-World SDET Example:
 
 **A menu-driven test runner:**
+
 ```javascript
 let choice;
 
 do {
-    console.log("\n--- Test Menu ---");
-    console.log("1. Run Login Tests");
-    console.log("2. Run Cart Tests");
-    console.log("3. Run Checkout Tests");
-    console.log("4. Exit");
+  console.log("\n--- Test Menu ---");
+  console.log("1. Run Login Tests");
+  console.log("2. Run Cart Tests");
+  console.log("3. Run Checkout Tests");
+  console.log("4. Exit");
 
-    choice = 4; // Simulating user input (in real code: prompt() or readline)
+  choice = 4; // Simulating user input (in real code: prompt() or readline)
 
-    switch (choice) {
-        case 1: console.log("Running Login Tests..."); break;
-        case 2: console.log("Running Cart Tests..."); break;
-        case 3: console.log("Running Checkout Tests..."); break;
-        case 4: console.log("Exiting..."); break;
-        default: console.log("Invalid choice!");
-    }
+  switch (choice) {
+    case 1:
+      console.log("Running Login Tests...");
+      break;
+    case 2:
+      console.log("Running Cart Tests...");
+      break;
+    case 3:
+      console.log("Running Checkout Tests...");
+      break;
+    case 4:
+      console.log("Exiting...");
+      break;
+    default:
+      console.log("Invalid choice!");
+  }
 } while (choice !== 4);
 ```
 
@@ -2489,28 +2603,31 @@ do {
 > Think of it as: "For each label/key in this object, do something."
 
 **Syntax:**
+
 ```javascript
 for (let key in object) {
-    // key = property name (string)
-    // object[key] = property value
+  // key = property name (string)
+  // object[key] = property value
 }
 ```
 
 **Example:**
+
 ```javascript
 let testConfig = {
-    browser: "chromium",
-    headless: true,
-    timeout: 5000,
-    retries: 3
+  browser: "chromium",
+  headless: true,
+  timeout: 5000,
+  retries: 3,
 };
 
 for (let key in testConfig) {
-    console.log(key + ": " + testConfig[key]);
+  console.log(key + ": " + testConfig[key]);
 }
 ```
 
 **Output:**
+
 ```
 browser: chromium
 headless: true
@@ -2519,6 +2636,7 @@ retries: 3
 ```
 
 **How it works:**
+
 - First iteration: `key` = `"browser"`, `testConfig[key]` = `"chromium"`
 - Second iteration: `key` = `"headless"`, `testConfig[key]` = `true`
 - ...and so on for each property.
@@ -2526,25 +2644,27 @@ retries: 3
 #### 🧪 Real-World SDET Example:
 
 **Checking API response fields:**
+
 ```javascript
 let apiResponse = {
-    status: 200,
-    message: "Success",
-    userId: 42,
-    email: "test@example.com",
-    role: null // Bug! Role should not be null
+  status: 200,
+  message: "Success",
+  userId: 42,
+  email: "test@example.com",
+  role: null, // Bug! Role should not be null
 };
 
 for (let field in apiResponse) {
-    if (apiResponse[field] === null || apiResponse[field] === undefined) {
-        console.log("🚨 BUG! Field '" + field + "' is " + apiResponse[field]);
-    } else {
-        console.log("✅ " + field + ": " + apiResponse[field]);
-    }
+  if (apiResponse[field] === null || apiResponse[field] === undefined) {
+    console.log("🚨 BUG! Field '" + field + "' is " + apiResponse[field]);
+  } else {
+    console.log("✅ " + field + ": " + apiResponse[field]);
+  }
 }
 ```
 
 **Output:**
+
 ```
 ✅ status: 200
 ✅ message: Success
@@ -2559,13 +2679,13 @@ for (let field in apiResponse) {
 // ❌ DON'T do this
 let colors = ["red", "green", "blue"];
 for (let key in colors) {
-    console.log(key);     // "0", "1", "2" — these are string indices, not values!
-    console.log(typeof key); // "string" — not "number"!
+  console.log(key); // "0", "1", "2" — these are string indices, not values!
+  console.log(typeof key); // "string" — not "number"!
 }
 
 // ✅ DO this instead
 for (let color of colors) {
-    console.log(color); // "red", "green", "blue" — actual values!
+  console.log(color); // "red", "green", "blue" — actual values!
 }
 ```
 
@@ -2578,22 +2698,25 @@ for (let color of colors) {
 > Think of it as: "For each item in this list, do something."
 
 **Syntax:**
+
 ```javascript
 for (let value of iterable) {
-    // value = the actual item
+  // value = the actual item
 }
 ```
 
 **Example:**
+
 ```javascript
 let fruits = ["Apple", "Banana", "Cherry"];
 
 for (let fruit of fruits) {
-    console.log("I like " + fruit);
+  console.log("I like " + fruit);
 }
 ```
 
 **Output:**
+
 ```
 I like Apple
 I like Banana
@@ -2602,44 +2725,50 @@ I like Cherry
 
 #### `for...in` vs `for...of` — The Key Difference
 
-| Feature | `for...in` | `for...of` |
-|---------|-----------|-----------|
-| Iterates over | **Keys** (property names) | **Values** (actual items) |
-| Best for | **Objects** `{ }` | **Arrays** `[ ]`, Strings, NodeLists |
-| Returns | `"name"`, `"age"`, `"0"`, `"1"` | `"John"`, `30`, `"red"`, `"green"` |
-| Use in automation | Reading config objects | Looping through elements on page |
+| Feature           | `for...in`                      | `for...of`                           |
+| ----------------- | ------------------------------- | ------------------------------------ |
+| Iterates over     | **Keys** (property names)       | **Values** (actual items)            |
+| Best for          | **Objects** `{ }`               | **Arrays** `[ ]`, Strings, NodeLists |
+| Returns           | `"name"`, `"age"`, `"0"`, `"1"` | `"John"`, `30`, `"red"`, `"green"`   |
+| Use in automation | Reading config objects          | Looping through elements on page     |
 
 ```javascript
 let testBrowsers = ["chromium", "firefox", "webkit"];
 
 // for...in gives INDICES (keys)
 for (let i in testBrowsers) {
-    console.log(i);           // "0", "1", "2"
+  console.log(i); // "0", "1", "2"
 }
 
 // for...of gives VALUES
 for (let browser of testBrowsers) {
-    console.log(browser);     // "chromium", "firefox", "webkit"
+  console.log(browser); // "chromium", "firefox", "webkit"
 }
 ```
 
 #### 🧪 Real-World SDET Example:
 
 **Checking all links on a page (Playwright):**
+
 ```javascript
 // Getting all links from a page
-let links = ["https://example.com", "https://test.com/broken", "https://shop.com"];
+let links = [
+  "https://example.com",
+  "https://test.com/broken",
+  "https://shop.com",
+];
 
 for (let link of links) {
-    if (link.includes("broken")) {
-        console.log("🚨 Broken link found: " + link);
-    } else {
-        console.log("✅ Link is valid: " + link);
-    }
+  if (link.includes("broken")) {
+    console.log("🚨 Broken link found: " + link);
+  } else {
+    console.log("✅ Link is valid: " + link);
+  }
 }
 ```
 
 **Output:**
+
 ```
 ✅ Link is valid: https://example.com
 🚨 Broken link found: https://test.com/broken
@@ -2647,15 +2776,16 @@ for (let link of links) {
 ```
 
 **Looping through characters in a string:**
+
 ```javascript
 let password = "MyP@ss123";
 
 let hasSpecialChar = false;
 for (let char of password) {
-    if ("!@#$%^&*".includes(char)) {
-        hasSpecialChar = true;
-        console.log("Found special character: " + char);
-    }
+  if ("!@#$%^&*".includes(char)) {
+    hasSpecialChar = true;
+    console.log("Found special character: " + char);
+  }
 }
 
 console.log("Password valid:", hasSpecialChar); // true
@@ -2672,33 +2802,33 @@ console.log("Password valid:", hasSpecialChar); // true
 
 // 1. for — when you know the count
 for (let i = 0; i < 3; i++) {
-    console.log("for:", i);       // 0, 1, 2
+  console.log("for:", i); // 0, 1, 2
 }
 
 // 2. while — when you don't know the count
 let j = 0;
 while (j < 3) {
-    console.log("while:", j);     // 0, 1, 2
-    j++;
+  console.log("while:", j); // 0, 1, 2
+  j++;
 }
 
 // 3. do...while — always runs at least once
 let k = 0;
 do {
-    console.log("do-while:", k);  // 0, 1, 2
-    k++;
+  console.log("do-while:", k); // 0, 1, 2
+  k++;
 } while (k < 3);
 
 // 4. for...in — for object keys
 let obj = { a: 1, b: 2, c: 3 };
 for (let key in obj) {
-    console.log("for-in:", key);  // "a", "b", "c"
+  console.log("for-in:", key); // "a", "b", "c"
 }
 
 // 5. for...of — for array values
 let arr = [1, 2, 3];
 for (let val of arr) {
-    console.log("for-of:", val);  // 1, 2, 3
+  console.log("for-of:", val); // 1, 2, 3
 }
 ```
 
@@ -2719,6 +2849,7 @@ Sometimes you need more control over your loops — like stopping early when you
 > Think of it as: "I found what I need. Stop everything and move on."
 
 **Syntax:**
+
 ```javascript
 for (...) {
     if (someCondition) {
@@ -2728,19 +2859,21 @@ for (...) {
 ```
 
 **Example:**
+
 ```javascript
 let numbers = [10, 20, 30, 40, 50];
 
 for (let i = 0; i < numbers.length; i++) {
-    if (numbers[i] === 30) {
-        console.log("Found 30 at index " + i + "! Stopping search.");
-        break; // Stop looping — we found it!
-    }
-    console.log("Checking: " + numbers[i]);
+  if (numbers[i] === 30) {
+    console.log("Found 30 at index " + i + "! Stopping search.");
+    break; // Stop looping — we found it!
+  }
+  console.log("Checking: " + numbers[i]);
 }
 ```
 
 **Output:**
+
 ```
 Checking: 10
 Checking: 20
@@ -2752,21 +2885,24 @@ Found 30 at index 2! Stopping search.
 #### 🧪 Real-World SDET Example:
 
 **Finding the first broken link on a page:**
+
 ```javascript
 let links = [
-    { url: "/home", status: 200 },
-    { url: "/about", status: 200 },
-    { url: "/pricing", status: 404 },  // Broken!
-    { url: "/contact", status: 200 }
+  { url: "/home", status: 200 },
+  { url: "/about", status: 200 },
+  { url: "/pricing", status: 404 }, // Broken!
+  { url: "/contact", status: 200 },
 ];
 
 for (let link of links) {
-    if (link.status !== 200) {
-        console.log("🚨 BROKEN LINK: " + link.url + " (Status: " + link.status + ")");
-        console.log("Stopping test — first failure found.");
-        break;
-    }
-    console.log("✅ " + link.url + " is OK");
+  if (link.status !== 200) {
+    console.log(
+      "🚨 BROKEN LINK: " + link.url + " (Status: " + link.status + ")",
+    );
+    console.log("Stopping test — first failure found.");
+    break;
+  }
+  console.log("✅ " + link.url + " is OK");
 }
 ```
 
@@ -2779,6 +2915,7 @@ for (let link of links) {
 > Think of it as: "Skip this one, but keep checking the rest."
 
 **Syntax:**
+
 ```javascript
 for (...) {
     if (someCondition) {
@@ -2789,17 +2926,19 @@ for (...) {
 ```
 
 **Example:**
+
 ```javascript
 for (let i = 1; i <= 5; i++) {
-    if (i === 3) {
-        console.log("Skipping " + i);
-        continue; // Skip the rest of the code for i=3
-    }
-    console.log("Processing: " + i);
+  if (i === 3) {
+    console.log("Skipping " + i);
+    continue; // Skip the rest of the code for i=3
+  }
+  console.log("Processing: " + i);
 }
 ```
 
 **Output:**
+
 ```
 Processing: 1
 Processing: 2
@@ -2813,25 +2952,27 @@ Processing: 5
 #### 🧪 Real-World SDET Example:
 
 **Skipping disabled products while testing:**
+
 ```javascript
 let products = [
-    { name: "Laptop", enabled: true, price: 999 },
-    { name: "Phone", enabled: false, price: 699 },   // Disabled — skip
-    { name: "Tablet", enabled: true, price: 499 },
-    { name: "Watch", enabled: false, price: 299 },    // Disabled — skip
-    { name: "Speaker", enabled: true, price: 149 }
+  { name: "Laptop", enabled: true, price: 999 },
+  { name: "Phone", enabled: false, price: 699 }, // Disabled — skip
+  { name: "Tablet", enabled: true, price: 499 },
+  { name: "Watch", enabled: false, price: 299 }, // Disabled — skip
+  { name: "Speaker", enabled: true, price: 149 },
 ];
 
 for (let product of products) {
-    if (!product.enabled) {
-        console.log("⏭️ Skipping disabled product: " + product.name);
-        continue; // Skip to next product
-    }
-    console.log("🧪 Testing: " + product.name + " — Price: $" + product.price);
+  if (!product.enabled) {
+    console.log("⏭️ Skipping disabled product: " + product.name);
+    continue; // Skip to next product
+  }
+  console.log("🧪 Testing: " + product.name + " — Price: $" + product.price);
 }
 ```
 
 **Output:**
+
 ```
 🧪 Testing: Laptop — Price: $999
 ⏭️ Skipping disabled product: Phone
@@ -2849,6 +2990,7 @@ for (let product of products) {
 > Without labels, `break` and `continue` only affect the **innermost** loop they're inside.
 
 **Syntax:**
+
 ```javascript
 outerLoop: for (...) {
     innerLoop: for (...) {
@@ -2862,30 +3004,33 @@ outerLoop: for (...) {
 ```
 
 **Example — Without a label (default behavior):**
+
 ```javascript
 for (let i = 1; i <= 3; i++) {
-    for (let j = 1; j <= 3; j++) {
-        if (j === 2) break; // Only breaks the INNER loop
-        console.log("i=" + i + ", j=" + j);
-    }
+  for (let j = 1; j <= 3; j++) {
+    if (j === 2) break; // Only breaks the INNER loop
+    console.log("i=" + i + ", j=" + j);
+  }
 }
 // Output: i=1,j=1 → i=2,j=1 → i=3,j=1  (inner loop breaks at j=2 each time)
 ```
 
 **Example — With a label:**
+
 ```javascript
 outerLoop: for (let i = 1; i <= 3; i++) {
-    for (let j = 1; j <= 3; j++) {
-        if (i === 2 && j === 2) {
-            console.log("Breaking OUTER loop at i=" + i + ", j=" + j);
-            break outerLoop; // Breaks the OUTER loop entirely!
-        }
-        console.log("i=" + i + ", j=" + j);
+  for (let j = 1; j <= 3; j++) {
+    if (i === 2 && j === 2) {
+      console.log("Breaking OUTER loop at i=" + i + ", j=" + j);
+      break outerLoop; // Breaks the OUTER loop entirely!
     }
+    console.log("i=" + i + ", j=" + j);
+  }
 }
 ```
 
 **Output:**
+
 ```
 i=1, j=1
 i=1, j=2
@@ -2899,22 +3044,23 @@ Breaking OUTER loop at i=2, j=2
 #### 🧪 Real-World SDET Example:
 
 **Searching for a specific cell in a Web Table:**
+
 ```javascript
 let table = [
-    ["Name",    "Price", "Stock"],
-    ["Laptop",  "999",   "Yes"],
-    ["Phone",   "0",     "No"],     // Bug: price is $0
-    ["Tablet",  "499",   "Yes"]
+  ["Name", "Price", "Stock"],
+  ["Laptop", "999", "Yes"],
+  ["Phone", "0", "No"], // Bug: price is $0
+  ["Tablet", "499", "Yes"],
 ];
 
 searchTable: for (let row = 1; row < table.length; row++) {
-    for (let col = 0; col < table[row].length; col++) {
-        if (table[row][col] === "0") {
-            console.log("🚨 Found $0 price at Row " + row + ", Col " + col);
-            console.log("   Product: " + table[row][0]);
-            break searchTable; // Found the bug, exit everything
-        }
+  for (let col = 0; col < table[row].length; col++) {
+    if (table[row][col] === "0") {
+      console.log("🚨 Found $0 price at Row " + row + ", Col " + col);
+      console.log("   Product: " + table[row][0]);
+      break searchTable; // Found the bug, exit everything
     }
+  }
 }
 ```
 
@@ -2924,12 +3070,12 @@ searchTable: for (let row = 1; row < table.length; row++) {
 
 ### Quick Reference: `break` vs `continue`
 
-| Feature | `break` | `continue` |
-|---------|---------|-----------|
-| What it does | **Exits** the entire loop | **Skips** current iteration only |
-| Loop continues? | ❌ No — loop is done | ✅ Yes — next iteration runs |
-| Use case | "Found it! Stop searching." | "Skip this one, check the rest." |
-| With labels | Exits a specific outer loop | Skips to next iteration of outer loop |
+| Feature         | `break`                     | `continue`                            |
+| --------------- | --------------------------- | ------------------------------------- |
+| What it does    | **Exits** the entire loop   | **Skips** current iteration only      |
+| Loop continues? | ❌ No — loop is done        | ✅ Yes — next iteration runs          |
+| Use case        | "Found it! Stop searching." | "Skip this one, check the rest."      |
+| With labels     | Exits a specific outer loop | Skips to next iteration of outer loop |
 
 ---
 
@@ -2942,33 +3088,36 @@ An **infinite loop** is a loop where the condition **never becomes `false`**, so
 ![Infinite Loop Warning](Images/Infinite_Loop_Warning.svg)
 
 **How it happens:**
+
 ```javascript
 // ❌ DANGER — Infinite Loop!
 let x = 1;
 while (x > 0) {
-    console.log("Running..."); // x is always > 0, this NEVER stops!
+  console.log("Running..."); // x is always > 0, this NEVER stops!
 }
 
 // ❌ DANGER — Forgot to update the counter!
 let count = 1;
 while (count <= 10) {
-    console.log(count);
-    // Missing: count++; → count is always 1, always <= 10!
+  console.log(count);
+  // Missing: count++; → count is always 1, always <= 10!
 }
 
 // ❌ DANGER — Condition can never be met!
-for (let i = 10; i >= 0; i++) { // i starts at 10 and goes UP, never < 0
-    console.log(i);
+for (let i = 10; i >= 0; i++) {
+  // i starts at 10 and goes UP, never < 0
+  console.log(i);
 }
 ```
 
 **How to prevent it:**
+
 ```javascript
 // ✅ SAFE — Counter is updated
 let count = 1;
 while (count <= 10) {
-    console.log(count);
-    count++; // This ensures count eventually reaches 11, making condition false
+  console.log(count);
+  count++; // This ensures count eventually reaches 11, making condition false
 }
 
 // ✅ SAFE — Always use a maximum attempts limit
@@ -2976,8 +3125,8 @@ let attempts = 0;
 let maxAttempts = 100; // Safety net!
 
 while (someCondition && attempts < maxAttempts) {
-    attempts++;
-    // do work...
+  attempts++;
+  // do work...
 }
 ```
 
@@ -2989,13 +3138,13 @@ while (someCondition && attempts < maxAttempts) {
 
 For most daily work, all loops perform similarly. But when dealing with **large datasets** (like validating 10,000 API responses), the choice matters:
 
-| Loop | Speed | Best For |
-|------|-------|----------|
-| `for` | ⚡ Fastest | Large arrays, performance-critical code |
-| `while` | ⚡ Fast | Conditional repetition |
-| `for...of` | ✅ Fast enough | Arrays, clean readable code |
-| `for...in` | ⚠️ Slowest | Objects only (avoid on arrays) |
-| `forEach` (array method) | ✅ Fast enough | Functional style, no break/continue |
+| Loop                     | Speed          | Best For                                |
+| ------------------------ | -------------- | --------------------------------------- |
+| `for`                    | ⚡ Fastest     | Large arrays, performance-critical code |
+| `while`                  | ⚡ Fast        | Conditional repetition                  |
+| `for...of`               | ✅ Fast enough | Arrays, clean readable code             |
+| `for...in`               | ⚠️ Slowest     | Objects only (avoid on arrays)          |
+| `forEach` (array method) | ✅ Fast enough | Functional style, no break/continue     |
 
 > 💡 **Rule of Thumb:** Use `for...of` for clean code. Switch to a classic `for` loop only if you need maximum speed or need the index.
 
@@ -3004,66 +3153,69 @@ For most daily work, all loops perform similarly. But when dealing with **large 
 ### 🧪 SDET Special: Common Automation Patterns
 
 #### 1. Handling Web Tables (Rows & Columns)
+
 ```javascript
 // Simulating a Playwright web table
 let tableRows = [
-    { product: "Laptop", price: 999, stock: true },
-    { product: "Phone", price: 699, stock: true },
-    { product: "Charger", price: 0, stock: false },  // Bug!
-    { product: "Case", price: 29, stock: true }
+  { product: "Laptop", price: 999, stock: true },
+  { product: "Phone", price: 699, stock: true },
+  { product: "Charger", price: 0, stock: false }, // Bug!
+  { product: "Case", price: 29, stock: true },
 ];
 
 console.log("--- Web Table Validation ---");
 for (let row of tableRows) {
-    if (row.price === 0) {
-        console.log("🚨 " + row.product + ": Price is $0!");
-    }
-    if (!row.stock) {
-        console.log("⚠️ " + row.product + ": Out of stock");
-    }
+  if (row.price === 0) {
+    console.log("🚨 " + row.product + ": Price is $0!");
+  }
+  if (!row.stock) {
+    console.log("⚠️ " + row.product + ": Out of stock");
+  }
 }
 ```
 
 #### 2. Handling Pagination (Multiple Pages)
+
 ```javascript
 // Testing all pages of search results
 let currentPage = 1;
 let totalPages = 5;
 
 while (currentPage <= totalPages) {
-    console.log("📄 Testing page " + currentPage + " of " + totalPages);
+  console.log("📄 Testing page " + currentPage + " of " + totalPages);
 
-    // In real Playwright:
-    // await page.goto(`/products?page=${currentPage}`);
-    // let items = await page.locator('.product-card').all();
-    // for (let item of items) { ... validate each item ... }
+  // In real Playwright:
+  // await page.goto(`/products?page=${currentPage}`);
+  // let items = await page.locator('.product-card').all();
+  // for (let item of items) { ... validate each item ... }
 
-    currentPage++;
+  currentPage++;
 }
 console.log("✅ All " + totalPages + " pages tested!");
 ```
 
 #### 3. Retry Logic (Flaky Tests)
+
 ```javascript
 let testPassed = false;
 let retries = 0;
 let maxRetries = 3;
 
 while (!testPassed && retries < maxRetries) {
-    retries++;
-    console.log("🔄 Attempt " + retries + " of " + maxRetries);
+  retries++;
+  console.log("🔄 Attempt " + retries + " of " + maxRetries);
 
-    // Simulating a flaky test that passes on 3rd try
-    if (retries === 3) {
-        testPassed = true;
-        console.log("✅ Test PASSED on attempt " + retries);
-    } else {
-        console.log("❌ Test failed, retrying...");
-    }
+  // Simulating a flaky test that passes on 3rd try
+  if (retries === 3) {
+    testPassed = true;
+    console.log("✅ Test PASSED on attempt " + retries);
+  } else {
+    console.log("❌ Test failed, retrying...");
+  }
 }
 
 if (!testPassed) {
-    console.log("🚨 Test FAILED after " + maxRetries + " attempts!");
+  console.log("🚨 Test FAILED after " + maxRetries + " attempts!");
 }
 ```
 
@@ -3080,15 +3232,19 @@ A **nested loop** is simply a loop placed **inside another loop**. The inner loo
 ![Nested Loops — Loop Inside a Loop](Images/Nested_Loops.svg)
 
 **Syntax:**
+
 ```javascript
-for (let i = 1; i <= 3; i++) {          // Outer loop — runs 3 times
-    for (let j = 1; j <= 3; j++) {      // Inner loop — runs 3 times PER outer run
-        console.log("i=" + i + ", j=" + j);
-    }
+for (let i = 1; i <= 3; i++) {
+  // Outer loop — runs 3 times
+  for (let j = 1; j <= 3; j++) {
+    // Inner loop — runs 3 times PER outer run
+    console.log("i=" + i + ", j=" + j);
+  }
 }
 ```
 
 **Output:**
+
 ```
 i=1, j=1 → i=1, j=2 → i=1, j=3
 i=2, j=1 → i=2, j=2 → i=2, j=3
@@ -3096,6 +3252,7 @@ i=3, j=1 → i=3, j=2 → i=3, j=3
 ```
 
 **🔑 Key Rule: Multiply the counts**
+
 - Outer runs **3 times**, inner runs **3 times each** → **3 × 3 = 9 total executions**
 - For outer=10, inner=10 → 10 × 10 = **100 total executions**
 
@@ -3104,31 +3261,33 @@ i=3, j=1 → i=3, j=2 → i=3, j=3
 #### 🧪 Real-World SDET Example:
 
 **Validating every cell in a web table (rows × columns):**
+
 ```javascript
 let table = [
-    ["Product",  "Price", "Stock"],   // Header row (index 0)
-    ["Laptop",   "999",   "Yes"],
-    ["Phone",    "0",     "No"],      // Bug: price is $0!
-    ["Tablet",   "499",   "Yes"]
+  ["Product", "Price", "Stock"], // Header row (index 0)
+  ["Laptop", "999", "Yes"],
+  ["Phone", "0", "No"], // Bug: price is $0!
+  ["Tablet", "499", "Yes"],
 ];
 
 // Start at row 1 to skip the header
 for (let row = 1; row < table.length; row++) {
-    for (let col = 0; col < table[row].length; col++) {
-        let cell = table[row][col];
+  for (let col = 0; col < table[row].length; col++) {
+    let cell = table[row][col];
 
-        if (cell === "0") {
-            console.log("🚨 BUG at Row " + row + ", Col " + col + ": value is 0!");
-        } else if (cell === "No") {
-            console.log("⚠️ Row " + row + ", Col " + col + ": Out of stock");
-        } else {
-            console.log("✅ Row " + row + ", Col " + col + ": " + cell);
-        }
+    if (cell === "0") {
+      console.log("🚨 BUG at Row " + row + ", Col " + col + ": value is 0!");
+    } else if (cell === "No") {
+      console.log("⚠️ Row " + row + ", Col " + col + ": Out of stock");
+    } else {
+      console.log("✅ Row " + row + ", Col " + col + ": " + cell);
     }
+  }
 }
 ```
 
 **Output:**
+
 ```
 ✅ Row 1, Col 0: Laptop
 ✅ Row 1, Col 1: 999
@@ -3153,22 +3312,24 @@ Every loop example so far has counted **up** (`i++`). But you can just as easily
 
 **The pattern — just 3 changes from a normal loop:**
 
-| Part | Count Up | Count Down |
-|------|----------|------------|
-| **Start** | `let i = 1` | `let i = 5` (start at the end) |
-| **Condition** | `i <= 5` | `i >= 1` (stop when you reach 1) |
-| **Update** | `i++` | `i--` (subtract instead of add) |
+| Part          | Count Up    | Count Down                       |
+| ------------- | ----------- | -------------------------------- |
+| **Start**     | `let i = 1` | `let i = 5` (start at the end)   |
+| **Condition** | `i <= 5`    | `i >= 1` (stop when you reach 1) |
+| **Update**    | `i++`       | `i--` (subtract instead of add)  |
 
 **Example — Countdown:**
+
 ```javascript
 // Count DOWN from 5 to 1
 for (let i = 5; i >= 1; i--) {
-    console.log(i);
+  console.log(i);
 }
 console.log("🚀 Launch!");
 ```
 
 **Output:**
+
 ```
 5
 4
@@ -3179,16 +3340,18 @@ console.log("🚀 Launch!");
 ```
 
 **Example — Loop through array in reverse:**
+
 ```javascript
 let browsers = ["Chrome", "Firefox", "Safari", "Edge"];
 
 // Loop from last index to 0
 for (let i = browsers.length - 1; i >= 0; i--) {
-    console.log("Testing: " + browsers[i]);
+  console.log("Testing: " + browsers[i]);
 }
 ```
 
 **Output:**
+
 ```
 Testing: Edge
 Testing: Safari
@@ -3201,15 +3364,16 @@ Testing: Chrome
 #### 🧪 Real-World SDET Example:
 
 **Removing failed tests from a list (safest to loop backwards when deleting):**
+
 ```javascript
 let testResults = ["PASS", "FAIL", "PASS", "FAIL", "PASS"];
 
 // Loop BACKWARDS when removing items — avoids index shifting issues
 for (let i = testResults.length - 1; i >= 0; i--) {
-    if (testResults[i] === "FAIL") {
-        console.log("Removing failed test at index " + i);
-        testResults.splice(i, 1); // Remove this item
-    }
+  if (testResults[i] === "FAIL") {
+    console.log("Removing failed test at index " + i);
+    testResults.splice(i, 1); // Remove this item
+  }
 }
 
 console.log("Remaining:", testResults); // ["PASS", "PASS", "PASS"]
@@ -3226,25 +3390,28 @@ A common frustration with `for...of` is that you get the **value** but not the *
 ![Array.entries() — Index AND Value](Images/Array_Entries.svg)
 
 **The Problem:**
+
 ```javascript
 let products = ["Laptop", "Phone", "Tablet"];
 
 for (let product of products) {
-    console.log(product);   // "Laptop", "Phone", "Tablet"
-    // But which NUMBER is this? We don't know!
+  console.log(product); // "Laptop", "Phone", "Tablet"
+  // But which NUMBER is this? We don't know!
 }
 ```
 
 **The Solution — `.entries()`:**
+
 ```javascript
 let products = ["Laptop", "Phone", "Tablet"];
 
 for (let [index, product] of products.entries()) {
-    console.log(index + ": " + product);
+  console.log(index + ": " + product);
 }
 ```
 
 **Output:**
+
 ```
 0: Laptop
 1: Phone
@@ -3252,27 +3419,29 @@ for (let [index, product] of products.entries()) {
 ```
 
 **How it works:**
+
 - `products.entries()` converts the array into pairs: `[0, "Laptop"]`, `[1, "Phone"]`, `[2, "Tablet"]`
 - `let [index, product]` — this is called **destructuring**: it unpacks each pair into two named variables
 - Now you have **both** the index number AND the value in every iteration
 
 **Comparison — 3 ways to loop with index:**
+
 ```javascript
 let colors = ["red", "green", "blue"];
 
 // Way 1: classic for — verbose
 for (let i = 0; i < colors.length; i++) {
-    console.log(i + ": " + colors[i]);
+  console.log(i + ": " + colors[i]);
 }
 
 // Way 2: for...of with entries — clean & modern ✅ RECOMMENDED
 for (let [i, color] of colors.entries()) {
-    console.log(i + ": " + color);
+  console.log(i + ": " + color);
 }
 
 // Way 3: forEach — no break/continue
 colors.forEach((color, i) => {
-    console.log(i + ": " + color);
+  console.log(i + ": " + color);
 });
 ```
 
@@ -3281,24 +3450,26 @@ colors.forEach((color, i) => {
 #### 🧪 Real-World SDET Example:
 
 **Reporting exactly which row number failed in a test:**
+
 ```javascript
 let testCases = [
-    { name: "Login Test",    status: "PASS" },
-    { name: "Checkout Test", status: "FAIL" },   // Row 1 failed
-    { name: "Search Test",   status: "PASS" },
-    { name: "Profile Test",  status: "FAIL" }    // Row 3 failed
+  { name: "Login Test", status: "PASS" },
+  { name: "Checkout Test", status: "FAIL" }, // Row 1 failed
+  { name: "Search Test", status: "PASS" },
+  { name: "Profile Test", status: "FAIL" }, // Row 3 failed
 ];
 
 for (let [rowNumber, test] of testCases.entries()) {
-    if (test.status === "FAIL") {
-        console.log("❌ Row " + rowNumber + " FAILED: " + test.name);
-    } else {
-        console.log("✅ Row " + rowNumber + " passed: " + test.name);
-    }
+  if (test.status === "FAIL") {
+    console.log("❌ Row " + rowNumber + " FAILED: " + test.name);
+  } else {
+    console.log("✅ Row " + rowNumber + " passed: " + test.name);
+  }
 }
 ```
 
 **Output:**
+
 ```
 ✅ Row 0 passed: Login Test
 ❌ Row 1 FAILED: Checkout Test
@@ -3317,27 +3488,30 @@ for (let [rowNumber, test] of testCases.entries()) {
 ![forEach() vs for...of](Images/ForEach_vs_ForOf.svg)
 
 **Syntax:**
+
 ```javascript
-array.forEach(function(item) {
-    // code to run for each item
+array.forEach(function (item) {
+  // code to run for each item
 });
 
 // Modern arrow function version (same thing, shorter):
 array.forEach((item) => {
-    // code to run for each item
+  // code to run for each item
 });
 ```
 
 **Basic Example:**
+
 ```javascript
 let fruits = ["Apple", "Banana", "Cherry"];
 
 fruits.forEach((fruit) => {
-    console.log("🍎 " + fruit);
+  console.log("🍎 " + fruit);
 });
 ```
 
 **Output:**
+
 ```
 🍎 Apple
 🍎 Banana
@@ -3345,11 +3519,12 @@ fruits.forEach((fruit) => {
 ```
 
 **Getting the index with forEach:**
+
 ```javascript
 let fruits = ["Apple", "Banana", "Cherry"];
 
 fruits.forEach((fruit, index) => {
-    console.log(index + ": " + fruit);
+  console.log(index + ": " + fruit);
 });
 // Output: 0: Apple | 1: Banana | 2: Cherry
 ```
@@ -3358,15 +3533,16 @@ fruits.forEach((fruit, index) => {
 
 **forEach vs for...of — When to use which:**
 
-| Feature | `forEach()` | `for...of` |
-|---------|------------|-----------|
-| Syntax | Shorter, callback style | Slightly longer |
-| `break` / `continue` | ❌ **Cannot use** | ✅ Works fine |
-| `async/await` | ❌ Doesn't work as expected | ✅ Works perfectly |
-| Getting index | ✅ Built-in (2nd param) | Need `.entries()` |
-| Use in Playwright async tests | ❌ Avoid | ✅ Use this |
+| Feature                       | `forEach()`                 | `for...of`         |
+| ----------------------------- | --------------------------- | ------------------ |
+| Syntax                        | Shorter, callback style     | Slightly longer    |
+| `break` / `continue`          | ❌ **Cannot use**           | ✅ Works fine      |
+| `async/await`                 | ❌ Doesn't work as expected | ✅ Works perfectly |
+| Getting index                 | ✅ Built-in (2nd param)     | Need `.entries()`  |
+| Use in Playwright async tests | ❌ Avoid                    | ✅ Use this        |
 
 **The crucial limitation — no `break`:**
+
 ```javascript
 let numbers = [1, 2, 3, 4, 5];
 
@@ -3385,43 +3561,46 @@ for (let num of numbers) {
 ```
 
 **The async/await problem:**
+
 ```javascript
 let urls = ["/api/user", "/api/orders", "/api/cart"];
 
 // ❌ WRONG — forEach does NOT wait for async operations
 urls.forEach(async (url) => {
-    let data = await fetch(url);  // This won't be awaited properly!
-    console.log(data);
+  let data = await fetch(url); // This won't be awaited properly!
+  console.log(data);
 });
 
 // ✅ CORRECT — for...of awaits each one properly
 for (let url of urls) {
-    let data = await fetch(url);  // This waits correctly
-    console.log(data);
+  let data = await fetch(url); // This waits correctly
+  console.log(data);
 }
 ```
 
 #### 🧪 Real-World SDET Example:
 
 **✅ Good use of forEach — simple logging:**
+
 ```javascript
 let testNames = ["Login", "Checkout", "Search", "Profile"];
 
 // Simple, clean — just printing every test name
 testNames.forEach((test) => {
-    console.log("📋 Registered test: " + test);
+  console.log("📋 Registered test: " + test);
 });
 ```
 
 **✅ Good use of for...of — async Playwright test:**
+
 ```javascript
 let productUrls = ["/products/1", "/products/2", "/products/3"];
 
 // In Playwright (async context) — for...of is correct!
 for (let url of productUrls) {
-    await page.goto(url);
-    let title = await page.title();
-    console.log("📄 " + url + " → " + title);
+  await page.goto(url);
+  let title = await page.title();
+  console.log("📄 " + url + " → " + title);
 }
 ```
 
@@ -3436,40 +3615,43 @@ This is one of the most common beginner bugs in JavaScript loops. It's important
 ![let vs var in Loops — Scope Gotcha](Images/Loop_Var_Scope.svg)
 
 **`var` in loops — The OLD way (leaks out!):**
+
 ```javascript
 for (var i = 0; i < 3; i++) {
-    console.log(i);  // 0, 1, 2
+  console.log(i); // 0, 1, 2
 }
 
 // ❌ i is STILL accessible here — it leaked out!
-console.log("After loop, i =", i);  // "After loop, i = 3"
+console.log("After loop, i =", i); // "After loop, i = 3"
 ```
 
 **`let` in loops — The MODERN way (stays inside!):**
+
 ```javascript
 for (let i = 0; i < 3; i++) {
-    console.log(i);  // 0, 1, 2
+  console.log(i); // 0, 1, 2
 }
 
 // ✅ i is NOT accessible here — safely trapped inside the loop!
-console.log("After loop, i =", i);  // ❌ ReferenceError: i is not defined
+console.log("After loop, i =", i); // ❌ ReferenceError: i is not defined
 ```
 
 **Why does this matter? — The Closure Bug:**
+
 ```javascript
 // ❌ BUG with var — classic infamous JavaScript bug
 for (var i = 0; i < 3; i++) {
-    setTimeout(() => {
-        console.log(i);  // Prints 3, 3, 3 — NOT 0, 1, 2!
-    }, 100);
+  setTimeout(() => {
+    console.log(i); // Prints 3, 3, 3 — NOT 0, 1, 2!
+  }, 100);
 }
 // Because by the time setTimeout runs, i has already reached 3!
 
 // ✅ FIXED with let — each iteration gets its OWN copy of i
 for (let i = 0; i < 3; i++) {
-    setTimeout(() => {
-        console.log(i);  // Prints 0, 1, 2 — correct! ✅
-    }, 100);
+  setTimeout(() => {
+    console.log(i); // Prints 0, 1, 2 — correct! ✅
+  }, 100);
 }
 ```
 
@@ -3477,11 +3659,11 @@ for (let i = 0; i < 3; i++) {
 
 **The golden rule:**
 
-| Rule | Explanation |
-|------|------------|
-| `var` | **Function-scoped** — leaks out of loops, causes bugs |
-| `let` | **Block-scoped** — stays inside `{ }`, safe |
-| `const` | Use when the variable never changes (rare in loops) |
+| Rule    | Explanation                                           |
+| ------- | ----------------------------------------------------- |
+| `var`   | **Function-scoped** — leaks out of loops, causes bugs |
+| `let`   | **Block-scoped** — stays inside `{ }`, safe           |
+| `const` | Use when the variable never changes (rare in loops)   |
 
 > 💡 **For SDETs:** If you ever see old test code using `var` in loops, replace it with `let`. It will behave more predictably in async automation code.
 
@@ -3504,11 +3686,12 @@ console.log(uniqueStatuses);
 
 // Loop through a Set with for...of
 for (let status of uniqueStatuses) {
-    console.log("Status found: " + status);
+  console.log("Status found: " + status);
 }
 ```
 
 **Output:**
+
 ```
 Status found: PASS
 Status found: FAIL
@@ -3516,19 +3699,28 @@ Status found: SKIP
 ```
 
 #### 🧪 SDET Example — Finding all unique browsers tested:
+
 ```javascript
-let browserLog = ["chromium", "firefox", "chromium", "webkit", "firefox", "chromium"];
+let browserLog = [
+  "chromium",
+  "firefox",
+  "chromium",
+  "webkit",
+  "firefox",
+  "chromium",
+];
 
 let uniqueBrowsers = new Set(browserLog); // Removes duplicates
 
 console.log("Unique browsers tested: " + uniqueBrowsers.size);
 
 for (let browser of uniqueBrowsers) {
-    console.log("  → " + browser);
+  console.log("  → " + browser);
 }
 ```
 
 **Output:**
+
 ```
 Unique browsers tested: 3
   → chromium
@@ -3545,18 +3737,19 @@ A `Map` stores **key-value pairs**, just like an object, but keys can be ANY typ
 ```javascript
 // Create a Map
 let testResults = new Map();
-testResults.set("login",    "PASS");
+testResults.set("login", "PASS");
 testResults.set("checkout", "FAIL");
-testResults.set("search",   "PASS");
-testResults.set("profile",  "SKIP");
+testResults.set("search", "PASS");
+testResults.set("profile", "SKIP");
 
 // Loop through a Map — get both key AND value
 for (let [testName, result] of testResults) {
-    console.log(testName + ": " + result);
+  console.log(testName + ": " + result);
 }
 ```
 
 **Output:**
+
 ```
 login: PASS
 checkout: FAIL
@@ -3567,31 +3760,33 @@ profile: SKIP
 > 💡 Notice: `for (let [testName, result] of testResults)` — this is **destructuring** again, unpacking each `[key, value]` pair automatically.
 
 #### 🧪 SDET Example — Test results summary with Map:
+
 ```javascript
 let suiteResults = new Map([
-    ["Login Suite",    "PASS"],
-    ["Payment Suite",  "FAIL"],
-    ["Search Suite",   "PASS"],
-    ["Profile Suite",  "PASS"]
+  ["Login Suite", "PASS"],
+  ["Payment Suite", "FAIL"],
+  ["Search Suite", "PASS"],
+  ["Profile Suite", "PASS"],
 ]);
 
 let passed = 0;
 let failed = 0;
 
 for (let [suite, status] of suiteResults) {
-    if (status === "PASS") {
-        passed++;
-        console.log("✅ " + suite);
-    } else {
-        failed++;
-        console.log("❌ " + suite + " — needs attention!");
-    }
+  if (status === "PASS") {
+    passed++;
+    console.log("✅ " + suite);
+  } else {
+    failed++;
+    console.log("❌ " + suite + " — needs attention!");
+  }
 }
 
 console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
 ```
 
 **Output:**
+
 ```
 ✅ Login Suite
 ❌ Payment Suite — needs attention!
@@ -3605,24 +3800,24 @@ console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
 
 ### Summary Cheat Sheet — Complete Loops Reference
 
-| What You Want To Do | Best Approach |
-|---------------------|--------------|
-| Repeat exactly N times | `for (let i = 0; i < N; i++)` |
-| Loop through an array's **values** | `for...of` |
-| Loop through an array's **values + index** | `for...of` with `.entries()` |
-| Loop through an **object's keys** | `for...in` |
-| Repeat until a condition changes | `while` |
-| Run at least once, then check | `do...while` |
-| Loop **backwards** through a list | `for (let i = arr.length-1; i >= 0; i--)` |
-| Loop inside a loop (tables, grids) | Nested `for` loops |
-| Stop looping early | `break` |
-| Skip one item, keep going | `continue` |
-| Exit a nested loop from inside | `break labelName` |
-| Simple action on every item (no break) | `forEach()` |
-| Loop with `async/await` in Playwright | `for...of` |
-| Loop through a `Set` (unique items) | `for...of` |
-| Loop through a `Map` (key-value pairs) | `for...of` with destructuring |
-| Always use `___` not `var` in loops | `let` |
+| What You Want To Do                        | Best Approach                             |
+| ------------------------------------------ | ----------------------------------------- |
+| Repeat exactly N times                     | `for (let i = 0; i < N; i++)`             |
+| Loop through an array's **values**         | `for...of`                                |
+| Loop through an array's **values + index** | `for...of` with `.entries()`              |
+| Loop through an **object's keys**          | `for...in`                                |
+| Repeat until a condition changes           | `while`                                   |
+| Run at least once, then check              | `do...while`                              |
+| Loop **backwards** through a list          | `for (let i = arr.length-1; i >= 0; i--)` |
+| Loop inside a loop (tables, grids)         | Nested `for` loops                        |
+| Stop looping early                         | `break`                                   |
+| Skip one item, keep going                  | `continue`                                |
+| Exit a nested loop from inside             | `break labelName`                         |
+| Simple action on every item (no break)     | `forEach()`                               |
+| Loop with `async/await` in Playwright      | `for...of`                                |
+| Loop through a `Set` (unique items)        | `for...of`                                |
+| Loop through a `Map` (key-value pairs)     | `for...of` with destructuring             |
+| Always use `___` not `var` in loops        | `let`                                     |
 
 > 💡 **Golden Rule for SDETs:** `for...of` is your workhorse for Playwright. It handles arrays, NodeLists, Sets, Maps, and works perfectly with `async/await`. Use `break` and `continue` inside it freely. Only switch to `forEach` for simple, non-async, read-every-item tasks.
 
@@ -3633,6 +3828,7 @@ console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
 As an SDET, you will frequently need to store unique values (like test IDs) or map keys to values (like storing test data). Let's learn the exact commands to manage `Set` and `Map` easily.
 
 ### 🔷 The `Set` Commands
+
 A `Set` is a collection of **unique** values. If you try to add a duplicate, it just ignores it.
 
 1. **`new Set()`** — Create an empty Set (or from an array).
@@ -3668,6 +3864,7 @@ console.log(failedTests.size); // 0
 ```
 
 ### 🔷 The `Map` Commands
+
 A `Map` is like a dictionary. It holds **Key-Value pairs**. You use a Key to save and find a Value.
 
 1. **`new Map()`** — Create an empty Map.
@@ -3705,31 +3902,38 @@ userRoles.clear();
 ```
 
 > 💡 **SDET Quick Tip:**
+>
 > - Use **`Set`** when you want to easily remove duplicates from an array: `let uniqueArray = [...new Set(arrayWithDuplicates)];`
 > - Use **`Map`** when you need to link things together (like linking an element locator string to its expected text on a webpage).
 
 ---
+
 ## Strings (Overview)
 
-A **String** is a data type used to represent text. It is essentially a sequence of characters—like letters, numbers, or symbols—all grouped together. 
+A **String** is a data type used to represent text. It is essentially a sequence of characters—like letters, numbers, or symbols—all grouped together.
 
 ### 1. How to Create a String
-You can create a string by wrapping text in three types of "wrappers": 
-*   **Single Quotes**: `'Hello'`
-*   **Double Quotes**: `"Hello"`
-*   **Backticks (Template Literals)**: `` `Hello` `` — These are special because they allow you to easily insert variables. 
+
+You can create a string by wrapping text in three types of "wrappers":
+
+- **Single Quotes**: `'Hello'`
+- **Double Quotes**: `"Hello"`
+- **Backticks (Template Literals)**: `` `Hello` `` — These are special because they allow you to easily insert variables.
 
 ### 2. Key Characteristics
-*   **Immutable**: You cannot change a single letter in an existing string (e.g., you can't just swap 'H' for 'J' in "Hello"). To change it, you must create a brand-new string.
-*   **Zero-based Indexing**: Like an array, you can access individual characters by their position, starting at `0`.
-*   **Case-Sensitive**: JavaScript treats `"Hello"` and `"hello"` as two completely different strings. 
+
+- **Immutable**: You cannot change a single letter in an existing string (e.g., you can't just swap 'H' for 'J' in "Hello"). To change it, you must create a brand-new string.
+- **Zero-based Indexing**: Like an array, you can access individual characters by their position, starting at `0`.
+- **Case-Sensitive**: JavaScript treats `"Hello"` and `"hello"` as two completely different strings.
 
 ### 3. Common Operations
-JavaScript provides built-in methods to handle strings easily: 
-*   **Length**: `.length` tells you how many characters are in the string.
-*   **Concatenation**: Joining strings together using the `+` operator or template literals.
-*   **Case Conversion**: `.toUpperCase()` or `.toLowerCase()` changes the entire string's case.
-*   **Searching**: `.includes()` or `.indexOf()` helps find specific words or letters inside a string.
+
+JavaScript provides built-in methods to handle strings easily:
+
+- **Length**: `.length` tells you how many characters are in the string.
+- **Concatenation**: Joining strings together using the `+` operator or template literals.
+- **Case Conversion**: `.toUpperCase()` or `.toLowerCase()` changes the entire string's case.
+- **Searching**: `.includes()` or `.indexOf()` helps find specific words or letters inside a string.
 
 ## 18. Escape Characters in Strings
 
@@ -3748,28 +3952,36 @@ An escape character is a **backslash `\`** followed by a special letter. The bac
 ### 🔷 All Escape Character Types
 
 #### 1. `\'` — Single Quote
+
 Use when your string is wrapped in single quotes and you need a single quote inside it.
+
 ```javascript
-let message = 'It\'s a beautiful day!';
+let message = "It's a beautiful day!";
 console.log(message); // It's a beautiful day!
 ```
 
 #### 2. `\"` — Double Quote
+
 Use when your string is wrapped in double quotes and you need a double quote inside it.
+
 ```javascript
-let quote = "He said \"Hello\" to everyone.";
+let quote = 'He said "Hello" to everyone.';
 console.log(quote); // He said "Hello" to everyone.
 ```
 
 #### 3. `\\` — Backslash itself
+
 Since `\` is the escape character, to print an actual backslash you need to escape it with another backslash.
+
 ```javascript
 let filePath = "C:\\Users\\Shuja\\Documents";
 console.log(filePath); // C:\Users\Shuja\Documents
 ```
 
 #### 4. `\n` — New Line
+
 Moves the text to the **next line**. This is the most commonly used escape character.
+
 ```javascript
 let greeting = "Hello!\nWelcome to JavaScript.";
 console.log(greeting);
@@ -3779,7 +3991,9 @@ console.log(greeting);
 ```
 
 #### 5. `\t` — Tab (Horizontal)
+
 Adds a **tab space** (like pressing the Tab key). Great for aligning output.
+
 ```javascript
 let report = "Name\tAge\tCity";
 console.log(report);
@@ -3787,38 +4001,48 @@ console.log(report);
 ```
 
 #### 6. `\r` — Carriage Return
+
 Moves the cursor to the **beginning of the current line** (without going to a new line). Rarely used in modern code, but you may encounter it in files from Windows (Windows uses `\r\n` for new lines).
+
 ```javascript
 console.log("Hello\rWorld");
 // Output: World  ("World" overwrites "Hello" because \r moved cursor to start)
 ```
 
 #### 7. `\b` — Backspace
+
 Deletes the **previous character**. Rarely used in practice.
+
 ```javascript
 console.log("Hello\b!");
 // Output: Hell!  (the 'o' was "backspaced" and replaced by '!')
 ```
 
 #### 8. `\f` — Form Feed
+
 A legacy character used in old printers to jump to the **next page**. You'll almost never use this, but it exists.
+
 ```javascript
 console.log("Page1\fPage2");
 // Behavior depends on the environment — mostly seen in old documents
 ```
 
 #### 9. `\0` — Null Character
+
 Represents the **null character** (not the `null` value). Used internally in low-level programming.
+
 ```javascript
 console.log("Hello\0World");
 // May display as: Hello World (with an invisible character in between)
 ```
 
 #### 10. `\uXXXX` — Unicode Character
+
 Lets you insert **any character from any language** using its Unicode code. The `XXXX` is a 4-digit hex code.
+
 ```javascript
 console.log("\u0048\u0065\u006C\u006C\u006F"); // Hello
-console.log("\u2764");  // ❤ (heart symbol)
+console.log("\u2764"); // ❤ (heart symbol)
 console.log("\u0928\u092E\u0938\u094D\u0924\u0947"); // नमस्ते (Namaste in Hindi)
 ```
 
@@ -3826,18 +4050,18 @@ console.log("\u0928\u092E\u0938\u094D\u0924\u0947"); // नमस्ते (Nama
 
 ### 🔷 Escape Characters Cheat Sheet
 
-| Escape Sequence | Name | What It Does | Used Often? |
-|---|---|---|---|
-| `\'` | Single Quote | Prints `'` inside single-quoted strings | ✅ Yes |
-| `\"` | Double Quote | Prints `"` inside double-quoted strings | ✅ Yes |
-| `\\` | Backslash | Prints a literal `\` | ✅ Yes |
-| `\n` | New Line | Moves text to the next line | ✅ Very Often |
-| `\t` | Tab | Adds a tab space | ✅ Yes |
-| `\r` | Carriage Return | Moves cursor to start of line | ⚠️ Rare |
-| `\b` | Backspace | Deletes previous character | ⚠️ Rare |
-| `\f` | Form Feed | Page break (legacy printers) | ❌ Almost Never |
-| `\0` | Null Character | Inserts a null character | ❌ Almost Never |
-| `\uXXXX` | Unicode | Inserts a character by its Unicode code | ✅ Sometimes |
+| Escape Sequence | Name            | What It Does                            | Used Often?     |
+| --------------- | --------------- | --------------------------------------- | --------------- |
+| `\'`            | Single Quote    | Prints `'` inside single-quoted strings | ✅ Yes          |
+| `\"`            | Double Quote    | Prints `"` inside double-quoted strings | ✅ Yes          |
+| `\\`            | Backslash       | Prints a literal `\`                    | ✅ Yes          |
+| `\n`            | New Line        | Moves text to the next line             | ✅ Very Often   |
+| `\t`            | Tab             | Adds a tab space                        | ✅ Yes          |
+| `\r`            | Carriage Return | Moves cursor to start of line           | ⚠️ Rare         |
+| `\b`            | Backspace       | Deletes previous character              | ⚠️ Rare         |
+| `\f`            | Form Feed       | Page break (legacy printers)            | ❌ Almost Never |
+| `\0`            | Null Character  | Inserts a null character                | ❌ Almost Never |
+| `\uXXXX`        | Unicode         | Inserts a character by its Unicode code | ✅ Sometimes    |
 
 ---
 
@@ -3847,7 +4071,7 @@ With ES6, JavaScript introduced **template literals** (backtick strings `` ` ``)
 
 ```javascript
 // OLD way — using escape characters
-let old = "Hello!\nMy name is \"Shuja\".\n\tI am learning JS.";
+let old = 'Hello!\nMy name is "Shuja".\n\tI am learning JS.';
 
 // NEW way — using template literals (backticks)
 let name = "Shuja";
@@ -3863,6 +4087,7 @@ console.log(modern);
 ```
 
 > 💡 With template literals:
+>
 > - **No need** to escape `"` or `'` — backticks handle both.
 > - **No need** for `\n` — just press Enter inside the backticks for a real new line.
 > - You can **embed variables** directly using `${variableName}`.
@@ -3874,9 +4099,10 @@ console.log(modern);
 As an SDET, you'll encounter escape characters when:
 
 **1. Building XPath or CSS selectors with quotes:**
+
 ```javascript
 // XPath that contains double quotes — escape them
-let xpath = "//button[@aria-label=\"Submit Form\"]";
+let xpath = '//button[@aria-label="Submit Form"]';
 console.log(xpath);
 // Output: //button[@aria-label="Submit Form"]
 
@@ -3885,6 +4111,7 @@ let xpath2 = `//button[@aria-label="Submit Form"]`;
 ```
 
 **2. Logging multi-line test reports:**
+
 ```javascript
 let testReport = `Test Results:
 \t✅ Login Test — PASSED
@@ -3904,6 +4131,7 @@ console.log(testReport);
 ```
 
 **3. Working with file paths (Windows):**
+
 ```javascript
 // Windows file paths use backslashes — must escape them
 let screenshotPath = "C:\\test-results\\screenshots\\login_test.png";
@@ -3912,7 +4140,6 @@ console.log(screenshotPath);
 ```
 
 > 💡 **SDET Tip:** Prefer **template literals** (backticks) in your test code whenever possible. They are cleaner, easier to read, and you won't need to escape quotes. Save `\n` and `\t` for when you need precise control over formatting in logs or reports.
-
 
 ## 19. String Methods in JS
 
@@ -3930,14 +4157,15 @@ These return `true` or `false` — they tell you **if** something exists.
 ```javascript
 let msg = "Payment failed: invalid card.";
 
-msg.includes("failed");      // true  — is "failed" anywhere inside?
-msg.startsWith("Payment");   // true  — does it begin with "Payment"?
-msg.endsWith("card.");        // true  — does it end with "card."?
+msg.includes("failed"); // true  — is "failed" anywhere inside?
+msg.startsWith("Payment"); // true  — does it begin with "Payment"?
+msg.endsWith("card."); // true  — does it end with "card."?
 
 // Text NOT there? They just return false — no crash!
-msg.includes("success");     // false
-msg.startsWith("Error");     // false
+msg.includes("success"); // false
+msg.startsWith("Error"); // false
 ```
+
 > 🎯 **SDET:** Verify a success toast shows, or that a URL begins with `https`.
 
 ---
@@ -3949,15 +4177,16 @@ These return the **index number** of where the text was found, or **`-1`** if it
 ```javascript
 let s = "cat sat on a cat mat";
 
-s.indexOf("cat");     // 0  — first "cat" starts at index 0
+s.indexOf("cat"); // 0  — first "cat" starts at index 0
 s.lastIndexOf("cat"); // 14 — last "cat" starts at index 14
-s.indexOf("dog");     // -1 ← NOT FOUND
+s.indexOf("dog"); // -1 ← NOT FOUND
 ```
 
-> 🎯 **SDET "not there" check:** `-1` means the text is absent. Use this to assert something is *not* on the page.
+> 🎯 **SDET "not there" check:** `-1` means the text is absent. Use this to assert something is _not_ on the page.
+>
 > ```javascript
 > if (pageText.indexOf("Error") === -1) {
->     console.log("✅ No error — test passed!");
+>   console.log("✅ No error — test passed!");
 > }
 > ```
 
@@ -3971,21 +4200,21 @@ Both cut out a piece of a string. The `end` index is **not included** in either.
 let msg = "Order #12345 placed";
 
 // slice — supports negative indexes
-msg.slice(7, 12);    // "12345"
-msg.slice(-6);       // "placed" ← negative counts from the END
+msg.slice(7, 12); // "12345"
+msg.slice(-6); // "placed" ← negative counts from the END
 
 // substring — no negative indexes (treats negative as 0)
 msg.substring(7, 12); // "12345"
-msg.substring(12);    // "placed"
+msg.substring(12); // "placed"
 ```
 
 **`slice` vs `substring` — quick comparison:**
 
-| Feature | `.slice(s, e)` | `.substring(s, e)` |
-|---|---|---|
-| Negative indexes? | ✅ Yes — counts from end | ❌ No — treated as `0` |
-| Swaps args if s > e? | ❌ Returns empty string | ✅ Yes — swaps automatically |
-| Use in SDET? | ✅ Preferred (more flexible) | ✅ Fine for simple extractions |
+| Feature              | `.slice(s, e)`               | `.substring(s, e)`             |
+| -------------------- | ---------------------------- | ------------------------------ |
+| Negative indexes?    | ✅ Yes — counts from end     | ❌ No — treated as `0`         |
+| Swaps args if s > e? | ❌ Returns empty string      | ✅ Yes — swaps automatically   |
+| Use in SDET?         | ✅ Preferred (more flexible) | ✅ Fine for simple extractions |
 
 > 🎯 **SDET:** Use `slice` as your default — it's more flexible. `substring` is fine when you know both indexes are positive.
 
@@ -3996,12 +4225,13 @@ msg.substring(12);    // "placed"
 ```javascript
 let s = "I love apples. apples are great.";
 
-s.replace("apples", "mango");    // "I love mango. apples are great."  ← first only
+s.replace("apples", "mango"); // "I love mango. apples are great."  ← first only
 s.replaceAll("apples", "mango"); // "I love mango. mango are great."   ← all of them
 
 // Strip a character by replacing with empty string ""
 "$49.99".replace("$", ""); // "49.99"
 ```
+
 > 🎯 **SDET:** Strip `$`, `₹`, `%` before converting scraped text to a number.
 
 ---
@@ -4013,9 +4243,9 @@ Web pages often return text with hidden spaces.
 ```javascript
 let name = "   John Doe   ";
 
-name.trim();      // "John Doe"    — both sides
+name.trim(); // "John Doe"    — both sides
 name.trimStart(); // "John Doe   " — left side only
-name.trimEnd();   // "   John Doe" — right side only
+name.trimEnd(); // "   John Doe" — right side only
 ```
 
 ---
@@ -4026,7 +4256,9 @@ name.trimEnd();   // "   John Doe" — right side only
 "PaSsEd".toUpperCase(); // "PASSED"
 "PaSsEd".toLowerCase(); // "passed"
 ```
+
 > 🎯 **SDET:** Always lowercase both sides before comparing to avoid case-mismatch failures.
+>
 > ```javascript
 > actual.toLowerCase() === expected.toLowerCase(); // safe comparison
 > ```
@@ -4044,8 +4276,9 @@ let browsers = csv.split(","); // ["chrome", "firefox", "safari"]
 
 // Array → String
 browsers.join(" | "); // "chrome | firefox | safari"
-browsers.join("");    // "chromefirefoxsafari"
+browsers.join(""); // "chromefirefoxsafari"
 ```
+
 > 🎯 **SDET:** Split a test-data config string into an array, loop over it, then join results into a report.
 
 ---
@@ -4055,16 +4288,17 @@ browsers.join("");    // "chromefirefoxsafari"
 ```javascript
 // Number → String
 (42).toString(); // "42"
-String(99);      // "99"
+String(99); // "99"
 
 // String → Whole number (stops at first non-digit)
-parseInt("42px");   // 42
-parseInt("abc");    // NaN
+parseInt("42px"); // 42
+parseInt("abc"); // NaN
 
 // String → Decimal number
 parseFloat("3.14rem"); // 3.14
-parseFloat("99");      // 99
+parseFloat("99"); // 99
 ```
+
 > 🎯 **SDET Pipeline:** `"$49.99"` → `.replace("$","")` → `parseFloat()` → compare to expected price.
 
 ---
@@ -4085,6 +4319,7 @@ text.match(/\d+/g); // ["123", "456"]
 // Check if email-like pattern exists
 "user@test.com".match(/@/); // truthy — "@" was found
 ```
+
 > 🎯 **SDET:** Verify a field only contains numbers, or extract all prices from a product listing page.
 
 ---
@@ -4126,17 +4361,17 @@ Syntax: string.padStart(totalLength, "fillChar")
 
 ```javascript
 // Pad with zeros on the LEFT (most common use case)
-"5".padStart(4, "0");   // "0005"
-"42".padStart(4, "0");  // "0042"
+"5".padStart(4, "0"); // "0005"
+"42".padStart(4, "0"); // "0042"
 "999".padStart(4, "0"); // "0999"
 
 // Pad with spaces on the RIGHT (for table alignment)
-"Pass".padEnd(10, " ");  // "Pass      "
-"Fail".padEnd(10, " ");  // "Fail      "
+"Pass".padEnd(10, " "); // "Pass      "
+"Fail".padEnd(10, " "); // "Fail      "
 
 // Pad with any character
-"hi".padStart(6, "*");  // "****hi"
-"hi".padEnd(6, "-");    // "hi----"
+"hi".padStart(6, "*"); // "****hi"
+"hi".padEnd(6, "-"); // "hi----"
 
 // If string is already long enough — nothing changes
 "Hello".padStart(3, "0"); // "Hello"  ← already longer than 3, unchanged
@@ -4148,19 +4383,20 @@ Without padding, your report columns look messy. With padding, they align neatly
 
 ```javascript
 let results = [
-    { test: "Login",    status: "PASS" },
-    { test: "Checkout", status: "FAIL" },
-    { test: "Search",   status: "PASS" },
+  { test: "Login", status: "PASS" },
+  { test: "Checkout", status: "FAIL" },
+  { test: "Search", status: "PASS" },
 ];
 
 for (let r of results) {
-    // padEnd makes test name column always 12 chars wide
-    // padStart makes status right-aligned in 6 chars
-    console.log(r.test.padEnd(12) + r.status.padStart(6));
+  // padEnd makes test name column always 12 chars wide
+  // padStart makes status right-aligned in 6 chars
+  console.log(r.test.padEnd(12) + r.status.padStart(6));
 }
 ```
 
 **Output (nicely aligned!):**
+
 ```
 Login          PASS
 Checkout       FAIL
@@ -4173,38 +4409,37 @@ Search         PASS
 
 ### 📋 String Methods Cheat Sheet
 
-| Method | What it does | Returns |
-|---|---|---|
-| `.includes("x")` | Does the string contain "x"? | `boolean` |
-| `.startsWith("x")` | Does it start with "x"? | `boolean` |
-| `.endsWith("x")` | Does it end with "x"? | `boolean` |
-| `.indexOf("x")` | Position of first "x" (`-1` = not found) | `number` |
-| `.lastIndexOf("x")` | Position of last "x" | `number` |
-| `.slice(s, e)` | Extract characters from index `s` to `e` | `string` |
-| `.substring(s, e)` | Extract characters from `s` to `e` (no negatives) | `string` |
-| `.replace("a","b")` | Replace **first** "a" with "b" | `string` |
-| `.replaceAll("a","b")` | Replace **all** "a" with "b" | `string` |
-| `.trim()` | Remove spaces from both ends | `string` |
-| `.trimStart()` | Remove spaces from left only | `string` |
-| `.trimEnd()` | Remove spaces from right only | `string` |
-| `.padStart(n, "x")` | Add "x" on the **LEFT** until length = n | `string` |
-| `.padEnd(n, "x")` | Add "x" on the **RIGHT** until length = n | `string` |
-| `.toUpperCase()` | Convert to ALL CAPS | `string` |
-| `.toLowerCase()` | Convert to all lowercase | `string` |
-| `.split("x")` | Break string into an array at "x" | `array` |
-| `.join("x")` | Merge array into string with "x" between | `string` |
-| `.match(/regex/)` | Find pattern(s) using regex | `array` or `null` |
-| `.toString()` | Convert number/value to string | `string` |
-| `parseInt("x")` | Convert string → whole number | `number` |
-| `parseFloat("x")` | Convert string → decimal number | `number` |
-| `.length` | Count characters (no `()` — it's a property!) | `number` |
-
+| Method                 | What it does                                      | Returns           |
+| ---------------------- | ------------------------------------------------- | ----------------- |
+| `.includes("x")`       | Does the string contain "x"?                      | `boolean`         |
+| `.startsWith("x")`     | Does it start with "x"?                           | `boolean`         |
+| `.endsWith("x")`       | Does it end with "x"?                             | `boolean`         |
+| `.indexOf("x")`        | Position of first "x" (`-1` = not found)          | `number`          |
+| `.lastIndexOf("x")`    | Position of last "x"                              | `number`          |
+| `.slice(s, e)`         | Extract characters from index `s` to `e`          | `string`          |
+| `.substring(s, e)`     | Extract characters from `s` to `e` (no negatives) | `string`          |
+| `.replace("a","b")`    | Replace **first** "a" with "b"                    | `string`          |
+| `.replaceAll("a","b")` | Replace **all** "a" with "b"                      | `string`          |
+| `.trim()`              | Remove spaces from both ends                      | `string`          |
+| `.trimStart()`         | Remove spaces from left only                      | `string`          |
+| `.trimEnd()`           | Remove spaces from right only                     | `string`          |
+| `.padStart(n, "x")`    | Add "x" on the **LEFT** until length = n          | `string`          |
+| `.padEnd(n, "x")`      | Add "x" on the **RIGHT** until length = n         | `string`          |
+| `.toUpperCase()`       | Convert to ALL CAPS                               | `string`          |
+| `.toLowerCase()`       | Convert to all lowercase                          | `string`          |
+| `.split("x")`          | Break string into an array at "x"                 | `array`           |
+| `.join("x")`           | Merge array into string with "x" between          | `string`          |
+| `.match(/regex/)`      | Find pattern(s) using regex                       | `array` or `null` |
+| `.toString()`          | Convert number/value to string                    | `string`          |
+| `parseInt("x")`        | Convert string → whole number                     | `number`          |
+| `parseFloat("x")`      | Convert string → decimal number                   | `number`          |
+| `.length`              | Count characters (no `()` — it's a property!)     | `number`          |
 
 ### Array
 
 --Arrays is collection of items.
 --Arrays let you store multiple values in a single variable.
- -- we use index instead of keys.
+-- we use index instead of keys.
 --If we see the type of then it will return objects. because arrays are objects in Javascript.
 --It is mutable. i.e. its value can be changed.
 --It is Hytrogenies and not Homogenous.(Hytrogenies means it can store multiple data types, Homogenous means it can store only one data type).
@@ -4227,9 +4462,9 @@ let users = [user1, user2];
 ### 1. Array Creation - "Declaration" 🏗️
 
 Arrays are declared in two ways:
+
 1. Array literal
 2. Array constructor
-
 
 #### Array literal
 
@@ -4253,6 +4488,7 @@ let statuses = new Array(4);
 // Array with initial values
 let users = new Array("John", "Jane", "Bob");
 ```
+
 ### Array Literals vs Array Constructor
 
 ```javascript
@@ -4272,10 +4508,10 @@ let status = ["pass", "fail", "skip"];
 //  index:       0       1       2
 //  length = 3
 
-console.log(status[0]);  // "pass"      ← first item
-console.log(status[1]);  // "fail"
-console.log(status[2]);  // "skip"      ← last item
-console.log(status[3]);  // undefined   ← out of bounds, no crash
+console.log(status[0]); // "pass"      ← first item
+console.log(status[1]); // "fail"
+console.log(status[2]); // "skip"      ← last item
+console.log(status[3]); // undefined   ← out of bounds, no crash
 ```
 
 ---
@@ -4301,15 +4537,16 @@ let status = ["pass", "fail", "skip"];
 console.log(status[status.length - 1]); // "skip" ✅
 
 // Way 2: Use .at() — the modern clean way (ES2022)
-console.log(status.at(-1));  // "skip" ✅  ← -1 means last
-console.log(status.at(-2));  // "fail" ✅  ← -2 means second from end
-console.log(status.at(0));   // "pass" ✅  ← works like normal index too
+console.log(status.at(-1)); // "skip" ✅  ← -1 means last
+console.log(status.at(-2)); // "fail" ✅  ← -2 means second from end
+console.log(status.at(0)); // "pass" ✅  ← works like normal index too
 
 // Way 3: slice
 console.log(status.slice(-1)[0]); // "skip" (less clean, avoid this)
 ```
 
 **Visual — how `.at()` counts:**
+
 ```
 let status = ["pass", "fail", "skip"];
 
@@ -4324,8 +4561,7 @@ status.at(-2) → "fail"   (second from end)
 
 > 🎯 **SDET Tip:** Use `.at(-1)` when you want the **last element** — for example, the last URL in a navigation history, or the latest log entry in a results array.
 
-
-### Array Values - Any Data Type 
+### Array Values - Any Data Type
 
 ```javascript
 let mixed = [10, "apple", true, null, undefined, { name: "John" }, [1, 2, 3]];
@@ -4352,9 +4588,8 @@ console.log(typeof mixed); // object - this is why we use Array.isArray()
 let prices = [29.99, 59.99, 89.99];
 prices[0] = 100;
 console.log(prices); // [100, 59.99, 89.99]
-
-
 ```
+
 ### Looping over an Array
 
 ```javascript
@@ -4365,72 +4600,72 @@ console.log(prices); // [100, 59.99, 89.99]
 // for loop
 let price = [29.99, 59.99, 89.99];
 for (let i = 0; i < prices.length; i++) {
-    console.log(prices[i]);
+  console.log(prices[i]);
 }
 
 // for...of loop (recommended)
 let price = [29.99, 59.99, 89.99];
 for (let price of prices) {
-    console.log(price);
+  console.log(price);
 }
 
 // for...in loop
 let price = [29.99, 59.99, 89.99];
 for (let price in prices) {
-    console.log(prices[price]);
+  console.log(prices[price]);
 }
 
 // forEach loop
 let price = [29.99, 59.99, 89.99];
 prices.forEach((price) => {
-    console.log(price);
+  console.log(price);
 });
 ```
- ### How to Add, Subtract,Multiply and Divide Array Values
 
- ```javascript
- // add all the array values
+### How to Add, Subtract,Multiply and Divide Array Values
 
- let prices = [29.99, 59.99, 89.99];
+```javascript
+// add all the array values
+
+let prices = [29.99, 59.99, 89.99];
 
 //  For of loop
 
 let sum = 0;
-for (let price of prices){
-    sum += price // short cut of sum = sum + price
+for (let price of prices) {
+  sum += price; // short cut of sum = sum + price
 }
-console.log(`Total amount is ${sum}`)
-
+console.log(`Total amount is ${sum}`);
 ```
-``` javascript
+
+```javascript
 // subtract all the array values
 let prices = [29.99, 59.99, 89.99];
 let sum = 0;
-for (let price of prices){
-    sum -= price // short cut of sum = sum - prices
+for (let price of prices) {
+  sum -= price; // short cut of sum = sum - prices
 }
-console.log(`Total amount is ${sum}`)
-
+console.log(`Total amount is ${sum}`);
 ```
-``` javascript
+
+```javascript
 // Multiply all the array values
 let prices = [29.99, 59.99, 89.99];
 let sum = 1;
-for (let price of prices){
-    sum *= price // short cut of sum = sum * prices
+for (let price of prices) {
+  sum *= price; // short cut of sum = sum * prices
 }
-console.log(`Total amount is ${sum}`)
-
+console.log(`Total amount is ${sum}`);
 ```
+
 ```javascript
 // Divide all the array values
 let prices = [29.99, 59.99, 89.99];
 let sum = 1;
-for (let price of prices){
-    sum /= price // short cut of sum = sum / prices
+for (let price of prices) {
+  sum /= price; // short cut of sum = sum / prices
 }
-console.log(`Total amount is ${sum}`)
-
+console.log(`Total amount is ${sum}`);
 ```
 
 ---
@@ -4458,13 +4693,15 @@ console.log(testSuites.length); // 3 (total items)
 ## 1️⃣ Array Creation
 
 ### Literal Syntax (Preferred)
+
 ```javascript
-let empty = [];  // Empty array
+let empty = []; // Empty array
 let browsers = ["Chrome", "Firefox", "Safari"];
 let mixed = [1, "hello", true, null, undefined]; // Any type
 ```
 
 ### Array Constructor
+
 ```javascript
 // Be careful! n means empty array of size n
 let scores = new Array(5); // [empty x 5] — creates 5 empty slots
@@ -4474,29 +4711,35 @@ let numbers = new Array(10, 20, 30); // [10, 20, 30]
 ```
 
 ### `fill()` — Populate Empty Slots
+
 Used to fill an array with static values. Perfect for creating dummy test data.
+
 ```javascript
 let dummyTests = new Array(5).fill("PASS");
 console.log(dummyTests); // ["PASS", "PASS", "PASS", "PASS", "PASS"]
 
 // Fill specific portion: fill(value, startIndex, endIndex)
 let scores = [10, 20, 30, 40];
-scores.fill(0, 1, 3); 
+scores.fill(0, 1, 3);
 console.log(scores); // [10, 0, 0, 40]
 ```
 
 ### `Array.of()` — Create Array with Explicit Values
+
 Like constructor, but **always creates array with the values you pass** (safer than constructor).
+
 ```javascript
-let vals = Array.of(1);    // [1] — creates array with value 1
-let vals2 = Array.of(5);   // [5] — creates array with value 5
+let vals = Array.of(1); // [1] — creates array with value 1
+let vals2 = Array.of(5); // [5] — creates array with value 5
 
 // Compare to constructor:
-let arr = new Array(5);    // [empty x 5] — creates empty array of size 5
+let arr = new Array(5); // [empty x 5] — creates empty array of size 5
 ```
 
 ### `Array.from()` — Convert Iterable to Array
+
 Converts strings, Sets, Maps, NodeLists (from DOM), or any iterable into an array.
+
 ```javascript
 // From string
 let chars = Array.from("hello");
@@ -4507,7 +4750,7 @@ let unique = Array.from(new Set([1, 2, 2, 3]));
 console.log(unique); // [1, 2, 3]
 
 // With mapping function (second parameter)
-let nums = Array.from([1, 2, 3], n => n * 2);
+let nums = Array.from([1, 2, 3], (n) => n * 2);
 console.log(nums); // [2, 4, 6]
 
 // SDET use: Get all elements from DOM and convert to array
@@ -4519,6 +4762,7 @@ let buttons = Array.from(document.querySelectorAll("button"));
 ## 2️⃣ Accessing & Modifying
 
 ### Access by Index
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 console.log(tests[0]); // "login"
@@ -4527,16 +4771,18 @@ console.log(tests[5]); // undefined (out of bounds)
 ```
 
 ### Using `.at()` — Negative Indices (Modern Syntax — ES2022)
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
-console.log(tests.at(-1));  // "logout" ← last item (perfect for testing!)
-console.log(tests.at(-2));  // "checkout" ← second from end
-console.log(tests.at(0));   // "login" ← regular index works too
+console.log(tests.at(-1)); // "logout" ← last item (perfect for testing!)
+console.log(tests.at(-2)); // "checkout" ← second from end
+console.log(tests.at(0)); // "login" ← regular index works too
 ```
 
 > 💡 **SDET Tip:** `.at(-1)` is perfect when you need the **last test result** or **last notification** without counting!
 
 ### Length Property
+
 ```javascript
 let steps = ["login", "search", "checkout"];
 console.log(steps.length); // 3
@@ -4547,6 +4793,7 @@ console.log(steps); // ["login", "search"] ← checkout removed!
 ```
 
 ### Modify Element
+
 ```javascript
 let statuses = ["pass", "fail", "skip"];
 statuses[1] = "blocked"; // Change index 1
@@ -4558,6 +4805,7 @@ console.log(statuses); // ["pass", "blocked", "skip"]
 ## 3️⃣ Adding & Removing
 
 ### `push()` — Add to END
+
 ```javascript
 let tests = ["login"];
 tests.push("checkout");
@@ -4567,14 +4815,16 @@ console.log(tests.push("new")); // Returns NEW length: 5
 ```
 
 ### `pop()` — Remove from END
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 let last = tests.pop();
-console.log(last);  // "logout" ← removed item
+console.log(last); // "logout" ← removed item
 console.log(tests); // ["login", "checkout"]
 ```
 
 ### `unshift()` — Add to BEGINNING
+
 ```javascript
 let tests = ["checkout"];
 tests.unshift("login");
@@ -4583,6 +4833,7 @@ console.log(tests); // ["setup", "login", "checkout"]
 ```
 
 ### `shift()` — Remove from BEGINNING
+
 ```javascript
 let tests = ["setup", "login", "checkout"];
 let first = tests.shift();
@@ -4591,14 +4842,16 @@ console.log(tests); // ["login", "checkout"]
 ```
 
 ### `splice()` — Add/Remove/Replace Anywhere
+
 Syntax: `splice(startIndex, deleteCount, item1, item2, ...)`
+
 ```javascript
 let tests = ["login", "search", "checkout", "logout"];
 
 // ❌ REMOVE: delete items
 let removed = tests.splice(1, 2); // Remove 2 items starting at index 1
 console.log(removed); // ["search", "checkout"] ← what was deleted
-console.log(tests);   // ["login", "logout"]
+console.log(tests); // ["login", "logout"]
 
 // ➕ ADD: insert items (deleteCount = 0)
 let steps = ["login", "logout"];
@@ -4616,28 +4869,34 @@ console.log(envs); // ["dev", "qa", "uat", "prod"]
 ## 4️⃣ Searching
 
 ### `includes(item)` — Check if Item Exists
+
 Returns `true` or `false`.
+
 ```javascript
 let browsers = ["chrome", "firefox", "safari"];
 console.log(browsers.includes("firefox")); // true
-console.log(browsers.includes("edge"));    // false
+console.log(browsers.includes("edge")); // false
 
 // SDET: Confirm browser is in matrix
 if (!browsers.includes("IE")) {
-    console.log("✅ IE is not in test suite (removed)");
+  console.log("✅ IE is not in test suite (removed)");
 }
 ```
 
 ### `indexOf(item)` — Find Position (First Occurrence)
+
 Returns **index** of first match, or `-1` if not found.
+
 ```javascript
 let results = ["pass", "fail", "pass", "fail"];
-console.log(results.indexOf("fail"));   // 1 ← first pass position
-console.log(results.indexOf("error"));  // -1 ← not found
+console.log(results.indexOf("fail")); // 1 ← first pass position
+console.log(results.indexOf("error")); // -1 ← not found
 ```
 
 ### `lastIndexOf(item)` — Find Position (Last Occurrence)
+
 Searches from the **end** and returns index of **last** match.
+
 ```javascript
 let results = ["pass", "fail", "pass", "fail"];
 console.log(results.lastIndexOf("fail")); // 3 ← last position
@@ -4649,82 +4908,91 @@ console.log("Last failure at index:", lastFail);
 ```
 
 ### `find(fn)` — Get First Item Matching Condition
+
 Returns the **actual item** (not index). Returns `undefined` if not found.
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
 ];
 
-let failedTest = tests.find(t => t.status === "FAIL");
+let failedTest = tests.find((t) => t.status === "FAIL");
 console.log(failedTest); // { name: "Checkout", status: "FAIL" }
 
-let crashed = tests.find(t => t.status === "CRASH");
+let crashed = tests.find((t) => t.status === "CRASH");
 console.log(crashed); // undefined
 ```
 
 ### `findIndex(fn)` — Get Position of First Match
+
 Returns **index** of first match, or `-1` if not found.
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
 ];
 
-let failPosition = tests.findIndex(t => t.status === "FAIL");
-console.log(failPosition);        // 1
+let failPosition = tests.findIndex((t) => t.status === "FAIL");
+console.log(failPosition); // 1
 console.log(tests[failPosition]); // { name: "Checkout", status: "FAIL" }
 ```
 
 ### `findLast(fn)` — Get Last Item Matching Condition (ES2023)
+
 Like `find`, but searches from **end** of array.
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Payment", status: "FAIL" },
 ];
 
-let lastFail = tests.findLast(t => t.status === "FAIL");
+let lastFail = tests.findLast((t) => t.status === "FAIL");
 console.log(lastFail.name); // "Payment" ← LAST failure
 ```
 
 ### `findLastIndex(fn)` — Get Position of Last Match (ES2023)
+
 Returns **index** of last match, or `-1` if not found.
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Payment", status: "FAIL" },
 ];
 
-let lastFailIdx = tests.findLastIndex(t => t.status === "FAIL");
+let lastFailIdx = tests.findLastIndex((t) => t.status === "FAIL");
 console.log(lastFailIdx); // 2 (Payment is at index 2)
 ```
 
 ### 📊 Searching Methods Comparison Table
 
-| Method | Searches From | Returns | Not Found |
-|---|---|---|---|
-| `includes(item)` | Start | `true`/`false` | `false` |
-| `indexOf(item)` | Start | **Index** | `-1` |
-| `lastIndexOf(item)` | **End** | **Index** | `-1` |
-| `find(fn)` | Start | **Item** | `undefined` |
-| `findIndex(fn)` | Start | **Index** | `-1` |
-| `findLast(fn)` | **End** | **Item** | `undefined` |
-| `findLastIndex(fn)` | **End** | **Index** | `-1` |
+| Method              | Searches From | Returns        | Not Found   |
+| ------------------- | ------------- | -------------- | ----------- |
+| `includes(item)`    | Start         | `true`/`false` | `false`     |
+| `indexOf(item)`     | Start         | **Index**      | `-1`        |
+| `lastIndexOf(item)` | **End**       | **Index**      | `-1`        |
+| `find(fn)`          | Start         | **Item**       | `undefined` |
+| `findIndex(fn)`     | Start         | **Index**      | `-1`        |
+| `findLast(fn)`      | **End**       | **Item**       | `undefined` |
+| `findLastIndex(fn)` | **End**       | **Index**      | `-1`        |
 
 ---
 
 ## 5️⃣ Iterating Through Arrays
 
 ### Classic `for` Loop
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 for (let i = 0; i < tests.length; i++) {
-    console.log(`${i}: ${tests[i]}`);
+  console.log(`${i}: ${tests[i]}`);
 }
 // 0: login
 // 1: checkout
@@ -4732,10 +5000,11 @@ for (let i = 0; i < tests.length; i++) {
 ```
 
 ### `for...of` Loop (Cleanest for Values)
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 for (let test of tests) {
-    console.log(test); // ← gives you the VALUE
+  console.log(test); // ← gives you the VALUE
 }
 // login
 // checkout
@@ -4743,10 +5012,11 @@ for (let test of tests) {
 ```
 
 ### `forEach()` — Run Function on Each Item
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 tests.forEach((test, index) => {
-    console.log(`Running: ${index + 1}. ${test}`);
+  console.log(`Running: ${index + 1}. ${test}`);
 });
 // Running: 1. login
 // Running: 2. checkout
@@ -4754,10 +5024,11 @@ tests.forEach((test, index) => {
 ```
 
 ### `.entries()` — Get Index AND Value
+
 ```javascript
 let tests = ["login", "checkout", "logout"];
 for (let [index, test] of tests.entries()) {
-    console.log(`${index}: ${test}`);
+  console.log(`${index}: ${test}`);
 }
 // 0: login
 // 1: checkout
@@ -4765,10 +5036,11 @@ for (let [index, test] of tests.entries()) {
 ```
 
 ### `for...in` Loop (Not Recommended for Arrays)
+
 ```javascript
 let tests = ["login", "checkout"];
 for (let i in tests) {
-    console.log(i, tests[i]); // i is STRING, not number!
+  console.log(i, tests[i]); // i is STRING, not number!
 }
 // ⚠️ Gives you KEYS (as strings), not values
 ```
@@ -4778,68 +5050,76 @@ for (let i in tests) {
 ## 6️⃣ Transforming Arrays
 
 ### `map()` — Transform Every Item (Create NEW Array)
+
 ![Map Method](Images/Map.png)
+
 ```javascript
 let prices = [100, 200, 300];
 
 // Apply 10% discount
-let discounted = prices.map(p => p * 0.9);
+let discounted = prices.map((p) => p * 0.9);
 console.log(discounted); // [90, 180, 270]
-console.log(prices);     // [100, 200, 300] ← original safe ✅
+console.log(prices); // [100, 200, 300] ← original safe ✅
 
 // SDET: Extract field from array of objects
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
 ];
-let names = tests.map(t => t.name);
+let names = tests.map((t) => t.name);
 console.log(names); // ["Login", "Checkout"]
 ```
 
 ### `filter()` — Keep Only Items Matching Condition
+
 ![Filter Method](Images/Filter.png)
+
 ```javascript
 let scores = [45, 82, 91, 60, 73];
-let passing = scores.filter(s => s >= 70);
+let passing = scores.filter((s) => s >= 70);
 console.log(passing); // [82, 91, 73]
 
 // SDET: Get only failed tests
 let results = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Payment", status: "FAIL" },
 ];
-let failures = results.filter(r => r.status === "FAIL");
+let failures = results.filter((r) => r.status === "FAIL");
 console.log(failures.length); // 2
 ```
 
 ### `reduce()` — Combine All Items Into One Value
+
 ![Reduce Method](Images/Reduce.png)
 Syntax: `reduce((accumulator, current) => ..., initialValue)`
+
 ```javascript
 let prices = [29.99, 59.99, 89.99]; // This is a easy example than in the Image.
 
 // Add up all prices
 let total = prices.reduce((sum, price) => {
-return sum + price
+  return sum + price;
 });
 console.log(total); // 179.97
 
 // SDET: Count passed tests
 let results = ["PASS", "FAIL", "PASS", "PASS"];
 let passCount = results.reduce((count, status) => {
-    return status === "PASS" ? count + 1 : count;
+  return status === "PASS" ? count + 1 : count;
 }, 0);
 console.log(passCount); // 3
 
 // Create object from array
 let browsers = ["chrome", "firefox"];
-let config = browsers.reduce((obj, b) => ({...obj, [b]: true}), {});
+let config = browsers.reduce((obj, b) => ({ ...obj, [b]: true }), {});
 console.log(config); // { chrome: true, firefox: true }
 ```
 
 ### `reduceRight()` — Combine from Right to Left
+
 Works exactly like `reduce()`, but processes the array starting from the last item.
+
 ```javascript
 let words = ["world", " ", "hello"];
 let sentence = words.reduceRight((acc, current) => acc + current, "");
@@ -4847,12 +5127,16 @@ console.log(sentence); // "hello world"
 ```
 
 ### `flat()` — Flatten Nested Arrays (ES2019)
+
 ```javascript
 let nested = [[1, 2], [3, 4], [5]];
 console.log(nested.flat()); // [1, 2, 3, 4, 5]
 
 // Flatten multiple levels
-let deepNested = [[1, [2, 3]], [4, [5, 6]]];
+let deepNested = [
+  [1, [2, 3]],
+  [4, [5, 6]],
+];
 console.log(deepNested.flat(1)); // [1, [2, 3], 4, [5, 6]] ← 1 level
 console.log(deepNested.flat(2)); // [1, 2, 3, 4, 5, 6] ← 2 levels
 console.log(deepNested.flat()); // Defaults to 1 level
@@ -4863,16 +5147,18 @@ console.log(withGaps.flat()); // [1, 3] ← empty removed
 ```
 
 ### `flatMap()` — Map and Flatten in One Step
+
 Combines `.map()` and `.flat()` (with depth 1) into a single, highly efficient method.
+
 ```javascript
 let sentences = ["Hello world", "Learning JS"];
 
 // If we just use map(), we get an array of arrays:
-let wordsNested = sentences.map(s => s.split(" ")); 
+let wordsNested = sentences.map((s) => s.split(" "));
 console.log(wordsNested); // [["Hello", "world"], ["Learning", "JS"]]
 
 // Using flatMap() gives us a single flat array of words!
-let wordsFlat = sentences.flatMap(s => s.split(" "));
+let wordsFlat = sentences.flatMap((s) => s.split(" "));
 console.log(wordsFlat); // ["Hello", "world", "Learning", "JS"]
 ```
 
@@ -4881,6 +5167,7 @@ console.log(wordsFlat); // ["Hello", "world", "Learning", "JS"]
 ## 7️⃣ Sorting
 
 ### `sort()` — Sort Array In Place
+
 ⚠️ **Default** sorts as **strings** alphabetically! For numbers, use a compare function.
 
 ```javascript
@@ -4899,14 +5186,15 @@ console.log(scores); // [300, 100, 50, 25, 8]
 
 // Sort objects by property
 let tests = [
-    { name: "Login", time: 5 },
-    { name: "Checkout", time: 2 },
-    { name: "Payment", time: 8 },
+  { name: "Login", time: 5 },
+  { name: "Checkout", time: 2 },
+  { name: "Payment", time: 8 },
 ];
 tests.sort((a, b) => a.time - b.time); // Sort by time ascending
 ```
 
 ### `reverse()` — Reverse Array In Place
+
 ```javascript
 let steps = ["login", "checkout", "logout"];
 steps.reverse();
@@ -4923,12 +5211,14 @@ console.log(steps); // original untouched ✅
 ## 8️⃣ Slicing & Combining
 
 ### `slice(start, end)` — Copy a Portion (Pure)
+
 Returns **new array**, original **untouched**. End index is **NOT included**.
+
 ```javascript
 let tests = ["a", "b", "c", "d", "e"];
 console.log(tests.slice(1, 3)); // ["b", "c"] ← indices 1,2 (not 3)
-console.log(tests.slice(2));     // ["c", "d", "e"] ← from index 2 to end
-console.log(tests.slice(-2));    // ["d", "e"] ← last 2 items
+console.log(tests.slice(2)); // ["c", "d", "e"] ← from index 2 to end
+console.log(tests.slice(-2)); // ["d", "e"] ← last 2 items
 console.log(tests); // ["a", "b", "c", "d", "e"] ← original untouched ✅
 
 // Copy entire array (common technique)
@@ -4936,6 +5226,7 @@ let copy = tests.slice();
 ```
 
 ### `concat()` — Join Arrays (Pure)
+
 ```javascript
 let suite1 = ["login", "search"];
 let suite2 = ["checkout"];
@@ -4952,6 +5243,7 @@ console.log(combined); // ["login", "logout", "admin"]
 ```
 
 ### Spread Operator `...` — Modern Array Combining
+
 ```javascript
 let a = [1, 2];
 let b = [3, 4];
@@ -4967,6 +5259,7 @@ let copy = [...tests];
 ```
 
 ### `join()` — Convert Array to String (Pure)
+
 ```javascript
 let frameworks = ["Playwright", "Cypress", "Selenium"];
 let result = frameworks.join(", ");
@@ -4985,66 +5278,72 @@ console.log(frameworks.join()); // "Playwright,Cypress,Selenium"
 ## 9️⃣ Checking & Validation
 
 ### `Array.isArray()` — Verify It's an Array
+
 ```javascript
 console.log(Array.isArray([1, 2, 3])); // true
-console.log(Array.isArray("hello"));   // false
-console.log(Array.isArray({a: 1}));    // false
+console.log(Array.isArray("hello")); // false
+console.log(Array.isArray({ a: 1 })); // false
 
 // SDET: Validate API response is array
 let response = []; // or some API data
 if (Array.isArray(response)) {
-    console.log("✅ Response is array, has", response.length, "items");
+  console.log("✅ Response is array, has", response.length, "items");
 } else {
-    console.log("❌ Response is not array!");
+  console.log("❌ Response is not array!");
 }
 ```
 
 ### `every()` — Test if ALL Elements Pass
+
 Returns `true` only if **ALL** items pass the condition.
+
 ```javascript
 let scores = [80, 90, 85];
-console.log(scores.every(s => s >= 70)); // true (all >= 70)
+console.log(scores.every((s) => s >= 70)); // true (all >= 70)
 
 let mixed = [80, 60, 85];
-console.log(mixed.every(s => s >= 70)); // false (60 < 70)
+console.log(mixed.every((s) => s >= 70)); // false (60 < 70)
 
 // SDET: Check if all tests passed
 let results = ["PASS", "PASS", "PASS"];
-if (results.every(r => r === "PASS")) {
-    console.log("✅ All tests passed!");
+if (results.every((r) => r === "PASS")) {
+  console.log("✅ All tests passed!");
 }
 ```
 
 ### `some()` — Test if AT LEAST ONE Element Passes
+
 Returns `true` if **at least one** item passes the condition.
+
 ```javascript
 let scores = [80, 60, 85];
-console.log(scores.some(s => s < 70)); // true (60 < 70)
+console.log(scores.some((s) => s < 70)); // true (60 < 70)
 
 let allHigh = [80, 90, 85];
-console.log(allHigh.some(s => s < 70)); // false (all >= 70)
+console.log(allHigh.some((s) => s < 70)); // false (all >= 70)
 
 // SDET: Check if any test failed
 let results = ["PASS", "FAIL", "PASS"];
-if (results.some(r => r === "FAIL")) {
-    console.log("❌ At least one test failed!");
+if (results.some((r) => r === "FAIL")) {
+  console.log("❌ At least one test failed!");
 }
 ```
 
 ### 📊 `every()` vs `some()` Comparison
 
-| Condition | `every()` | `some()` |
-|---|---|---|
-| All A's | `true` | `true` |
-| Some A's, Some B's | `false` | `true` |
-| All B's | `false` | `false` |
-| Empty array | `true` | `false` |
+| Condition          | `every()` | `some()` |
+| ------------------ | --------- | -------- |
+| All A's            | `true`    | `true`   |
+| Some A's, Some B's | `false`   | `true`   |
+| All B's            | `false`   | `false`  |
+| Empty array        | `true`    | `false`  |
 
 ---
 
 ## 🔟 Copying Arrays
 
 ### Reference vs Copy (Important!)
+
 ```javascript
 let original = [1, 2, 3];
 
@@ -5061,45 +5360,45 @@ let copy4 = original.concat();
 
 copy1.push(99);
 console.log(original); // [1, 2, 3] ← original safe ✅
-console.log(copy1);    // [1, 2, 3, 99]
+console.log(copy1); // [1, 2, 3, 99]
 ```
 
 ### 🌊 Shallow vs Deep Copy — Explained Simply
 
 Imagine you are copying a **test data folder**:
+
 - **Shallow Copy:** You duplicate the folder, but any shortcuts inside still point to the original files. If you change a file through the shortcut, the original file is changed!
 - **Deep Copy:** You duplicate the folder AND all the files inside. It is a completely independent, safe copy.
 
 In JavaScript, if your array contains **other arrays or objects** (nested data), you must be careful:
 
 #### ⚠️ Shallow Copy (The problem with nested data)
+
 Methods like `...spread` and `.slice()` only copy the **first level**. Nested items are still linked!
 
 ```javascript
 // Test data with a nested array (e.g., tags)
 let originalTests = [
-    "LoginTest", 
-    ["P1", "Smoke"] // Nested array!
+  "LoginTest",
+  ["P1", "Smoke"], // Nested array!
 ];
 
 // Let's make a shallow copy
-let shallowCopy = [...originalTests]; 
+let shallowCopy = [...originalTests];
 
 // We modify the nested array in the COPY
-shallowCopy[1].push("Regression"); 
+shallowCopy[1].push("Regression");
 
 // BUG! The original was also modified because the nested array was shared!
-console.log(originalTests[1]); // ["P1", "Smoke", "Regression"] ❌ 
+console.log(originalTests[1]); // ["P1", "Smoke", "Regression"] ❌
 ```
 
 #### ✅ Deep Copy (The safe way for nested data)
+
 To completely detach the copy, we convert the entire thing to a string (JSON) and back to an object.
 
 ```javascript
-let originalTests = [
-    "LoginTest", 
-    ["P1", "Smoke"]
-];
+let originalTests = ["LoginTest", ["P1", "Smoke"]];
 
 // Make a Deep Copy using JSON methods
 let deepCopy = JSON.parse(JSON.stringify(originalTests));
@@ -5109,7 +5408,7 @@ deepCopy[1].push("Regression");
 
 // The original is SAFE!
 console.log(originalTests[1]); // ["P1", "Smoke"] ✅
-console.log(deepCopy[1]);      // ["P1", "Smoke", "Regression"]
+console.log(deepCopy[1]); // ["P1", "Smoke", "Regression"]
 ```
 
 > 🎯 **SDET Golden Rule:** If your array is flat (just strings/numbers), use `[...array]`. If your array contains **objects or other arrays** (like API JSON responses), use `JSON.parse(JSON.stringify(array))` to copy it safely before modifying it!
@@ -5119,6 +5418,7 @@ console.log(deepCopy[1]);      // ["P1", "Smoke", "Regression"]
 ## 1️⃣1️⃣ Array Destructuring
 
 ### Basic Destructuring
+
 ```javascript
 let [a, b, c] = [10, 20, 30];
 console.log(a); // 10
@@ -5127,26 +5427,29 @@ console.log(c); // 30
 
 // Skip elements
 let [first, , third] = [10, 20, 30];
-console.log(first);  // 10
-console.log(third);  // 30 (second is skipped)
+console.log(first); // 10
+console.log(third); // 30 (second is skipped)
 ```
 
 ### Rest Operator with Destructuring
+
 ```javascript
 let [first, second, ...rest] = [10, 20, 30, 40, 50];
-console.log(first);  // 10
+console.log(first); // 10
 console.log(second); // 20
-console.log(rest);   // [30, 40, 50]
+console.log(rest); // [30, 40, 50]
 
 // SDET: Separate test cases
 let [head, ...tail] = ["setup", "login", "checkout", "logout"];
-console.log(head);   // "setup"
-console.log(tail);   // ["login", "checkout", "logout"]
+console.log(head); // "setup"
+console.log(tail); // ["login", "checkout", "logout"]
 ```
 
 ### Swapping Values
+
 ```javascript
-let a = 1, b = 2;
+let a = 1,
+  b = 2;
 [a, b] = [b, a]; // Swap!
 console.log(a, b); // 2, 1
 ```
@@ -5155,79 +5458,87 @@ console.log(a, b); // 2, 1
 
 ## 1️⃣2️⃣ Pure vs Impure Methods — Quick Reference
 
-| Method | Pure | Impure | Returns |
-|---|---|---|---|
-| `push()` | ❌ | ✅ | New length |
-| `pop()` | ❌ | ✅ | Removed item |
-| `unshift()` | ❌ | ✅ | New length |
-| `shift()` | ❌ | ✅ | Removed item |
-| `splice()` | ❌ | ✅ | Removed items |
-| `sort()` | ❌ | ✅ | Sorted array |
-| `reverse()` | ❌ | ✅ | Reversed array |
-| `slice()` | ✅ | - | New array |
-| `concat()` | ✅ | - | New array |
-| `map()` | ✅ | - | New array |
-| `filter()` | ✅ | - | New array |
-| `reduce()` | ✅ | - | Single value |
-| `forEach()` | ❌* | - | `undefined` |
-| `find()` | ✅ | - | Item or `undefined` |
-| `findIndex()` | ✅ | - | Index or `-1` |
-| `includes()` | ✅ | - | Boolean |
-| `indexOf()` | ✅ | - | Index or `-1` |
-| `every()` | ✅ | - | Boolean |
-| `some()` | ✅ | - | Boolean |
-| `join()` | ✅ | - | String |
-| `flat()` | ✅ | - | New array |
-| `flatMap()` | ✅ | - | New array |
-| `reduceRight()`| ✅ | - | Single value |
+| Method          | Pure | Impure | Returns             |
+| --------------- | ---- | ------ | ------------------- |
+| `push()`        | ❌   | ✅     | New length          |
+| `pop()`         | ❌   | ✅     | Removed item        |
+| `unshift()`     | ❌   | ✅     | New length          |
+| `shift()`       | ❌   | ✅     | Removed item        |
+| `splice()`      | ❌   | ✅     | Removed items       |
+| `sort()`        | ❌   | ✅     | Sorted array        |
+| `reverse()`     | ❌   | ✅     | Reversed array      |
+| `slice()`       | ✅   | -      | New array           |
+| `concat()`      | ✅   | -      | New array           |
+| `map()`         | ✅   | -      | New array           |
+| `filter()`      | ✅   | -      | New array           |
+| `reduce()`      | ✅   | -      | Single value        |
+| `forEach()`     | ❌\* | -      | `undefined`         |
+| `find()`        | ✅   | -      | Item or `undefined` |
+| `findIndex()`   | ✅   | -      | Index or `-1`       |
+| `includes()`    | ✅   | -      | Boolean             |
+| `indexOf()`     | ✅   | -      | Index or `-1`       |
+| `every()`       | ✅   | -      | Boolean             |
+| `some()`        | ✅   | -      | Boolean             |
+| `join()`        | ✅   | -      | String              |
+| `flat()`        | ✅   | -      | New array           |
+| `flatMap()`     | ✅   | -      | New array           |
+| `reduceRight()` | ✅   | -      | Single value        |
 
-> *`forEach` doesn't modify the array itself, but doesn't return anything.
+> \*`forEach` doesn't modify the array itself, but doesn't return anything.
 
 ---
 
 ## 🚀 JavaScript Array Methods: When to use what
 
 ### 1. `forEach` (The Inspector)
-* **Goal:** To **do an action** for every single item (like printing to the screen or clicking a button).
-* **Returns:** `undefined` (Nothing).
-* **Rule:** Never try to save it to a variable.
+
+- **Goal:** To **do an action** for every single item (like printing to the screen or clicking a button).
+- **Returns:** `undefined` (Nothing).
+- **Rule:** Never try to save it to a variable.
+
 ```javascript
 // Example: Just looking at the data
 arr.forEach((val) => {
-    console.log(val); 
+  console.log(val);
 });
 ```
 
 ### 2. `map` (The Factory)
-* **Goal:** To create a **brand new array** by transforming every single item in the original array.
-* **Returns:** A New Array (exact same size as the original).
-* **Rule:** You must return the new value you want to build.
+
+- **Goal:** To create a **brand new array** by transforming every single item in the original array.
+- **Returns:** A New Array (exact same size as the original).
+- **Rule:** You must return the new value you want to build.
+
 ```javascript
 // Example: Multiply everything by 2
 let doubled = arr.map((val) => {
-    return val * 2; 
+  return val * 2;
 });
 ```
 
 ### 3. `filter` (The Bouncer)
-* **Goal:** To create a **smaller array** by only keeping items that pass a specific test.
-* **Returns:** A New Array (smaller, or empty if nothing passes).
-* **Rule:** You must return a True/False math condition.
+
+- **Goal:** To create a **smaller array** by only keeping items that pass a specific test.
+- **Returns:** A New Array (smaller, or empty if nothing passes).
+- **Rule:** You must return a True/False math condition.
+
 ```javascript
 // Example: Keep only numbers greater than 10
 let winners = arr.filter((val) => {
-    return val > 10; 
+  return val > 10;
 });
 ```
 
 ### 4. `reduce` (The Snowball)
-* **Goal:** To crush the entire array down into **one single value** (like a total sum, or a single Object backpack).
-* **Returns:** A Single Value.
-* **Rule:** You must use an accumulator (the snowball) and give it a starting value at the very end.
+
+- **Goal:** To crush the entire array down into **one single value** (like a total sum, or a single Object backpack).
+- **Returns:** A Single Value.
+- **Rule:** You must use an accumulator (the snowball) and give it a starting value at the very end.
+
 ```javascript
 // Example: Add all numbers together
 let totalSum = arr.reduce((acc, val) => {
-    return acc + val;
+  return acc + val;
 }, 0); // <-- 0 is the starting value
 ```
 
@@ -5239,24 +5550,25 @@ JavaScript developers used to hate that `sort()`, `reverse()`, and `splice()` mo
 
 In 2023, JavaScript introduced **Pure** versions of these methods. They do the exact same thing, but they **create a brand new array** and leave the original completely untouched!
 
-| Old Mutating Method | New Pure Method (ES2023) | What it does |
-|---|---|---|
-| `sort()` | **`toSorted()`** | Returns a new sorted array. |
-| `reverse()` | **`toReversed()`** | Returns a new reversed array. |
-| `splice()` | **`toSpliced()`** | Returns a new array with items added/removed. |
-| `arr[index] = val` | **`with(index, val)`** | Returns a new array with the item replaced. |
+| Old Mutating Method | New Pure Method (ES2023) | What it does                                  |
+| ------------------- | ------------------------ | --------------------------------------------- |
+| `sort()`            | **`toSorted()`**         | Returns a new sorted array.                   |
+| `reverse()`         | **`toReversed()`**       | Returns a new reversed array.                 |
+| `splice()`          | **`toSpliced()`**        | Returns a new array with items added/removed. |
+| `arr[index] = val`  | **`with(index, val)`**   | Returns a new array with the item replaced.   |
 
 ### ES2023 Code Examples:
-```javascript
+
+````javascript
 let months = ["Jan", "Mar", "Apr"];
 
 // 1. toSorted()
-let sortedMonths = months.toSorted(); 
+let sortedMonths = months.toSorted();
 // sortedMonths is ["Apr", "Jan", "Mar"]
 // months is STILL ["Jan", "Mar", "Apr"] ✅
 
 // 2. toReversed()
-let reversedMonths = months.toReversed(); 
+let reversedMonths = months.toReversed();
 // reversedMonths is ["Apr", "Mar", "Jan"]
 
 // 3. toSpliced(index, deleteCount, item)
@@ -5264,14 +5576,14 @@ let insertedMonths = months.toSpliced(1, 0, "Feb");
 // insertedMonths is ["Jan", "Feb", "Mar", "Apr"]
 
 // 4. with(index, newValue) — Replace without mutating
-let fixedMonths = months.with(1, "March"); 
+let fixedMonths = months.with(1, "March");
 // fixedMonths is ["Jan", "March", "Apr"]
 
 ---
 
 ### Discount Scenario (Modifying Array)
 
-```javascript 
+```javascript
 
 # Modifying Arrays in JavaScript: The Discount Scenario
 
@@ -5289,7 +5601,7 @@ let prices = [250, 645, 300, 900, 50];
 
 // Loop through the array using the index (i)
 for (let i = 0; i < prices.length; i++) {
-    
+
     // THE LONG WAY:
     // let discount = prices[i] * 0.10;
     // prices[i] = prices[i] - discount;
@@ -5308,28 +5620,30 @@ for (let i = 0;i < items.length; i++){
     items[i] -= offer;
 }
 console.log(items)
-```
+````
+
 ### How to find the largest and smallest value in an Array
 
-``` javascript
+```javascript
 let prices = [250, 645, 300, 900, 50];
 
 let largest = prices[0];
 let smallest = prices[0];
 
 for (let i = 1; i < prices.length; i++) {
-    if (prices[i] > largest) {
-        largest = prices[i];
-    }
-    if (prices[i] < smallest) {
-        smallest = prices[i];
-    }
+  if (prices[i] > largest) {
+    largest = prices[i];
+  }
+  if (prices[i] < smallest) {
+    smallest = prices[i];
+  }
 }
 
 console.log(largest);
 console.log(smallest);
 ```
-### How to find percentage 
+
+### How to find percentage
 
 ```javascript
 Scenario 1: You need to find "X% of a number"
@@ -5343,7 +5657,7 @@ JavaScript
 let totalCart = 200;
 let taxRate = 15; // 15%
 
-let taxAmount = (taxRate / 100) * totalCart; 
+let taxAmount = (taxRate / 100) * totalCart;
 console.log(taxAmount); // Output: 30
 
 
@@ -5369,6 +5683,7 @@ There are 2 types of Array methods:
 1. Pure Methods (Non-Mutating): These methods do NOT change the original array. They return a new array with the results.
 2. Impure Methods (Mutating): These methods modify (change) the original array directly.
 ```
+
 ### Array Methods Examples
 
 ```javascript
@@ -5376,12 +5691,12 @@ let numbers = [1, 2, 3, 4, 5];
 
 // 1. Pure Methods
 // map: Creates a NEW array with modified values
-let doubled = numbers.map(n => n * 2); 
+let doubled = numbers.map((n) => n * 2);
 console.log(doubled); // [2, 4, 6, 8, 10]
 console.log(numbers); // Original array is unchanged: [1, 2, 3, 4, 5]
 
 // filter: Creates a NEW array with filtered values
-let evens = numbers.filter(n => n % 2 === 0);
+let evens = numbers.filter((n) => n % 2 === 0);
 console.log(evens); // [2, 4]
 
 // 2. Impure Methods
@@ -5389,43 +5704,45 @@ console.log(evens); // [2, 4]
 let removed = numbers.splice(1, 2); // Removes 2 items starting from index 1
 console.log(removed); // [2, 3]
 console.log(numbers); // Original array is CHAGNED: [1, 4, 5]
-``` 
+```
 
 ---
 
 ### 📋 Array Methods — Quick Reference Table
 
-| Method | What it does | Pure / Impure | Returns |
-|---|---|---|---|
-| `.push(item)` | Add to the **END** | ❌ Impure | New length |
-| `.pop()` | Remove from the **END** | ❌ Impure | Removed item |
-| `.unshift(item)` | Add to the **BEGINNING** | ❌ Impure | New length |
-| `.shift()` | Remove from the **BEGINNING** | ❌ Impure | Removed item |
-| `.splice(start, del, ...items)` | Add / Remove / Replace at any position | ❌ Impure | Removed items array |
-| `.sort()` | Sort items in place | ❌ Impure | Sorted array |
-| `.reverse()` | Reverse items in place | ❌ Impure | Reversed array |
-| `.forEach(fn)` | Run a function on each item (no return) | ❌ Impure* | `undefined` |
-| `.slice(start, end)` | Copy a portion (original untouched) | ✅ Pure | New array |
-| `.concat(...arrays)` | Join multiple arrays | ✅ Pure | New array |
-| `.toString()` | Convert to comma-separated string | ✅ Pure | String |
-| `.includes(item)` | Is this item in the array? | ✅ Pure | `true` / `false` |
-| `.indexOf(item)` | Position of item (`-1` = not found) | ✅ Pure | Index number |
-| `.find(fn)` | First **item** matching a condition | ✅ Pure | Item or `undefined` |
-| `.findIndex(fn)` | First **index** matching a condition | ✅ Pure | Index or `-1` |
-| `.map(fn)` | Transform every item into a new value | ✅ Pure | New array |
-| `.filter(fn)` | Keep only items that pass a condition | ✅ Pure | New array |
-| `.reduce(fn, start)` | Boil array down to a single value | ✅ Pure | Single value |
+| Method                          | What it does                            | Pure / Impure | Returns             |
+| ------------------------------- | --------------------------------------- | ------------- | ------------------- |
+| `.push(item)`                   | Add to the **END**                      | ❌ Impure     | New length          |
+| `.pop()`                        | Remove from the **END**                 | ❌ Impure     | Removed item        |
+| `.unshift(item)`                | Add to the **BEGINNING**                | ❌ Impure     | New length          |
+| `.shift()`                      | Remove from the **BEGINNING**           | ❌ Impure     | Removed item        |
+| `.splice(start, del, ...items)` | Add / Remove / Replace at any position  | ❌ Impure     | Removed items array |
+| `.sort()`                       | Sort items in place                     | ❌ Impure     | Sorted array        |
+| `.reverse()`                    | Reverse items in place                  | ❌ Impure     | Reversed array      |
+| `.forEach(fn)`                  | Run a function on each item (no return) | ❌ Impure\*   | `undefined`         |
+| `.slice(start, end)`            | Copy a portion (original untouched)     | ✅ Pure       | New array           |
+| `.concat(...arrays)`            | Join multiple arrays                    | ✅ Pure       | New array           |
+| `.toString()`                   | Convert to comma-separated string       | ✅ Pure       | String              |
+| `.includes(item)`               | Is this item in the array?              | ✅ Pure       | `true` / `false`    |
+| `.indexOf(item)`                | Position of item (`-1` = not found)     | ✅ Pure       | Index number        |
+| `.find(fn)`                     | First **item** matching a condition     | ✅ Pure       | Item or `undefined` |
+| `.findIndex(fn)`                | First **index** matching a condition    | ✅ Pure       | Index or `-1`       |
+| `.map(fn)`                      | Transform every item into a new value   | ✅ Pure       | New array           |
+| `.filter(fn)`                   | Keep only items that pass a condition   | ✅ Pure       | New array           |
+| `.reduce(fn, start)`            | Boil array down to a single value       | ✅ Pure       | Single value        |
 
 > 💡 **Pure vs Impure:**
+>
 > - **Pure** — original array is **safe**, result is returned.
 > - **Impure** — original array is **changed** directly. Be careful!
-> - *`forEach` doesn't modify the array itself, but doesn't return anything either.
+> - \*`forEach` doesn't modify the array itself, but doesn't return anything either.
 
 ---
 
 ### 🔴 Impure Methods (Change the Original Array)
 
 #### `push()` — Add to the END
+
 ```javascript
 let tests = ["Login", "Search"];
 tests.push("Checkout");
@@ -5433,14 +5750,16 @@ console.log(tests); // ["Login", "Search", "Checkout"] ← Checkout added at end
 ```
 
 #### `pop()` — Remove from the END
+
 ```javascript
 let tests = ["Login", "Search", "Checkout"];
 let last = tests.pop();
-console.log(last);  // "Checkout" ← the removed item is returned
+console.log(last); // "Checkout" ← the removed item is returned
 console.log(tests); // ["Login", "Search"] ← original changed
 ```
 
 #### `unshift()` — Add to the BEGINNING
+
 ```javascript
 let tests = ["Search", "Checkout"];
 tests.unshift("Login");
@@ -5448,6 +5767,7 @@ console.log(tests); // ["Login", "Search", "Checkout"] ← Login added at front
 ```
 
 #### `shift()` — Remove from the BEGINNING
+
 ```javascript
 let tests = ["Login", "Search", "Checkout"];
 let first = tests.shift();
@@ -5456,6 +5776,7 @@ console.log(tests); // ["Search", "Checkout"] ← original changed
 ```
 
 #### `splice()` — Add / Remove / Replace Anywhere
+
 Syntax: `splice(startIndex, deleteCount, item1, item2, ...)`
 
 ```javascript
@@ -5464,7 +5785,7 @@ let tests = ["Login", "Search", "Checkout", "Profile"];
 // ✂️ REMOVE — delete 2 items starting at index 1
 let removed = tests.splice(1, 2);
 console.log(removed); // ["Search", "Checkout"] ← what was removed
-console.log(tests);   // ["Login", "Profile"]   ← original changed
+console.log(tests); // ["Login", "Profile"]   ← original changed
 
 // ➕ ADD — insert without removing (deleteCount = 0)
 let steps = ["Login", "Checkout"];
@@ -5482,14 +5803,15 @@ console.log(envs); // ["dev", "qa", "prod"]
 ### 🟢 Pure Methods (Original Array Is Safe)
 
 #### `slice()` — Copy a Portion (or the Whole Array)
+
 Syntax: `slice(startIndex, endIndex)` — end is **not included**
 
 ```javascript
 let tests = ["Login", "Search", "Checkout", "Profile", "Logout"];
 
-tests.slice(1, 3);  // ["Search", "Checkout"] ← index 1 and 2 only
-tests.slice(2);     // ["Checkout", "Profile", "Logout"] ← from index 2 to end
-tests.slice(-2);    // ["Profile", "Logout"] ← last 2 items
+tests.slice(1, 3); // ["Search", "Checkout"] ← index 1 and 2 only
+tests.slice(2); // ["Checkout", "Profile", "Logout"] ← from index 2 to end
+tests.slice(-2); // ["Profile", "Logout"] ← last 2 items
 
 // Copy the entire array (common trick)
 let copy = tests.slice();
@@ -5497,6 +5819,7 @@ console.log(tests); // original untouched ✅
 ```
 
 #### `concat()` — Join Multiple Arrays
+
 ```javascript
 let suite1 = ["Login", "Search"];
 let suite2 = ["Checkout", "Payment"];
@@ -5510,6 +5833,7 @@ console.log(suite1); // original untouched ✅
 ```
 
 #### `toString()` — Convert Array to String
+
 ```javascript
 let browsers = ["chrome", "firefox", "safari"];
 let result = browsers.toString();
@@ -5518,32 +5842,34 @@ console.log(result); // "chrome,firefox,safari"
 ```
 
 #### `includes()` — Check if Item Exists
+
 ```javascript
 let browsers = ["chrome", "firefox", "safari"];
 
 browsers.includes("firefox"); // true
-browsers.includes("edge");    // false
+browsers.includes("edge"); // false
 
 // SDET use: check if a required browser is in your test matrix
 if (!browsers.includes("edge")) {
-    console.log("⚠️ Edge not in test suite!");
+  console.log("⚠️ Edge not in test suite!");
 }
 ```
 
 #### `findIndex()` — Find Position by Condition
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
 ];
 
-let failIdx = tests.findIndex(t => t.status === "FAIL");
-console.log(failIdx);        // 1
+let failIdx = tests.findIndex((t) => t.status === "FAIL");
+console.log(failIdx); // 1
 console.log(tests[failIdx]); // { name: "Checkout", status: "FAIL" }
 
 // If NOT found, returns -1
-let crashIdx = tests.findIndex(t => t.status === "CRASH");
+let crashIdx = tests.findIndex((t) => t.status === "CRASH");
 console.log(crashIdx); // -1
 ```
 
@@ -5551,6 +5877,7 @@ console.log(crashIdx); // -1
 
 > ⚠️ **SDET Critical Tip — Leading Zeros:**
 > Whenever you automate a test and see a number on screen that **starts with a zero** (like `09`, `007`, `02345`), always save it as a **String**.
+>
 > ```javascript
 > // ❌ WRONG — JavaScript will drop the leading zero!
 > let orderId = 007;
@@ -5566,101 +5893,113 @@ console.log(crashIdx); // -1
 ### 🟡 More Essential Pure Methods
 
 #### `indexOf()` — Find Position of an Item
+
 Like `findIndex` but for a **direct value** (not a condition). Returns `-1` if not found.
+
 ```javascript
 let browsers = ["chrome", "firefox", "safari", "firefox"];
 
-browsers.indexOf("firefox");   // 1 ← first occurrence
-browsers.indexOf("edge");      // -1 ← not found
+browsers.indexOf("firefox"); // 1 ← first occurrence
+browsers.indexOf("edge"); // -1 ← not found
 
 // SDET use: confirm an item is NOT in the list
 if (browsers.indexOf("IE") === -1) {
-    console.log("✅ IE is not in the test suite");
+  console.log("✅ IE is not in the test suite");
 }
 ```
 
 #### `find()` — Get the Actual Item (not the index)
+
 `findIndex` gives you the position. `find` gives you the **item itself**.
+
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
 ];
 
 // findIndex → gives the index number (1)
-let idx = tests.findIndex(t => t.status === "FAIL"); // 1
+let idx = tests.findIndex((t) => t.status === "FAIL"); // 1
 
 // find → gives the actual object
-let failedTest = tests.find(t => t.status === "FAIL");
+let failedTest = tests.find((t) => t.status === "FAIL");
 console.log(failedTest); // { name: "Checkout", status: "FAIL" }
 
 // If nothing matches, returns undefined
-let crash = tests.find(t => t.status === "CRASH");
+let crash = tests.find((t) => t.status === "CRASH");
 console.log(crash); // undefined
 ```
 
 #### `map()` — Transform Every Item
+
 Creates a **brand new array** by applying a function to every item. Original is safe.
+
 ```javascript
 let prices = [100, 200, 300];
 
 // Apply 10% discount to all prices
-let discounted = prices.map(p => p * 0.9);
+let discounted = prices.map((p) => p * 0.9);
 console.log(discounted); // [90, 180, 270]
-console.log(prices);     // [100, 200, 300] ← original unchanged ✅
+console.log(prices); // [100, 200, 300] ← original unchanged ✅
 
 // SDET use: extract one field from an array of objects
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
 ];
-let names = tests.map(t => t.name);
+let names = tests.map((t) => t.name);
 console.log(names); // ["Login", "Checkout"]
 ```
 
 #### `filter()` — Keep Only Items That Pass a Condition
+
 Creates a **new array** with only the items where the condition is `true`.
+
 ```javascript
 let results = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
-    { name: "Profile",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
+  { name: "Profile", status: "FAIL" },
 ];
 
-let failures = results.filter(r => r.status === "FAIL");
+let failures = results.filter((r) => r.status === "FAIL");
 console.log(failures);
 // [{ name: "Checkout", status: "FAIL" }, { name: "Profile", status: "FAIL" }]
 
-let passes = results.filter(r => r.status === "PASS");
+let passes = results.filter((r) => r.status === "PASS");
 console.log(passes.length); // 2
 ```
 
 #### `forEach()` — Run a Function on Every Item (No Return)
+
 `forEach` loops through every item and runs a function. It does **NOT** return anything — use it for side effects like `console.log` or updating something outside.
+
 ```javascript
 let tests = ["Login", "Checkout", "Search"];
 
 // Just print each test
-tests.forEach(test => {
-    console.log("🧪 Running: " + test);
+tests.forEach((test) => {
+  console.log("🧪 Running: " + test);
 });
 // 🧪 Running: Login
 // 🧪 Running: Checkout
 // 🧪 Running: Search
 
 // forEach vs map — key difference:
-let result = tests.forEach(t => t.toUpperCase()); // Returns undefined!
+let result = tests.forEach((t) => t.toUpperCase()); // Returns undefined!
 console.log(result); // undefined ← forEach never returns a new array
 
-let result2 = tests.map(t => t.toUpperCase()); // Returns new array!
+let result2 = tests.map((t) => t.toUpperCase()); // Returns new array!
 console.log(result2); // ["LOGIN", "CHECKOUT", "SEARCH"]
 ```
 
 #### `reduce()` — Boil the Whole Array Down to One Value
+
 `reduce` takes all items and combines them into a **single result** (total, string, object, etc.).
 Syntax: `reduce((accumulator, currentItem) => ..., startingValue)`
+
 ```javascript
 let prices = [29.99, 59.99, 89.99];
 
@@ -5671,7 +6010,7 @@ console.log(total); // 179.97
 // SDET use: count how many tests passed
 let results = ["PASS", "FAIL", "PASS", "PASS", "FAIL"];
 let passCount = results.reduce((count, status) => {
-    return status === "PASS" ? count + 1 : count;
+  return status === "PASS" ? count + 1 : count;
 }, 0);
 console.log(passCount); // 3
 ```
@@ -5681,7 +6020,9 @@ console.log(passCount); // 3
 ### 🔴 Impure Methods — `sort()` & `reverse()`
 
 #### `sort()` — Sort the Array In Place
+
 > ⚠️ By default `sort()` converts items to **strings** and sorts alphabetically. For numbers you **must** provide a compare function.
+
 ```javascript
 // Strings — works fine by default
 let browsers = ["safari", "chrome", "firefox"];
@@ -5698,6 +6039,7 @@ console.log(scores); // [300, 100, 50, 25, 8]
 ```
 
 #### `reverse()` — Reverse the Array In Place
+
 ```javascript
 let steps = ["Login", "Search", "Checkout", "Logout"];
 steps.reverse();
@@ -5706,10 +6048,9 @@ console.log(steps); // ["Logout", "Checkout", "Search", "Login"]
 
 // Safe reverse (use slice first to copy, then reverse)
 let safeReversed = steps.slice().reverse();
-console.log(steps);        // original untouched ✅
+console.log(steps); // original untouched ✅
 console.log(safeReversed); // reversed copy
 ```
-
 
 ### Accessing and Modifying
 
@@ -5729,12 +6070,12 @@ The simplest search. Just tells you YES (`true`) or NO (`false`).
 let browsers = ["chrome", "firefox", "safari"];
 
 console.log(browsers.includes("firefox")); // true
-console.log(browsers.includes("edge"));    // false
+console.log(browsers.includes("edge")); // false
 
 // SDET use: check if a required browser is in your test list
 if (!browsers.includes("edge")) {
-    console.log("⚠️ Edge not in test suite! Adding it.");
-    browsers.push("edge");
+  console.log("⚠️ Edge not in test suite! Adding it.");
+  browsers.push("edge");
 }
 ```
 
@@ -5749,17 +6090,17 @@ If nothing matches, returns `undefined`.
 
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
+  { name: "Payment", status: "FAIL" },
 ];
 
-let firstFail = tests.find(t => t.status === "FAIL");
+let firstFail = tests.find((t) => t.status === "FAIL");
 console.log(firstFail); // { name: "Checkout", status: "FAIL" } ← stops at FIRST match
 
 // If not found:
-let crashed = tests.find(t => t.status === "CRASH");
+let crashed = tests.find((t) => t.status === "CRASH");
 console.log(crashed); // undefined
 ```
 
@@ -5772,20 +6113,21 @@ Returns `-1` if nothing matches.
 
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
 ];
 
-let failIdx = tests.findIndex(t => t.status === "FAIL");
-console.log(failIdx);        // 1
+let failIdx = tests.findIndex((t) => t.status === "FAIL");
+console.log(failIdx); // 1
 console.log(tests[failIdx]); // { name: "Checkout", status: "FAIL" }
 
-let crashIdx = tests.findIndex(t => t.status === "CRASH");
+let crashIdx = tests.findIndex((t) => t.status === "CRASH");
 console.log(crashIdx); // -1 ← means NOT found
 ```
 
 > 📊 **`find` vs `findIndex` in one line:**
+>
 > - `find` → gives you the **item** (the object/value itself)
 > - `findIndex` → gives you the **position number** (where it is)
 
@@ -5798,18 +6140,18 @@ Useful when you want the most recent match.
 
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
+  { name: "Payment", status: "FAIL" },
 ];
 
 // find → returns FIRST FAIL (Checkout)
-let firstFail = tests.find(t => t.status === "FAIL");
+let firstFail = tests.find((t) => t.status === "FAIL");
 console.log(firstFail.name); // "Checkout"
 
 // findLast → returns LAST FAIL (Payment)
-let lastFail = tests.findLast(t => t.status === "FAIL");
+let lastFail = tests.findLast((t) => t.status === "FAIL");
 console.log(lastFail.name); // "Payment"
 ```
 
@@ -5823,14 +6165,14 @@ Like `findIndex` but searches from the END. Returns `-1` if not found.
 
 ```javascript
 let tests = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
-    { name: "Payment",  status: "FAIL" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
+  { name: "Payment", status: "FAIL" },
 ];
 
-let lastFailIdx = tests.findLastIndex(t => t.status === "FAIL");
-console.log(lastFailIdx);        // 3
+let lastFailIdx = tests.findLastIndex((t) => t.status === "FAIL");
+console.log(lastFailIdx); // 3
 console.log(tests[lastFailIdx]); // { name: "Payment", status: "FAIL" }
 ```
 
@@ -5838,13 +6180,13 @@ console.log(tests[lastFailIdx]); // { name: "Payment", status: "FAIL" }
 
 #### 📋 Quick Comparison — All Searching Methods
 
-| Method | Searches From | Returns | Not Found Returns |
-|---|---|---|---|
-| `includes(item)` | Start | `true` or `false` | `false` |
-| `find(fn)` | Start | The **item** | `undefined` |
-| `findIndex(fn)` | Start | The **index** | `-1` |
-| `findLast(fn)` | **End** | The **item** (last match) | `undefined` |
-| `findLastIndex(fn)` | **End** | The **index** (last match) | `-1` |
+| Method              | Searches From | Returns                    | Not Found Returns |
+| ------------------- | ------------- | -------------------------- | ----------------- |
+| `includes(item)`    | Start         | `true` or `false`          | `false`           |
+| `find(fn)`          | Start         | The **item**               | `undefined`       |
+| `findIndex(fn)`     | Start         | The **index**              | `-1`              |
+| `findLast(fn)`      | **End**       | The **item** (last match)  | `undefined`       |
+| `findLastIndex(fn)` | **End**       | The **index** (last match) | `-1`              |
 
 ---
 
@@ -5858,8 +6200,8 @@ console.log(tests[lastFailIdx]); // { name: "Payment", status: "FAIL" }
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // Keep only even numbers
-let evens = numbers.filter(n => n % 2 === 0);
-console.log(evens);   // [2, 4, 6, 8, 10]
+let evens = numbers.filter((n) => n % 2 === 0);
+console.log(evens); // [2, 4, 6, 8, 10]
 console.log(numbers); // [1,2,3,4,5,6,7,8,9,10] ← original untouched ✅
 ```
 
@@ -5867,15 +6209,15 @@ console.log(numbers); // [1,2,3,4,5,6,7,8,9,10] ← original untouched ✅
 
 ```javascript
 let results = [
-    { name: "Login",    status: "PASS" },
-    { name: "Checkout", status: "FAIL" },
-    { name: "Search",   status: "PASS" },
-    { name: "Payment",  status: "FAIL" },
-    { name: "Profile",  status: "PASS" },
+  { name: "Login", status: "PASS" },
+  { name: "Checkout", status: "FAIL" },
+  { name: "Search", status: "PASS" },
+  { name: "Payment", status: "FAIL" },
+  { name: "Profile", status: "PASS" },
 ];
 
 // Get only failed tests
-let failures = results.filter(r => r.status === "FAIL");
+let failures = results.filter((r) => r.status === "FAIL");
 console.log(failures);
 // [
 //   { name: "Checkout", status: "FAIL" },
@@ -5883,7 +6225,7 @@ console.log(failures);
 // ]
 
 // Get only passed tests
-let passes = results.filter(r => r.status === "PASS");
+let passes = results.filter((r) => r.status === "PASS");
 console.log("✅ Passed:", passes.length); // ✅ Passed: 3
 console.log("❌ Failed:", failures.length); // ❌ Failed: 2
 ```
@@ -5893,18 +6235,20 @@ console.log("❌ Failed:", failures.length); // ❌ Failed: 2
 ```javascript
 // Get just the NAMES of failed tests
 let failedNames = results
-    .filter(r => r.status === "FAIL")  // keep only failures
-    .map(r => r.name);                  // extract their names
+  .filter((r) => r.status === "FAIL") // keep only failures
+  .map((r) => r.name); // extract their names
 
 console.log(failedNames); // ["Checkout", "Payment"]
 ```
 
 > 💡 **`filter` vs `find`:**
+>
 > - `filter` → returns a **new array** with ALL matches
 > - `find` → returns the **first single item** that matches (not an array)
+>
 > ```javascript
-> results.find(r => r.status === "FAIL");   // { name: "Checkout", ... }  ← one item
-> results.filter(r => r.status === "FAIL");  // [{ name: "Checkout",...}, { name:"Payment",...}] ← all
+> results.find((r) => r.status === "FAIL"); // { name: "Checkout", ... }  ← one item
+> results.filter((r) => r.status === "FAIL"); // [{ name: "Checkout",...}, { name:"Payment",...}] ← all
 > ```
 
 ---
@@ -5913,10 +6257,10 @@ console.log(failedNames); // ["Checkout", "Payment"]
 
 Before learning about multi-dimensional arrays, understand how **rows** and **columns** work. Think of a Google Sheet:
 
-| Name | Email | Status |
-|------|-------|--------|
-| Alice | alice@test.com | Active |
-| Bob | bob@test.com | Active |
+| Name    | Email            | Status   |
+| ------- | ---------------- | -------- |
+| Alice   | alice@test.com   | Active   |
+| Bob     | bob@test.com     | Active   |
 | Charlie | charlie@test.com | Inactive |
 
 **Rows** = Horizontal lines (each person is one row)  
@@ -5933,11 +6277,12 @@ Rows:
 ```
 
 In JavaScript:
+
 ```javascript
 let testResults = [
-  ["Login Test",    "PASS", "1.2s"],    // Row 1
-  ["Search Test",   "FAIL", "0.8s"],    // Row 2
-  ["Checkout Test", "PASS", "2.5s"]     // Row 3
+  ["Login Test", "PASS", "1.2s"], // Row 1
+  ["Search Test", "FAIL", "0.8s"], // Row 2
+  ["Checkout Test", "PASS", "2.5s"], // Row 3
 ];
 
 // Access first row: testResults[0] → ["Login Test", "PASS", "1.2s"]
@@ -5954,11 +6299,12 @@ Columns:  Student  |  Math | English | Science
 ```
 
 In JavaScript:
+
 ```javascript
 let grades = [
-  ["Alice",   90, 85, 92],     // Row 1
-  ["Bob",     75, 88, 80],     // Row 2
-  ["Charlie", 88, 92, 91]      // Row 3
+  ["Alice", 90, 85, 92], // Row 1
+  ["Bob", 75, 88, 80], // Row 2
+  ["Charlie", 88, 92, 91], // Row 3
 ];
 
 // Get Alice's math grade: grades[0][1] → 90
@@ -5975,11 +6321,12 @@ Columns:  Username | Age | Country | Premium
 ```
 
 In JavaScript:
+
 ```javascript
 let users = [
-  ["john_doe",   28, "USA",       true],      // Row 1
-  ["jane_smith", 34, "UK",        false],     // Row 2
-  ["pak_user",   25, "Pakistan",  true]       // Row 3
+  ["john_doe", 28, "USA", true], // Row 1
+  ["jane_smith", 34, "UK", false], // Row 2
+  ["pak_user", 25, "Pakistan", true], // Row 3
 ];
 
 // Access John's age: users[0][1] → 28
@@ -6003,9 +6350,9 @@ A **2D array** is an array of arrays — like a **table with rows and columns**.
 ```javascript
 // Basic 2D array (3x3 matrix)
 let matrix = [
-    [1, 2, 3],      // row 0
-    [4, 5, 6],      // row 1
-    [7, 8, 9]       // row 2
+  [1, 2, 3], // row 0
+  [4, 5, 6], // row 1
+  [7, 8, 9], // row 2
 ];
 
 // Visual representation:
@@ -6016,16 +6363,16 @@ let matrix = [
 
 // Rectangular array (3 rows, 4 columns)
 let grid = [
-    [10, 20, 30, 40],
-    [50, 60, 70, 80],
-    [90, 100, 110, 120]
+  [10, 20, 30, 40],
+  [50, 60, 70, 80],
+  [90, 100, 110, 120],
 ];
 
 // SDET: Test results table
 let testResults = [
-    ["login",    "pass",  200],
-    ["checkout", "fail",  404],
-    ["payment",  "pass",  201]
+  ["login", "pass", 200],
+  ["checkout", "fail", 404],
+  ["payment", "pass", 201],
 ];
 ```
 
@@ -6047,9 +6394,9 @@ Access using **[row][column]** syntax.
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
 ];
 
 // ✅ GET values using [row][col]
@@ -6063,8 +6410,8 @@ matrix[0][0] = 99;
 console.log(matrix[0][0]); // 99
 
 // ✅ Get last element
-let rows = matrix.length;           // 3
-let cols = matrix[0].length;        // 3
+let rows = matrix.length; // 3
+let cols = matrix[0].length; // 3
 console.log(matrix[rows - 1][cols - 1]); // 9 (matrix[2][2])
 ```
 
@@ -6089,15 +6436,17 @@ matrix[5][5]; // undefined
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
 ];
 
-for (let i = 0; i < matrix.length; i++) {          // outer: rows
-    for (let j = 0; j < matrix[i].length; j++) {   // inner: columns
-        console.log(matrix[i][j]);
-    }
+for (let i = 0; i < matrix.length; i++) {
+  // outer: rows
+  for (let j = 0; j < matrix[i].length; j++) {
+    // inner: columns
+    console.log(matrix[i][j]);
+  }
 }
 // Output: 1 2 3 4 5 6 7 8 9
 ```
@@ -6106,14 +6455,16 @@ for (let i = 0; i < matrix.length; i++) {          // outer: rows
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6]
+  [1, 2, 3],
+  [4, 5, 6],
 ];
 
-for (let row of matrix) {           // each row is an array
-    for (let cell of row) {         // each cell in row
-        console.log(cell);
-    }
+for (let row of matrix) {
+  // each row is an array
+  for (let cell of row) {
+    // each cell in row
+    console.log(cell);
+  }
 }
 ```
 
@@ -6121,15 +6472,15 @@ for (let row of matrix) {           // each row is an array
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6]
+  [1, 2, 3],
+  [4, 5, 6],
 ];
 
-matrix.forEach(row => {
-    row.forEach(cell => {
-        process.stdout.write(cell + " ");
-    });
-    console.log(); // new line
+matrix.forEach((row) => {
+  row.forEach((cell) => {
+    process.stdout.write(cell + " ");
+  });
+  console.log(); // new line
 });
 // Output:
 // 1 2 3
@@ -6144,13 +6495,13 @@ matrix.forEach(row => {
 
 ```javascript
 let scores = [
-    [85, 90, 78],
-    [60, 45, 70],
-    [95, 88, 92]
+  [85, 90, 78],
+  [60, 45, 70],
+  [95, 88, 92],
 ];
 
 // Get sum of each row
-let rowSums = scores.map(row => row.reduce((a, b) => a + b, 0));
+let rowSums = scores.map((row) => row.reduce((a, b) => a + b, 0));
 console.log(rowSums); // [253, 175, 275]
 
 // Which student has the highest total?
@@ -6162,18 +6513,18 @@ console.log(maxSum); // 275
 
 ```javascript
 let suiteResults = [
-    ["login-pass",    "register-pass", "logout-pass"],
-    ["search-pass",   "filter-fail",   "sort-pass"],
-    ["checkout-fail", "payment-fail",  "confirm-pass"]
+  ["login-pass", "register-pass", "logout-pass"],
+  ["search-pass", "filter-fail", "sort-pass"],
+  ["checkout-fail", "payment-fail", "confirm-pass"],
 ];
 
 // Find all failures
 for (let i = 0; i < suiteResults.length; i++) {
-    for (let j = 0; j < suiteResults[i].length; j++) {
-        if (suiteResults[i][j].includes("fail")) {
-            console.log(`Row ${i}, Col ${j}: ${suiteResults[i][j]}`);
-        }
+  for (let j = 0; j < suiteResults[i].length; j++) {
+    if (suiteResults[i][j].includes("fail")) {
+      console.log(`Row ${i}, Col ${j}: ${suiteResults[i][j]}`);
     }
+  }
 }
 // Row 1, Col 1: filter-fail
 // Row 2, Col 0: checkout-fail
@@ -6184,22 +6535,22 @@ for (let i = 0; i < suiteResults.length; i++) {
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
 ];
 
 // Extract column 1 (middle column)
-let col1 = matrix.map(row => row[1]);
+let col1 = matrix.map((row) => row[1]);
 console.log(col1); // [2, 5, 8]
 
 // SDET: Get all statuses from test results
 let tests = [
-    ["login",    "pass"],
-    ["checkout", "fail"],
-    ["payment",  "pass"]
+  ["login", "pass"],
+  ["checkout", "fail"],
+  ["payment", "pass"],
 ];
-let statuses = tests.map(test => test[1]);
+let statuses = tests.map((test) => test[1]);
 console.log(statuses); // ["pass", "fail", "pass"]
 ```
 
@@ -6207,9 +6558,9 @@ console.log(statuses); // ["pass", "fail", "pass"]
 
 ```javascript
 let matrix = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9]
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
 ];
 
 // Convert to 1D
@@ -6219,9 +6570,9 @@ console.log(flat); // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 // Or manually
 let flattened = [];
 for (let row of matrix) {
-    for (let cell of row) {
-        flattened.push(cell);
-    }
+  for (let cell of row) {
+    flattened.push(cell);
+  }
 }
 ```
 
@@ -6234,16 +6585,16 @@ A **3D array** is an array of 2D arrays — like **multiple sheets/layers**.
 ```javascript
 // 3D array: 2 sheets, each with 2x2 matrix
 let data = [
-    // Sheet 0
-    [
-        [1, 2],
-        [3, 4]
-    ],
-    // Sheet 1
-    [
-        [5, 6],
-        [7, 8]
-    ]
+  // Sheet 0
+  [
+    [1, 2],
+    [3, 4],
+  ],
+  // Sheet 1
+  [
+    [5, 6],
+    [7, 8],
+  ],
 ];
 
 // Access: [sheet][row][col]
@@ -6256,12 +6607,15 @@ console.log(data[1][1][1]); // 8 (sheet 1, row 1, col 1)
 // 3  4        7  8
 
 // Iterate 3D
-for (let sheet of data) {          // each 2D sheet
-    for (let row of sheet) {       // each row in sheet
-        for (let cell of row) {    // each cell in row
-            console.log(cell);
-        }
+for (let sheet of data) {
+  // each 2D sheet
+  for (let row of sheet) {
+    // each row in sheet
+    for (let cell of row) {
+      // each cell in row
+      console.log(cell);
     }
+  }
 }
 ```
 
@@ -6270,16 +6624,16 @@ for (let sheet of data) {          // each 2D sheet
 ```javascript
 // Test results: different browsers, multiple environments, each test
 let results = [
-    // Chrome
-    [
-        ["dev", "pass", 120],
-        ["staging", "pass", 150]
-    ],
-    // Firefox
-    [
-        ["dev", "fail", 95],
-        ["staging", "pass", 160]
-    ]
+  // Chrome
+  [
+    ["dev", "pass", 120],
+    ["staging", "pass", 150],
+  ],
+  // Firefox
+  [
+    ["dev", "fail", 95],
+    ["staging", "pass", 160],
+  ],
 ];
 
 // Access: Which status for Firefox in Staging?
@@ -6302,11 +6656,11 @@ Pattern generation is common in coding interviews and useful for understanding n
 
 let n = 3;
 for (let i = 1; i <= n; i++) {
-    let row = "";
-    for (let j = 1; j <= i; j++) {
-        row += "* ";
-    }
-    console.log(row.trim());
+  let row = "";
+  for (let j = 1; j <= i; j++) {
+    row += "* ";
+  }
+  console.log(row.trim());
 }
 ```
 
@@ -6322,11 +6676,11 @@ for (let i = 1; i <= n; i++) {
 
 let n = 5;
 for (let i = n; i >= 1; i--) {
-    let row = "";
-    for (let j = 1; j <= i; j++) {
-        row += "*";
-    }
-    console.log(row);
+  let row = "";
+  for (let j = 1; j <= i; j++) {
+    row += "*";
+  }
+  console.log(row);
 }
 ```
 
@@ -6340,19 +6694,19 @@ for (let i = n; i >= 1; i--) {
 
 let n = 3;
 for (let i = 1; i <= n; i++) {
-    let row = "";
-    
-    // Spaces
-    for (let j = 1; j <= n - i; j++) {
-        row += " ";
-    }
-    
-    // Stars
-    for (let j = 1; j <= 2 * i - 1; j++) {
-        row += "*";
-    }
-    
-    console.log(row);
+  let row = "";
+
+  // Spaces
+  for (let j = 1; j <= n - i; j++) {
+    row += " ";
+  }
+
+  // Stars
+  for (let j = 1; j <= 2 * i - 1; j++) {
+    row += "*";
+  }
+
+  console.log(row);
 }
 ```
 
@@ -6368,15 +6722,15 @@ for (let i = 1; i <= n; i++) {
 
 let n = 5;
 for (let i = 1; i <= n; i++) {
-    let row = "";
-    for (let j = 1; j <= n; j++) {
-        if (i === 1 || i === n || j === 1 || j === n) {
-            row += "* ";
-        } else {
-            row += "  ";
-        }
+  let row = "";
+  for (let j = 1; j <= n; j++) {
+    if (i === 1 || i === n || j === 1 || j === n) {
+      row += "* ";
+    } else {
+      row += "  ";
     }
-    console.log(row);
+  }
+  console.log(row);
 }
 ```
 
@@ -6384,18 +6738,18 @@ for (let i = 1; i <= n; i++) {
 
 ## Quick Reference: 2D Array Operations
 
-| Operation | Code | Result |
-|---|---|---|
-| **Create 2D** | `[[1,2],[3,4]]` | 2x2 matrix |
-| **Access** | `matrix[0][1]` | Element at row 0, col 1 |
-| **Modify** | `matrix[0][1] = 99` | Changes element |
-| **Get rows** | `matrix.length` | Number of rows |
-| **Get columns** | `matrix[0].length` | Number of columns in row 0 |
-| **Sum row** | `row.reduce((a,b) => a+b, 0)` | Total of row values |
-| **Get column** | `matrix.map(r => r[i])` | All values from column i |
-| **Flatten** | `matrix.flat()` | Convert 2D to 1D |
-| **Iterate rows** | `for (let row of matrix)` | Loop each row |
-| **Iterate all** | `for (let r of m) for (let c of r)` | Loop each cell |
+| Operation        | Code                                | Result                     |
+| ---------------- | ----------------------------------- | -------------------------- |
+| **Create 2D**    | `[[1,2],[3,4]]`                     | 2x2 matrix                 |
+| **Access**       | `matrix[0][1]`                      | Element at row 0, col 1    |
+| **Modify**       | `matrix[0][1] = 99`                 | Changes element            |
+| **Get rows**     | `matrix.length`                     | Number of rows             |
+| **Get columns**  | `matrix[0].length`                  | Number of columns in row 0 |
+| **Sum row**      | `row.reduce((a,b) => a+b, 0)`       | Total of row values        |
+| **Get column**   | `matrix.map(r => r[i])`             | All values from column i   |
+| **Flatten**      | `matrix.flat()`                     | Convert 2D to 1D           |
+| **Iterate rows** | `for (let row of matrix)`           | Loop each row              |
+| **Iterate all**  | `for (let r of m) for (let c of r)` | Loop each cell             |
 
 ---
 
@@ -6407,11 +6761,23 @@ let arr1D = [1, 2, 3, 4];
 console.log(arr1D[0]); // 1
 
 // 2D — Table/Matrix
-let arr2D = [[1, 2], [3, 4]];
+let arr2D = [
+  [1, 2],
+  [3, 4],
+];
 console.log(arr2D[0][1]); // 2
 
 // 3D — Multiple tables
-let arr3D = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]];
+let arr3D = [
+  [
+    [1, 2],
+    [3, 4],
+  ],
+  [
+    [5, 6],
+    [7, 8],
+  ],
+];
 console.log(arr3D[0][1][0]); // 3
 ```
 
@@ -6419,7 +6785,7 @@ console.log(arr3D[0][1][0]); // 3
 
 ### Printing on the Same Line in Node.js (Pattern Building)
 
-When building patterns or formatting terminal output, standard `console.log()` automatically adds a new line (an invisible "Enter" key press) at the end of every print. 
+When building patterns or formatting terminal output, standard `console.log()` automatically adds a new line (an invisible "Enter" key press) at the end of every print.
 
 To print multiple items side-by-side on the exact same line, you must use Node's `process.stdout.write()`.
 
@@ -6428,30 +6794,30 @@ let m = 3;
 
 // OUTER LOOP: Controls the Rows (Top to Bottom)
 for (let i = 1; i <= m; i++) {
-    
-    // INNER LOOP: Controls the Columns (Left to Right)
-    for (let j = 1; j <= i; j++) {
-        
-        // 🛑 process.stdout.write(): 
-        // Prints the string BUT leaves the cursor exactly where it finished. 
-        // This forces the next star to be printed right next to it horizontally.
-        process.stdout.write("* "); 
-    }
-    
-    // 🟢 console.log() (Empty):
-    // Once the inner loop is done building the row, we use an empty console.log().
-    // This simply acts like hitting the "Enter" key to drop the cursor down to the next line for the next row.
-    console.log(); 
+  // INNER LOOP: Controls the Columns (Left to Right)
+  for (let j = 1; j <= i; j++) {
+    // 🛑 process.stdout.write():
+    // Prints the string BUT leaves the cursor exactly where it finished.
+    // This forces the next star to be printed right next to it horizontally.
+    process.stdout.write("* ");
+  }
+
+  // 🟢 console.log() (Empty):
+  // Once the inner loop is done building the row, we use an empty console.log().
+  // This simply acts like hitting the "Enter" key to drop the cursor down to the next line for the next row.
+  console.log();
 }
 ```
+
 ### Functions
 
-- A function is a reusable block of code that performs a specific task. 
+- A function is a reusable block of code that performs a specific task.
 - Instead of repeating logic, we define it once and call it when ever needed. It increases the code reusability.
 
 ![Functions](Images/Functions.png)
 
 Functions are of two types
+
 1. Function statement (Normal Function)
 2. Arrow Function
 
@@ -6462,18 +6828,20 @@ Function statement is a function that is declared using the keyword function. It
 ```javascript
 //defination
 function functionName(parameters) {
-    // code to be executed
+  // code to be executed
 }
 
 // calling
-functionName(arguments)
+functionName(arguments);
 ```
 
--------------------------------------------------------------------------------------------
+---
+
 - **Parameters** means name of variables which are used to store the values which are passed to the function.
 - **Arguments** means values which are passed to the function.
 
 for example in:
+
 ```javascript
 functionName(parameters) {
     // code to be executed
@@ -6490,131 +6858,143 @@ add(5, 10);
 //A simple way to remember: Parameters = definition, Arguments = call.
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ## What is Return?
 
 Think of a function like a **machine**:
+
 - You put something **in** (arguments)
 - It does some work
 - It gives something **back** to you (return)
 
--------------------------------------------------------------------------------------------
+---
 
 ### Without Return
+
 The machine does the work but throws the result away:
 
 ```javascript
 function add(a, b) {
-    console.log(a + b) // prints 8, but thrown away
+  console.log(a + b); // prints 8, but thrown away
 }
 
-let x = add(3, 5)  // x is undefined ❌
-console.log(x * 2) // NaN ❌ can't use it
+let x = add(3, 5); // x is undefined ❌
+console.log(x * 2); // NaN ❌ can't use it
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ### With Return
+
 The machine hands the result back to YOU:
 
 ```javascript
 function add(a, b) {
-    return a + b // hands 8 back to whoever called it
+  return a + b; // hands 8 back to whoever called it
 }
 
-let x = add(3, 5)  // x is 8 ✅
-console.log(x * 2) // 16 ✅ now you can use it
+let x = add(3, 5); // x is 8 ✅
+console.log(x * 2); // 16 ✅ now you can use it
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ### One Important Rule
+
 Once `return` runs, the function stops. Anything after it is ignored:
 
 ```javascript
 function add(a, b) {
-    return a + b
-    console.log("I will never run") // ❌ dead code
+  return a + b;
+  console.log("I will never run"); // ❌ dead code
 }
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ### Quick Summary
+
 - `console.log()` inside = prints it, but **nobody gets it back**
 - `return` = **hands the value back** so you can use it elsewhere
 
------------------------------------------------------------------------------------------------------
+---
+
 # Basic Functions in JavaScript
 
 Functions can be categorized based on two things:
+
 - Do they take arguments? (input)
 - Do they return a value? (output)
 
--------------------------------------------------------------------------------------------
+---
 
 ## 1. No Parameters, No Return
+
 Only performs an action, returns nothing.
 
 ```javascript
 function greet() {
-    console.log("Hello World")
+  console.log("Hello World");
 }
 
-greet() // Output: Hello World
+greet(); // Output: Hello World
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ## 2. With Parameters, No Return
+
 Takes input, but returns nothing.
 
 ```javascript
 function greet(name) {
-    console.log("Hello " + name)
+  console.log("Hello " + name);
 }
 
-greet("Shuja") // Output: Hello Shuja
+greet("Shuja"); // Output: Hello Shuja
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ## 3. No Parameters, With Return
+
 Returns a value, but takes no input.
 
 ```javascript
 function greet() {
-    return "Hello World"
+  return "Hello World";
 }
 
-console.log(greet()) // Output: Hello World
+console.log(greet()); // Output: Hello World
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ## 4. With Parameters, With Return
+
 Takes input AND returns a value. (Most common in real projects)
 
 ```javascript
 function greet(name) {
-    return "Hello " + name
+  return "Hello " + name;
 }
 
-console.log(greet("Shuja")) // Output: Hello Shuja
+console.log(greet("Shuja")); // Output: Hello Shuja
 ```
 
--------------------------------------------------------------------------------------------
+---
 
 ## Quick Summary Table
 
-| Type | Parameters | Return | Example Call          |
-|------|------------|--------|-----------------------|
-| 1    | ❌ No      | ❌ No  | greet()               |
-| 2    | ✅ Yes     | ❌ No  | greet("Shuja")        |
-| 3    | ❌ No      | ✅ Yes | console.log(greet())  |
+| Type | Parameters | Return | Example Call                |
+| ---- | ---------- | ------ | --------------------------- |
+| 1    | ❌ No      | ❌ No  | greet()                     |
+| 2    | ✅ Yes     | ❌ No  | greet("Shuja")              |
+| 3    | ❌ No      | ✅ Yes | console.log(greet())        |
 | 4    | ✅ Yes     | ✅ Yes | console.log(greet("Shuja")) |
--------------------------------------------------------------------------------------------
+
+---
 
 ## Function Expression
 
@@ -6623,25 +7003,29 @@ In JavaScript, functions are treated as **values**. This means you can create a 
 When a function does not have a name after the `function` keyword, it is called an **Anonymous Function**.
 
 ### Normal Function vs. Function Expression
+
 The core difference between them is **Hoisting** (how JavaScript loads them into memory).
 
 #### 1. Normal Function (Function Declaration)
-Normal functions are **hoisted**. You can call them *before* they are defined in your code.
+
+Normal functions are **hoisted**. You can call them _before_ they are defined in your code.
+
 ```javascript
 console.log(greet1("Bob")); // ✅ Works!
 
 function greet1(name1) {
-    return `Hello, ${name1}!`;
+  return `Hello, ${name1}!`;
 }
 ```
--------------------------------------------------------------------------------------------
 
-###  2. Function Expression
+---
+
+### 2. Function Expression
 
 A function expression is simply storing a function inside a variable.
 
 const greet = function(name) {
-    return `Hello, ${name}!`;
+return `Hello, ${name}!`;
 };
 
 console.log(greet("Shuja")); // Output: Hello, Shuja!
@@ -6656,12 +7040,12 @@ That's it. The function has no name — the variable IS the name.
 greet("Shuja"); // ERROR — greet doesn't exist yet
 
 const greet = function(name) {
-    return `Hello, ${name}!`;
+return `Hello, ${name}!`;
 };
 
 // ✅ This works
 const greet = function(name) {
-    return `Hello, ${name}!`;
+return `Hello, ${name}!`;
 };
 
 greet("Shuja"); // Define first, call after
@@ -6678,7 +7062,7 @@ In test automation you will see this pattern constantly:
 const numbers = [1, 2, 3, 4, 5];
 
 const evenNumbers = numbers.filter(function(num) {
-    return num % 2 === 0;
+return num % 2 === 0;
 });
 
 console.log(evenNumbers); // [2, 4]
@@ -6691,13 +7075,13 @@ You will use this every single day in Playwright and JavaScript.
 
 ### Quick Summary
 
-| | Function Declaration | Function Expression |
-|---|---|---|
-| Has a name | ✅ Yes | ❌ No (variable is the name) |
-| Hoisted | ✅ Yes | ❌ No |
-| Use case | General functions | Callbacks, test helpers |
+|            | Function Declaration | Function Expression          |
+| ---------- | -------------------- | ---------------------------- |
+| Has a name | ✅ Yes               | ❌ No (variable is the name) |
+| Hoisted    | ✅ Yes               | ❌ No                        |
+| Use case   | General functions    | Callbacks, test helpers      |
 
--------------------------------------------------------------------------------------------
+---
 
 #### 2. Arrow Function:
 
@@ -6705,125 +7089,206 @@ Arrow function is a function that is declared using the arrow syntax `=>`. It is
 
 ```javascript
 const functionName = (parameters) => {
-    // code to be executed
-}
+  // code to be executed
+};
 
-// sum function - normal and arrow function 
+// sum function - normal and arrow function
 
 function sum(a, b) {
-    return a + b;
+  return a + b;
 }
 
 let arrowSum = (a, b) => a + b;
-console.log(arrowSum(10, 20))
-
+console.log(arrowSum(10, 20));
 
 // multiplication
 
 function multiplication(a, b) {
-    return a * b;
+  return a * b;
 }
 
-//double it with arrow function 
+//double it with arrow function
 
-const doubleIt = n => n * 2;
+const doubleIt = (n) => n * 2;
 console.log(doubleIt(20)); // prefered way to write as it is not bulky and concise.
 
-let arrowMultiplication = (a, b) => a * b;  
-console.log(arrowMultiplication(10, 20)) 
-
+let arrowMultiplication = (a, b) => a * b;
+console.log(arrowMultiplication(10, 20));
 
 // Function Statement:
 
 function getResult(score) {
-    return score >= 70 ? "pass" : "fail";
+  return score >= 70 ? "pass" : "fail";
 }
 
-getResult(85);  // "pass"
-getResult(45);  // "fail"
+getResult(85); // "pass"
+getResult(45); // "fail"
 
-console.log("------")
+console.log("------");
 
-function a (){
-    console.log("hello World")
+function a() {
+  console.log("hello World");
 }
 a();
 
-function b (hie){ //hie is parameter
-    console.log(hie)
+function b(hie) {
+  //hie is parameter
+  console.log(hie);
 }
-b("hi from shuja") // shuja is argument
+b("hi from shuja"); // shuja is argument
 
 // Arrow Function
 
 // 1. Basic Arrow Function
-// Syntax: 
+// Syntax:
 // const functionName = (parameter1, parameter2) => {
 //    // code to be executed
 // }
 
 // With no parameters
 let arrow = () => {
-    console.log("Hello")
-}
+  console.log("Hello");
+};
 arrow();
 
 let add = (a, b) => {
-    return a + b;
-}
+  return a + b;
+};
 
-console.log(add(2, 5));  // 7
+console.log(add(2, 5)); // 7
 
 let multiply = (a, b) => {
-    return a * b;
-}
+  return a * b;
+};
 
-console.log(multiply(2, 5));  // 10
+console.log(multiply(2, 5)); // 10
 
-function sum(x, y){
-    let s = x + y;
-    return s; // return is optional if not present function will return undefined. The meaning of return is to return the value to the caller. we can only have one return statement in a function.
+function sum(x, y) {
+  let s = x + y;
+  return s; // return is optional if not present function will return undefined. The meaning of return is to return the value to the caller. we can only have one return statement in a function.
 }
 sum(10, 20); // 30
 ```
 
 ```javascript
 function calculateBoth(x, y) {
-    let s = x + y;
-    let m = x * y;
-    
-    // 1. Pack your backpack (an Array!)
-    let myAnswers = [s, m]; 
-    
-    // 2. Carry the single backpack out the exit door
-    return myAnswers; 
+  let s = x + y;
+  let m = x * y;
+
+  // 1. Pack your backpack (an Array!)
+  let myAnswers = [s, m];
+
+  // 2. Carry the single backpack out the exit door
+  return myAnswers;
 }
 
 // 3. Catch the backpack
 let results = calculateBoth(10, 20);
 
-console.log(results);    // Output: [ 30, 200 ]
+console.log(results); // Output: [ 30, 200 ]
 console.log(results[0]); // Output: 30 (Just the sum)
 console.log(results[1]); // Output: 200 (Just the multiplication)
 ```
 
 > **Note:** Function parameters are like local variables of functions, and they are block scoped.
 
+---
+
+### Arrow Functions: Explicit vs. Implicit Return
+
+An arrow function can return a value in **two ways**, and the only thing that controls which one you use is whether you write **curly braces `{}`** or not.
+
+> 💡 **The Curly Braces are the Master Switch.**
+> They are the _only_ thing JavaScript looks at to decide whether it should return automatically or not.
+
+---
+
+#### 🔴 Scenario A — With Curly Braces `{ }` → You MUST write `return`
+
+When you put curly braces after the arrow `=>`, you are telling JavaScript:
+
+> _"I am opening a room. I might write five lines of code in here. Do NOT assume anything. Wait for me to manually write the word `return`."_
+
+If you forget `return` here, the function hands back `undefined`.
+
+```javascript
+// WITH curly braces → You MUST type 'return'
+const multiply = (n) => {
+  return n * 2;
+};
+
+console.log(multiply(10)); // Output: 20 ✅
+```
+
+---
+
+#### 🟢 Scenario B — Without Curly Braces → Automatic Return (Implicit Return)
+
+When you do **NOT** put curly braces, you are telling JavaScript:
+
+> _"This is a one-lane highway. Whatever math is on this single line, instantly throw it out the exit door."_
+
+This is the **only** time it will return without you typing the word `return`.
+
+```javascript
+// NO curly braces → It returns automatically (Implicit Return)
+const multiply = (n) => n * 2;
+
+console.log(multiply(10)); // Output: 20 ✅
+```
+
+---
+
+#### ❌ The #1 Mistake — The Broken Code
+
+This is the most common mistake new developers make. Study this carefully:
+
+```javascript
+// ❌ BROKEN: You used curly braces but forgot the word 'return'
+const multiply = (n) => {
+  n * 2; // ← This line runs, but the result is thrown away!
+};
+
+let answer = multiply(10);
+console.log(answer); // Output: undefined ❌
+```
+
+The function ran the math, but because you used `{ }` and didn't write `return`, JavaScript silently discarded the result.
+
+---
+
+#### 📋 Quick Reference — The Unbreakable Rule
+
+| You write this...          | What JavaScript does             | Result                 |
+| -------------------------- | -------------------------------- | ---------------------- |
+| `(n) => { return n * 2; }` | Waits for your `return`          | ✅ Returns `20`        |
+| `(n) => n * 2`             | Returns automatically            | ✅ Returns `20`        |
+| `(n) => { n * 2; }`        | Waits for `return`... finds none | ❌ Returns `undefined` |
+
+> **The Bottom Line:**
+>
+> - If you see `{` → you **must** write `return`.
+> - If you don't see `{` → the code **returns automatically**.
+
+---
+
 ### Methods
+
 - It is a function inside a property.
 
 **Example:**
+
 ```javascript
 const calculator = {
-    add: function(a, b) {  
-        // add is property and function is value. 'add' is a method of the calculator object.
-        return a + b;
-    },
-    subtract: function(a, b) {
-        return a - b;
-    }
-}
-console.log(calculator.add(10, 20))
+  add: function (a, b) {
+    // add is property and function is value. 'add' is a method of the calculator object.
+    return a + b;
+  },
+  subtract: function (a, b) {
+    return a - b;
+  },
+};
+console.log(calculator.add(10, 20));
 ```
 
 ### For each loops
@@ -6834,16 +7299,17 @@ In for each in callback function we can use 3 parameters which is (value, index,
 It can also be called as Higher Order Function because it takes a function as a parameter. and also Higher order Method because it is a method of an array.
 
 example with 3 parameters
+
 1. value: its value of current element.
 2. index: its index of current element.
 3. array: its array of current element.
 
-```javascript 
+```javascript
 const array = [10,20,30,40,50];
 
 array.forEach(function(value,index,array){
     console.log("value:" + value + " index:" + index + " array:" + array);
-}); 
+});
 
 output:
 value:10 index:0 array:[10, 20, 30, 40, 50]
@@ -6852,6 +7318,7 @@ value:30 index:2 array:[10, 20, 30, 40, 50]
 value:40 index:3 array:[10, 20, 30, 40, 50]
 value:50 index:4 array:[10, 20, 30, 40, 50]
 ```
+
 ```javascript
 Array objects have built in function called for each which is very useful to iterate over array elements.
 
@@ -6883,46 +7350,52 @@ let total = (num) => {
 }
 arr.forEach(total)
 ```
+
 ### Higher Order bs
+
 - **Functions are first-class citizens**: They can be treated like any other variable.
 - **Can be passed as arguments**: You can pass a function into another function (called a callback).
 - **Can be returned**: A function can return another function.
 
 **Example: Passing a function as an argument**
+
 ```javascript
 // A simple function
 function sayHello(name) {
-    return `Hello, ${name}!`;
+  return `Hello, ${name}!`;
 }
 
 // Higher Order Function (Takes a function as an argument)
 function processUser(userName, callbackFn) {
-    console.log(callbackFn(userName)); 
+  console.log(callbackFn(userName));
 }
 
 processUser("Pramod", sayHello); // Output: Hello, Pramod!
 ```
 
-### Higher Order Method 
-A **Higher Order Method** is just a Higher Order Function that is built into an object (like an Array). 
+### Higher Order Method
+
+A **Higher Order Method** is just a Higher Order Function that is built into an object (like an Array).
 
 Methods like `.forEach()`, `.map()`, `.filter()`, and `.reduce()` are all higher-order methods because they accept a function as their parameter.
 
 **Example: `.map()` is a higher-order method**
+
 ```javascript
 let numbers = [1, 2, 3];
 
 // .map() takes an arrow function as an argument
-let doubled = numbers.map(num => num * 2);
+let doubled = numbers.map((num) => num * 2);
 
 console.log(doubled); // Output: [2, 4, 6]
 ```
+
 ```javascript
 
 Map function
 
 - It is a higher order method.
-- Map Function is used to transform each element of an array. and it always returns a new array. 
+- Map Function is used to transform each element of an array. and it always returns a new array.
 - It will not modify the original array.
 
 let a = [1, 2, 3, 4]
@@ -6938,9 +7411,10 @@ let a2 = a.map ((val) => { // let is Blocled scope so please do use a differnet 
     return val
 });
 
-console.log(a1); //  The original Array stays the same and we get a new array 
+console.log(a1); //  The original Array stays the same and we get a new array
 console.log(a2); // [1,2,3,4,5]
 ```
+
 ```javascript
 
 ### Filter function
@@ -6958,6 +7432,7 @@ let even_Arr = arr.filter((val) => {
 })
 console.log(even_Arr) // [2,4]
 ```
+
 ```javascript
 
 ### Reduce function
@@ -6978,7 +7453,7 @@ let a2 = a.reduce ((val) => { // let is Blocled scope so please do use a differn
     return val
 });
 
-console.log(a1); //  The original Array stays the same and we get a new array 
+console.log(a1); //  The original Array stays the same and we get a new array
 console.log(a2); // [1,2,3,4,5]
 
 ### Find out the largest number in array or viseversa
@@ -6989,33 +7464,169 @@ let arr = [1, 2, 3, 4]
  })
  console.log(largest);
 ```
+
 ```javascript
 // to add two numnbers in array using reduce
 
-let arr = [1,2,3,4]
- let add = arr.reduce((val, val2) => {
-    return val + val2
- })
- console.log(add);
+let arr = [1, 2, 3, 4];
+let add = arr.reduce((val, val2) => {
+  return val + val2;
+});
+console.log(add);
 ```
-```javascript 
-// Find the largest and smallest number in array and add them together
 
+```javascript
+// Find the largest and smallest number in array and add them together
 
 let arr = [1, 2, 3, 4];
 
 // Find the largest number
 let largest = arr.reduce((val1, val2) => {
-    return val1 > val2 ? val1 : val2;
-}); 
+  return val1 > val2 ? val1 : val2;
+});
 console.log("Largest:", largest);
 
 // Find the smallest number
 let smallest = arr.reduce((val1, val2) => {
-    return val1 < val2 ? val1 : val2;
-}); 
+  return val1 < val2 ? val1 : val2;
+});
 console.log("Smallest:", smallest);
 
 // Add them together
 console.log("Sum of both:", largest + smallest);
 ```
+
+### IIFE (Immediately Invoked Function expression)
+
+This Type of function. They do not need to be called as they will call themself.
+
+```javascript
+function name1() {
+  console.log("Hi");
+}
+name1();
+
+// IIFE -> How to convert a function to IIFE?
+// Remove the name add a brackect and call it immediately.
+
+(function () {
+  let name = "Jhon Wick";
+  console.log("Hello " + name); // Output: Hello John
+})();
+// Output: Hello Jhon Wick
+
+(function () {
+    console.log("Staging")
+})();
+
+(() => {
+    console.log("Setup complete");
+})();
+```
+-----------------------------------------------------------------------------------
+### Default parameters
+``` javascript
+function retry(testName, maxRetries = 3, delay = 1000) {
+    console.log(`Retrying ${testName} up to ${maxRetries} times, ${delay}ms apart`);
+}
+
+retry("Login"); // Retrying Login up to 3 times, 1000ms apart
+retry("Checkout", 5); // Retrying Checkout up to 5 times, 1000ms apart
+retry("API Test", 2, 500); // Retrying API Test up to 2 times, 500ms apart
+```
+----------------------------------------------------------------------------------- 
+
+### Rest Parameters `...`
+
+> `...` in a function **definition** — collects all incoming arguments into a single array.
+
+```javascript
+function hasError(...codes) {
+  return codes.some(c => c >= 400);
+}
+
+hasError(200, 201, 404); // true  — 404 triggered it
+hasError(200, 302);      // false — all OK
+hasError(500);           // true  — server error
+```
+
+Mix named params with rest — rest **must be last**:
+
+```javascript
+function retry(testName, ...retryCodes) {
+  console.log(`Test: ${testName}`);
+  console.log(`Retry on: ${retryCodes}`);
+}
+
+retry('Login', 500, 502, 503);
+// Test: Login
+// Retry on: 500,502,503
+```
+
+⚠️ **Rules**
+
+| Rule | |
+|---|---|
+| `...` must be the **last** param | `(a, b, ...rest)` ✅ — `(...rest, a)` ❌ |
+| Only **one** rest param per function | Can't use two `...` |
+| Gives a **real array** | `.map()`, `.filter()`, `.some()` all work on it |
+
+---
+
+### Spread Operator `...`
+
+> `...` on an array being **passed in** — unpacks it into individual values.
+
+```javascript
+function add(a, b, c) {
+  return a + b + c;
+}
+
+let nums = [10, 20, 30];
+add(nums);    // NaN  — array passed as first arg, rest are undefined
+add(...nums); // 60   — unpacks to add(10, 20, 30)
+```
+
+**SDET Examples:**
+
+```javascript
+// Merge base headers + auth headers into one API request config
+const base    = ['Content-Type', 'Authorization'];
+const extra   = ['X-Request-ID', 'X-Tenant-ID'];
+const headers = [...base, ...extra];
+// ['Content-Type', 'Authorization', 'X-Request-ID', 'X-Tenant-ID']
+```
+
+```javascript
+// Math.max() needs individual numbers, not an array
+const times   = [120, 340, 89, 450, 210];
+const slowest = Math.max(...times); // 450
+```
+
+---
+
+#### Rest vs Spread
+
+```javascript
+// REST → definition, collects INTO array
+function rest(...args) {
+  console.log(args); // [1, 2, 3]
+}
+rest(1, 2, 3);
+
+// SPREAD → call site, spreads OUT of array
+function spread(a, b, c) {
+  console.log(a, b, c); // 1  2  3
+}
+spread(...[1, 2, 3]);
+```
+
+| | Rest `...` | Spread `...` |
+|---|---|---|
+| **Where** | Function **definition** | Function **call** / array literal |
+| **Direction** | Many values → one array | One array → many values |
+| **SDET use** | Accept N status codes | Pass a test-data array into a function |
+
+> **Memory trick:** Same `...` — Rest **collects in**, Spread **pushes out**.
+
+---
