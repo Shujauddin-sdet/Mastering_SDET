@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 520" width="780" height="520" font-family="'Segoe UI', system-ui, sans-serif">
+  <!-- Background -->
+  <rect width="780" height="520" fill="#1a1a2e" rx="16"/>
+
+  <!-- Title -->
+  <text x="390" y="46" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700">JavaScript Closure — Magic Backpack 🎒</text>
+
+  <!-- OUTER FUNCTION BOX -->
+  <rect x="60" y="70" width="660" height="290" rx="14" fill="none" stroke="#4a90d9" stroke-width="2.5"/>
+  <text x="90" y="100" fill="#4a90d9" font-size="15" font-weight="700">Outer Function  createCounter()</text>
+
+  <!-- Outer variable label -->
+  <text x="90" y="135" fill="#888" font-size="13">🎒 Backpack — lives here while the outer function ran</text>
+  <rect x="90" y="145" width="295" height="42" rx="8" fill="#2a2a4a"/>
+  <text x="110" y="173" fill="#f4a261" font-size="16" font-family="'Courier New', monospace" font-weight="700">let count = 0</text>
+
+  <!-- INNER FUNCTION BOX -->
+  <rect x="90" y="205" width="540" height="140" rx="12" fill="none" stroke="#50c878" stroke-width="2.5"/>
+  <text x="115" y="230" fill="#50c878" font-size="14" font-weight="700">Inner Function (returned → stored in myCounter)</text>
+
+  <rect x="115" y="240" width="490" height="42" rx="8" fill="#1e3a2a"/>
+  <text x="135" y="266" fill="#a8e6c0" font-size="14" font-family="'Courier New', monospace">count++;        // reaches into the backpack</text>
+
+  <rect x="115" y="288" width="490" height="36" rx="8" fill="#1e3a2a"/>
+  <text x="135" y="311" fill="#a8e6c0" font-size="14" font-family="'Courier New', monospace">return count;</text>
+
+  <!-- Arrow: inner function → count variable (still remembers) -->
+  <path d="M 390 240 Q 390 195 395 175" fill="none" stroke="#f4a261" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrowOrange)"/>
+  <text x="402" y="215" fill="#f4a261" font-size="12" font-weight="600">still remembers!</text>
+
+  <defs>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f4a261"/>
+    </marker>
+  </defs>
+
+  <!-- Outer function done label -->
+  <text x="390" y="378" text-anchor="middle" fill="#777" font-size="13">Outer function finishes and is gone... but inner function keeps the backpack! 🎒</text>
+
+  <!-- BOTTOM: calling myCounter -->
+  <rect x="60" y="395" width="660" height="112" rx="12" fill="#0f0f1e" stroke="#333" stroke-width="1.5"/>
+
+  <text x="90" y="420" fill="#ccc" font-size="13">After  const myCounter = createCounter()  — outer is gone, inner lives on:</text>
+
+  <text x="110" y="448" fill="#7ec8e3" font-size="14" font-family="'Courier New', monospace">console.log(myCounter());  </text>
+  <text x="435" y="448" fill="#50c878" font-size="14" font-family="'Courier New', monospace">// Output: 1  ✅</text>
+
+  <text x="110" y="468" fill="#7ec8e3" font-size="14" font-family="'Courier New', monospace">console.log(myCounter());  </text>
+  <text x="435" y="468" fill="#50c878" font-size="14" font-family="'Courier New', monospace">// Output: 2  ✅</text>
+
+  <text x="110" y="490" fill="#7ec8e3" font-size="14" font-family="'Courier New', monospace">console.log(myCounter());  </text>
+  <text x="435" y="490" fill="#50c878" font-size="14" font-family="'Courier New', monospace">// Output: 3  ✅</text>
+</svg>
