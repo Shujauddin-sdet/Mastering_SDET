@@ -7698,7 +7698,7 @@ Because of Function Scope, I cannot call the inner function directly from the ou
 
 ### 2. Jargon Buster: Decoding the Textbook Terms
 
-Sometimes you will read the formal definition: _"A closure is a function enclosed with its lexical environment."_ Here is what those fancy words actually mean in plain English:
+The formal definition: _"A closure is a function enclosed with its lexical environment."_
 
 | Term | Plain English Meaning |
 | --- | --- |
