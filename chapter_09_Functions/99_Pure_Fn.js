@@ -20,3 +20,14 @@ console.log(isPassing(threshold));
 
 threshold = 50;
 console.log(isPassing(threshold));
+
+
+// ❌ Impure — modifies external variable
+function enroll(student) {
+    allStudents.push(student);  // modifies outside array
+    return student;
+}
+let allStudents = [];
+
+enroll("Alice");
+console.log(allStudents);

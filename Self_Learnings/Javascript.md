@@ -40,6 +40,7 @@
 14. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
 15. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
 16. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
+16.1 [Variable Shadowing](#variable-shadowing-in-javascript)
 17. [for...of with Map and Set](#15-forof-with-map-and-set)
 18. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
 19. [Escape Characters](#18-escape-characters-in-strings)
@@ -3666,6 +3667,96 @@ for (let i = 0; i < 3; i++) {
 | `const` | Use when the variable never changes (rare in loops)   |
 
 > 💡 **For SDETs:** If you ever see old test code using `var` in loops, replace it with `let`. It will behave more predictably in async automation code.
+
+---
+
+## Variable Shadowing in JavaScript
+
+In JavaScript, **Variable Shadowing** occurs when you declare a new variable inside a local scope (like inside a function or a block) that has the exact same name as a variable in an outer scope.
+
+Because `let` and `const` are block-scoped, JavaScript allows this without throwing an error. When the inner function runs, the local variable "shadows" (or hides) the outer variable.
+
+### 🎯 The "Check Your Pockets" Rule
+
+When JavaScript looks for a variable, it always searches from the **inside out**:
+
+1. The function checks its own local scope (its own pockets) first.
+2. If it finds the variable there, it uses it immediately and ignores the outer scope.
+3. If it does not find it, only then does it look outward to the parent scope or the global environment.
+
+### 💡 Code Example: The Environment Setup
+
+Here is a practical SDET example showing how shadowing works when managing test URLs.
+
+```javascript
+// 1. The Outer Scope (Global Variable)
+let baseUrl = "https://production-site.com";
+
+function runLocalTest() {
+    // 2. The Inner Scope (Local Variable)
+    // We declare a new variable with the EXACT same name. 
+    // This "shadows" the global variable.
+    let baseUrl = "http://localhost:3000"; 
+    
+    // 3. JavaScript checks its own local scope first, finds "localhost", and stops looking.
+    console.log("Running tests on: " + baseUrl); 
+}
+
+// === Execution Phase ===
+
+// Runs the function. It uses its own shadowed version.
+runLocalTest(); 
+// Output: Running tests on: http://localhost:3000
+
+// Checks the global variable. It remains completely untouched!
+console.log("Global URL is still: " + baseUrl); 
+// Output: Global URL is still: https://production-site.com
+```
+
+### 📤 Output:
+```console
+Running tests on: http://localhost:3000
+Global URL is still: https://production-site.com
+```
+
+### 🎮 Why This Matters for SDETs
+
+**Safety:** Shadowing protects your global variables. In the example above, creating a local `baseUrl` inside the function ensured that we didn't accidentally overwrite the main production URL for the rest of the application.
+
+**Debugging Trap:** Shadowing is a very common source of bugs. If you accidentally put `let` in front of a variable inside a function when you actually meant to update the global variable, the outer variable will never get updated.
+
+### ⚠️ The Bug Scenario:
+
+```javascript
+let failures = 0;
+
+function logFailure() {
+    let failures = 5; // ❌ Accidentally used 'let' here! Created a shadow variable instead of updating the global one.
+}
+
+logFailure();
+console.log(failures); // This will still print 0! The global variable was never touched.
+```
+
+### 📤 Output:
+```console
+0
+```
+
+### 🔑 Key Takeaway:
+
+If you want to **update** a global variable from inside a function, **do NOT use `let`**:
+
+```javascript
+let failures = 0;
+
+function logFailure() {
+    failures = 5; // ✅ Correct! No 'let' — we're updating the global variable
+}
+
+logFailure();
+console.log(failures); // 5 — the global variable was updated!
+```
 
 ---
 
@@ -7403,6 +7494,7 @@ Part 1: Returning a Function (You already know this!)
 Think about the createIdGenerator() factory you just built.
 
 JavaScript
+
 function createIdGenerator(prefix) {
     let count = 0;
     return function() {  // <-- Look! It returns a function!
@@ -7576,6 +7668,120 @@ Here is exactly what the JavaScript engine is doing during the Execution Phase:
 - It opens Backpack B (50%). It calculates $100 in savings. The final price is $100.
 - It looks at Backpack B's `totalSaved`. Because this is the first time we used Black Friday, its backpack is still at 0. It adds 100. Backpack B now holds 100.
 - Output: `final price 100 Total Amount you have saved so far 100`
+
+---
+
+# 🎯 Pure vs. Impure Functions in JavaScript
+
+## What's the Difference?
+
+In JavaScript, a **"Pure Function"** is a highly predictable, isolated block of code. To be classified as pure, a function must strictly follow two rules. If a function breaks either of these rules, it is classified as an **"Impure Function."**
+
+---
+
+## 📋 The Two Sacred Rules
+
+### ✅ Rule 1: Same Input ALWAYS = Same Output (Deterministic)
+
+A pure function is entirely predictable. If you pass it the exact same arguments, it must return the exact same answer every single time. It cannot rely on:
+- Random number generators
+- The current system time
+- External API calls that might change the result
+
+### ✅ Rule 2: No Side Effects (Isolated)
+
+A pure function does not interact with the outside world. It is only allowed to:
+- Look at the parameters passed into it
+- Return a result
+
+It **cannot**:
+- Modify variables that exist outside of its scope
+- Mutate external arrays or objects
+- Write to files or databases
+- Print to console (in strict terms)
+
+---
+
+## ❌ The Impure Function (The Rule Breaker)
+
+This function **breaks Rule 2** because it reaches outside of its own scope to modify a global variable.
+
+```javascript
+let globalBankBalance = 100; // Lives in the outside world
+
+function addFiveImpure() {
+    // BREAKS RULE 2: Modifying an external variable (Side Effect)
+    globalBankBalance = globalBankBalance + 5; 
+    return globalBankBalance;
+}
+
+console.log(addFiveImpure()); // Returns 105
+console.log(addFiveImpure()); // Returns 110
+```
+
+### 📤 Output:
+```console
+105
+110
+```
+
+### ⚠️ The Problem:
+- **BREAKS RULE 1**: We gave it the exact same input (no arguments), but it returned a **different output** the second time!
+- **BREAKS RULE 2**: It modified `globalBankBalance`, which lives outside its scope.
+
+---
+
+## ✅ The Pure Function (The Good Citizen)
+
+This function follows **both rules**. It relies only on its parameters, and it does not mutate any external data.
+
+```javascript
+let globalBankBalance = 100;
+
+function addFivePure(currentBalance) {
+    // RULE 2 PASSED: It does not touch 'globalBankBalance'. 
+    // It only uses the parameter provided.
+    let newBalance = currentBalance + 5; 
+    
+    return newBalance;
+}
+
+console.log(addFivePure(100)); // Returns 105
+console.log(addFivePure(100)); // Returns 105
+```
+
+### 📤 Output:
+```console
+105
+105
+```
+
+### ✅ Why This Works:
+- **RULE 1 PASSED**: Input 100 always results in 105, every single time.
+- **RULE 2 PASSED**: The external `globalBankBalance` remains untouched. The function only uses its parameter and creates local variables.
+
+---
+
+## 🔍 Side-by-Side Comparison
+
+| Aspect | Impure | Pure |
+|--------|--------|------|
+| **Input → Output** | Changes each time | Predictable always |
+| **External Variables** | Modifies them | Never touches them |
+| **Testability** | Hard to test | Easy to test |
+| **Debugging** | Difficult (hidden dependencies) | Easy (only depends on parameters) |
+| **Reusable** | No (couples to external state) | Yes (self-contained) |
+
+---
+
+## 💡 Key Takeaways
+
+🎯 **Pure functions are**: Predictable, testable, reusable, and safe to use anywhere
+
+❌ **Impure functions are**: Risky, hard to debug, and create hidden dependencies
+
+Always aim for pure functions when possible! They're the foundation of reliable, maintainable code.
+---
 
 ### Higher Order Method
 
