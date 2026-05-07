@@ -7377,6 +7377,205 @@ function processUser(userName, callbackFn) {
 
 processUser("Pramod", sayHello); // Output: Hello, Pramod!
 ```
+```javascript 
+
+1. Are Higher Order Functions and Higher Order Methods the same?
+Yes, the concept is exactly the same. The only difference is where they live.
+
+Function: A freestanding block of code. myFunction()
+
+Method: A function that is attached to an Object or an Array. myArray.myMethod()
+
+When developers say "Higher Order Function," they are talking about the general rule. When they say "Higher Order Method," they are usually talking specifically about JavaScript's built-in array tools, like .map(), .filter(), and .reduce().
+
+Under the hood, the engine works the exact same way.
+
+2. What exactly IS a Higher Order Function (HOF)?
+To be a Higher Order Function, a function only needs to do one of two things:
+
+It returns another function.
+
+It takes another function as an argument (a parameter).
+
+If it does either of those things, it gets the VIP title of "Higher Order."
+
+Part 1: Returning a Function (You already know this!)
+Think about the createIdGenerator() factory you just built.
+
+JavaScript
+function createIdGenerator(prefix) {
+    let count = 0;
+    return function() {  // <-- Look! It returns a function!
+        count++;
+        return prefix + count;
+    }
+}
+Because createIdGenerator returns a function, it is officially a Higher Order Function.
+
+Part 2: Taking a Function as an Argument (The New Part)
+This is the second half of the puzzle. Instead of handing a string or a number to a function, you hand it a completely different function.
+
+The function you pass in is called a Callback Function.
+
+Here is a classic SDET example. Imagine you want to click a button, but you want the computer to log a message right before it clicks.
+
+JavaScript
+// 1. The Callback Function (The simple worker)
+function clickLogin() {
+    console.log("Clicking the login button now!");
+}
+
+// 2. The Higher Order Function (The Boss)
+function runWithLogging(actionFunction) {
+    console.log("[SYSTEM] Preparing to run action...");
+    
+    // The Boss executes the function you handed to it!
+    actionFunction(); 
+}
+
+// 3. The Execution: We pass the worker TO the boss.
+// Notice we DO NOT use () on clickLogin here. We aren't running it yet. We are just handing the blueprint over.
+runWithLogging(clickLogin); 
+Output:
+
+Plaintext
+[SYSTEM] Preparing to run action...
+Clicking the login button now!
+Why do SDETs care about this?
+Higher Order Functions are the backbone of test automation. Every time you write an assertion in a framework like Cypress, Playwright, or Jest, you are using HOFs. Furthermore, JavaScript's built-in Higher Order Methods (.filter, .map) are how we search through massive JSON API responses to find the exact data we want to test.
+```
+```javascript 
+//The below examples has concept of callback, HOF and Closures
+
+// 1. The Boss (HOF) takes a worker (Callback)
+function createRetryWrapper(testWorker) {
+    
+    // 2. The Boss packs a backpack (Closure setup)
+    let failures = 0; 
+    
+    // 3. The Child is born. It has access to BOTH the backpack AND the worker!
+    function innerRun() {
+        let result = testWorker(); 
+        
+        if (result === "fail") {
+            failures++; // Reaching into the backpack!
+            return `Test failed. Total failures: ${failures}`;
+        } else {
+            return `Test passed!`;
+        }
+    }
+    
+    // 4. The Boss hands the child back.
+    return innerRun;
+}
+
+// === THE EXECUTION ===
+
+// The normal callback worker
+function flakeyTest() {
+    return "fail";
+}
+
+// We give the worker to the Boss. 
+// The Boss gives us back a closure that remembers the failures!
+let safeTest = createRetryWrapper(flakeyTest);
+
+console.log(safeTest()); // Output: Test failed. Total failures: 1
+console.log(safeTest()); // Output: Test failed. Total failures: 2
+```
+You are testing an e-commerce checkout system. You need a function that generates different discount codes (like 20% off for Holidays, and 50% off for Black Friday).
+
+The Catch: Your test also needs to track exactly how much total money has been saved every time that specific discount code is used. The discount codes must not interfere with each other's totals.
+
+Expected Output:
+
+```plaintext
+final price 80 Total Amount you have saved so far 20
+final price 40 Total Amount you have saved so far 30
+final price 100 Total Amount you have saved so far 100
+```
+
+**The Code (The Solution)**
+
+```javascript
+// 1. THE HIGHER-ORDER FUNCTION (HOF):
+// It is an HOF because it returns another function at the very end.
+function createDiscount(percentage) {
+
+    // 2. THE CLOSURE (The Magic Backpack):
+    // This variable is protected. The inner function remembers it forever.
+    let totalSaved = 0;
+
+    // 3. THE CHILD: It accepts a price from the outside world.
+    function inner(acceptPrice) {
+        let price = acceptPrice;
+
+        // Calculate the specific savings for this purchase
+        let savings = price * (percentage / 100);
+
+        // Calculate what the customer actually pays
+        let finalPrice = price - savings;
+
+        // UPDATE THE BACKPACK: Take the current total, add new savings, and save it.
+        totalSaved = totalSaved + savings;
+
+        // Return the formatted string
+        return `final price ${finalPrice} Total Amount you have saved so far ${totalSaved}`;
+    }
+
+    // The HOF hands the Child over to the outside world
+    return inner;
+}
+
+// === EXECUTION PHASE ===
+
+// Create Backpack A (percentage: 20, totalSaved: 0)
+let holidaySale = createDiscount(20);
+
+// Create Backpack B (percentage: 50, totalSaved: 0)
+let blackFriday = createDiscount(50);
+
+console.log(holidaySale(100)); // Uses Backpack A
+console.log(holidaySale(50));  // Uses Backpack A
+console.log(blackFriday(200)); // Uses Backpack B
+```
+
+**Line-by-Line Execution Breakdown**
+
+Here is exactly what the JavaScript engine is doing during the Execution Phase:
+
+**Line 28: `let holidaySale = createDiscount(20);`**
+
+- We call the Higher-Order Function.
+- It creates Backpack A. It puts `percentage = 20` and `totalSaved = 0` inside.
+- It hands the Child function to the variable `holidaySale`.
+
+**Line 31: `let blackFriday = createDiscount(50);`**
+
+- We call the Higher-Order Function again.
+- It creates a brand new, completely separate Backpack B. It puts `percentage = 50` and `totalSaved = 0` inside.
+- It hands this new Child function to the variable `blackFriday`.
+
+**Line 33: `console.log(holidaySale(100));`**
+
+- The `holidaySale` Child wakes up and takes the $100.
+- It opens Backpack A (20%). It calculates $20 in savings. The final price is $80.
+- It looks at Backpack A's `totalSaved` (which is 0). It adds 20. Backpack A now holds 20.
+- Output: `final price 80 Total Amount you have saved so far 20`
+
+**Line 34: `console.log(holidaySale(50));`**
+
+- The `holidaySale` Child wakes up and takes the $50.
+- It opens Backpack A (20%). It calculates $10 in savings. The final price is $40.
+- It looks at Backpack A's `totalSaved` (which is currently 20). It adds the new 10. Backpack A now holds 30.
+- Output: `final price 40 Total Amount you have saved so far 30`
+
+**Line 35: `console.log(blackFriday(200));`**
+
+- The `blackFriday` Child wakes up and takes the $200.
+- It opens Backpack B (50%). It calculates $100 in savings. The final price is $100.
+- It looks at Backpack B's `totalSaved`. Because this is the first time we used Black Friday, its backpack is still at 0. It adds 100. Backpack B now holds 100.
+- Output: `final price 100 Total Amount you have saved so far 100`
 
 ### Higher Order Method
 
