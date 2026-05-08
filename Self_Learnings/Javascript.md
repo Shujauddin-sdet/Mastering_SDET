@@ -8332,6 +8332,23 @@ setTimeout(TestSuite.run, 1000); // Output: "Running: undefined"
 // ✅ FIXED: We bind the function to the object BEFORE handing it to the timer.
 setTimeout(TestSuite.run.bind(TestSuite), 1000); // Output: "Running: Login API"
 
+Short Note:
+
+1. call() → executes the function immediately
+   - Used when you want to pass arguments as a comma-separated list
+2. apply() → executes the function immediately
+   - Used when you want to pass arguments as an array
+3. bind() → creates a new function (does NOT execute immediately)
+   - Used when you want to preserve the `this` context for callbacks
+
+   All three methods do the exact same core thing: They let you take a standalone function and force its this keyword to point to a specific object.
+
+call(obj, arg1, arg2): Runs immediately. Passes arguments normally (separated by Commas).
+
+apply(obj, [arg1, arg2]): Runs immediately. Passes arguments wrapped inside an Array.
+
+bind(obj, arg1, arg2): Does NOT run immediately. Builds a brand new, permanently locked copy of the function for you to run later.
+
 ------
 
 ### 🔒 Closure
