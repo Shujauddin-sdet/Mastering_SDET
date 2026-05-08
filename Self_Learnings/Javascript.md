@@ -7011,6 +7011,66 @@ function add(a, b) {
 
 ---
 
+## Scope: Global, Function, Block
+
+We will use this analogy: **The Street (Global)**, **The Office (Function)**, and **The Locked Safe (Block)**.
+
+Here is one complete piece of code that shows exactly how they all interact with each other. Read the comments as you go down!
+
+```javascript
+// ==========================================
+// 1. GLOBAL SCOPE (The Public Street)
+// Everyone in the entire file can see this.
+// ==========================================
+let weatherToday = "Sunny"; 
+
+function startWorkDay() {
+    // ==========================================
+    // 2. FUNCTION SCOPE (The Private Office)
+    // Only things inside 'startWorkDay' can see this.
+    // ==========================================
+    let officePassword = "OpenSesame"; 
+
+    // The office can look out the window to see the street!
+    console.log("The weather outside is: " + weatherToday); // Works!
+
+    if (weatherToday === "Sunny") {
+        // ==========================================
+        // 3. BLOCK SCOPE (The Locked Safe)
+        // Only things inside these specific 'if' brackets can see this.
+        // ==========================================
+        let secretBonus = 1000; 
+
+        // The safe can look out into the office, AND out to the street!
+        console.log("My office password is: " + officePassword); // Works!
+        console.log("I got a bonus of: $" + secretBonus); // Works!
+    }
+
+    // ❌ BUG! We stepped out of the 'if' statement. 
+    // We are still in the office, but the safe door slammed shut!
+    // console.log("Did I get a bonus? " + secretBonus); // ERROR: secretBonus is not defined
+}
+
+// Let's run the function
+startWorkDay();
+
+// ❌ BUG! We are standing out on the street. 
+// We cannot look through the locked office door.
+// console.log("What is the password? " + officePassword); // ERROR: officePassword is not defined
+```
+
+### The "Russian Nesting Doll" Rule
+
+If you look closely at that code, you'll see a very specific pattern. It works exactly like a set of **Russian Nesting Dolls**.
+
+- The **deepest code** (inside the `if` statement) is the smartest. It can see its own stuff, it can see the function's stuff, and it can see the global stuff. It sees everything above it.
+- The **middle code** (inside the function) is halfway smart. It can see its own stuff, and the global stuff. But it cannot look deeper into the `if` statement.
+- The **outside code** (Global) is completely blind. It can only see itself. It cannot look inside functions, and it cannot look inside `if` statements.
+
+> **The Golden Rule of Scope:** You can always look *outward* to grab data, but you can never look *inward* to grab data.
+
+---
+
 # Basic Functions in JavaScript
 
 Functions can be categorized based on two things:
