@@ -8090,6 +8090,249 @@ reportBugs(...UI_Bugs, ...API_Bugs);
 ```
 
 ---
+📜 Function Declarations vs. Expressions
+There are two primary ways to write a function in JavaScript. The difference comes down to Hoisting (how JavaScript reads the file before running it).
+
+1. Function Declarations (Hoisted)
+A standard function. JavaScript moves it to the top of the file before running the code, meaning you can call it before you actually write it.
+
+JavaScript
+bootServer(); // ✅ Works perfectly!
+
+function bootServer() {
+    console.log("Server is running!");
+}
+2. Function Expressions (Not Hoisted)
+A function stored inside a variable. It is treated like a piece of data. Because it is a variable, it is not hoisted. You must define it before you can call it.
+
+JavaScript
+// ❌ Crashes! ReferenceError: bootServer is not defined
+bootServer(); 
+
+let bootServer = function() {
+    console.log("Server is running!");
+};
+
+bootServer(); // ✅ Now it works.
+Note: We use Function Expressions heavily when treating functions like data, such as passing them as Callbacks or returning them from Closures.
+
+-------------
+
+### Arrow functions — lexical this
+
+In modern JavaScript (ES6+), Arrow Functions `() => {}` provide a shorter way to write functions. But their most important feature is how they handle the `this` keyword compared to standard functions.
+
+### What does "Lexical" mean?
+"Lexical" refers to the physical location of the code on your screen. "Lexical scope" means that a function looks at exactly where it was typed in the file to figure out what data it has access to.
+
+### 1. The Standard Function (Depends on HOW it is called)
+When you use a standard `function() {}`, the value of `this` depends entirely on **how the function is called**. 
+If a function is nested inside another function and called directly, it loses its connection to the main object.
+
+```javascript
+let UserProfile = {
+    userName: "Admin",
+
+    printDetails: function() {
+        console.log("1. Parent function sees: " + this.userName); 
+
+        // We create a nested standard function
+        let innerFunction = function() {
+            // BUG! Because this is a standard function, it loses the connection 
+            // to the UserProfile object when called by itself.
+            console.log("2. Inner function sees: " + this.userName); 
+        };
+
+        // We call the inner function directly
+        innerFunction(); 
+    }
+};
+
+UserProfile.printDetails();
+/* OUTPUT:
+   1. Parent function sees: Admin
+   2. Inner function sees: undefined   <--- THE BUG
+*/
+
+2. The Arrow Function (Depends on WHERE it is written)
+Arrow functions () => {} fix this problem using Lexical this.
+An arrow function does not have its own this. Instead, it looks at the exact place it was physically written in the code, and permanently inherits this from its parent. It doesn't matter how you call it; it never loses its connection.
+
+JavaScript
+let UserProfile = {
+    userName: "Admin",
+
+    printDetails: function() {
+        console.log("1. Parent function sees: " + this.userName); 
+
+        // We create a nested ARROW function
+        let innerArrowFunction = () => {
+            // FIXED! The arrow function looks at its physical location, 
+            // sees it is inside 'printDetails', and uses the exact same 'this'.
+            console.log("2. Inner function sees: " + this.userName); 
+        };
+
+        // We call the inner function directly
+        innerArrowFunction(); 
+    }
+};
+
+UserProfile.printDetails();
+/* OUTPUT:
+   1. Parent function sees: Admin
+   2. Inner function sees: Admin   <--- FIXED!
+*/
+-------------
+
+# 📤 Return Values — `undefined` by Default
+
+In JavaScript, a function is a machine that does some work. When the machine finishes, it is expected to hand something back to the person who turned it on. We call this "returning a value."
+
+### The Rule: `undefined` by Default
+Every single function in JavaScript returns a value, whether you tell it to or not. 
+If you do not explicitly use the `return` keyword, JavaScript will automatically return `undefined`.
+
+Let's look at an example where we forget the `return` keyword:
+
+```javascript
+function addNumbers(a, b) {
+    let sum = a + b;
+    // We did the math, but we forgot to hand the answer back!
+}
+
+// We run the function and try to store the answer in a variable
+let myAnswer = addNumbers(5, 5);
+
+console.log(myAnswer); 
+// Output: undefined
+The Fix: Using the return Keyword
+To actually extract data out of a function so you can use it in the rest of your program, you must use the return keyword.
+
+The moment JavaScript reads the word return, it stops the function immediately and hands the data back.
+
+JavaScript
+function addNumbers(a, b) {
+    let sum = a + b;
+    return sum; // We are officially handing the data back!
+}
+
+let myAnswer = addNumbers(5, 5);
+
+console.log(myAnswer); 
+// Output: 10
+⚠️ The Biggest Trap: console.log vs return
+This is the number one mistake developers make when learning functions. They use console.log() inside a function, see the correct answer on their screen, but then their program crashes later because the data is actually undefined.
+
+console.log() is for the Developer. It simply prints a message to the screen so human eyes can read it. The computer immediately forgets it.
+
+return is for the Computer. It securely hands the actual data from the function back to the main program so it can be saved in a variable or used later.
+
+The Bug Scenario:
+
+JavaScript
+function calculateTax(price) {
+    let total = price * 0.10;
+    console.log(total); // Prints 5 to the screen, but doesn't hand it back!
+}
+
+let taxAmount = calculateTax(50); // taxAmount is now 'undefined'
+
+// The program crashes here because you can't do math with 'undefined'
+let finalPrice = 50 + taxAmount; 
+The Correct Approach for SDETs:
+When writing test automation utilities or helper methods, never rely on console.log to pass data. Always return the data so your test framework can actually assert and verify the values.
+
+JavaScript
+// ✅ Correct
+function calculateTax(price) {
+    let total = price * 0.10;
+    return total; 
+}
+
+-------
+
+call(), apply(), bind()
+
+# 🛠️ Controlling `this`: call(), apply(), and bind()
+
+In JavaScript, standard functions can sometimes forget which object they belong to (especially when passed as callbacks). 
+
+Before Arrow Functions were invented to fix this problem, developers relied on three powerful methods: `call()`, `apply()`, and `bind()`. These methods allow you to take a standalone function and **force** its `this` keyword to point to a specific object.
+
+Think of it like "borrowing" a function. You have an Object containing data, and you have a standalone Function. You want the function to use the Object's data.
+
+### The Setup
+We have two user objects, and one generic standalone function. Notice that the function uses `this.name`, but it doesn't actually live inside any object!
+
+```javascript
+let user1 = { name: "Alice" };
+let user2 = { name: "Bob" };
+
+function introduce(role, yearsOfExperience) {
+    console.log(`I am ${this.name}, a ${role} with ${yearsOfExperience} years of experience.`);
+}
+
+// ❌ If we call it normally, it breaks because 'this' is undefined.
+// introduce("SDET", 3); 
+1. call() — Run Immediately (Comma Separated)
+The call() method executes the function immediately.
+
+The first argument you pass is the Object you want this to point to.
+
+The rest of the arguments are passed in normally, separated by commas.
+
+JavaScript
+// We force the function to use 'user1' as its 'this'
+introduce.call(user1, "SDET", 3); 
+// Output: "I am Alice, a SDET with 3 years of experience."
+
+// We borrow the exact same function for 'user2'
+introduce.call(user2, "Developer", 5);
+// Output: "I am Bob, a Developer with 5 years of experience."
+2. apply() — Run Immediately (Array)
+The apply() method is almost exactly the same as call(). It also executes the function immediately.
+The ONLY difference is how you pass the arguments. Instead of commas, apply() expects all the arguments to be wrapped inside a single Array.
+
+Mnemonic Trick: Apply uses an Array.
+
+JavaScript
+// Notice the square brackets! The arguments are in an array.
+introduce.apply(user1, ["QA Lead", 7]); 
+// Output: "I am Alice, a QA Lead with 7 years of experience."
+Why do we need apply?
+It is incredibly useful when you already have an array of data (like from a database or an API) and you want to pass it into a function without having to unpack it manually.
+
+3. bind() — Build a New Function (Does NOT run immediately)
+This is the most important one for interviews.
+Unlike call and apply, bind() does not execute the function. Instead, it creates a brand new copy of the function with this permanently locked to the object you provided.
+
+Mnemonic Trick: Bind Builds a new function.
+
+JavaScript
+// We lock the function to user1, but it doesn't run yet!
+let aliceIntroduction = introduce.bind(user1, "Automation Engineer", 2);
+
+// Later in the code, when we are ready, we call the new function:
+aliceIntroduction(); 
+// Output: "I am Alice, a Automation Engineer with 2 years of experience."
+The SDET Real-World Use Case for bind()
+You will use bind() when you need to pass a method as a Callback (like into a timer or an event listener) but you don't want it to lose its this connection.
+
+JavaScript
+let TestSuite = {
+    testName: "Login API",
+    run: function() {
+        console.log("Running: " + this.testName);
+    }
+};
+
+// ❌ BUG: The timer takes over, and 'this' is lost.
+setTimeout(TestSuite.run, 1000); // Output: "Running: undefined"
+
+// ✅ FIXED: We bind the function to the object BEFORE handing it to the timer.
+setTimeout(TestSuite.run.bind(TestSuite), 1000); // Output: "Running: Login API"
+
+------
 
 ### 🔒 Closure
 
