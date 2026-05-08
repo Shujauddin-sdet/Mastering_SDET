@@ -65,6 +65,20 @@
     - [Common 2D Operations](#common-2d-operations)
     - [3D Arrays](#3d-arrays)
     - [Pattern Generation](#pattern-generation)
+23. [Objects — Comprehensive Guide](#11-objects--comprehensive-guide)
+    - [Creating Objects (Object Literals)](#111-creating-objects-object-literals)
+    - [Accessing Object Properties](#112-accessing-object-properties)
+    - [Modifying and Adding Properties](#113-modifying-and-adding-properties)
+    - [Deleting Properties](#114-deleting-properties)
+    - [Primitive vs Reference](#115-primitive-vs-reference--the-critical-difference)
+    - [Object Methods](#116-object-methods-functions-inside-objects)
+    - [Object Destructuring](#117-object-destructuring)
+    - [Spread Operator with Objects](#118-spread-operator-with-objects)
+    - [Getters and Setters](#119-getters-and-setters)
+    - [Object Built-in Methods](#1110-object-built-in-methods)
+    - [Real-World Objects](#1111-real-world-objects--configuration-and-test-data)
+    - [let vs const with Objects](#1112-let-vs-const-with-objects)
+    - [Objects Quick Reference](#1113-summary--objects-quick-reference)
 
 - [Appendix](#appendix-comparison-recap--vs-)
 
@@ -8881,3 +8895,1110 @@ For a closure to actually work in your code without throwing errors, you need **
 > If you miss even one of these, you either don't have a closure, or you have a closure that nobody can ever reach!
 
 ---
+
+# Objects and Classes
+
+## What is an Object?
+
+An Object is a standalone entity that holds data in **key-value pairs**. 
+
+It is a collection of **key-value pairs** stored in **heap memory** *(a dynamic, flexible memory space)*. Variables don't hold the object itself, they hold a **reference** (memory address) to it.
+
+Objects are collections of key-value pairs. They are fundamental to JavaScript and used everywhere.
+
+**In Objects:**  Whenever you assign one object to another object, it will always copy the reference. 
+
+- we cannot have space in key names
+- Key can be string or symbol 
+- key are case sensitive
+
+### The Analogy
+
+Imagine a physical ID card for an employee. That card has a Name, an ID Number, a Department, and an Expiry Date. You wouldn't want to store these as five random, disconnected variables in your code. You want them bundled together. In JavaScript, an Object is exactly that — a container that bundles related data together using Key-Value pairs.
+
+- **Key:** The label (e.g., `"Name"`)
+- **Value:** The actual data (e.g., `"John Doe"`)
+
+Think of it like a real-world object, like a car:
+- **Properties (Data):** A car has a color, a brand, and a weight.
+- **Methods (Actions):** A car can start, drive, and brake.
+
+---
+
+### 1. Basic Structure & Creating an Object (SDET Example)
+
+An object uses curly braces `{}`. Each "key" (the name of the data) is connected to a "value."
+
+In Playwright or test automation, you constantly need to manage configurations. Let's create an object to hold our test setup.
+
+```javascript
+const testConfig = {
+    browser: "chromium",       // Key: browser, Value: "chromium"
+    environment: "staging",
+    timeout: 5000,
+    isHeadless: true
+};
+```
+
+---
+
+### 2. Reading Data from an Object
+
+To get information out of your object, you usually use **Dot Notation**. You just type the object's name, a dot, and the key.
+
+```javascript
+console.log("We are running tests on: " + testConfig.browser); 
+// Output: We are running tests on: chromium
+```
+
+Sometimes, you might need to use **Bracket Notation**, especially if your key has a space in it (which is rare but happens) or if you are using a variable to find the key.
+
+```javascript
+console.log(testConfig["environment"]); 
+// Output: staging
+```
+
+---
+
+### 3. Modifying and Adding Data
+
+Objects are flexible. Even if you declare an object with `const`, you can still change what's inside it. (You just can't reassign the whole object to something else).
+
+```javascript
+// Updating an existing value (Test taking too long? Let's increase the timeout)
+testConfig.timeout = 10000;
+
+// Adding a brand new key-value pair on the fly
+testConfig.retries = 2; 
+
+console.log(testConfig);
+// Output will now include { timeout: 10000 } and { retries: 2 }
+```
+
+---
+
+### 4. Objects Can "Do" Things (Methods)
+
+An object doesn't just have to hold static data like strings and numbers; it can also hold functions. 
+
+> **When a normal function is just floating around on its own, it’s a function. But the moment you put that function inside an object, it gets a promotion and is called a Method.**
+
+Here is a real-world QA example of an object holding user credentials and a method to format them:
+
+```javascript
+const testUser = {
+    username: "admin_qa",
+    password: "Password123!",
+    
+    // This is a method!
+    printCredentials: function() {
+        // 'this' refers to the object itself. 
+        // It's saying: "Get MY username and MY password"
+        console.log("Login with: " + this.username + " and " + this.password);
+    }
+};
+
+// Calling the method
+testUser.printCredentials(); 
+// Output: Login with: admin_qa and Password123!
+```
+
+Or using the car example:
+```javascript
+const car = {
+  brand: "Tesla",      
+  model: "Model 3",    
+  year: 2023,          
+  
+  // A function inside an object is called a "Method"
+  start: function() {
+    console.log("The car is starting...");
+  }
+};
+
+car.start(); // Output: The car is starting...
+```
+
+---
+
+### 5. Why do we use them?
+
+Instead of having 10 different variables floating around for one thing:
+```javascript
+let carBrand = "Tesla";
+let carYear = 2023;
+```
+You group them into one single object (`car`). This makes your code organized, easy to read, and allows you to pass "the whole car" into a function or a Promise rather than sending every piece of data separately.
+
+> **Note:** Objects are literally everywhere in Playwright. Every time you interact with an element or configure a browser, you are passing objects around.
+
+
+# reference
+
+let a = {
+  status1: "pass",
+};
+
+console.log(a["status1"]);
+
+
+let b = a // b copies the REFERENCE, not the object
+b.status1 = "fail"
+console.log(b.status1)
+
+
+let c = { status1: "pass" }
+let d = { status1: "pass" }
+console.log(c === d) // false bcz memory location is different
+
+
+const t_json = {
+  "name": "Shujauddin",
+  "age": 10
+}
+console.log(t_json)
+
+
+const t_js = {
+  name: "Shujauddin",
+  age: 10
+}
+console.log(t_js)
+
+# dynamic property access
+
+const user = {
+    name: "John",
+    age: 30,
+    email: "john@example.com"
+};
+
+// Dynamic property access
+const key = "age";
+console.log(user[key]);
+
+// Adding/modifying properties
+user.city = "NYC";
+user.age = 31;
+
+console.log(user);
+-----------------------------------------------------------
+
+## Javascript Prototype (`__proto__`)
+
+In JavaScript, **Prototypes** are simply a way for objects to **share and borrow** methods and properties from other objects. 
+
+Every object in JavaScript has a hidden, special property (which we can access and set using `__proto__`). 
+
+Think of `__proto__` as a **"Fallback Plan"** or **"Asking the Manager"**.
+
+### The Analogy: The Corporate Policy
+
+Imagine you have a general **Corporate Policy** (the prototype object). It says that the default tax rate is 10%. 
+Then you have **Employees** (your new objects). 
+- If an employee is asked for their tax rate and doesn't know it, they fall back and look at the corporate policy. 
+- However, if an employee has a **special custom contract** (their own method), they will use their custom contract and completely ignore the corporate policy!
+
+Here is how we code this using `__proto__`:
+
+```javascript
+// 1. The "Corporate Policy" (This will be our prototype)
+const employeePrototype = {
+  calculateTax() {
+    console.log("The tax rate is 10%");
+  },
+};
+
+// 2. Employee 1 has a SPECIAL custom contract (Override)
+const newEmployee_01 = {
+  salary: "60000",
+  
+  // Because Employee 1 has their OWN calculateTax method, 
+  // JavaScript will use this one and NEVER check the prototype.
+  calculateTax() {
+    console.log("The tax rate is 20%"); 
+  },
+};
+
+// 3. Employee 2 and 3 are standard employees. They only know their salary.
+const newEmployee_02 = {
+  salary: "50000",
+};
+
+const newEmployee_03 = {
+  salary: "50000",
+};
+
+// ==========================================
+// 🔗 LINKING THEM TOGETHER (The Magic Step)
+// ==========================================
+// We are telling the employees: "If you are ever asked to do something 
+// you don't know how to do, go look at the 'employeePrototype'."
+
+newEmployee_01.__proto__ = employeePrototype;
+newEmployee_02.__proto__ = employeePrototype;
+newEmployee_03.__proto__ = employeePrototype;
+
+// ==========================================
+// 🚀 LET'S TEST IT OUT!
+// ==========================================
+
+// Employee 2 does NOT have a calculateTax method.
+// So, it falls back to '__proto__' and borrows it from 'employeePrototype'.
+newEmployee_02.calculateTax(); // Output: "The tax rate is 10%"
+
+// Employee 3 also borrows it.
+newEmployee_03.calculateTax(); // Output: "The tax rate is 10%"
+
+// Employee 1 HAS their own method! 
+// This is called "Method Overriding" or "Shadowing". 
+// It uses its own method and ignores the prototype.
+newEmployee_01.calculateTax(); // Output: "The tax rate is 20%"
+```
+
+### Visualizing the Chain 🔍
+
+When you write `newEmployee_02.calculateTax()`, this is the exact thought process JavaScript goes through:
+
+1. **Step 1:** Look inside `newEmployee_02`. Does it have a `calculateTax()` function? 
+   - *Result: No, it only has `salary: "50000"`.*
+2. **Step 2:** Follow the `__proto__` link. Where does it point? 
+   - *Result: It points to `employeePrototype`.*
+3. **Step 3:** Look inside `employeePrototype`. Does it have a `calculateTax()` function?
+   - *Result: Yes! Execute it!*
+
+If JavaScript kept following `__proto__` links and couldn't find the method anywhere, it would eventually hit `null` and throw an error (`is not a function`). This chain of fallback links is called the **Prototype Chain**.
+
+---
+
+## Object Property Descriptors (The Hidden Settings)
+
+When you create a property inside an object (like `name: "Login"`), JavaScript actually creates a set of **hidden settings** behind the scenes to manage how that property behaves. You can think of this like right-clicking a file on your computer and opening its "Properties" window to see if it's Read-Only or Hidden.
+
+You can view these hidden settings using `Object.getOwnPropertyDescriptor()`:
+
+```javascript
+let obj = { name: "Login" };
+
+console.log(Object.getOwnPropertyDescriptor(obj, "name"));
+/* Output:
+{
+  value: 'Login',
+  writable: true,
+  enumerable: true,
+  configurable: true
+}
+*/
+```
+
+### What do these words actually mean? 
+
+1. **`value` (The Data)**
+   - **What it means:** The actual information stored inside the property.
+   - **Example:** `"Login"`
+
+2. **`writable` (The "Read-Only" Lock)**
+   - **What it means:** Can someone change this value later? 
+   - **Analogy:** If `writable` is `true`, anyone can overwrite the name. If you set it to `false`, the property becomes strictly **Read-Only**. No one can overwrite `"Login"` with something else.
+
+3. **`enumerable` (The "Hidden Folder" Switch)**
+   - **What it means:** Will this property show up when we loop over the object (like using a `for...in` loop) or when we ask for the object's keys?
+   - **Analogy:** If `enumerable` is `false`, it's like marking a folder as **Hidden** on your computer. The data is still there, but it won't show up in lists when you loop through the object!
+
+4. **`configurable` (The "Master Lock")**
+   - **What it means:** Can we completely `delete` this property from the object? Also, can we change these hidden settings (like `writable` or `enumerable`) later?
+   - **Analogy:** If `configurable` is `false`, it is the ultimate lockdown. You cannot delete the property, and you cannot change these hidden settings anymore. It is permanently bolted down!
+
+---
+
+### Can we change these hidden settings? 
+
+**Yes!** You can modify these hidden settings using a built-in method called `Object.defineProperty()`.
+
+Let's look at a practical QA Example. Imagine we have a test configuration, and we want to completely **lock down** the environment so no one accidentally changes it to Production while testing!
+
+```javascript
+const testConfig = {
+    env: "QA_Env"
+};
+
+// Right now, anyone can change testConfig.env = "Production";
+
+// Let's lock it down!
+Object.defineProperty(testConfig, "env", {
+    writable: false,      // ❌ Cannot change the value anymore
+    configurable: false,  // ❌ Cannot delete the 'env' property or change these settings again
+    enumerable: true      // ✅ It will still show up if we loop over testConfig
+});
+
+// Let's test our new locks!
+
+// 1. Try to overwrite the value
+testConfig.env = "Production"; 
+console.log(testConfig.env); // Output: "QA_Env" (The overwrite was completely ignored!)
+
+// 2. Try to delete it
+delete testConfig.env;
+console.log(testConfig.env); // Output: "QA_Env" (The deletion was blocked!)
+```
+
+This is incredibly useful when building automation frameworks because it prevents other developers from accidentally breaking critical configurations.
+
+---
+
+## 11. Objects — Comprehensive Guide
+
+### What is an Object?
+
+An **Object** is a container that holds related data and functions grouped together. Instead of having many separate variables, you organize them into a single entity. Each piece of information is stored as a **key-value pair**.
+
+**Example:** Instead of having separate variables `studentName`, `studentAge`, and `studentPhone`, you group them into one object:
+
+```javascript
+let student = {
+  name: "Amit",
+  age: 25,
+  phone: 9876543210
+};
+```
+
+---
+
+### 11.1 Creating Objects (Object Literals)
+
+The simplest way to create an object is using an **Object Literal** — curly braces `{}` with key-value pairs inside.
+
+**Syntax:**
+```javascript
+let objectName = {
+  key1: value1,
+  key2: value2,
+  key3: value3
+};
+```
+
+**Example:**
+```javascript
+let student1 = { name: "Amit", age: 25 };
+let student2 = { name: "Pramod" };
+let student3 = { name: "Pramod", age: 87, phone: 9876543210 };
+```
+
+#### 🔷 Keys in Object Literals
+
+**Rule:** In object literals, **keys do NOT require quotes** (they are implicitly treated as strings).
+
+```javascript
+// Modern JavaScript — keys WITHOUT quotes
+let obj = { status: "pass", name: "John" };
+
+// JSON format — keys WITH quotes (when using JSON specification)
+let jsonObj = { "status": "pass", "name": "John" };
+
+// Both work the same way in JavaScript
+console.log(obj.status);      // "pass"
+console.log(jsonObj.status);  // "pass"
+```
+
+> **Note:** When you see quotes around keys, it's typically **JSON format** (JavaScript Object Notation), which is a data exchange standard. In regular JavaScript object literals, quotes are optional.
+
+---
+
+### 11.2 Accessing Object Properties
+
+There are **two main ways** to access the value of a property: **Dot notation** and **Bracket notation**.
+
+#### Method 1: Dot Notation (Most Common)
+
+**Syntax:** `object.key`
+
+```javascript
+let user = { name: "John", age: 30, email: "john@example.com" };
+
+console.log(user.name);   // "John"
+console.log(user.age);    // 30
+console.log(user.email);  // "john@example.com"
+```
+
+#### Method 2: Bracket Notation (With Strings or Variables)
+
+**Syntax:** `object["key"]`
+
+This method is useful when the key is stored in a variable or contains special characters.
+
+```javascript
+let user = { name: "John", age: 30, email: "john@example.com" };
+
+console.log(user["name"]);   // "John"
+console.log(user["age"]);    // 30
+console.log(user["email"]);  // "john@example.com"
+```
+
+#### 🔷 Keys Are Case-Sensitive
+
+JavaScript treats keys as case-sensitive. `status` and `Status` are **two different keys**.
+
+```javascript
+let obj = { status: "pass", Status: "fail" };
+
+console.log(obj["status"]);  // "pass"
+console.log(obj["Status"]);  // "fail"
+console.log(obj.status);     // "pass"
+console.log(obj.Status);     // "fail"
+```
+
+#### 🔷 Dynamic Property Access (Using Variables)
+
+**Meaning:** You can access properties using a variable instead of a hardcoded string. This is especially useful when you don't know the property name ahead of time.
+
+```javascript
+const user = {
+  name: "John",
+  age: 30,
+  email: "john@example.com"
+};
+
+// Using a variable to dynamically access a property
+const key = "age";
+console.log(user[key]);  // 30  ← Accesses user.age
+
+// This works in loops or when reading from config files
+const propertyName = "email";
+console.log(user[propertyName]);  // "john@example.com"
+```
+
+**Why is this useful for SDET?**
+In test automation, you often need to validate different properties based on what the test requires:
+
+```javascript
+const testData = { username: "admin", password: "pass123", role: "admin" };
+const fieldToCheck = "username";  // This might come from a test parameter
+
+console.log(testData[fieldToCheck]);  // "admin"
+```
+
+---
+
+### 11.3 Modifying and Adding Properties
+
+You can **modify** existing properties or **add new properties** to an object at any time.
+
+```javascript
+let user = {
+  name: "John",
+  age: 30,
+  email: "john@example.com"
+};
+
+// Modifying existing properties
+user.age = 31;
+user.email = "newemail@example.com";
+
+// Adding new properties
+user.city = "NYC";
+user.country = "USA";
+
+console.log(user);
+// Output: { name: "John", age: 31, email: "newemail@example.com", city: "NYC", country: "USA" }
+```
+
+**Real-world Example (Configuration Objects):**
+```javascript
+let config = {};
+config.browser = "Chrome";
+config.timeout = 3000;
+config.timeout = 5000;  // Update timeout to 5000
+console.log(config);    // { browser: "Chrome", timeout: 5000 }
+```
+
+---
+
+### 11.4 Deleting Properties
+
+You can **remove a property** from an object using the `delete` operator.
+
+```javascript
+let config = {
+  browser: "Chrome",
+  timeout: 3000,
+  retries: 2
+};
+
+delete config.browser;  // Removes the 'browser' property
+
+console.log(config);  // { timeout: 3000, retries: 2 }
+console.log(config.browser);  // undefined  ← Property no longer exists
+```
+
+---
+
+### 11.5 Primitive vs Reference — The Critical Difference
+
+This is one of the **most important concepts** in JavaScript. Understanding this determines whether your code shares data or creates independent copies.
+
+#### Primitive Data Types — Pass by Value
+
+**Primitives** (number, string, boolean, null, undefined, symbol, bigint) are copied by **value**. When you assign a primitive to another variable, you create a **complete independent copy**.
+
+```javascript
+// Primitive data types - PASS BY VALUE
+let a = 10;
+let b = a;  // b gets a COPY of a's value
+
+b = 99;     // Change b
+
+console.log(a);  // 10  ← a is NOT affected (independent copy)
+console.log(b);  // 99
+```
+
+#### Objects (Non-Primitives) — Pass by Reference
+
+**Objects** (objects, arrays, functions) are copied by **reference**. When you assign an object to another variable, **both variables point to the same object in memory**. Changes through one variable affect the other!
+
+```javascript
+// Objects — copied by REFERENCE
+let obj1 = { val: 10 };
+let obj2 = obj1;  // obj2 does NOT get a copy; both point to the same object!
+
+obj2.val = 99;    // Change through obj2
+
+console.log(obj1.val);  // 99  ← obj1 is ALSO changed! 😱
+console.log(obj2.val);  // 99
+```
+
+#### Visual Representation
+
+```javascript
+// Primitive — Two separate containers
+let a = 10;        // Container A holds 10
+let b = a;         // Container B holds 10 (a copy)
+
+// Object — Two names pointing to one container
+let obj1 = { x: 10 };      // Container holds { x: 10 }
+let obj2 = obj1;           // obj2 just points to the SAME container
+
+// Both look like different variables, but they share the same data in memory!
+```
+
+#### Testing Object Equality
+
+```javascript
+// Two separate objects — different memory locations
+let c = { status: "pass" };
+let d = { status: "pass" };
+
+console.log(c === d);  // false  ← They look the same, but they are different objects in memory!
+console.log(c === c);  // true   ← An object is always equal to itself
+```
+
+---
+
+### 11.6 Object Methods (Functions Inside Objects)
+
+An **Object Method** is a function stored inside an object. You define it the same way as a property, but the value is a function.
+
+```javascript
+const user = {
+    name: "Pramod",
+    age: 43
+};
+
+const calculator = {
+    value: 0,
+    
+    // Method 1: add numbers
+    add(n) {
+        this.value += n;  // 'this' refers to the calculator object
+        return this;      // Return the object itself (Method Chaining)
+    },
+    
+    // Method 2: subtract numbers
+    subtract(n) {
+        this.value -= n;
+        return this;
+    }
+};
+
+// Using the methods
+console.log(calculator.add(5));  // { value: 5, add: [Function], subtract: [Function] }
+console.log(calculator.subtract(3));  // { value: 2, add: [Function], subtract: [Function] }
+```
+
+#### 🔷 The `this` Keyword — Referring to the Object Itself
+
+**Meaning:** Inside a method, `this` refers to the **object that owns the method**. It lets you access other properties and methods of the same object.
+
+```javascript
+const user = {
+    firstName: "Pramod",
+    lastName: "Dutta",
+    
+    // Method that uses 'this'
+    sayFullName(additionalName) {
+        this.firstName += additionalName;  // Modify this object's firstName
+        return this.firstName;
+    }
+};
+
+console.log(user.sayFullName(" Singh"));  // "Pramod Singh"
+console.log(user.firstName);  // "Pramod Singh"  ← Changed!
+```
+
+#### 🔷 Method Chaining — Returning `this`
+
+When a method returns `this`, you can chain multiple method calls together:
+
+```javascript
+const calculator = {
+    value: 0,
+    add(n) {
+        this.value += n;
+        return this;  // Returns the object itself
+    },
+    subtract(n) {
+        this.value -= n;
+        return this;
+    }
+};
+
+// Method Chaining — call multiple methods in one line
+calculator.add(10).subtract(3).add(5);
+console.log(calculator.value);  // 12  (10 - 3 + 5)
+```
+
+**Why is this useful for SDET?**
+Method chaining makes your automation code cleaner and more readable. It's used heavily in frameworks like Playwright:
+
+```javascript
+// Playwright-style method chaining
+page.goto('https://example.com').fill('#username', 'admin').click('#loginBtn');
+```
+
+---
+
+### 11.7 Object Destructuring
+
+**Destructuring** is a **convenient way to extract properties from an object and assign them to individual variables**. Instead of repeatedly writing `user.name`, `user.age`, you can destructure them into separate variables.
+
+#### Basic Destructuring
+
+```javascript
+const user = { name1: "John", age: 30, city: "NYC" };
+
+// Extract properties into variables
+const { name1, age } = user;
+
+console.log(name1);  // "John"
+console.log(age);    // 30
+```
+
+#### Renaming Variables During Destructuring
+
+You can rename the variables as you extract them:
+
+```javascript
+const user = { name1: "John", age: 30, city: "NYC" };
+
+// Rename 'name1' to 'userName' and 'age' to 'userAge'
+const { name1: userName, age: userAge } = user;
+
+console.log(userName);   // "John"
+console.log(userAge);    // 30
+```
+
+#### Default Values During Destructuring
+
+If a property doesn't exist, you can provide a default value:
+
+```javascript
+const user = { name: "John", age: 30 };
+
+// 'country' doesn't exist, so use the default value "USA"
+const { name, age, country = "USA" } = user;
+
+console.log(country);  // "USA"  ← Used the default value
+```
+
+#### Nested Object Destructuring
+
+You can destructure deeply nested objects:
+
+```javascript
+const data = { 
+    user: { 
+        name: "John", 
+        address: { 
+            city: "NYC" 
+        } 
+    } 
+};
+
+// Extract the nested 'city' property
+const { user: { address: { city } } } = data;
+
+console.log(city);  // "NYC"
+```
+
+**Why is this useful for SDET?**
+When you receive API responses or test data, destructuring makes your code cleaner:
+
+```javascript
+const apiResponse = {
+    status: 200,
+    body: { userId: 123, userName: "admin" }
+};
+
+// Clean extraction
+const { body: { userId, userName } } = apiResponse;
+
+console.log(userId, userName);  // 123, "admin"
+```
+
+---
+
+### 11.8 Spread Operator with Objects
+
+The **Spread Operator (`...`)** allows you to **copy or merge objects** in a concise way.
+
+#### Copying an Object (Shallow Copy)
+
+```javascript
+const obj1 = { a: 1, b: 2 };
+
+// Create a shallow copy
+const copy = { ...obj1 };
+
+copy.a = 99;
+
+console.log(obj1.a);  // 1   ← obj1 is NOT affected
+console.log(copy.a);  // 99  ← copy has the changed value
+```
+
+#### Merging Multiple Objects
+
+```javascript
+const obj1 = { a: 1, b: 2 };
+const obj2 = { c: 3, d: 4 };
+
+// Merge obj1 and obj2 into one object
+const merged = { ...obj1, ...obj2 };
+
+console.log(merged);
+// Output: { a: 1, b: 2, c: 3, d: 4 }
+```
+
+#### Merging with Overrides (Later values win)
+
+```javascript
+const defaults = { browser: "Chrome", timeout: 5000 };
+const userConfig = { timeout: 10000, retries: 3 };
+
+// Merge with userConfig overriding defaults
+const finalConfig = { ...defaults, ...userConfig };
+
+console.log(finalConfig);
+// Output: { browser: "Chrome", timeout: 10000, retries: 3 }
+// Note: timeout was overridden to 10000
+```
+
+**Why is this useful for SDET?**
+In test automation, you often merge default configs with test-specific overrides:
+
+```javascript
+const baseConfig = { browser: "Chrome", headless: true };
+const testConfig = { ...baseConfig, headless: false };  // Run with UI visible
+
+console.log(testConfig);
+// { browser: "Chrome", headless: false }
+```
+
+---
+
+### 11.9 Getters and Setters
+
+**Getters** and **Setters** are special methods that allow you to **run custom logic when reading or writing** to a property. They look like properties but act like methods behind the scenes.
+
+#### Using `get` — Custom Logic When Reading
+
+```javascript
+const user = {
+    firstName: "Pramod",
+    lastName: "Dutta",
+    
+    // Getter — runs when you READ user.fullName
+    get fullName() {
+        return this.firstName + " " + this.lastName;
+    }
+};
+
+console.log(user.fullName);  // "Pramod Dutta"
+// It looks like a property, but it's actually running a function!
+```
+
+#### Using `set` — Custom Logic When Writing
+
+```javascript
+const user = {
+    firstName: "Pramod",
+    lastName: "Dutta",
+    
+    get fullName() {
+        return this.firstName + " " + this.lastName;
+    },
+    
+    // Setter — runs when you WRITE to user.fullName
+    set fullName(value) {
+        // Split the value and update firstName and lastName
+        [this.firstName, this.lastName] = value.split(" ");
+    }
+};
+
+console.log(user.fullName);           // "Pramod Dutta"
+user.fullName = "Amit Sharma";        // Triggers the setter
+console.log(user.firstName);          // "Amit"
+console.log(user.lastName);           // "Sharma"
+console.log(user.fullName);           // "Amit Sharma"
+```
+
+**Why are getters and setters useful for SDET?**
+They add validation or transformation when properties are accessed:
+
+```javascript
+const testConfig = {
+    _timeout: 5000,  // Private property (convention: _ prefix)
+    
+    // Validate when setting timeout
+    set timeout(value) {
+        if (value < 1000) {
+            throw new Error("Timeout must be at least 1000ms");
+        }
+        this._timeout = value;
+    },
+    
+    get timeout() {
+        return this._timeout;
+    }
+};
+
+testConfig.timeout = 500;  // Error: Timeout must be at least 1000ms
+```
+
+---
+
+### 11.10 Object Built-in Methods
+
+JavaScript provides powerful built-in methods to work with objects.
+
+#### `Object.keys()` — Get All Property Names
+
+Returns an **array of all property keys** in the object.
+
+```javascript
+const obj = { a: 1, b: 2, c: 3 };
+
+console.log(Object.keys(obj));
+// Output: ["a", "b", "c"]
+```
+
+#### `Object.values()` — Get All Property Values
+
+Returns an **array of all property values** in the object.
+
+```javascript
+const obj = { a: 1, b: 2, c: 3 };
+
+console.log(Object.values(obj));
+// Output: [1, 2, 3]
+```
+
+#### `Object.entries()` — Get Key-Value Pairs
+
+Returns an **array of [key, value] pairs**.
+
+```javascript
+const obj = { a: 1, b: 2, c: 3 };
+
+console.log(Object.entries(obj));
+// Output: [["a", 1], ["b", 2], ["c", 3]]
+```
+
+#### Looping Through Objects
+
+**Method 1: for...in Loop** — Iterates over all enumerable properties
+
+```javascript
+const user = { name: "John", age: 30 };
+
+for (const key in user) {
+    console.log(`${key}: ${user[key]}`);
+}
+// Output:
+// name: John
+// age: 30
+```
+
+**Method 2: Object.keys() with forEach** — Modern approach
+
+```javascript
+const user = { name: "John", age: 30 };
+
+Object.keys(user).forEach(key => {
+    console.log(key);  // "name", "age"
+});
+```
+
+**Method 3: Object.entries() with forEach** — Get both key and value cleanly
+
+```javascript
+const user = { name: "John", age: 30 };
+
+Object.entries(user).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+});
+// Output:
+// name: John
+// age: 30
+```
+
+---
+
+### 11.11 Real-World Objects — Configuration and Test Data
+
+In SDET and automation, objects are used extensively for **configuration** and **test data**.
+
+#### Configuration Object Example
+
+```javascript
+const ENV = {
+    BASE_URL: "https://staging.myapp.com",
+    TIMEOUT: 5000,
+    RETRIES: 2,
+    BROWSER: "Chrome"
+};
+
+const EXPECTED_RESPONSE = {
+    status: 200,
+    body: {
+        user: { role: "admin", active: true }
+    }
+};
+
+const config = {
+    // Base URLs
+    baseUrl: 'http://localhost:3000',
+    apiBaseUrl: 'http://localhost:3000/api',
+    
+    // Test User Credentials
+    testUser: {
+        username: 'testuser@example.com',
+        password: 'SecurePass123',
+    },
+    
+    // Logging Configuration
+    logLevel: 'INFO',
+    
+    // Retry Configuration
+    retryCount: parseInt(process.env.RETRY_COUNT || '3', 10),
+};
+```
+
+#### Using Configuration in Tests
+
+```javascript
+// Reading from config
+console.log(config.baseUrl);           // 'http://localhost:3000'
+console.log(config.testUser.username); // 'testuser@example.com'
+
+// Updating config for specific tests
+const testConfig = { ...config, logLevel: 'DEBUG' };
+```
+
+---
+
+### 11.12 `let` vs `const` with Objects
+
+**The Key Difference:** Whether the **object reference** can be reassigned.
+
+#### Using `let` — Can Reassign and Modify
+
+```javascript
+let config1 = { browser: "Chrome", timeout: 3000 };
+
+// ✅ Modifying properties — ALLOWED
+config1.browser = "Firefox";
+config1.timeout = 5000;
+config1.retries = 2;
+
+console.log(config1);
+// { browser: "Firefox", timeout: 5000, retries: 2 }
+
+// ✅ Reassigning the object — ALLOWED
+config1 = { browser: "Safari" };
+console.log(config1);
+// { browser: "Safari" }
+```
+
+#### Using `const` — Cannot Reassign, But Can Modify Properties
+
+```javascript
+const config = { browser: "Chrome", timeout: 3000 };
+
+// ✅ Modifying properties — ALLOWED
+config.browser = "Firefox";
+config.timeout = 5000;
+config.retries = 2;
+
+console.log(config);
+// { browser: "Firefox", timeout: 5000, retries: 2 }
+
+// ❌ Reassigning the object — NOT ALLOWED
+// config = { browser: "Safari" };  // Error: Assignment to constant variable
+```
+
+#### Summary Table
+
+| Operation                        | `let config` | `const config` |
+| -------------------------------- | ------------ | -------------- |
+| **Modify properties**            | ✅ Yes       | ✅ Yes         |
+| **Add new properties**           | ✅ Yes       | ✅ Yes         |
+| **Delete properties**            | ✅ Yes       | ✅ Yes         |
+| **Reassign entire object**       | ✅ Yes       | ❌ No          |
+| **Redeclare the variable**       | ❌ No        | ❌ No          |
+
+**Best Practice for SDET:**
+Use `const` for configuration objects that shouldn't be reassigned, but use `let` if you need to completely swap the object during testing:
+
+```javascript
+// Configuration — use const
+const defaultConfig = { browser: "Chrome" };
+
+// Test-specific setup — might reassign
+let currentConfig = defaultConfig;
+currentConfig = { browser: "Firefox" };  // Can reassign
+```
+
+---
+
+### 11.13 Summary — Objects Quick Reference
+
+| Concept                     | Syntax / Example                          | Use Case                                   |
+| --------------------------- | ----------------------------------------- | ------------------------------------------ |
+| **Create object**           | `let obj = { key: value }`               | Store related data together                |
+| **Access property**         | `obj.key` or `obj["key"]`                | Read property values                       |
+| **Modify property**         | `obj.key = newValue`                    | Update existing data                       |
+| **Add property**            | `obj.newKey = value`                    | Add new information to object              |
+| **Delete property**         | `delete obj.key`                        | Remove unwanted properties                 |
+| **Object method**           | `obj.method() { return this }`          | Add behavior to objects                    |
+| **Destructuring**           | `const { key } = obj`                   | Extract properties cleanly                 |
+| **Spread operator**         | `{ ...obj1, ...obj2 }`                  | Copy or merge objects                      |
+| **Getter**                  | `get propName() { }`                    | Run logic when reading properties          |
+| **Setter**                  | `set propName(val) { }`                 | Run logic when writing to properties       |
+| **Object.keys()**           | `Object.keys(obj)`                      | Get all property names                     |
+| **Object.values()**         | `Object.values(obj)`                    | Get all property values                    |
+| **Object.entries()**        | `Object.entries(obj)`                   | Get [key, value] pairs                     |
+| **for...in loop**           | `for (key in obj) { }`                  | Iterate over object properties             |
+| **Pass by reference**       | `let b = obj; b.key = x`               | Both variables share the same object       |
+
+---
+
+> 💡 **SDET Takeaway:** Objects are **the foundation of test automation**. Every Playwright command, API response, and configuration is built on objects. Mastering objects means mastering modern JavaScript automation.
