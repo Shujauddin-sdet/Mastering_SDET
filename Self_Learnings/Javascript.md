@@ -10163,3 +10163,112 @@ console.log(jsonString); // '{"name":"John","role":"admin"}'
 const newObj = JSON.parse(jsonString);
 console.log(newObj.role); // "admin"
 ```
+
+---
+
+### 11.19 `Object.assign()` (Cloning & Merging)
+
+Before the Spread Operator (`...`) was introduced, developers used `Object.assign()` to copy or merge objects. It is still widely used in many existing test frameworks.
+
+It takes a **target** object as the first parameter, and one or more **source** objects after that. It copies all properties from the sources into the target.
+
+#### 1. Copying an Object
+If you want to clone an object, you pass an empty object `{}` as the target.
+
+```javascript
+const original = { browser: "Chrome", headless: true };
+
+// Clone original into a completely new object
+const cloned = Object.assign({}, original);
+
+console.log(cloned); // { browser: "Chrome", headless: true }
+```
+
+#### 2. Merging Multiple Objects
+```javascript
+const defaultOptions = { timeout: 5000, retries: 2 };
+const userOptions = { retries: 5, log: true };
+
+// Merge userOptions into defaultOptions (userOptions overrides defaults)
+const merged = Object.assign({}, defaultOptions, userOptions);
+
+console.log(merged); // { timeout: 5000, retries: 5, log: true }
+```
+
+---
+
+### 11.20 🟡 Optional Chaining `?.` (The Code Saver)
+
+This is arguably one of the greatest features ever added to JavaScript. It will save you from hundreds of framework crashes.
+
+#### The Analogy: The Missing Bridge
+Imagine you are driving across three connected islands.
+
+- **Without optional chaining:** You drive blindly. If the second bridge is missing, your car drives off a cliff and explodes. (Your code throws a fatal TypeError and your entire test suite stops running).
+- **With optional chaining `?.`:** You send a drone ahead. You say, "Go to Island 1, if the bridge exists, go to Island 2, if the bridge exists, go to Island 3." If a bridge is missing, the drone just safely stops and reports back: `undefined`. No explosions.
+
+#### Real SDET Example: Unpredictable API Responses
+When testing APIs, sometimes the server sends back a perfectly nested user object. But if the test fails, it might send back a completely different error object.
+
+If you try to read deeply nested data that isn't there, JavaScript panics.
+
+```javascript
+const successResponse = { body: { data: { user: { name: "Shujauddin" } } } };
+const failResponse = { status: 404, error: "Not Found" }; // 'body' doesn't exist here!
+
+// ❌ THE OLD WAY (CRASHES YOUR TEST SUITE!)
+// console.log(failResponse.body.data.user.name); 
+// ERROR: Cannot read properties of undefined (reading 'data')
+
+// ✅ THE NEW WAY WITH OPTIONAL CHAINING
+// We put "?." before every dot where we think the data MIGHT be missing.
+console.log(failResponse.body?.data?.user?.name); 
+// Output: undefined (The test safely continues running!)
+```
+
+**How to read `?.` in English:**
+"Look inside `failResponse`. Does `body` exist? If yes, keep going. If no, stop immediately and return `undefined`."
+
+It is the ultimate safety net for SDETs dealing with unpredictable API payloads or web elements that might not have loaded on the page yet.
+
+---
+
+### 11.21 Object Shorthand Properties
+
+When you create an object from existing variables, you often find yourself typing the exact same word twice. Object Shorthand Properties is a modern JavaScript feature that removes this redundancy.
+
+#### The Analogy: The Name Tag
+Imagine you are attending a conference. You walk up to the registration desk holding a sticky note with your name: "Shujauddin".
+
+- **The Old Way (Repetitive):** The receptionist takes your sticky note, writes "Name:" on a proper badge, and then writes "Shujauddin" next to it. They wrote the label even though it was obvious.
+- **The New Way (Shorthand):** The receptionist sees your sticky note says "Shujauddin", assumes the label should also be "Shujauddin", and just slaps the sticky note directly onto your shirt. No double writing required.
+
+#### Real SDET Example: Building API Payloads
+When sending data in an API POST request (like creating a new user or a test account), you usually gather variables from different parts of your code and pack them into one JSON object.
+
+```javascript
+const username = "testuser123";
+const password = "SecurePassword!";
+const environment = "staging";
+
+// ❌ THE OLD WAY (Repetitive)
+// You type the exact same word on the left (the key) and the right (the variable)
+const payloadOld = {
+    username: username,
+    password: password,
+    environment: environment
+};
+
+// ✅ THE NEW WAY (Object Shorthand)
+// If the key name and the variable name are identical, just type it once!
+const payloadNew = {
+    username,
+    password,
+    environment
+};
+
+console.log(payloadNew);
+// Output: { username: "testuser123", password: "SecurePassword!", environment: "staging" }
+```
+
+This makes your code much cleaner and faster to read, especially when constructing large test data objects.
