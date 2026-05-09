@@ -7540,7 +7540,7 @@ function processUser(userName, callbackFn) {
   console.log(callbackFn(userName));
 }
 
-processUser("Pramod", sayHello); // Output: Hello, Pramod!
+processUser("Shujauddin", sayHello); // Output: Hello, Shujauddin!
 ```
 ```javascript 
 
@@ -9280,8 +9280,8 @@ let objectName = {
 **Example:**
 ```javascript
 let student1 = { name: "Amit", age: 25 };
-let student2 = { name: "Pramod" };
-let student3 = { name: "Pramod", age: 87, phone: 9876543210 };
+let student2 = { name: "Shujauddin" };
+let student3 = { name: "Shujauddin", age: 87, phone: 9876543210 };
 ```
 
 #### 🔷 Keys in Object Literals
@@ -9499,7 +9499,7 @@ An **Object Method** is a function stored inside an object. You define it the sa
 
 ```javascript
 const user = {
-    name: "Pramod",
+    name: "Shujauddin",
     age: 43
 };
 
@@ -9530,8 +9530,8 @@ console.log(calculator.subtract(3));  // { value: 2, add: [Function], subtract: 
 
 ```javascript
 const user = {
-    firstName: "Pramod",
-    lastName: "Dutta",
+    firstName: "Shujauddin",
+    lastName: "Shujauddin_1",
     
     // Method that uses 'this'
     sayFullName(additionalName) {
@@ -9540,8 +9540,8 @@ const user = {
     }
 };
 
-console.log(user.sayFullName(" Singh"));  // "Pramod Singh"
-console.log(user.firstName);  // "Pramod Singh"  ← Changed!
+console.log(user.sayFullName(" Singh"));  // "Shujauddin Singh"
+console.log(user.firstName);  // "Shujauddin Singh"  ← Changed!
 ```
 
 #### 🔷 Method Chaining — Returning `this`
@@ -9722,8 +9722,8 @@ console.log(testConfig);
 
 ```javascript
 const user = {
-    firstName: "Pramod",
-    lastName: "Dutta",
+    firstName: "Shujauddin",
+    lastName: "Shujauddin_1",
     
     // Getter — runs when you READ user.fullName
     get fullName() {
@@ -9731,7 +9731,7 @@ const user = {
     }
 };
 
-console.log(user.fullName);  // "Pramod Dutta"
+console.log(user.fullName);  // "Shujauddin Shujauddin_1"
 // It looks like a property, but it's actually running a function!
 ```
 
@@ -9739,8 +9739,8 @@ console.log(user.fullName);  // "Pramod Dutta"
 
 ```javascript
 const user = {
-    firstName: "Pramod",
-    lastName: "Dutta",
+    firstName: "Shujauddin",
+    lastName: "Shujauddin_1",
     
     get fullName() {
         return this.firstName + " " + this.lastName;
@@ -9753,7 +9753,7 @@ const user = {
     }
 };
 
-console.log(user.fullName);           // "Pramod Dutta"
+console.log(user.fullName);           // "Shujauddin Shujauddin_1"
 user.fullName = "Amit Sharma";        // Triggers the setter
 console.log(user.firstName);          // "Amit"
 console.log(user.lastName);           // "Sharma"
@@ -10002,3 +10002,164 @@ currentConfig = { browser: "Firefox" };  // Can reassign
 ---
 
 > 💡 **SDET Takeaway:** Objects are **the foundation of test automation**. Every Playwright command, API response, and configuration is built on objects. Mastering objects means mastering modern JavaScript automation.
+
+---
+
+### 11.14 Computed Properties
+
+Computed properties allow you to set the name of an object's key using a variable or an expression inside square brackets `[]` when you create the object. 
+
+```javascript
+const prefix = "user_";
+const dynamicKey = "email";
+
+const student = {
+    [prefix + "name"]: "John",    // Key becomes "user_name"
+    [dynamicKey]: "john@test.com" // Key becomes "email"
+};
+
+console.log(student.user_name); // "John"
+console.log(student.email);     // "john@test.com"
+```
+
+This is very helpful when reading keys from an external file or when building configuration objects dynamically during automation testing.
+
+---
+
+### 11.15 Static Methods and Properties
+
+Static properties and methods belong to the **class itself**, not to the individual objects (instances) created from the class. You call them directly on the class.
+
+```javascript
+class Browser {
+    // Static property
+    static defaultTimeout = 5000;
+
+    // Static method
+    static closeAll() {
+        console.log("Closing all browsers...");
+    }
+}
+
+// You do NOT need to create a new object (new Browser())
+console.log(Browser.defaultTimeout); // 5000
+Browser.closeAll();                  // "Closing all browsers..."
+```
+
+---
+
+### 11.16 Private Fields (`#`)
+
+By default, everything in a JavaScript object is public. If you want to hide a property or method so that it cannot be accessed from outside the object, you put a `#` symbol in front of it.
+
+```javascript
+class TestAccount {
+    // Private property
+    #password = "SecretPass123";
+
+    getPassword() {
+        return this.#password; // It can only be used INSIDE the class
+    }
+}
+
+const myAccount = new TestAccount();
+console.log(myAccount.getPassword()); // "SecretPass123"
+
+// Trying to access the private field directly from the outside:
+// console.log(myAccount.#password);  // ❌ SyntaxError: Private field must be declared
+```
+
+---
+
+### 11.17 Prototypal Inheritance
+
+Prototypal Inheritance is simply an invisible "fallback link" between two objects.
+
+#### The Analogy: The QA Escalation Desk
+
+Imagine you are a Junior QA. A developer asks you how to fix a bug.
+
+If you know the answer, you answer it yourself.
+
+If you don't know the answer, you don't panic. You have an invisible link to your QA Manager. You pass the question to them, and if they know it, they answer it on your behalf.
+
+In JavaScript, objects work the exact same way. If an object doesn't have a specific method, it checks its "Manager" (its Prototype) before giving up and throwing an error.
+
+#### Example (SDET Base Page)
+
+The simplest way to link two objects is using `Object.create()`. Let's create a generic "Base" test object, and link a specific "Login" test object to it.
+
+```javascript
+// 1. The Manager (The Prototype Object)
+const basePage = {
+    timeout: 5000,
+    takeScreenshot() {
+        console.log("📸 Snap! Screenshot saved.");
+    }
+};
+
+// 2. The Junior QA (The Child Object)
+// We use Object.create() to invisibly link loginPage to basePage
+const loginPage = Object.create(basePage);
+
+// We give the child object its own specific skill
+loginPage.enterPassword = function() {
+    console.log("Typing password...");
+};
+
+// --- LET'S SEE IT IN ACTION ---
+
+// Scenario A: The Junior QA knows what to do
+loginPage.enterPassword(); 
+// Output: "Typing password..." (It found the method right inside loginPage)
+
+// Scenario B: The Junior QA DOES NOT know what to do!
+loginPage.takeScreenshot(); 
+// Output: "📸 Snap! Screenshot saved." 
+```
+
+**What just happened in Scenario B?**
+When you told `loginPage` to take a screenshot, JavaScript looked inside `loginPage` and said, "Wait, there is no `takeScreenshot` function here!"
+
+But instead of crashing, it followed the invisible prototype link up to the "Manager" (`basePage`). It found the `takeScreenshot` function there, and ran it perfectly.
+
+That is Prototypal Inheritance in a nutshell: Objects sharing their tools through an invisible fallback chain.
+
+---
+
+### 11.18 Built-in Objects: Math, Date, JSON
+
+JavaScript provides several pre-built objects that give you powerful tools right out of the box.
+
+#### 1. The `Math` Object
+Used for mathematical operations. You don't create it; you just use it directly.
+```javascript
+console.log(Math.round(4.7));      // 5 (Rounds to nearest whole number)
+console.log(Math.max(10, 50, 20)); // 50 (Finds the highest value)
+console.log(Math.random());        // Generates a random decimal between 0 and 1
+```
+
+#### 2. The `Date` Object
+Used for capturing and manipulating dates and times.
+```javascript
+const now = new Date();
+console.log(now.getFullYear()); // 2026
+console.log(now.getMonth());    // Current month (0-11, where 0 is January)
+
+// Setting a specific date
+const futureDate = new Date("2030-01-01");
+```
+
+#### 3. The `JSON` Object
+Used heavily in API testing to convert data between JavaScript objects and text strings.
+```javascript
+const userObj = { name: "John", role: "admin" };
+
+// Object to String (For sending in API requests)
+const jsonString = JSON.stringify(userObj); 
+console.log(jsonString); // '{"name":"John","role":"admin"}'
+
+// String to Object (For reading API responses)
+const newObj = JSON.parse(jsonString);
+console.log(newObj.role); // "admin"
+```
