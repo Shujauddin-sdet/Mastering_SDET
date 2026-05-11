@@ -79,6 +79,7 @@
     - [Real-World Objects](#1111-real-world-objects--configuration-and-test-data)
     - [let vs const with Objects](#1112-let-vs-const-with-objects)
     - [Objects Quick Reference](#1113-summary--objects-quick-reference)
+24. [Classes — Object-Oriented JavaScript](#12-classes--object-oriented-javascript)
 
 - [Appendix](#appendix-comparison-recap--vs-)
 
@@ -10131,38 +10132,238 @@ That is Prototypal Inheritance in a nutshell: Objects sharing their tools throug
 
 JavaScript provides several pre-built objects that give you powerful tools right out of the box.
 
+---
+
 #### 1. The `Math` Object
-Used for mathematical operations. You don't create it; you just use it directly.
+
+Used for mathematical operations. You don't create it — you just call it directly. Think of it as a scientific calculator that is always in your pocket.
+
+##### Basic Examples
+
 ```javascript
-console.log(Math.round(4.7));      // 5 (Rounds to nearest whole number)
-console.log(Math.max(10, 50, 20)); // 50 (Finds the highest value)
-console.log(Math.random());        // Generates a random decimal between 0 and 1
+// Rounding
+console.log(Math.round(4.7));   // 5   — Rounds to the nearest whole number
+console.log(Math.round(4.4));   // 4   — Rounds down because 4.4 < 4.5
+console.log(Math.ceil(4.1));    // 5   — Always rounds UP (ceiling)
+console.log(Math.floor(4.9));   // 4   — Always rounds DOWN (floor)
+
+// Min and Max
+console.log(Math.max(10, 50, 20, 35)); // 50 — Finds the highest value
+console.log(Math.min(10, 50, 20, 35)); // 10 — Finds the lowest value
+
+// Powers and Square Roots
+console.log(Math.pow(2, 3));    // 8   — 2 raised to the power of 3 (2³)
+console.log(Math.sqrt(25));     // 5   — Square root of 25
+
+// Absolute Value
+console.log(Math.abs(-15));     // 15  — Removes the negative sign
+
+// Constants
+console.log(Math.PI);           // 3.141592653589793
 ```
+
+##### `Math.random()` — Generating Test Data
+
+`Math.random()` generates a random decimal **between 0 (inclusive) and 1 (exclusive)**. On its own it isn't very useful, but combined with `Math.floor` it becomes a powerful random data generator.
+
+```javascript
+// Generate a random decimal between 0 and 1
+console.log(Math.random()); // e.g., 0.7361849201
+
+// ✅ SDET Pattern: Random integer between 1 and 100 (for random test IDs)
+const randomId = Math.floor(Math.random() * 100) + 1;
+console.log(randomId); // e.g., 47
+
+// ✅ SDET Pattern: Pick a random item from an array (random test data)
+const browsers = ["Chrome", "Firefox", "Safari", "Edge"];
+const randomBrowser = browsers[Math.floor(Math.random() * browsers.length)];
+console.log(randomBrowser); // e.g., "Firefox"
+```
+
+##### `Math.trunc()` — Remove Decimals Without Rounding
+
+```javascript
+console.log(Math.trunc(4.9));   // 4  — Just chops the decimal off (no rounding)
+console.log(Math.trunc(-4.9));  // -4 — Works on negatives too
+```
+
+> 💡 **SDET Use Case:** Use `Math.random()` + `Math.floor()` to generate unique test user IDs, random ports, or random wait times to avoid flakiness in parallel test runs.
+
+---
 
 #### 2. The `Date` Object
-Used for capturing and manipulating dates and times.
+
+Used for capturing and working with dates and times. Unlike `Math`, you create a `Date` object using the `new` keyword.
+
+##### Getting the Current Date and Time
+
 ```javascript
 const now = new Date();
-console.log(now.getFullYear()); // 2026
-console.log(now.getMonth());    // Current month (0-11, where 0 is January)
 
-// Setting a specific date
-const futureDate = new Date("2030-01-01");
+console.log(now);                   // e.g., 2026-05-11T06:20:18.000Z (full timestamp)
+console.log(now.getFullYear());     // 2026 — 4-digit year
+console.log(now.getMonth());        // 4    — ⚠️ Months are 0-indexed! (0 = Jan, 4 = May)
+console.log(now.getDate());         // 11   — Day of the month (1–31)
+console.log(now.getDay());          // 0    — Day of the week (0 = Sunday, 6 = Saturday)
+console.log(now.getHours());        // 6    — Current hour (0–23)
+console.log(now.getMinutes());      // 20   — Current minutes (0–59)
+console.log(now.getSeconds());      // 18   — Current seconds (0–59)
+console.log(now.getMilliseconds()); // 0    — Milliseconds (0–999)
 ```
+
+> ⚠️ **Common Gotcha:** `getMonth()` returns 0 for January, 1 for February… Always add `+ 1` when displaying months to humans.
+
+##### Creating a Specific Date
+
+```javascript
+// Creating a date from a string
+const releaseDate = new Date("2030-01-15");
+console.log(releaseDate.getFullYear()); // 2030
+console.log(releaseDate.getMonth());    // 0  — January (remember, 0-indexed!)
+console.log(releaseDate.getDate());     // 15
+
+// Creating a date from numbers: new Date(year, month, day, hours, minutes, seconds)
+const deployDate = new Date(2026, 4, 11, 9, 0, 0); // month 4 = May
+console.log(deployDate.getMonth()); // 4  — May
+```
+
+##### Comparing Dates — A Core SDET Pattern
+
+```javascript
+const sessionStart = new Date("2026-05-11T06:00:00");
+const sessionEnd   = new Date("2026-05-11T06:30:00");
+
+// Dates can be subtracted to get milliseconds
+const durationMs = sessionEnd - sessionStart;
+console.log(durationMs);               // 1800000 — 30 minutes in milliseconds
+console.log(durationMs / 1000 / 60);   // 30      — Convert to minutes
+
+// Is the session expired?
+const now2 = new Date();
+console.log(now2 > sessionEnd); // true or false — Checks if we're past the session
+```
+
+##### `Date.now()` — Measuring Performance
+
+```javascript
+const start = Date.now(); // Returns a number: milliseconds since Jan 1, 1970
+
+// Simulate some work (replace with actual test code)
+for (let i = 0; i < 1_000_000; i++) {}
+
+const end = Date.now();
+console.log(`Test ran in ${end - start} ms`); // e.g., "Test ran in 3 ms"
+```
+
+##### Formatting a Date for Logs and Reports
+
+```javascript
+const today = new Date();
+
+// toISOString() — standard format, great for log timestamps
+console.log(today.toISOString()); // "2026-05-11T06:20:18.000Z"
+
+// toLocaleDateString() — human-friendly format
+console.log(today.toLocaleDateString("en-IN")); // "11/5/2026" (India locale)
+console.log(today.toLocaleDateString("en-US")); // "5/11/2026" (US locale)
+
+// toLocaleString() — full date and time
+console.log(today.toLocaleString("en-IN")); // "11/5/2026, 6:20:18 am"
+```
+
+> 💡 **SDET Use Case:** Use `Date.now()` to measure how long a page load or API call takes. Use `toISOString()` to add accurate timestamps to your test report filenames (e.g., `report-2026-05-11T06-20-18.html`).
+
+---
 
 #### 3. The `JSON` Object
-Used heavily in API testing to convert data between JavaScript objects and text strings.
+
+JSON (JavaScript Object Notation) is the universal language of the internet. Every API request and response you work with in automation will be JSON. The `JSON` object gives you two critical tools.
+
+| Method | Direction | Use Case |
+|---|---|---|
+| `JSON.stringify()` | Object → String | Sending data in an API POST/PUT request |
+| `JSON.parse()` | String → Object | Reading data from an API GET response |
+
+##### `JSON.stringify()` — Object to String
+
 ```javascript
-const userObj = { name: "John", role: "admin" };
+const user = { name: "Shujauddin", role: "SDET", active: true };
 
-// Object to String (For sending in API requests)
-const jsonString = JSON.stringify(userObj); 
-console.log(jsonString); // '{"name":"John","role":"admin"}'
-
-// String to Object (For reading API responses)
-const newObj = JSON.parse(jsonString);
-console.log(newObj.role); // "admin"
+const jsonString = JSON.stringify(user);
+console.log(jsonString);        // '{"name":"Shujauddin","role":"SDET","active":true}'
+console.log(typeof jsonString); // "string"
 ```
+
+##### `JSON.stringify()` with Pretty Printing
+
+Pass `null, 2` as extra arguments to format the output with indentation — very useful for debugging API payloads.
+
+```javascript
+const payload = {
+    username: "testuser",
+    password: "Test@1234",
+    settings: { theme: "dark", notifications: true }
+};
+
+console.log(JSON.stringify(payload, null, 2));
+// Output:
+// {
+//   "username": "testuser",
+//   "password": "Test@1234",
+//   "settings": {
+//     "theme": "dark",
+//     "notifications": true
+//   }
+// }
+```
+
+##### `JSON.parse()` — String to Object
+
+```javascript
+// Simulating an API response (always arrives as a string)
+const apiResponse = '{"status":200,"data":{"userId":42,"name":"Alice"}}';
+
+const parsed = JSON.parse(apiResponse);
+console.log(typeof parsed);          // "object"
+console.log(parsed.status);          // 200
+console.log(parsed.data.userId);     // 42
+console.log(parsed.data.name);       // "Alice"
+```
+
+##### Round-Trip: Stringify then Parse (Deep Clone Pattern)
+
+```javascript
+const original = { browser: "Chrome", settings: { headless: true } };
+
+// This is a quick trick to deep-clone an object
+const deepCopy = JSON.parse(JSON.stringify(original));
+
+deepCopy.settings.headless = false; // Change the clone
+
+console.log(original.settings.headless); // true  — Original is untouched! ✅
+console.log(deepCopy.settings.headless); // false — Clone is changed ✅
+```
+
+##### Handling Invalid JSON — Safe Parsing
+
+```javascript
+function safeParseJSON(str) {
+    try {
+        return JSON.parse(str);
+    } catch (error) {
+        console.log("Invalid JSON received:", error.message);
+        return null;
+    }
+}
+
+const validJson   = '{"name": "Bob"}';
+const invalidJson = "{ name: Bob }"; // ❌ Not valid JSON — missing quotes
+
+console.log(safeParseJSON(validJson));   // { name: "Bob" }
+console.log(safeParseJSON(invalidJson)); // "Invalid JSON received: ..." → null
+```
+
+> 💡 **SDET Takeaway:** You will use `JSON.stringify()` and `JSON.parse()` in every single API test. When you send a POST body — `stringify`. When you read a GET response — `parse`. The `try/catch` wrapper around `JSON.parse()` is a must-have in production automation to prevent a bad API response from crashing your entire test run.
 
 ---
 
@@ -10207,6 +10408,28 @@ Imagine you are driving across three connected islands.
 - **Without optional chaining:** You drive blindly. If the second bridge is missing, your car drives off a cliff and explodes. (Your code throws a fatal TypeError and your entire test suite stops running).
 - **With optional chaining `?.`:** You send a drone ahead. You say, "Go to Island 1, if the bridge exists, go to Island 2, if the bridge exists, go to Island 3." If a bridge is missing, the drone just safely stops and reports back: `undefined`. No explosions.
 
+#### What is `body` here?
+
+`body` is just a **regular property name** — nothing special about the word itself, the same way you'd name a key `name`, `age`, or `timeout`.
+
+The name comes from **real-world HTTP API design**. When a server replies to a request, the response is split into two parts:
+- **Headers** — invisible metadata (status code, content type, etc.)
+- **Body** — the actual data payload you asked for
+
+So developers adopted a convention of naming that data property `body` in their JavaScript objects. It has **no built-in meaning** in JavaScript — it's purely a naming habit.
+
+Here's what the `successResponse` object looks like when you open it layer by layer:
+
+```
+successResponse          ← outer object
+  └── body               ← a property whose VALUE is another object
+        └── data         ← a property whose value is another object
+              └── user   ← a property whose value is another object
+                    └── name: "Shujauddin"  ← finally, the actual value
+```
+
+`failResponse` has **no `body` key at all**. It only has `status` and `error`. So when JavaScript tries `failResponse.body.data`, it first checks `failResponse.body` → gets `undefined` → then tries to do `undefined.data` → **CRASH**. That's exactly what `?.` prevents.
+
 #### Real SDET Example: Unpredictable API Responses
 When testing APIs, sometimes the server sends back a perfectly nested user object. But if the test fails, it might send back a completely different error object.
 
@@ -10228,6 +10451,60 @@ console.log(failResponse.body?.data?.user?.name);
 
 **How to read `?.` in English:**
 "Look inside `failResponse`. Does `body` exist? If yes, keep going. If no, stop immediately and return `undefined`."
+
+#### Step-by-Step Example: Two API Responses, Same Code
+
+```javascript
+// --- SCENARIO: Your test calls an API that logs in a user ---
+// When login SUCCEEDS, the server returns this:
+const loginSuccess = {
+    status: 200,
+    body: {                         // ✅ 'body' EXISTS here
+        data: {
+            user: {
+                name: "Shujauddin",
+                role: "admin"
+            }
+        }
+    }
+};
+
+// When login FAILS, the server returns this:
+const loginFail = {
+    status: 401,
+    error: "Invalid credentials"    // ❌ 'body' does NOT exist here
+    // There is no 'body' key at all in this object
+};
+
+// --- WITHOUT OPTIONAL CHAINING ---
+// This code ONLY works for loginSuccess. If you point it at loginFail, it CRASHES.
+// console.log(loginFail.body.data.user.name);
+// Step 1: loginFail.body       → undefined  (there is no 'body' key)
+// Step 2: undefined.data       → 💥 TypeError: Cannot read properties of undefined
+
+// --- WITH OPTIONAL CHAINING ---
+// The same single line of code now handles BOTH responses safely.
+console.log(loginSuccess.body?.data?.user?.name); // "Shujauddin"
+// Step 1: loginSuccess.body    → { data: { user: { name: "Shujauddin", role: "admin" } } }
+// Step 2: .data                → { user: { name: "Shujauddin", role: "admin" } }
+// Step 3: .user                → { name: "Shujauddin", role: "admin" }
+// Step 4: .name                → "Shujauddin" ✅
+
+console.log(loginFail.body?.data?.user?.name);    // undefined
+// Step 1: loginFail.body       → undefined  (no 'body' key)
+// Step 2: ?. sees undefined    → STOPS HERE immediately, returns undefined
+// Steps 3 & 4 never even run  → No crash ✅
+
+// --- WHY THIS MATTERS IN REAL AUTOMATION ---
+// You write ONE assertion that works for both cases:
+const userName = loginSuccess.body?.data?.user?.name;
+
+if (userName) {
+    console.log(`Login verified. Welcome, ${userName}!`); // "Login verified. Welcome, Shujauddin!"
+} else {
+    console.log("Login failed — no user found in the response.");
+}
+```
 
 It is the ultimate safety net for SDETs dealing with unpredictable API payloads or web elements that might not have loaded on the page yet.
 
@@ -10519,6 +10796,37 @@ console.log(eng.species); // "homo sapiens" (inherited)
 console.log(eng.branch);  // "Software Engineering"
 ```
 
+**So… what exactly is `eng` here?**
+
+`eng` is the **instance** — the real, physical object that was built from the `Engineer` blueprint.
+
+Here's how to think about that one line:
+
+```javascript
+let eng = new Engineer("Software Engineering");
+```
+
+| Part | What it is | Analogy |
+|---|---|---|
+| `Engineer` | The **blueprint** (class) | The paper instructions for building an engineer |
+| `new` | The **factory button** | You pressed "BUILD" to manufacture a real object |
+| `eng` | The **instance** | The finished, physical object that popped out of the factory |
+
+`Engineer` on its own is just a set of instructions — it's not real and holds no data. The moment you press `new`, JavaScript actually builds a real object in memory, fills it with data from the constructor, and hands it to you inside `eng`.
+
+**The Proof:** Run `console.log(eng)` and you'll see the actual physical object sitting in memory with its own unique data:
+
+```javascript
+console.log(eng);
+// Engineer { species: 'homo sapiens', branch: 'Software Engineering' }
+```
+
+Notice two things in that output:
+1. It says `Engineer` at the start — that's the blueprint it was built from.
+2. It shows both `species` (inherited from `Persons` via `super()`) and `branch` (its own property). Both live inside the same single object, `eng`.
+
+
+
 ---
 
 ### 12.7 Creating an Instance with `new` — The 4 Secret Steps
@@ -10652,5 +10960,5 @@ player1.login();
 
 ---
 
-> 💡 **SDET Takeaway:** Classes are the backbone of modern test automation frameworks. Every Playwright `Page`, every API wrapper, and every reusable helper you build will use Classes. Mastering `constructor`, `extends`, `super`, and `static` will directly make your automation code cleaner, reusable, and professional.
+
 
