@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 620" width="700" height="620" style="font-family: 'Segoe UI', system-ui, sans-serif;">
+  <!-- Background -->
+  <rect width="700" height="620" rx="16" fill="#0d1117"/>
+
+  <!-- Title -->
+  <text x="350" y="38" text-anchor="middle" fill="#e6edf3" font-size="18" font-weight="700">try / catch / finally — Execution Flow</text>
+
+  <!-- START -->
+  <ellipse cx="350" cy="85" rx="60" ry="22" fill="#21262d" stroke="#8b949e" stroke-width="1.5"/>
+  <text x="350" y="90" text-anchor="middle" fill="#8b949e" font-size="13" font-weight="600">START</text>
+
+  <!-- Arrow: START → TRY -->
+  <line x1="350" y1="107" x2="350" y2="138" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow-grey)"/>
+
+  <!-- TRY block -->
+  <rect x="180" y="138" width="340" height="66" rx="10" fill="#0d2b2b" stroke="#2ea99f" stroke-width="2"/>
+  <text x="350" y="162" text-anchor="middle" fill="#2ea99f" font-size="14" font-weight="700">🟢 try { }</text>
+  <text x="350" y="183" text-anchor="middle" fill="#7ee7e0" font-size="12">Run your code here. If it works — great.</text>
+  <text x="350" y="198" text-anchor="middle" fill="#7ee7e0" font-size="12">If it throws an error — stop immediately.</text>
+
+  <!-- Decision diamond -->
+  <!-- Arrow: TRY → decision -->
+  <line x1="350" y1="204" x2="350" y2="235" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow-grey)"/>
+  <polygon points="350,240 400,275 350,310 300,275" fill="#161b22" stroke="#8b949e" stroke-width="1.5"/>
+  <text x="350" y="270" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">Error</text>
+  <text x="350" y="286" text-anchor="middle" fill="#e6edf3" font-size="12" font-weight="600">thrown?</text>
+
+  <!-- YES label + arrow down to CATCH -->
+  <text x="255" y="298" text-anchor="middle" fill="#f87171" font-size="12" font-weight="600">YES</text>
+  <line x1="300" y1="275" x2="195" y2="275" stroke="#f87171" stroke-width="1.5"/>
+  <line x1="195" y1="275" x2="195" y2="342" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+  <!-- NO label + arrow right then down to FINALLY skipping catch -->
+  <text x="462" y="268" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="600">NO</text>
+  <line x1="400" y1="275" x2="510" y2="275" stroke="#4ade80" stroke-width="1.5"/>
+  <line x1="510" y1="275" x2="510" y2="480" stroke="#4ade80" stroke-width="1.5"/>
+  <line x1="510" y1="480" x2="395" y2="480" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <!-- CATCH block -->
+  <rect x="55" y="342" width="280" height="66" rx="10" fill="#2b0d0d" stroke="#f87171" stroke-width="2"/>
+  <text x="195" y="367" text-anchor="middle" fill="#f87171" font-size="14" font-weight="700">🔴 catch (err) { }</text>
+  <text x="195" y="388" text-anchor="middle" fill="#fca5a5" font-size="12">Handle the error. Log it, show a</text>
+  <text x="195" y="402" text-anchor="middle" fill="#fca5a5" font-size="12">message, or retry the operation.</text>
+
+  <!-- Arrow: CATCH → FINALLY -->
+  <line x1="195" y1="408" x2="195" y2="450" stroke="#8b949e" stroke-width="1.5"/>
+  <line x1="195" y1="450" x2="265" y2="450" stroke="#8b949e" stroke-width="1.5"/>
+  <line x1="265" y1="450" x2="265" y2="472" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow-grey)"/>
+
+  <!-- FINALLY block -->
+  <rect x="175" y="472" width="340" height="66" rx="10" fill="#0d1529" stroke="#60a5fa" stroke-width="2"/>
+  <text x="350" y="496" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="700">🔵 finally { }</text>
+  <text x="350" y="517" text-anchor="middle" fill="#93c5fd" font-size="12">ALWAYS runs — success or failure.</text>
+  <text x="350" y="532" text-anchor="middle" fill="#93c5fd" font-size="12">Close connections, clean up resources.</text>
+
+  <!-- Arrow: FINALLY → END -->
+  <line x1="350" y1="538" x2="350" y2="572" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow-grey)"/>
+
+  <!-- END -->
+  <ellipse cx="350" cy="590" rx="60" ry="22" fill="#21262d" stroke="#8b949e" stroke-width="1.5"/>
+  <text x="350" y="595" text-anchor="middle" fill="#8b949e" font-size="13" font-weight="600">END</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow-grey" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#8b949e"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4ade80"/>
+    </marker>
+  </defs>
+</svg>

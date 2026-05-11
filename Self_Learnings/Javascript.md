@@ -80,7 +80,16 @@
     - [let vs const with Objects](#1112-let-vs-const-with-objects)
     - [Objects Quick Reference](#1113-summary--objects-quick-reference)
 24. [Classes — Object-Oriented JavaScript](#12-classes--object-oriented-javascript)
-
+25. [JSON (JavaScript Object Notation)](#25-json-javascript-object-notation)
+26. [Synchronous vs Asynchronous JS](#26-synchronous-vs-asynchronous-js)
+27. [Callbacks in JavaScript](#27-callbacks-in-javascript)
+    - [Basic Callback Concept](#271-basic-callback-concept)
+    - [Three Ways to Define Callbacks](#272-three-ways-to-define-callbacks)
+    - [Callbacks with Parameters](#273-callbacks-with-parameters)
+    - [Synchronous Callbacks — forEach()](#274-synchronous-callbacks--foreach)
+    - [Asynchronous Callbacks — setTimeout()](#275-asynchronous-callbacks--settimeout)
+    - [Real QA Scenario — E2E Login Flow](#276-real-qa-scenario--e2e-login-flow-callback-hell-️)
+    - [Key Takeaways](#277-key-takeaways)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -11007,7 +11016,7 @@ player1.login();
 
 ---
 
-### JSON
+## 25. JSON (JavaScript Object Notation)
 
 **JSON** stands for **JavaScript Object Notation**.
 
@@ -11666,3 +11675,259 @@ console.log(copy.joined instanceof Date); // true ✅ — Date is preserved as a
 | `JSON.stringify(obj, ["key"])`  | Only includes specified keys (replacer)     | `string`     |
 | `JSON.parse(str, reviverFn)`    | Parses and transforms values using a function | `object`   |
 | `structuredClone(obj)`          | Modern built-in deep clone (handles Dates)  | `object`     |
+
+-----------------------------
+
+## 26. Synchronous vs Asynchronous JS
+
+### Synchronous
+
+Synchronous means the code runs in a particular sequence of instructions given in the program. Each instruction waits for the previous instruction to complete its execution before moving to the next one.
+
+**Example:**
+
+```javascript
+console.log("Instruction 1");
+console.log("Instruction 2");
+console.log("Instruction 3");
+```
+
+**Output:**
+
+```text
+Instruction 1
+Instruction 2
+Instruction 3
+```
+
+### Asynchronous
+
+Due to synchronous programming, sometimes important instructions get blocked due to a previous slow instruction (like waiting for a timer, fetching data, or reading a file). This can cause a delay or freeze in the UI. 
+
+Asynchronous code execution allows JavaScript to execute the next instruction immediately in the background, so it doesn't block the main flow.
+
+**Example:**
+
+```javascript
+console.log("Instruction 1");
+
+setTimeout(() => {
+  console.log("Instruction 2 (after 2 seconds)");
+}, 2000); // 👈 this takes 2 seconds
+
+console.log("Instruction 3");
+```
+
+**Output:**
+
+```text
+Instruction 1
+Instruction 3
+Instruction 2 (after 2 seconds)
+```
+
+---
+
+## 27. Callbacks in JavaScript
+
+> **What is a Callback?**
+> A callback is a function that is passed as an argument to another function, and is executed after some operation has been performed.
+
+---
+
+### 27.1 Basic Callback Concept
+
+A callback function is simply a function passed into another function as an argument, which is then invoked inside the outer function.
+
+```javascript
+// Define a function that accepts another function as an argument
+function placeOrder(item, callback) {
+    console.log("Placing order for: " + item);
+    callback(); // Execute the callback function
+}
+
+// Define the callback function
+function orderComplete() {
+    console.log("Order placed successfully!");
+}
+
+// Call the function with the callback
+placeOrder("Burger", orderComplete);
+// Output:
+// Placing order for: Burger
+// Order placed successfully!
+```
+
+---
+
+### 27.2 Three Ways to Define Callbacks
+
+#### **Way 1: Named Function as Callback**
+
+```javascript
+function placeOrder(item, callback) {
+    console.log("Placing order");
+    callback();
+}
+
+function print() {
+    console.log("Done with the order");
+}
+
+placeOrder("Burger", print);
+// Output:
+// Placing order
+// Done with the order
+```
+
+#### **Way 2: Anonymous Function as Callback**
+
+```javascript
+placeOrder("Burger", function () {
+    console.log("Anonymous function - I'm also a function without a name!");
+});
+// Output:
+// Placing order
+// Anonymous function - I'm also a function without a name!
+```
+
+#### **Way 3: Arrow Function as Callback**
+
+```javascript
+placeOrder("Burger", () => {
+    console.log("Arrow function - I'm a callback too!");
+});
+// Output:
+// Placing order
+// Arrow function - I'm a callback too!
+```
+
+---
+
+### 27.3 Callbacks with Parameters
+
+Callbacks can receive parameters from the outer function:
+
+```javascript
+function runTest(testName, callback) {
+    let status = "PASS";
+    callback(testName, status); // Pass parameters to the callback
+}
+
+runTest("Login Test", function (name, result) {
+    console.log(name + " → " + result);
+});
+// Output: Login Test → PASS
+```
+
+---
+
+### 27.4 Synchronous Callbacks — forEach()
+
+The `forEach()` method uses callbacks to iterate over arrays:
+
+```javascript
+let testResults = ["PASS", "FAIL", "PASS", "SKIP"];
+
+testResults.forEach(function (result, index) {
+    console.log("Test " + index + " → " + result);
+});
+
+console.log("All done"); // Prints LAST because forEach is synchronous
+// Output:
+// Test 0 → PASS
+// Test 1 → FAIL
+// Test 2 → PASS
+// Test 3 → SKIP
+// All done
+```
+
+---
+
+### 27.5 Asynchronous Callbacks — setTimeout()
+
+Callbacks are often used for asynchronous operations like delays, API calls, and file reads:
+
+```javascript
+console.log("Test 1: started");
+
+setTimeout(function () {
+    console.log("Test 2: API response received!");
+}, 2000);
+
+console.log("Test 3: Moving to next test");
+
+// Output:
+// Test 1: started
+// Test 3: Moving to next test
+// Test 2: API response received! (after 2 seconds)
+```
+
+---
+
+### 27.6 Real QA Scenario — E2E Login Flow (Callback Hell ⚠️)
+
+```javascript
+// Each step is dependent on the previous step — this is callback hell!
+
+function openBrowser(callback) {
+    console.log("Opening the browser");
+    setTimeout(function () {
+        console.log("Step 1 - Browser started");
+        callback();
+    }, 500);
+}
+
+function goToLoginPage(callback) {
+    setTimeout(function () {
+        console.log("Step 2: Login page loaded");
+        callback();
+    }, 500);
+}
+
+function enterCredentials(callback) {
+    setTimeout(function () {
+        console.log("Step 3: Credentials entered");
+        callback();
+    }, 500);
+}
+
+function clickLogin(callback) {
+    setTimeout(function () {
+        console.log("Step 4: Login button clicked");
+        callback();
+    }, 500);
+}
+
+// 😱 THIS IS CALLBACK HELL — Deeply nested callbacks!
+openBrowser(function () {
+    goToLoginPage(function () {
+        enterCredentials(function () {
+            clickLogin(function () {
+                console.log("✅ Test Complete!");
+            })
+        })
+    })
+})
+
+// Output (after 2 seconds):
+// Opening the browser
+// Step 1 - Browser started
+// Step 2: Login page loaded
+// Step 3: Credentials entered
+// Step 4: Login button clicked
+// ✅ Test Complete!
+```
+
+> **The Problem:** As you add more steps, the code becomes increasingly hard to read and maintain. This is known as **"Callback Hell"** or **"Pyramid of Doom"**. 
+> **The Solution:** Use **Promises** or **async/await** to flatten the structure.
+
+---
+
+### 27.7 Key Takeaways
+
+✅ Callbacks are functions passed as arguments to other functions  
+✅ Callbacks execute **after** a specific operation completes  
+✅ Great for simple tasks, but can lead to "Callback Hell" with multiple nested calls  
+✅ For complex async flows, use **Promises** or **async/await** instead  
+✅ Commonly used in: `forEach()`, `setTimeout()`, `setInterval()`, event listeners, and API calls

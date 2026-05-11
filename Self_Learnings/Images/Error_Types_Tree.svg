@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 440" width="780" height="440" style="font-family: 'Segoe UI', system-ui, sans-serif;">
+  <!-- Background -->
+  <rect width="780" height="440" rx="16" fill="#0d1117"/>
+
+  <!-- Title -->
+  <text x="390" y="34" text-anchor="middle" fill="#e6edf3" font-size="17" font-weight="700">JavaScript Built-in Error Types</text>
+
+  <!-- ROOT: Error -->
+  <rect x="270" y="50" width="240" height="56" rx="10" fill="#21262d" stroke="#8b949e" stroke-width="2"/>
+  <text x="390" y="74" text-anchor="middle" fill="#e6edf3" font-size="14" font-weight="700">Error</text>
+  <text x="390" y="94" text-anchor="middle" fill="#8b949e" font-size="11">(base class — all errors inherit from this)</text>
+
+  <!-- Connector lines from root -->
+  <line x1="390" y1="106" x2="390" y2="130" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="80" y1="130" x2="700" y2="130" stroke="#484f58" stroke-width="1.5"/>
+
+  <!-- Branch drops -->
+  <line x1="80"  y1="130" x2="80"  y2="168" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="205" y1="130" x2="205" y2="168" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="330" y1="130" x2="330" y2="168" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="455" y1="130" x2="455" y2="168" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="580" y1="130" x2="580" y2="168" stroke="#484f58" stroke-width="1.5"/>
+  <line x1="700" y1="130" x2="700" y2="168" stroke="#484f58" stroke-width="1.5"/>
+
+  <!-- SyntaxError -->
+  <rect x="30" y="168" width="102" height="82" rx="8" fill="#0e2622" stroke="#2ea99f" stroke-width="1.8"/>
+  <text x="81" y="188" text-anchor="middle" fill="#2ea99f" font-size="12" font-weight="700">SyntaxError</text>
+  <text x="81" y="206" text-anchor="middle" fill="#7ee7e0" font-size="10">let x = ;</text>
+  <text x="81" y="222" text-anchor="middle" fill="#7ee7e0" font-size="10">Missing value</text>
+  <text x="81" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Bad code structure</text>
+
+  <!-- ReferenceError -->
+  <rect x="155" y="168" width="102" height="82" rx="8" fill="#1a1040" stroke="#a78bfa" stroke-width="1.8"/>
+  <text x="206" y="188" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">ReferenceError</text>
+  <text x="206" y="206" text-anchor="middle" fill="#c4b5fd" font-size="10">console.log(y);</text>
+  <text x="206" y="222" text-anchor="middle" fill="#c4b5fd" font-size="10">y is not defined</text>
+  <text x="206" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Variable doesn't exist</text>
+
+  <!-- TypeError -->
+  <rect x="280" y="168" width="102" height="82" rx="8" fill="#2b0d0d" stroke="#f87171" stroke-width="1.8"/>
+  <text x="331" y="188" text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">TypeError</text>
+  <text x="331" y="206" text-anchor="middle" fill="#fca5a5" font-size="10">null.property</text>
+  <text x="331" y="222" text-anchor="middle" fill="#fca5a5" font-size="10">Cannot read null</text>
+  <text x="331" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Wrong type used</text>
+
+  <!-- RangeError -->
+  <rect x="405" y="168" width="102" height="82" rx="8" fill="#0d2a14" stroke="#4ade80" stroke-width="1.8"/>
+  <text x="456" y="188" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700">RangeError</text>
+  <text x="456" y="206" text-anchor="middle" fill="#86efac" font-size="10">new Array(-1)</text>
+  <text x="456" y="222" text-anchor="middle" fill="#86efac" font-size="10">Invalid length</text>
+  <text x="456" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Value out of range</text>
+
+  <!-- URIError -->
+  <rect x="530" y="168" width="102" height="82" rx="8" fill="#1a1a08" stroke="#facc15" stroke-width="1.8"/>
+  <text x="581" y="188" text-anchor="middle" fill="#facc15" font-size="12" font-weight="700">URIError</text>
+  <text x="581" y="206" text-anchor="middle" fill="#fde68a" font-size="10">decodeURI('%')</text>
+  <text x="581" y="222" text-anchor="middle" fill="#fde68a" font-size="10">URI malformed</text>
+  <text x="581" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Bad URI format</text>
+
+  <!-- Custom Error -->
+  <rect x="652" y="168" width="110" height="82" rx="8" fill="#200d29" stroke="#e879f9" stroke-width="1.8"/>
+  <text x="707" y="188" text-anchor="middle" fill="#e879f9" font-size="12" font-weight="700">Custom Error</text>
+  <text x="707" y="206" text-anchor="middle" fill="#f0abfc" font-size="10">class MyErr</text>
+  <text x="707" y="222" text-anchor="middle" fill="#f0abfc" font-size="10">extends Error {}</text>
+  <text x="707" y="240" text-anchor="middle" fill="#6b7280" font-size="10">Your own error type</text>
+
+  <!-- Divider -->
+  <line x1="40" y1="280" x2="740" y2="280" stroke="#21262d" stroke-width="1"/>
+
+  <!-- Bottom legend / insight row -->
+  <text x="390" y="308" text-anchor="middle" fill="#8b949e" font-size="12">💡 All error types have two key properties you can read inside a</text>
+  <text x="390" y="326" text-anchor="middle" fill="#8b949e" font-size="12">catch block:  </text>
+  <rect x="220" y="342" width="340" height="56" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1"/>
+  <text x="250" y="362" fill="#60a5fa" font-size="12" font-weight="600">err.name</text>
+  <text x="360" y="362" fill="#8b949e" font-size="12">→  The type, e.g. "TypeError"</text>
+  <text x="250" y="382" fill="#60a5fa" font-size="12" font-weight="600">err.message</text>
+  <text x="360" y="382" fill="#8b949e" font-size="12">→  The reason, e.g. "null is not..."</text>
+  <text x="250" y="400" fill="#60a5fa" font-size="12" font-weight="600">err.stack</text>
+  <text x="360" y="400" fill="#8b949e" font-size="12">→  Full call stack trace</text>
+</svg>
