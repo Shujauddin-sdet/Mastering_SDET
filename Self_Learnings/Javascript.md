@@ -10272,3 +10272,385 @@ console.log(payloadNew);
 ```
 
 This makes your code much cleaner and faster to read, especially when constructing large test data objects.
+
+---
+
+## 12. Classes — Object-Oriented JavaScript
+
+> A **Class** is a **code template (blueprint)** used to create objects. Each object built from a class has its own **state** (data stored in properties) and **behaviour** (actions defined as methods).
+
+---
+
+### 12.1 What is a Class?
+
+Think of a Class like a **blueprint for a car**. The blueprint is not the car itself — you cannot drive a blueprint. But from that one blueprint, you can build hundreds of different cars, each with its own unique colour and brand.
+
+```javascript
+class Car {
+  start() {
+    console.log("start");
+  }
+  stop() {
+    console.log("stop");
+  }
+  setBrand(brand) {
+    this.brand = brand;
+  }
+}
+
+// Creating objects (instances) from the class
+let thar  = new Car();
+let lexus = new Car();
+
+thar.setBrand("Thar");
+thar.start();   // Output: start
+lexus.stop();   // Output: stop
+```
+
+> **Key Rule:** Every time you use the `new` keyword, JavaScript builds a **fresh, independent object** from the blueprint. `thar` and `lexus` are separate cars — changing one does not affect the other.
+
+---
+
+### 12.2 The Constructor — The Setup Wizard 🏗️
+
+#### What is It?
+A `constructor()` is a **special method inside a class** that runs **automatically** the moment you create a new object with `new`. It acts as the Setup Wizard that builds the object and fills it with unique data.
+
+#### The Analogy: The Passport Machine
+| Scenario | What Happens |
+|---|---|
+| **Without a Constructor** | The machine spits out a blank passport. You must manually fill in the name and birthdate later — and if you forget, it's invalid. |
+| **With a Constructor** | You type the name and birthdate *before* pressing print. A completed, ready-to-use passport comes out instantly. |
+
+#### ❌ The Pain — Without a Constructor
+```javascript
+class LoginPage {
+  // No setup wizard here!
+}
+
+let qaPage = new LoginPage();
+qaPage.url = "qa.myapp.com"; // Must be added manually — easy to forget!
+```
+
+#### ✅ The Fix — With a Constructor
+```javascript
+class LoginPage {
+  constructor(environmentUrl) {
+    this.url = environmentUrl; // Automatically attaches the URL to this object
+  }
+}
+
+let qaPage   = new LoginPage("qa.myapp.com");
+let prodPage = new LoginPage("prod.myapp.com");
+```
+
+#### Full Example with a Car
+```javascript
+class Car {
+  constructor(brand) {
+    console.log("Creating an object...");
+    this.brand = brand; // Slapping the nametag on the car
+  }
+  start() { console.log("start"); }
+  stop()  { console.log("stop");  }
+}
+
+let thar  = new Car("Thar");
+let lexus = new Car();       // No brand passed
+
+console.log(thar.brand);  // "Thar"
+console.log(lexus.brand); // undefined
+```
+
+---
+
+### 12.3 Default Parameters in Constructor
+
+You can give your constructor a **default value** so that an object is never born with `undefined` data.
+
+```javascript
+class Car {
+  constructor(brand = "Unknown Car") { // Fallback value defined here
+    this.brand = brand;
+  }
+}
+
+let mysteryCar = new Car(); // No brand passed in
+
+console.log(mysteryCar.brand); // Output: "Unknown Car"
+```
+
+---
+
+### 12.4 Properties vs. Methods
+
+| Feature | Description | Key Characteristic |
+|---|---|---|
+| **Property** | Stores information about the object | It is a **variable** (`this.name`) |
+| **Method** | Performs an action | It is a **function** (`viewData()`) |
+
+> **Scannable Tip:** Properties do **not** have `()` at the end (`student.name`), but methods always do (`student.viewData()`).
+
+#### SDET Example — A College Portal
+
+```javascript
+class User {
+  constructor(name, email) {
+    this.name  = name;   // PROPERTY: stores the user's name
+    this.email = email;  // PROPERTY: stores the user's email
+  }
+
+  viewData() {           // METHOD: an action the user can perform
+    console.log("Website Data: Welcome to the College Portal.");
+  }
+}
+
+let student1 = new User("Alice", "alice@college.edu");
+
+console.log(student1.name); // Accessing a PROPERTY (no parentheses)
+student1.viewData();        // Calling a METHOD (uses parentheses)
+```
+
+---
+
+### 12.5 Inheritance — `extends`
+
+**Inheritance** means a **child class** automatically receives all the properties and methods of a **parent class**, without rewriting them.
+
+```javascript
+class Parent {
+  hello() {
+    console.log("Parent says: Child can access me!");
+  }
+}
+
+class Child extends Parent {
+  hello() {
+    super.hello(); // Calls the Parent's version first
+    console.log("Child says: And I can add my own logic too!");
+  }
+}
+
+let obj = new Child();
+obj.hello();
+// Output:
+// Parent says: Child can access me!
+// Child says: And I can add my own logic too!
+```
+
+> ⚠️ **Method Overriding:** If a child and parent have a method with the **same name**, the child's version is used. The parent's version is silenced unless you explicitly call it with `super`.
+
+---
+
+### 12.6 The `super` Keyword
+
+The `super` keyword has **two jobs** inside a child class:
+
+| Usage | Purpose |
+|---|---|
+| `super()` | Calls the **parent's constructor** to initialize inherited properties |
+| `super.methodName()` | Calls a **specific method** from the parent class |
+
+#### Full SDET Example — `User` and `Admin`
+
+```javascript
+/**
+ * PARENT — The basic template for anyone using the college website.
+ */
+class User {
+  constructor(name, email) {
+    this.name  = name;
+    this.email = email;
+  }
+
+  viewData() {
+    console.log(`${this.name} is reading the college information...`);
+  }
+}
+
+/**
+ * CHILD — Inherits all User skills and adds Admin-only VIP skills.
+ */
+class Admin extends User {
+  constructor(name, email) {
+    super(name, email); // THE GOLDEN RULE: must call super() first!
+  }
+
+  editData() {
+    console.log(`${this.name} is editing the website data!`);
+  }
+}
+
+// --- TESTING ---
+const admin1   = new Admin("Principal Sayeeda", "principal@college.edu");
+const student1 = new User("Shujauddin", "student@college.edu");
+
+admin1.viewData();  // ✅ Inherited from User
+admin1.editData();  // ✅ Admin's own VIP skill
+
+student1.viewData(); // ✅ Works fine
+// student1.editData(); // ❌ TypeError — User does not have editData!
+```
+
+> 🔑 **Key Rules for `super()`:**
+> - You **must** call `super()` before using `this` in a child constructor.
+> - JavaScript throws a `ReferenceError` if you access `this` before calling `super()`.
+> - JavaScript does **not** support multiple constructors (no constructor overloading).
+
+#### Class with Deeper Inheritance
+```javascript
+class Persons {
+  constructor() {
+    this.species = "homo sapiens";
+  }
+  eat() { console.log("eat"); }
+}
+
+class Engineer extends Persons {
+  constructor(branch) {
+    super(); // Initializes 'species' from Persons
+    this.branch = branch;
+  }
+  work() { console.log("solve problems"); }
+}
+
+let eng = new Engineer("Software Engineering");
+console.log(eng.species); // "homo sapiens" (inherited)
+console.log(eng.branch);  // "Software Engineering"
+```
+
+---
+
+### 12.7 Creating an Instance with `new` — The 4 Secret Steps
+
+> An **Instance** is a real, physical object built from a class blueprint. `new` is the factory button you press to create it.
+
+When you write `let myCar = new Car("Thar");`, the `new` keyword does **4 things** behind the scenes in a fraction of a millisecond:
+
+| Step | What Happens |
+|---|---|
+| **1. Creates a blank object** | Makes a new empty object `{}` in memory |
+| **2. Points `this`** | Tells `this` inside the constructor to point at that new empty object |
+| **3. Runs the constructor** | Executes your `constructor()` to fill the object with data |
+| **4. Returns the object** | Hands the finished object back to your variable (`myCar`) |
+
+#### What Happens if You Forget `new`?
+
+```javascript
+class Car {
+  constructor(brand) {
+    this.brand = brand;
+  }
+}
+
+// ✅ Correct
+let car1 = new Car("Thar");
+console.log(car1.brand); // "Thar"
+
+// ❌ Wrong — missing 'new'
+let car2 = Car("Lexus");
+// ERROR: Class constructor Car cannot be invoked without 'new'
+```
+
+---
+
+### 12.8 Method Chaining (`return this`)
+
+**Method chaining** lets you call multiple methods on the same object in a **single line**. For this to work, every intermediate method must `return this` to pass the object forward.
+
+#### The Analogy: The Drive-Thru Window
+Imagine you are holding a tray (the object `this`). Window 1 adds a Burger, then **hands the tray back** (`return this`). Because you have the tray, you can go to Window 2. If Window 1 forgets to hand the tray back, you arrive at Window 2 empty-handed and the system crashes.
+
+#### SDET Example — Browser Setup Chain
+
+```javascript
+class BrowserSetup {
+  setBrowser(browserName) {
+    console.log("1. Setting browser to: " + browserName);
+    return this; // Hands the tray back!
+  }
+
+  setURL(url) {
+    console.log("2. Setting URL to: " + url);
+    return this; // Hands the tray back!
+  }
+
+  startTest() {
+    console.log("3. Test is now running!");
+    // No 'return this' needed — this is the final step.
+  }
+}
+
+let test = new BrowserSetup();
+
+// Chain all three calls on one line!
+test.setBrowser("Chrome").setURL("google.com").startTest();
+
+/* Output:
+   1. Setting browser to: Chrome
+   2. Setting URL to: google.com
+   3. Test is now running!
+*/
+```
+
+---
+
+### 12.9 Static Methods and Properties
+
+A **static method** is a utility tool attached directly to the **class blueprint itself** — not to any individual object. You do **not** need the `new` keyword to use it.
+
+| Type | How to Call | Requires `new`? |
+|---|---|---|
+| Normal Method | `instance.login()` | ✅ Yes — must build an object first |
+| Static Method | `User.generateRandomPassword()` | ❌ No — call directly on the class |
+
+```javascript
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+
+  // NORMAL METHOD — belongs to an individual user object
+  login() {
+    console.log(`${this.name} is logging in.`);
+  }
+
+  // STATIC METHOD — belongs to the User class itself (a free tool)
+  static generateRandomPassword() {
+    console.log("Generating a random password: Password123!");
+  }
+}
+
+// ✅ Using the static method — no 'new' needed
+User.generateRandomPassword();
+
+// ✅ Using the normal method — must build an object first
+let player1 = new User("Shujauddin");
+player1.login();
+
+// ❌ Cannot call a normal method directly on the class
+// User.login(); // TypeError: User.login is not a function
+```
+
+---
+
+### 12.10 Classes — Quick Reference Summary
+
+| Concept | Syntax | Purpose |
+|---|---|---|
+| **Define a class** | `class Car { }` | Create a blueprint |
+| **Constructor** | `constructor(args) { this.x = args; }` | Initialize an object on creation |
+| **Default parameter** | `constructor(brand = "Unknown") { }` | Prevent `undefined` values |
+| **Create an instance** | `let obj = new Car("Thar")` | Build an object from the blueprint |
+| **Property** | `this.name = value` | Store data on the object |
+| **Method** | `drive() { console.log("vroom"); }` | Add behaviour to the object |
+| **Inheritance** | `class Admin extends User { }` | Child class gets parent's skills |
+| **super()** | `super(args)` | Call parent's constructor first |
+| **super.method()** | `super.viewData()` | Call parent's specific method |
+| **Method chaining** | `return this` inside a method | Enable chaining multiple calls |
+| **Static method** | `static toolName() { }` | Tool on the class, no `new` needed |
+
+---
+
+> 💡 **SDET Takeaway:** Classes are the backbone of modern test automation frameworks. Every Playwright `Page`, every API wrapper, and every reusable helper you build will use Classes. Mastering `constructor`, `extends`, `super`, and `static` will directly make your automation code cleaner, reusable, and professional.
+
