@@ -40,7 +40,7 @@
 14. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
 15. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
 16. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
-16.1 [Variable Shadowing](#variable-shadowing-in-javascript)
+    16.1 [Variable Shadowing](#variable-shadowing-in-javascript)
 17. [for...of with Map and Set](#15-forof-with-map-and-set)
 18. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
 19. [Escape Characters](#18-escape-characters-in-strings)
@@ -3708,27 +3708,28 @@ Here is a practical SDET example showing how shadowing works when managing test 
 let baseUrl = "https://production-site.com";
 
 function runLocalTest() {
-    // 2. The Inner Scope (Local Variable)
-    // We declare a new variable with the EXACT same name. 
-    // This "shadows" the global variable.
-    let baseUrl = "http://localhost:3000"; 
-    
-    // 3. JavaScript checks its own local scope first, finds "localhost", and stops looking.
-    console.log("Running tests on: " + baseUrl); 
+  // 2. The Inner Scope (Local Variable)
+  // We declare a new variable with the EXACT same name.
+  // This "shadows" the global variable.
+  let baseUrl = "http://localhost:3000";
+
+  // 3. JavaScript checks its own local scope first, finds "localhost", and stops looking.
+  console.log("Running tests on: " + baseUrl);
 }
 
 // === Execution Phase ===
 
 // Runs the function. It uses its own shadowed version.
-runLocalTest(); 
+runLocalTest();
 // Output: Running tests on: http://localhost:3000
 
 // Checks the global variable. It remains completely untouched!
-console.log("Global URL is still: " + baseUrl); 
+console.log("Global URL is still: " + baseUrl);
 // Output: Global URL is still: https://production-site.com
 ```
 
 ### 📤 Output:
+
 ```console
 Running tests on: http://localhost:3000
 Global URL is still: https://production-site.com
@@ -3746,7 +3747,7 @@ Global URL is still: https://production-site.com
 let failures = 0;
 
 function logFailure() {
-    let failures = 5; // ❌ Accidentally used 'let' here! Created a shadow variable instead of updating the global one.
+  let failures = 5; // ❌ Accidentally used 'let' here! Created a shadow variable instead of updating the global one.
 }
 
 logFailure();
@@ -3754,6 +3755,7 @@ console.log(failures); // This will still print 0! The global variable was never
 ```
 
 ### 📤 Output:
+
 ```console
 0
 ```
@@ -3766,7 +3768,7 @@ If you want to **update** a global variable from inside a function, **do NOT use
 let failures = 0;
 
 function logFailure() {
-    failures = 5; // ✅ Correct! No 'let' — we're updating the global variable
+  failures = 5; // ✅ Correct! No 'let' — we're updating the global variable
 }
 
 logFailure();
@@ -7037,39 +7039,39 @@ Here is one complete piece of code that shows exactly how they all interact with
 // 1. GLOBAL SCOPE (The Public Street)
 // Everyone in the entire file can see this.
 // ==========================================
-let weatherToday = "Sunny"; 
+let weatherToday = "Sunny";
 
 function startWorkDay() {
+  // ==========================================
+  // 2. FUNCTION SCOPE (The Private Office)
+  // Only things inside 'startWorkDay' can see this.
+  // ==========================================
+  let officePassword = "OpenSesame";
+
+  // The office can look out the window to see the street!
+  console.log("The weather outside is: " + weatherToday); // Works!
+
+  if (weatherToday === "Sunny") {
     // ==========================================
-    // 2. FUNCTION SCOPE (The Private Office)
-    // Only things inside 'startWorkDay' can see this.
+    // 3. BLOCK SCOPE (The Locked Safe)
+    // Only things inside these specific 'if' brackets can see this.
     // ==========================================
-    let officePassword = "OpenSesame"; 
+    let secretBonus = 1000;
 
-    // The office can look out the window to see the street!
-    console.log("The weather outside is: " + weatherToday); // Works!
+    // The safe can look out into the office, AND out to the street!
+    console.log("My office password is: " + officePassword); // Works!
+    console.log("I got a bonus of: $" + secretBonus); // Works!
+  }
 
-    if (weatherToday === "Sunny") {
-        // ==========================================
-        // 3. BLOCK SCOPE (The Locked Safe)
-        // Only things inside these specific 'if' brackets can see this.
-        // ==========================================
-        let secretBonus = 1000; 
-
-        // The safe can look out into the office, AND out to the street!
-        console.log("My office password is: " + officePassword); // Works!
-        console.log("I got a bonus of: $" + secretBonus); // Works!
-    }
-
-    // ❌ BUG! We stepped out of the 'if' statement. 
-    // We are still in the office, but the safe door slammed shut!
-    // console.log("Did I get a bonus? " + secretBonus); // ERROR: secretBonus is not defined
+  // ❌ BUG! We stepped out of the 'if' statement.
+  // We are still in the office, but the safe door slammed shut!
+  // console.log("Did I get a bonus? " + secretBonus); // ERROR: secretBonus is not defined
 }
 
 // Let's run the function
 startWorkDay();
 
-// ❌ BUG! We are standing out on the street. 
+// ❌ BUG! We are standing out on the street.
 // We cannot look through the locked office door.
 // console.log("What is the password? " + officePassword); // ERROR: officePassword is not defined
 ```
@@ -7082,7 +7084,7 @@ If you look closely at that code, you'll see a very specific pattern. It works e
 - The **middle code** (inside the function) is halfway smart. It can see its own stuff, and the global stuff. But it cannot look deeper into the `if` statement.
 - The **outside code** (Global) is completely blind. It can only see itself. It cannot look inside functions, and it cannot look inside `if` statements.
 
-> **The Golden Rule of Scope:** You can always look *outward* to grab data, but you can never look *inward* to grab data.
+> **The Golden Rule of Scope:** You can always look _outward_ to grab data, but you can never look _inward_ to grab data.
 
 ---
 
@@ -7342,7 +7344,6 @@ sum(10, 20); // 30
 
 ```javascript
 function calculateBoth(x, y) {
-
   let s = x + y;
   let m = x * y;
 
@@ -7543,7 +7544,8 @@ function processUser(userName, callbackFn) {
 
 processUser("Shujauddin", sayHello); // Output: Hello, Shujauddin!
 ```
-```javascript 
+
+```javascript
 
 1. Are Higher Order Functions and Higher Order Methods the same?
 Yes, the concept is exactly the same. The only difference is where they live.
@@ -7595,14 +7597,14 @@ function clickLogin() {
 // 2. The Higher Order Function (The Boss)
 function runWithLogging(actionFunction) {
     console.log("[SYSTEM] Preparing to run action...");
-    
+
     // The Boss executes the function you handed to it!
-    actionFunction(); 
+    actionFunction();
 }
 
 // 3. The Execution: We pass the worker TO the boss.
 // Notice we DO NOT use () on clickLogin here. We aren't running it yet. We are just handing the blueprint over.
-runWithLogging(clickLogin); 
+runWithLogging(clickLogin);
 Output:
 
 Plaintext
@@ -7611,45 +7613,46 @@ Clicking the login button now!
 Why do SDETs care about this?
 Higher Order Functions are the backbone of test automation. Every time you write an assertion in a framework like Cypress, Playwright, or Jest, you are using HOFs. Furthermore, JavaScript's built-in Higher Order Methods (.filter, .map) are how we search through massive JSON API responses to find the exact data we want to test.
 ```
-```javascript 
+
+```javascript
 //The below examples has concept of callback, HOF and Closures
 
 // 1. The Boss (HOF) takes a worker (Callback)
 function createRetryWrapper(testWorker) {
-    
-    // 2. The Boss packs a backpack (Closure setup)
-    let failures = 0; 
-    
-    // 3. The Child is born. It has access to BOTH the backpack AND the worker!
-    function innerRun() {
-        let result = testWorker(); 
-        
-        if (result === "fail") {
-            failures++; // Reaching into the backpack!
-            return `Test failed. Total failures: ${failures}`;
-        } else {
-            return `Test passed!`;
-        }
+  // 2. The Boss packs a backpack (Closure setup)
+  let failures = 0;
+
+  // 3. The Child is born. It has access to BOTH the backpack AND the worker!
+  function innerRun() {
+    let result = testWorker();
+
+    if (result === "fail") {
+      failures++; // Reaching into the backpack!
+      return `Test failed. Total failures: ${failures}`;
+    } else {
+      return `Test passed!`;
     }
-    
-    // 4. The Boss hands the child back.
-    return innerRun;
+  }
+
+  // 4. The Boss hands the child back.
+  return innerRun;
 }
 
 // === THE EXECUTION ===
 
 // The normal callback worker
 function flakeyTest() {
-    return "fail";
+  return "fail";
 }
 
-// We give the worker to the Boss. 
+// We give the worker to the Boss.
 // The Boss gives us back a closure that remembers the failures!
 let safeTest = createRetryWrapper(flakeyTest);
 
 console.log(safeTest()); // Output: Test failed. Total failures: 1
 console.log(safeTest()); // Output: Test failed. Total failures: 2
 ```
+
 You are testing an e-commerce checkout system. You need a function that generates different discount codes (like 20% off for Holidays, and 50% off for Black Friday).
 
 The Catch: Your test also needs to track exactly how much total money has been saved every time that specific discount code is used. The discount codes must not interfere with each other's totals.
@@ -7668,30 +7671,29 @@ final price 100 Total Amount you have saved so far 100
 // 1. THE HIGHER-ORDER FUNCTION (HOF):
 // It is an HOF because it returns another function at the very end.
 function createDiscount(percentage) {
+  // 2. THE CLOSURE (The Magic Backpack):
+  // This variable is protected. The inner function remembers it forever.
+  let totalSaved = 0;
 
-    // 2. THE CLOSURE (The Magic Backpack):
-    // This variable is protected. The inner function remembers it forever.
-    let totalSaved = 0;
+  // 3. THE CHILD: It accepts a price from the outside world.
+  function inner(acceptPrice) {
+    let price = acceptPrice;
 
-    // 3. THE CHILD: It accepts a price from the outside world.
-    function inner(acceptPrice) {
-        let price = acceptPrice;
+    // Calculate the specific savings for this purchase
+    let savings = price * (percentage / 100);
 
-        // Calculate the specific savings for this purchase
-        let savings = price * (percentage / 100);
+    // Calculate what the customer actually pays
+    let finalPrice = price - savings;
 
-        // Calculate what the customer actually pays
-        let finalPrice = price - savings;
+    // UPDATE THE BACKPACK: Take the current total, add new savings, and save it.
+    totalSaved = totalSaved + savings;
 
-        // UPDATE THE BACKPACK: Take the current total, add new savings, and save it.
-        totalSaved = totalSaved + savings;
+    // Return the formatted string
+    return `final price ${finalPrice} Total Amount you have saved so far ${totalSaved}`;
+  }
 
-        // Return the formatted string
-        return `final price ${finalPrice} Total Amount you have saved so far ${totalSaved}`;
-    }
-
-    // The HOF hands the Child over to the outside world
-    return inner;
+  // The HOF hands the Child over to the outside world
+  return inner;
 }
 
 // === EXECUTION PHASE ===
@@ -7703,7 +7705,7 @@ let holidaySale = createDiscount(20);
 let blackFriday = createDiscount(50);
 
 console.log(holidaySale(100)); // Uses Backpack A
-console.log(holidaySale(50));  // Uses Backpack A
+console.log(holidaySale(50)); // Uses Backpack A
 console.log(blackFriday(200)); // Uses Backpack B
 ```
 
@@ -7759,6 +7761,7 @@ In JavaScript, a **"Pure Function"** is a highly predictable, isolated block of 
 ### ✅ Rule 1: Same Input ALWAYS = Same Output (Deterministic)
 
 A pure function is entirely predictable. If you pass it the exact same arguments, it must return the exact same answer every single time. It cannot rely on:
+
 - Random number generators
 - The current system time
 - External API calls that might change the result
@@ -7766,10 +7769,12 @@ A pure function is entirely predictable. If you pass it the exact same arguments
 ### ✅ Rule 2: No Side Effects (Isolated)
 
 A pure function does not interact with the outside world. It is only allowed to:
+
 - Look at the parameters passed into it
 - Return a result
 
 It **cannot**:
+
 - Modify variables that exist outside of its scope
 - Mutate external arrays or objects
 - Write to files or databases
@@ -7785,9 +7790,9 @@ This function **breaks Rule 2** because it reaches outside of its own scope to m
 let globalBankBalance = 100; // Lives in the outside world
 
 function addFiveImpure() {
-    // BREAKS RULE 2: Modifying an external variable (Side Effect)
-    globalBankBalance = globalBankBalance + 5; 
-    return globalBankBalance;
+  // BREAKS RULE 2: Modifying an external variable (Side Effect)
+  globalBankBalance = globalBankBalance + 5;
+  return globalBankBalance;
 }
 
 console.log(addFiveImpure()); // Returns 105
@@ -7795,12 +7800,14 @@ console.log(addFiveImpure()); // Returns 110
 ```
 
 ### 📤 Output:
+
 ```console
 105
 110
 ```
 
 ### ⚠️ The Problem:
+
 - **BREAKS RULE 1**: We gave it the exact same input (no arguments), but it returned a **different output** the second time!
 - **BREAKS RULE 2**: It modified `globalBankBalance`, which lives outside its scope.
 
@@ -7814,11 +7821,11 @@ This function follows **both rules**. It relies only on its parameters, and it d
 let globalBankBalance = 100;
 
 function addFivePure(currentBalance) {
-    // RULE 2 PASSED: It does not touch 'globalBankBalance'. 
-    // It only uses the parameter provided.
-    let newBalance = currentBalance + 5; 
-    
-    return newBalance;
+  // RULE 2 PASSED: It does not touch 'globalBankBalance'.
+  // It only uses the parameter provided.
+  let newBalance = currentBalance + 5;
+
+  return newBalance;
 }
 
 console.log(addFivePure(100)); // Returns 105
@@ -7826,12 +7833,14 @@ console.log(addFivePure(100)); // Returns 105
 ```
 
 ### 📤 Output:
+
 ```console
 105
 105
 ```
 
 ### ✅ Why This Works:
+
 - **RULE 1 PASSED**: Input 100 always results in 105, every single time.
 - **RULE 2 PASSED**: The external `globalBankBalance` remains untouched. The function only uses its parameter and creates local variables.
 
@@ -7839,13 +7848,13 @@ console.log(addFivePure(100)); // Returns 105
 
 ## 🔍 Side-by-Side Comparison
 
-| Aspect | Impure | Pure |
-|--------|--------|------|
-| **Input → Output** | Changes each time | Predictable always |
-| **External Variables** | Modifies them | Never touches them |
-| **Testability** | Hard to test | Easy to test |
-| **Debugging** | Difficult (hidden dependencies) | Easy (only depends on parameters) |
-| **Reusable** | No (couples to external state) | Yes (self-contained) |
+| Aspect                 | Impure                          | Pure                              |
+| ---------------------- | ------------------------------- | --------------------------------- |
+| **Input → Output**     | Changes each time               | Predictable always                |
+| **External Variables** | Modifies them                   | Never touches them                |
+| **Testability**        | Hard to test                    | Easy to test                      |
+| **Debugging**          | Difficult (hidden dependencies) | Easy (only depends on parameters) |
+| **Reusable**           | No (couples to external state)  | Yes (self-contained)              |
 
 ---
 
@@ -7855,8 +7864,7 @@ console.log(addFivePure(100)); // Returns 105
 
 ❌ **Impure functions are**: Risky, hard to debug, and create hidden dependencies
 
-Always aim for pure functions when possible! They're the foundation of reliable, maintainable code.
----
+## Always aim for pure functions when possible! They're the foundation of reliable, maintainable code.
 
 ### Higher Order Method
 
@@ -8001,25 +8009,31 @@ name1();
 // Output: Hello Jhon Wick
 
 (function () {
-    console.log("Staging")
+  console.log("Staging");
 })();
 
 (() => {
-    console.log("Setup complete");
+  console.log("Setup complete");
 })();
 ```
------------------------------------------------------------------------------------
+
+---
+
 ### Default parameters
-``` javascript
+
+```javascript
 function retry(testName, maxRetries = 3, delay = 1000) {
-    console.log(`Retrying ${testName} up to ${maxRetries} times, ${delay}ms apart`);
+  console.log(
+    `Retrying ${testName} up to ${maxRetries} times, ${delay}ms apart`,
+  );
 }
 
 retry("Login"); // Retrying Login up to 3 times, 1000ms apart
 retry("Checkout", 5); // Retrying Checkout up to 5 times, 1000ms apart
 retry("API Test", 2, 500); // Retrying API Test up to 2 times, 500ms apart
 ```
------------------------------------------------------------------------------------ 
+
+---
 
 ## 📦 Rest Parameters vs. Spread Operator `...`
 
@@ -8031,10 +8045,10 @@ JavaScript acts like a strict traffic cop. It looks at the **location** of the d
 
 ### ⚡ Quick Cheat Sheet
 
-| Feature | What it does | Visual Analogy | Where you see it |
-|---|---|---|---|
-| **Rest `...`** | Collects loose items into a single array | Packing a "miscellaneous pouch" in a travel bag | Inside function definitions: `function(a, ...b)` |
-| **Spread `...`** | Expands an array/object out into individual items | Dumping out a box of test phones onto a table | Inside arrays, objects, or function calls: `[...myArray]` |
+| Feature          | What it does                                      | Visual Analogy                                  | Where you see it                                          |
+| ---------------- | ------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
+| **Rest `...`**   | Collects loose items into a single array          | Packing a "miscellaneous pouch" in a travel bag | Inside function definitions: `function(a, ...b)`          |
+| **Spread `...`** | Expands an array/object out into individual items | Dumping out a box of test phones onto a table   | Inside arrays, objects, or function calls: `[...myArray]` |
 
 ---
 
@@ -8045,6 +8059,7 @@ JavaScript acts like a strict traffic cop. It looks at the **location** of the d
 **Mental Model:** The Catcher's Mitt. You are setting up a net to catch an unknown number of incoming arguments.
 
 ⚠️ **Strict Rules for Rest:**
+
 - Must be the **last** parameter: `(a, b, ...rest)` is ✅. `(...rest, a, b)` is ❌.
 - **Only one** per function: You cannot have two miscellaneous pouches.
 - Creates a **real array**: You can use `.map()`, `.filter()`, and `.some()` on it.
@@ -8054,7 +8069,7 @@ JavaScript acts like a strict traffic cop. It looks at the **location** of the d
 ```javascript
 function packBag(laptop, phone, ...extraItems) {
   console.log("Laptop pocket:", laptop); // "MacBook"
-  console.log("Phone pocket:", phone);   // "iPhone"
+  console.log("Phone pocket:", phone); // "iPhone"
   console.log("The pouch:", extraItems); // ["USB cable", "Snickers", "Notebook"]
 }
 
@@ -8073,7 +8088,7 @@ function checkButtonsAreVisible(...buttons) {
   console.log("Checking these buttons:", buttons);
 }
 
-checkButtonsAreVisible("Login");                    // Array with 1 item
+checkButtonsAreVisible("Login"); // Array with 1 item
 checkButtonsAreVisible("Home", "About", "Contact"); // Array with 3 items
 ```
 
@@ -8082,11 +8097,11 @@ _Example B: Validating HTTP Status Codes_
 ```javascript
 function hasError(...codes) {
   // We can use array methods because 'codes' is a real array
-  return codes.some(c => c >= 400);
+  return codes.some((c) => c >= 400);
 }
 
 hasError(200, 201, 404); // true  — 404 triggered it
-hasError(200, 302);      // false — all OK
+hasError(200, 302); // false — all OK
 ```
 
 ---
@@ -8104,11 +8119,11 @@ _Example A: Combining Test Data (Arrays)_
 If you are writing data-driven tests in Playwright or Selenium, you often need to merge different lists of users or URLs into one master execution list.
 
 ```javascript
-const standardUsers = ['standard_user', 'problem_user'];
-const adminUsers    = ['super_admin'];
+const standardUsers = ["standard_user", "problem_user"];
+const adminUsers = ["super_admin"];
 
 // Using Spread to "dump" both arrays into one flat master array
-const allUsersToTest = [...standardUsers, ...adminUsers, 'locked_out_user'];
+const allUsersToTest = [...standardUsers, ...adminUsers, "locked_out_user"];
 
 console.log(allUsersToTest);
 // Output: ['standard_user', 'problem_user', 'super_admin', 'locked_out_user']
@@ -8120,16 +8135,16 @@ When testing APIs, you often have a "base" JSON payload. For specific tests, you
 
 ```javascript
 const baseTestConfig = {
-  browser:  'chromium',
-  timeout:  5000,
-  headless: true
+  browser: "chromium",
+  timeout: 5000,
+  headless: true,
 };
 
 // "Dump out" the base config, overwrite 'headless', and add 'retries'
 const debugConfig = {
   ...baseTestConfig,
   headless: false, // Overwrites the original 'true'
-  retries:  2      // Adds a new property
+  retries: 2, // Adds a new property
 };
 
 console.log(debugConfig);
@@ -8156,8 +8171,8 @@ function reportBugs(...bugs) {
   console.log("I caught these bugs:", bugs);
 }
 
-const UI_Bugs  = ['button_missing', 'text_overlap'];
-const API_Bugs = ['timeout', '500_error'];
+const UI_Bugs = ["button_missing", "text_overlap"];
+const API_Bugs = ["timeout", "500_error"];
 
 // 2. CALLING the function (DUMPING / SPREAD)
 // The computer sees we are executing a function, so it knows this is Spread.
@@ -8165,61 +8180,63 @@ reportBugs(...UI_Bugs, ...API_Bugs);
 ```
 
 ---
+
 📜 Function Declarations vs. Expressions
 There are two primary ways to write a function in JavaScript. The difference comes down to Hoisting (how JavaScript reads the file before running it).
 
 1. Function Declarations (Hoisted)
-A standard function. JavaScript moves it to the top of the file before running the code, meaning you can call it before you actually write it.
+   A standard function. JavaScript moves it to the top of the file before running the code, meaning you can call it before you actually write it.
 
 JavaScript
 bootServer(); // ✅ Works perfectly!
 
 function bootServer() {
-    console.log("Server is running!");
-}
-2. Function Expressions (Not Hoisted)
+console.log("Server is running!");
+} 2. Function Expressions (Not Hoisted)
 A function stored inside a variable. It is treated like a piece of data. Because it is a variable, it is not hoisted. You must define it before you can call it.
 
 JavaScript
 // ❌ Crashes! ReferenceError: bootServer is not defined
-bootServer(); 
+bootServer();
 
 let bootServer = function() {
-    console.log("Server is running!");
+console.log("Server is running!");
 };
 
 bootServer(); // ✅ Now it works.
 Note: We use Function Expressions heavily when treating functions like data, such as passing them as Callbacks or returning them from Closures.
 
--------------
+---
 
 ### Arrow functions — lexical this
 
 In modern JavaScript (ES6+), Arrow Functions `() => {}` provide a shorter way to write functions. But their most important feature is how they handle the `this` keyword compared to standard functions.
 
 ### What does "Lexical" mean?
+
 "Lexical" refers to the physical location of the code on your screen. "Lexical scope" means that a function looks at exactly where it was typed in the file to figure out what data it has access to.
 
 ### 1. The Standard Function (Depends on HOW it is called)
-When you use a standard `function() {}`, the value of `this` depends entirely on **how the function is called**. 
+
+When you use a standard `function() {}`, the value of `this` depends entirely on **how the function is called**.
 If a function is nested inside another function and called directly, it loses its connection to the main object.
 
-```javascript
+````javascript
 let UserProfile = {
     userName: "Admin",
 
     printDetails: function() {
-        console.log("1. Parent function sees: " + this.userName); 
+        console.log("1. Parent function sees: " + this.userName);
 
         // We create a nested standard function
         let innerFunction = function() {
-            // BUG! Because this is a standard function, it loses the connection 
+            // BUG! Because this is a standard function, it loses the connection
             // to the UserProfile object when called by itself.
-            console.log("2. Inner function sees: " + this.userName); 
+            console.log("2. Inner function sees: " + this.userName);
         };
 
         // We call the inner function directly
-        innerFunction(); 
+        innerFunction();
     }
 };
 
@@ -8238,17 +8255,17 @@ let UserProfile = {
     userName: "Admin",
 
     printDetails: function() {
-        console.log("1. Parent function sees: " + this.userName); 
+        console.log("1. Parent function sees: " + this.userName);
 
         // We create a nested ARROW function
         let innerArrowFunction = () => {
-            // FIXED! The arrow function looks at its physical location, 
+            // FIXED! The arrow function looks at its physical location,
             // sees it is inside 'printDetails', and uses the exact same 'this'.
-            console.log("2. Inner function sees: " + this.userName); 
+            console.log("2. Inner function sees: " + this.userName);
         };
 
         // We call the inner function directly
-        innerArrowFunction(); 
+        innerArrowFunction();
     }
 };
 
@@ -8264,7 +8281,7 @@ UserProfile.printDetails();
 In JavaScript, a function is a machine that does some work. When the machine finishes, it is expected to hand something back to the person who turned it on. We call this "returning a value."
 
 ### The Rule: `undefined` by Default
-Every single function in JavaScript returns a value, whether you tell it to or not. 
+Every single function in JavaScript returns a value, whether you tell it to or not.
 If you do not explicitly use the `return` keyword, JavaScript will automatically return `undefined`.
 
 Let's look at an example where we forget the `return` keyword:
@@ -8278,7 +8295,7 @@ function addNumbers(a, b) {
 // We run the function and try to store the answer in a variable
 let myAnswer = addNumbers(5, 5);
 
-console.log(myAnswer); 
+console.log(myAnswer);
 // Output: undefined
 The Fix: Using the return Keyword
 To actually extract data out of a function so you can use it in the rest of your program, you must use the return keyword.
@@ -8293,7 +8310,7 @@ function addNumbers(a, b) {
 
 let myAnswer = addNumbers(5, 5);
 
-console.log(myAnswer); 
+console.log(myAnswer);
 // Output: 10
 ⚠️ The Biggest Trap: console.log vs return
 This is the number one mistake developers make when learning functions. They use console.log() inside a function, see the correct answer on their screen, but then their program crashes later because the data is actually undefined.
@@ -8313,7 +8330,7 @@ function calculateTax(price) {
 let taxAmount = calculateTax(50); // taxAmount is now 'undefined'
 
 // The program crashes here because you can't do math with 'undefined'
-let finalPrice = 50 + taxAmount; 
+let finalPrice = 50 + taxAmount;
 The Correct Approach for SDETs:
 When writing test automation utilities or helper methods, never rely on console.log to pass data. Always return the data so your test framework can actually assert and verify the values.
 
@@ -8321,7 +8338,7 @@ JavaScript
 // ✅ Correct
 function calculateTax(price) {
     let total = price * 0.10;
-    return total; 
+    return total;
 }
 
 -------
@@ -8330,7 +8347,7 @@ call(), apply(), bind()
 
 # 🛠️ Controlling `this`: call(), apply(), and bind()
 
-In JavaScript, standard functions can sometimes forget which object they belong to (especially when passed as callbacks). 
+In JavaScript, standard functions can sometimes forget which object they belong to (especially when passed as callbacks).
 
 Before Arrow Functions were invented to fix this problem, developers relied on three powerful methods: `call()`, `apply()`, and `bind()`. These methods allow you to take a standalone function and **force** its `this` keyword to point to a specific object.
 
@@ -8348,7 +8365,7 @@ function introduce(role, yearsOfExperience) {
 }
 
 // ❌ If we call it normally, it breaks because 'this' is undefined.
-// introduce("SDET", 3); 
+// introduce("SDET", 3);
 1. call() — Run Immediately (Comma Separated)
 The call() method executes the function immediately.
 
@@ -8358,7 +8375,7 @@ The rest of the arguments are passed in normally, separated by commas.
 
 JavaScript
 // We force the function to use 'user1' as its 'this'
-introduce.call(user1, "SDET", 3); 
+introduce.call(user1, "SDET", 3);
 // Output: "I am Alice, a SDET with 3 years of experience."
 
 // We borrow the exact same function for 'user2'
@@ -8372,7 +8389,7 @@ Mnemonic Trick: Apply uses an Array.
 
 JavaScript
 // Notice the square brackets! The arguments are in an array.
-introduce.apply(user1, ["QA Lead", 7]); 
+introduce.apply(user1, ["QA Lead", 7]);
 // Output: "I am Alice, a QA Lead with 7 years of experience."
 Why do we need apply?
 It is incredibly useful when you already have an array of data (like from a database or an API) and you want to pass it into a function without having to unpack it manually.
@@ -8388,7 +8405,7 @@ JavaScript
 let aliceIntroduction = introduce.bind(user1, "Automation Engineer", 2);
 
 // Later in the code, when we are ready, we call the new function:
-aliceIntroduction(); 
+aliceIntroduction();
 // Output: "I am Alice, a Automation Engineer with 2 years of experience."
 The SDET Real-World Use Case for bind()
 You will use bind() when you need to pass a method as a Callback (like into a timer or an event listener) but you don't want it to lose its this connection.
@@ -8467,7 +8484,7 @@ The Magic: Here is where the closure happens. Even though the Parent is complete
 
 The Child "closes over" (holds onto) the backpack forever. That is why it is called a Closure.
 
-```javascript 
+```javascript
 
 Seeing the Story in the Code
 Let's look at the exact moment each part of the story happens in a simple JavaScript function:
@@ -8475,35 +8492,35 @@ Let's look at the exact moment each part of the story happens in a simple JavaSc
 JavaScript
 // 1. The Parent arrives
 function theParent() {
-  
+
   // 2. The Parent packs the backpack
-  let backpack = "$20 bill"; 
+  let backpack = "$20 bill";
 
   // 3. The Parent creates the Child
   function theChild() {
-    
+
     // 5. The Child looks inside the backpack and uses the item!
-    console.log("I found a " + backpack); 
+    console.log("I found a " + backpack);
   }
 
   // 4. The Parent hands the Child over to the outside world, and then the Parent leaves (dies).
-  return theChild; 
+  return theChild;
 }
 
 // ==========================================
 
 // We run the Parent. It packs the bag, creates the Child, and leaves.
 // We save the surviving Child into a variable called 'myClosure'.
-let myClosure = theParent(); 
+let myClosure = theParent();
 
 // The Parent has been gone for a long time now.
 // But when we execute the Child...
-myClosure(); 
+myClosure();
 
 // Output: I found a $20 bill
 The key takeaway: The inner function (theChild) will always remember the exact variables that were sitting right next to it when it was born, no matter where or when you execute it later.
 
-```
+````
 
 ![Closure Magic Backpack Diagram](Images/Closure_diagram.svg)
 
@@ -8516,24 +8533,22 @@ This is the classic example to prove that a closure is working.
 ```javascript
 // Line 1: We define the "Outer Function" (The Parent)
 function createCounter() {
-  
   // Line 4: We create a variable inside the outer function. This goes into the backpack.
-  let count = 0; 
+  let count = 0;
 
   // Line 7: We return a brand new "Inner Function" (The Child)
-  return function() {
-    
+  return function () {
     // Line 10: The inner function reaches into the backpack and modifies 'count'
-    count++; 
-    
+    count++;
+
     // Line 13: The inner function outputs the new count
     return count;
   };
 }
 
-// Line 18: We execute createCounter(). 
+// Line 18: We execute createCounter().
 // It creates 'count', creates the inner function, hands the inner function to 'myCounter', and then createCounter() is done.
-const myCounter = createCounter(); 
+const myCounter = createCounter();
 
 // Line 22: myCounter is just the inner function. The outer function is gone, but 'count' lives on!
 console.log(myCounter()); // Output: 1
@@ -8550,16 +8565,14 @@ In test automation, you often need unique emails for every test run so the datab
 ```javascript
 // Line 1: The Outer Function takes a base name (like "shopper")
 function createTestEmailGenerator(baseName) {
-  
   // Line 4: We create a uniqueId starting at 100. This goes in the backpack.
-  let uniqueId = 100; 
+  let uniqueId = 100;
 
   // Line 7: We return the Inner Function
-  return function() {
-    
+  return function () {
     // Line 10: Every time this is called, it increments the uniqueId in the backpack
-    uniqueId++; 
-    
+    uniqueId++;
+
     // Line 13: It builds a brand new email string using BOTH variables in the backpack (baseName and uniqueId)
     return `${baseName}+${uniqueId}@test.com`;
   };
@@ -8584,15 +8597,15 @@ Once the outer function **returns** the inner function, you have two ways to use
 
 ```javascript
 function outer() {
-    let message = "Hello";
-    console.log("Outer called!");
+  let message = "Hello";
+  console.log("Outer called!");
 
-    function inner() {
-        console.log(message);
-    }
-    
-    // You MUST return the inner function so it can escape!
-    return inner; 
+  function inner() {
+    console.log(message);
+  }
+
+  // You MUST return the inner function so it can escape!
+  return inner;
 }
 ```
 
@@ -8607,11 +8620,11 @@ console.log("--- Running Method 1 ---");
 
 // Step 1: Run outer() and save the result (the inner function) to a variable.
 // This keeps the 'message' variable safe in memory.
-let fn_inner = outer(); 
+let fn_inner = outer();
 
 // Step 2: Execute the variable. It remembers 'message'!
-fn_inner(); 
-// Output: 
+fn_inner();
+// Output:
 // Outer called!
 // Hello
 ```
@@ -8625,11 +8638,11 @@ Use this when you only need to use the inner function **once** and don't need to
 ```javascript
 console.log("--- Running Method 2 ---");
 
-// We skip the variable entirely. 
-// The first () runs outer(). 
+// We skip the variable entirely.
+// The first () runs outer().
 // The second () immediately runs the inner() function that was just returned.
-outer()(); 
-// Output: 
+outer()();
+// Output:
 // Outer called!
 // Hello
 ```
@@ -8638,10 +8651,10 @@ outer()();
 
 #### ⚡ The Golden Rule for Calling Closures
 
-| Approach | When to use it |
-| --- | --- |
-| **Variable** `let fn = outer(); fn();` | Save the backpack to **use it multiple times** |
-| **Direct call** `outer()();` | Use it **once** and throw the backpack away immediately |
+| Approach                               | When to use it                                          |
+| -------------------------------------- | ------------------------------------------------------- |
+| **Variable** `let fn = outer(); fn();` | Save the backpack to **use it multiple times**          |
+| **Direct call** `outer()();`           | Use it **once** and throw the backpack away immediately |
 
 - You **must** use `return`. If you don't return the inner function, it is trapped inside forever.
 - Use a **variable** if you want to save the magic backpack to use it multiple times.
@@ -8719,11 +8732,11 @@ trueClosure();
 
 For a closure to actually work in your code without throwing errors, you need **all three**:
 
-| # | Requirement | Why it matters |
-| --- | --- | --- |
-| 1 | **A function inside a function** | Creates the inner/outer scope relationship |
-| 2 | **Inner function uses a variable from the outer function** | This is what actually forms the memory link |
-| 3 | **The outer function MUST `return` the inner function** | Without `return`, the inner function is trapped forever and can never be called |
+| #   | Requirement                                                | Why it matters                                                                  |
+| --- | ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 1   | **A function inside a function**                           | Creates the inner/outer scope relationship                                      |
+| 2   | **Inner function uses a variable from the outer function** | This is what actually forms the memory link                                     |
+| 3   | **The outer function MUST `return` the inner function**    | Without `return`, the inner function is trapped forever and can never be called |
 
 ---
 
@@ -8771,12 +8784,12 @@ The outer function runs **exactly once**. Once it has created and returned the i
 
 #### ⚖️ Key Difference
 
-| | Closure | Class |
-| --- | --- | --- |
-| **Privacy** | ✅ True data privacy via function scope | ⚠️ Less strict — properties are accessible by default |
-| **State** | Lives in the outer function's scope | Lives on `this` (the instance) |
-| **Pattern** | Functional programming | Object-Oriented Programming (OOP) |
-| **Instances** | Each call creates an isolated scope | Each `new` call creates a new object |
+|               | Closure                                 | Class                                                 |
+| ------------- | --------------------------------------- | ----------------------------------------------------- |
+| **Privacy**   | ✅ True data privacy via function scope | ⚠️ Less strict — properties are accessible by default |
+| **State**     | Lives in the outer function's scope     | Lives on `this` (the instance)                        |
+| **Pattern**   | Functional programming                  | Object-Oriented Programming (OOP)                     |
+| **Instances** | Each call creates an isolated scope     | Each `new` call creates a new object                  |
 
 > - **Closure** → true data privacy via function scope
 > - **Class** → structured objects, but less strict privacy
@@ -8815,18 +8828,19 @@ If you skip closures and manage state without them, you pay a price:
 
 ### 11. When to Use — Closure vs Class
 
-| Use **Closure** when... | Use **Class** when... |
-| --- | --- |
-| ✅ You need **private variables** | ✅ You need **multiple structured instances** |
-| ✅ You want **simple, isolated state** | ✅ You want **OOP-style** organization |
-| ✅ You prefer **functional patterns** | ✅ You are building **scalable systems** |
+| Use **Closure** when...                | Use **Class** when...                         |
+| -------------------------------------- | --------------------------------------------- |
+| ✅ You need **private variables**      | ✅ You need **multiple structured instances** |
+| ✅ You want **simple, isolated state** | ✅ You want **OOP-style** organization        |
+| ✅ You prefer **functional patterns**  | ✅ You are building **scalable systems**      |
 
 ---
+
 ---
 
 ### 12. Closure vs. Just Roommates (Spotting the Difference)
 
-Sometimes code *looks* like a closure because it has a function inside a function, but if it doesn't meet the "Memory Link" requirement, it's just two functions living together.
+Sometimes code _looks_ like a closure because it has a function inside a function, but if it doesn't meet the "Memory Link" requirement, it's just two functions living together.
 
 #### ❌ Example A: NOT a Closure (Just Roommates)
 
@@ -8842,12 +8856,12 @@ function outer() {
   }
 
   // We MUST return the inner function to execute it later
-  return inner; 
+  return inner;
 }
 
 // Execution:
 let roommates = outer();
-roommates(); 
+roommates();
 // Output: Hi
 ```
 
@@ -8865,16 +8879,16 @@ function outer() {
 
   function inner() {
     // YES! It reaches into the outer function's memory.
-    console.log(outerVar); 
+    console.log(outerVar);
   }
 
   // We MUST return the inner function to execute it later
-  return inner; 
+  return inner;
 }
 
 // Execution:
 let trueClosure = outer();
-trueClosure(); 
+trueClosure();
 // Output: Hello from the backpack!
 ```
 
@@ -8886,11 +8900,11 @@ trueClosure();
 
 For a closure to actually work in your code without throwing errors, you need **all three** of these "ingredients":
 
-| # | The Ingredient | Why it's Critical |
-| --- | --- | --- |
-| 1 | **Function inside a Function** | Creates the nested "parent/child" relationship. |
-| 2 | **Variable Usage** | The inner function **must** use a variable from the outer function. |
-| 3 | **The Return Escape** | The outer function **must return** the inner function so it isn't trapped inside forever. |
+| #   | The Ingredient                 | Why it's Critical                                                                         |
+| --- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| 1   | **Function inside a Function** | Creates the nested "parent/child" relationship.                                           |
+| 2   | **Variable Usage**             | The inner function **must** use a variable from the outer function.                       |
+| 3   | **The Return Escape**          | The outer function **must return** the inner function so it isn't trapped inside forever. |
 
 > [!IMPORTANT]
 > If you miss even one of these, you either don't have a closure, or you have a closure that nobody can ever reach!
@@ -8901,16 +8915,16 @@ For a closure to actually work in your code without throwing errors, you need **
 
 ## What is an Object?
 
-An Object is a standalone entity that holds data in **key-value pairs**. 
+An Object is a standalone entity that holds data in **key-value pairs**.
 
-It is a collection of **key-value pairs** stored in **heap memory** *(a dynamic, flexible memory space)*. Variables don't hold the object itself, they hold a **reference** (memory address) to it.
+It is a collection of **key-value pairs** stored in **heap memory** _(a dynamic, flexible memory space)_. Variables don't hold the object itself, they hold a **reference** (memory address) to it.
 
 Objects are collections of key-value pairs. They are fundamental to JavaScript and used everywhere.
 
-**In Objects:**  Whenever you assign one object to another object, it will always copy the reference. 
+**In Objects:** Whenever you assign one object to another object, it will always copy the reference.
 
 - we cannot have space in key names
-- Key can be string or symbol 
+- Key can be string or symbol
 - key are case sensitive
 
 ### The Analogy
@@ -8921,6 +8935,7 @@ Imagine a physical ID card for an employee. That card has a Name, an ID Number, 
 - **Value:** The actual data (e.g., `"John Doe"`)
 
 Think of it like a real-world object, like a car:
+
 - **Properties (Data):** A car has a color, a brand, and a weight.
 - **Methods (Actions):** A car can start, drive, and brake.
 
@@ -8934,10 +8949,10 @@ In Playwright or test automation, you constantly need to manage configurations. 
 
 ```javascript
 const testConfig = {
-    browser: "chromium",       // Key: browser, Value: "chromium"
-    environment: "staging",
-    timeout: 5000,
-    isHeadless: true
+  browser: "chromium", // Key: browser, Value: "chromium"
+  environment: "staging",
+  timeout: 5000,
+  isHeadless: true,
 };
 ```
 
@@ -8948,14 +8963,14 @@ const testConfig = {
 To get information out of your object, you usually use **Dot Notation**. You just type the object's name, a dot, and the key.
 
 ```javascript
-console.log("We are running tests on: " + testConfig.browser); 
+console.log("We are running tests on: " + testConfig.browser);
 // Output: We are running tests on: chromium
 ```
 
 Sometimes, you might need to use **Bracket Notation**, especially if your key has a space in it (which is rare but happens) or if you are using a variable to find the key.
 
 ```javascript
-console.log(testConfig["environment"]); 
+console.log(testConfig["environment"]);
 // Output: staging
 ```
 
@@ -8970,7 +8985,7 @@ Objects are flexible. Even if you declare an object with `const`, you can still 
 testConfig.timeout = 10000;
 
 // Adding a brand new key-value pair on the fly
-testConfig.retries = 2; 
+testConfig.retries = 2;
 
 console.log(testConfig);
 // Output will now include { timeout: 10000 } and { retries: 2 }
@@ -8980,7 +8995,7 @@ console.log(testConfig);
 
 ### 4. Objects Can "Do" Things (Methods)
 
-An object doesn't just have to hold static data like strings and numbers; it can also hold functions. 
+An object doesn't just have to hold static data like strings and numbers; it can also hold functions.
 
 > **When a normal function is just floating around on its own, it’s a function. But the moment you put that function inside an object, it gets a promotion and is called a Method.**
 
@@ -8988,33 +9003,34 @@ Here is a real-world QA example of an object holding user credentials and a meth
 
 ```javascript
 const testUser = {
-    username: "admin_qa",
-    password: "Password123!",
-    
-    // This is a method!
-    printCredentials: function() {
-        // 'this' refers to the object itself. 
-        // It's saying: "Get MY username and MY password"
-        console.log("Login with: " + this.username + " and " + this.password);
-    }
+  username: "admin_qa",
+  password: "Password123!",
+
+  // This is a method!
+  printCredentials: function () {
+    // 'this' refers to the object itself.
+    // It's saying: "Get MY username and MY password"
+    console.log("Login with: " + this.username + " and " + this.password);
+  },
 };
 
 // Calling the method
-testUser.printCredentials(); 
+testUser.printCredentials();
 // Output: Login with: admin_qa and Password123!
 ```
 
 Or using the car example:
+
 ```javascript
 const car = {
-  brand: "Tesla",      
-  model: "Model 3",    
-  year: 2023,          
-  
+  brand: "Tesla",
+  model: "Model 3",
+  year: 2023,
+
   // A function inside an object is called a "Method"
-  start: function() {
+  start: function () {
     console.log("The car is starting...");
-  }
+  },
 };
 
 car.start(); // Output: The car is starting...
@@ -9025,53 +9041,50 @@ car.start(); // Output: The car is starting...
 ### 5. Why do we use them?
 
 Instead of having 10 different variables floating around for one thing:
+
 ```javascript
 let carBrand = "Tesla";
 let carYear = 2023;
 ```
+
 You group them into one single object (`car`). This makes your code organized, easy to read, and allows you to pass "the whole car" into a function or a Promise rather than sending every piece of data separately.
 
 > **Note:** Objects are literally everywhere in Playwright. Every time you interact with an element or configure a browser, you are passing objects around.
 
-
 # reference
 
 let a = {
-  status1: "pass",
+status1: "pass",
 };
 
 console.log(a["status1"]);
-
 
 let b = a // b copies the REFERENCE, not the object
 b.status1 = "fail"
 console.log(b.status1)
 
-
 let c = { status1: "pass" }
 let d = { status1: "pass" }
 console.log(c === d) // false bcz memory location is different
 
-
 const t_json = {
-  "name": "Shujauddin",
-  "age": 10
+"name": "Shujauddin",
+"age": 10
 }
 console.log(t_json)
 
-
 const t_js = {
-  name: "Shujauddin",
-  age: 10
+name: "Shujauddin",
+age: 10
 }
 console.log(t_js)
 
 # dynamic property access
 
 const user = {
-    name: "John",
-    age: 30,
-    email: "john@example.com"
+name: "John",
+age: 30,
+email: "john@example.com"
 };
 
 // Dynamic property access
@@ -9082,22 +9095,22 @@ console.log(user[key]);
 user.city = "NYC";
 user.age = 31;
 
-console.log(user);
------------------------------------------------------------
+## console.log(user);
 
 ## Javascript Prototype (`__proto__`)
 
-In JavaScript, **Prototypes** are simply a way for objects to **share and borrow** methods and properties from other objects. 
+In JavaScript, **Prototypes** are simply a way for objects to **share and borrow** methods and properties from other objects.
 
-Every object in JavaScript has a hidden, special property (which we can access and set using `__proto__`). 
+Every object in JavaScript has a hidden, special property (which we can access and set using `__proto__`).
 
 Think of `__proto__` as a **"Fallback Plan"** or **"Asking the Manager"**.
 
 ### The Analogy: The Corporate Policy
 
-Imagine you have a general **Corporate Policy** (the prototype object). It says that the default tax rate is 10%. 
-Then you have **Employees** (your new objects). 
-- If an employee is asked for their tax rate and doesn't know it, they fall back and look at the corporate policy. 
+Imagine you have a general **Corporate Policy** (the prototype object). It says that the default tax rate is 10%.
+Then you have **Employees** (your new objects).
+
+- If an employee is asked for their tax rate and doesn't know it, they fall back and look at the corporate policy.
 - However, if an employee has a **special custom contract** (their own method), they will use their custom contract and completely ignore the corporate policy!
 
 Here is how we code this using `__proto__`:
@@ -9113,11 +9126,11 @@ const employeePrototype = {
 // 2. Employee 1 has a SPECIAL custom contract (Override)
 const newEmployee_01 = {
   salary: "60000",
-  
-  // Because Employee 1 has their OWN calculateTax method, 
+
+  // Because Employee 1 has their OWN calculateTax method,
   // JavaScript will use this one and NEVER check the prototype.
   calculateTax() {
-    console.log("The tax rate is 20%"); 
+    console.log("The tax rate is 20%");
   },
 };
 
@@ -9133,7 +9146,7 @@ const newEmployee_03 = {
 // ==========================================
 // 🔗 LINKING THEM TOGETHER (The Magic Step)
 // ==========================================
-// We are telling the employees: "If you are ever asked to do something 
+// We are telling the employees: "If you are ever asked to do something
 // you don't know how to do, go look at the 'employeePrototype'."
 
 newEmployee_01.__proto__ = employeePrototype;
@@ -9151,8 +9164,8 @@ newEmployee_02.calculateTax(); // Output: "The tax rate is 10%"
 // Employee 3 also borrows it.
 newEmployee_03.calculateTax(); // Output: "The tax rate is 10%"
 
-// Employee 1 HAS their own method! 
-// This is called "Method Overriding" or "Shadowing". 
+// Employee 1 HAS their own method!
+// This is called "Method Overriding" or "Shadowing".
 // It uses its own method and ignores the prototype.
 newEmployee_01.calculateTax(); // Output: "The tax rate is 20%"
 ```
@@ -9161,12 +9174,12 @@ newEmployee_01.calculateTax(); // Output: "The tax rate is 20%"
 
 When you write `newEmployee_02.calculateTax()`, this is the exact thought process JavaScript goes through:
 
-1. **Step 1:** Look inside `newEmployee_02`. Does it have a `calculateTax()` function? 
-   - *Result: No, it only has `salary: "50000"`.*
-2. **Step 2:** Follow the `__proto__` link. Where does it point? 
-   - *Result: It points to `employeePrototype`.*
+1. **Step 1:** Look inside `newEmployee_02`. Does it have a `calculateTax()` function?
+   - _Result: No, it only has `salary: "50000"`._
+2. **Step 2:** Follow the `__proto__` link. Where does it point?
+   - _Result: It points to `employeePrototype`._
 3. **Step 3:** Look inside `employeePrototype`. Does it have a `calculateTax()` function?
-   - *Result: Yes! Execute it!*
+   - _Result: Yes! Execute it!_
 
 If JavaScript kept following `__proto__` links and couldn't find the method anywhere, it would eventually hit `null` and throw an error (`is not a function`). This chain of fallback links is called the **Prototype Chain**.
 
@@ -9192,14 +9205,14 @@ console.log(Object.getOwnPropertyDescriptor(obj, "name"));
 */
 ```
 
-### What do these words actually mean? 
+### What do these words actually mean?
 
 1. **`value` (The Data)**
    - **What it means:** The actual information stored inside the property.
    - **Example:** `"Login"`
 
 2. **`writable` (The "Read-Only" Lock)**
-   - **What it means:** Can someone change this value later? 
+   - **What it means:** Can someone change this value later?
    - **Analogy:** If `writable` is `true`, anyone can overwrite the name. If you set it to `false`, the property becomes strictly **Read-Only**. No one can overwrite `"Login"` with something else.
 
 3. **`enumerable` (The "Hidden Folder" Switch)**
@@ -9212,7 +9225,7 @@ console.log(Object.getOwnPropertyDescriptor(obj, "name"));
 
 ---
 
-### Can we change these hidden settings? 
+### Can we change these hidden settings?
 
 **Yes!** You can modify these hidden settings using a built-in method called `Object.defineProperty()`.
 
@@ -9220,22 +9233,22 @@ Let's look at a practical QA Example. Imagine we have a test configuration, and 
 
 ```javascript
 const testConfig = {
-    env: "QA_Env"
+  env: "QA_Env",
 };
 
 // Right now, anyone can change testConfig.env = "Production";
 
 // Let's lock it down!
 Object.defineProperty(testConfig, "env", {
-    writable: false,      // ❌ Cannot change the value anymore
-    configurable: false,  // ❌ Cannot delete the 'env' property or change these settings again
-    enumerable: true      // ✅ It will still show up if we loop over testConfig
+  writable: false, // ❌ Cannot change the value anymore
+  configurable: false, // ❌ Cannot delete the 'env' property or change these settings again
+  enumerable: true, // ✅ It will still show up if we loop over testConfig
 });
 
 // Let's test our new locks!
 
 // 1. Try to overwrite the value
-testConfig.env = "Production"; 
+testConfig.env = "Production";
 console.log(testConfig.env); // Output: "QA_Env" (The overwrite was completely ignored!)
 
 // 2. Try to delete it
@@ -9259,7 +9272,7 @@ An **Object** is a container that holds related data and functions grouped toget
 let student = {
   name: "Amit",
   age: 25,
-  phone: 9876543210
+  phone: 9876543210,
 };
 ```
 
@@ -9270,15 +9283,17 @@ let student = {
 The simplest way to create an object is using an **Object Literal** — curly braces `{}` with key-value pairs inside.
 
 **Syntax:**
+
 ```javascript
 let objectName = {
   key1: value1,
   key2: value2,
-  key3: value3
+  key3: value3,
 };
 ```
 
 **Example:**
+
 ```javascript
 let student1 = { name: "Amit", age: 25 };
 let student2 = { name: "Shujauddin" };
@@ -9294,11 +9309,11 @@ let student3 = { name: "Shujauddin", age: 87, phone: 9876543210 };
 let obj = { status: "pass", name: "John" };
 
 // JSON format — keys WITH quotes (when using JSON specification)
-let jsonObj = { "status": "pass", "name": "John" };
+let jsonObj = { status: "pass", name: "John" };
 
 // Both work the same way in JavaScript
-console.log(obj.status);      // "pass"
-console.log(jsonObj.status);  // "pass"
+console.log(obj.status); // "pass"
+console.log(jsonObj.status); // "pass"
 ```
 
 > **Note:** When you see quotes around keys, it's typically **JSON format** (JavaScript Object Notation), which is a data exchange standard. In regular JavaScript object literals, quotes are optional.
@@ -9316,9 +9331,9 @@ There are **two main ways** to access the value of a property: **Dot notation** 
 ```javascript
 let user = { name: "John", age: 30, email: "john@example.com" };
 
-console.log(user.name);   // "John"
-console.log(user.age);    // 30
-console.log(user.email);  // "john@example.com"
+console.log(user.name); // "John"
+console.log(user.age); // 30
+console.log(user.email); // "john@example.com"
 ```
 
 #### Method 2: Bracket Notation (With Strings or Variables)
@@ -9330,9 +9345,9 @@ This method is useful when the key is stored in a variable or contains special c
 ```javascript
 let user = { name: "John", age: 30, email: "john@example.com" };
 
-console.log(user["name"]);   // "John"
-console.log(user["age"]);    // 30
-console.log(user["email"]);  // "john@example.com"
+console.log(user["name"]); // "John"
+console.log(user["age"]); // 30
+console.log(user["email"]); // "john@example.com"
 ```
 
 #### 🔷 Keys Are Case-Sensitive
@@ -9342,10 +9357,10 @@ JavaScript treats keys as case-sensitive. `status` and `Status` are **two differ
 ```javascript
 let obj = { status: "pass", Status: "fail" };
 
-console.log(obj["status"]);  // "pass"
-console.log(obj["Status"]);  // "fail"
-console.log(obj.status);     // "pass"
-console.log(obj.Status);     // "fail"
+console.log(obj["status"]); // "pass"
+console.log(obj["Status"]); // "fail"
+console.log(obj.status); // "pass"
+console.log(obj.Status); // "fail"
 ```
 
 #### 🔷 Dynamic Property Access (Using Variables)
@@ -9356,16 +9371,16 @@ console.log(obj.Status);     // "fail"
 const user = {
   name: "John",
   age: 30,
-  email: "john@example.com"
+  email: "john@example.com",
 };
 
 // Using a variable to dynamically access a property
 const key = "age";
-console.log(user[key]);  // 30  ← Accesses user.age
+console.log(user[key]); // 30  ← Accesses user.age
 
 // This works in loops or when reading from config files
 const propertyName = "email";
-console.log(user[propertyName]);  // "john@example.com"
+console.log(user[propertyName]); // "john@example.com"
 ```
 
 **Why is this useful for SDET?**
@@ -9373,9 +9388,9 @@ In test automation, you often need to validate different properties based on wha
 
 ```javascript
 const testData = { username: "admin", password: "pass123", role: "admin" };
-const fieldToCheck = "username";  // This might come from a test parameter
+const fieldToCheck = "username"; // This might come from a test parameter
 
-console.log(testData[fieldToCheck]);  // "admin"
+console.log(testData[fieldToCheck]); // "admin"
 ```
 
 ---
@@ -9388,7 +9403,7 @@ You can **modify** existing properties or **add new properties** to an object at
 let user = {
   name: "John",
   age: 30,
-  email: "john@example.com"
+  email: "john@example.com",
 };
 
 // Modifying existing properties
@@ -9404,12 +9419,13 @@ console.log(user);
 ```
 
 **Real-world Example (Configuration Objects):**
+
 ```javascript
 let config = {};
 config.browser = "Chrome";
 config.timeout = 3000;
-config.timeout = 5000;  // Update timeout to 5000
-console.log(config);    // { browser: "Chrome", timeout: 5000 }
+config.timeout = 5000; // Update timeout to 5000
+console.log(config); // { browser: "Chrome", timeout: 5000 }
 ```
 
 ---
@@ -9422,13 +9438,13 @@ You can **remove a property** from an object using the `delete` operator.
 let config = {
   browser: "Chrome",
   timeout: 3000,
-  retries: 2
+  retries: 2,
 };
 
-delete config.browser;  // Removes the 'browser' property
+delete config.browser; // Removes the 'browser' property
 
-console.log(config);  // { timeout: 3000, retries: 2 }
-console.log(config.browser);  // undefined  ← Property no longer exists
+console.log(config); // { timeout: 3000, retries: 2 }
+console.log(config.browser); // undefined  ← Property no longer exists
 ```
 
 ---
@@ -9444,12 +9460,12 @@ This is one of the **most important concepts** in JavaScript. Understanding this
 ```javascript
 // Primitive data types - PASS BY VALUE
 let a = 10;
-let b = a;  // b gets a COPY of a's value
+let b = a; // b gets a COPY of a's value
 
-b = 99;     // Change b
+b = 99; // Change b
 
-console.log(a);  // 10  ← a is NOT affected (independent copy)
-console.log(b);  // 99
+console.log(a); // 10  ← a is NOT affected (independent copy)
+console.log(b); // 99
 ```
 
 #### Objects (Non-Primitives) — Pass by Reference
@@ -9459,24 +9475,24 @@ console.log(b);  // 99
 ```javascript
 // Objects — copied by REFERENCE
 let obj1 = { val: 10 };
-let obj2 = obj1;  // obj2 does NOT get a copy; both point to the same object!
+let obj2 = obj1; // obj2 does NOT get a copy; both point to the same object!
 
-obj2.val = 99;    // Change through obj2
+obj2.val = 99; // Change through obj2
 
-console.log(obj1.val);  // 99  ← obj1 is ALSO changed! 😱
-console.log(obj2.val);  // 99
+console.log(obj1.val); // 99  ← obj1 is ALSO changed! 😱
+console.log(obj2.val); // 99
 ```
 
 #### Visual Representation
 
 ```javascript
 // Primitive — Two separate containers
-let a = 10;        // Container A holds 10
-let b = a;         // Container B holds 10 (a copy)
+let a = 10; // Container A holds 10
+let b = a; // Container B holds 10 (a copy)
 
 // Object — Two names pointing to one container
-let obj1 = { x: 10 };      // Container holds { x: 10 }
-let obj2 = obj1;           // obj2 just points to the SAME container
+let obj1 = { x: 10 }; // Container holds { x: 10 }
+let obj2 = obj1; // obj2 just points to the SAME container
 
 // Both look like different variables, but they share the same data in memory!
 ```
@@ -9488,8 +9504,8 @@ let obj2 = obj1;           // obj2 just points to the SAME container
 let c = { status: "pass" };
 let d = { status: "pass" };
 
-console.log(c === d);  // false  ← They look the same, but they are different objects in memory!
-console.log(c === c);  // true   ← An object is always equal to itself
+console.log(c === d); // false  ← They look the same, but they are different objects in memory!
+console.log(c === c); // true   ← An object is always equal to itself
 ```
 
 ---
@@ -9500,29 +9516,29 @@ An **Object Method** is a function stored inside an object. You define it the sa
 
 ```javascript
 const user = {
-    name: "Shujauddin",
-    age: 43
+  name: "Shujauddin",
+  age: 43,
 };
 
 const calculator = {
-    value: 0,
-    
-    // Method 1: add numbers
-    add(n) {
-        this.value += n;  // 'this' refers to the calculator object
-        return this;      // Return the object itself (Method Chaining)
-    },
-    
-    // Method 2: subtract numbers
-    subtract(n) {
-        this.value -= n;
-        return this;
-    }
+  value: 0,
+
+  // Method 1: add numbers
+  add(n) {
+    this.value += n; // 'this' refers to the calculator object
+    return this; // Return the object itself (Method Chaining)
+  },
+
+  // Method 2: subtract numbers
+  subtract(n) {
+    this.value -= n;
+    return this;
+  },
 };
 
 // Using the methods
-console.log(calculator.add(5));  // { value: 5, add: [Function], subtract: [Function] }
-console.log(calculator.subtract(3));  // { value: 2, add: [Function], subtract: [Function] }
+console.log(calculator.add(5)); // { value: 5, add: [Function], subtract: [Function] }
+console.log(calculator.subtract(3)); // { value: 2, add: [Function], subtract: [Function] }
 ```
 
 #### 🔷 The `this` Keyword — Referring to the Object Itself
@@ -9531,18 +9547,18 @@ console.log(calculator.subtract(3));  // { value: 2, add: [Function], subtract: 
 
 ```javascript
 const user = {
-    firstName: "Shujauddin",
-    lastName: "Shujauddin_1",
-    
-    // Method that uses 'this'
-    sayFullName(additionalName) {
-        this.firstName += additionalName;  // Modify this object's firstName
-        return this.firstName;
-    }
+  firstName: "Shujauddin",
+  lastName: "Shujauddin_1",
+
+  // Method that uses 'this'
+  sayFullName(additionalName) {
+    this.firstName += additionalName; // Modify this object's firstName
+    return this.firstName;
+  },
 };
 
-console.log(user.sayFullName(" Singh"));  // "Shujauddin Singh"
-console.log(user.firstName);  // "Shujauddin Singh"  ← Changed!
+console.log(user.sayFullName(" Singh")); // "Shujauddin Singh"
+console.log(user.firstName); // "Shujauddin Singh"  ← Changed!
 ```
 
 #### 🔷 Method Chaining — Returning `this`
@@ -9551,20 +9567,20 @@ When a method returns `this`, you can chain multiple method calls together:
 
 ```javascript
 const calculator = {
-    value: 0,
-    add(n) {
-        this.value += n;
-        return this;  // Returns the object itself
-    },
-    subtract(n) {
-        this.value -= n;
-        return this;
-    }
+  value: 0,
+  add(n) {
+    this.value += n;
+    return this; // Returns the object itself
+  },
+  subtract(n) {
+    this.value -= n;
+    return this;
+  },
 };
 
 // Method Chaining — call multiple methods in one line
 calculator.add(10).subtract(3).add(5);
-console.log(calculator.value);  // 12  (10 - 3 + 5)
+console.log(calculator.value); // 12  (10 - 3 + 5)
 ```
 
 **Why is this useful for SDET?**
@@ -9572,7 +9588,7 @@ Method chaining makes your automation code cleaner and more readable. It's used 
 
 ```javascript
 // Playwright-style method chaining
-page.goto('https://example.com').fill('#username', 'admin').click('#loginBtn');
+page.goto("https://example.com").fill("#username", "admin").click("#loginBtn");
 ```
 
 ---
@@ -9589,8 +9605,8 @@ const user = { name1: "John", age: 30, city: "NYC" };
 // Extract properties into variables
 const { name1, age } = user;
 
-console.log(name1);  // "John"
-console.log(age);    // 30
+console.log(name1); // "John"
+console.log(age); // 30
 ```
 
 #### Renaming Variables During Destructuring
@@ -9603,8 +9619,8 @@ const user = { name1: "John", age: 30, city: "NYC" };
 // Rename 'name1' to 'userName' and 'age' to 'userAge'
 const { name1: userName, age: userAge } = user;
 
-console.log(userName);   // "John"
-console.log(userAge);    // 30
+console.log(userName); // "John"
+console.log(userAge); // 30
 ```
 
 #### Default Values During Destructuring
@@ -9617,7 +9633,7 @@ const user = { name: "John", age: 30 };
 // 'country' doesn't exist, so use the default value "USA"
 const { name, age, country = "USA" } = user;
 
-console.log(country);  // "USA"  ← Used the default value
+console.log(country); // "USA"  ← Used the default value
 ```
 
 #### Nested Object Destructuring
@@ -9625,19 +9641,23 @@ console.log(country);  // "USA"  ← Used the default value
 You can destructure deeply nested objects:
 
 ```javascript
-const data = { 
-    user: { 
-        name: "John", 
-        address: { 
-            city: "NYC" 
-        } 
-    } 
+const data = {
+  user: {
+    name: "John",
+    address: {
+      city: "NYC",
+    },
+  },
 };
 
 // Extract the nested 'city' property
-const { user: { address: { city } } } = data;
+const {
+  user: {
+    address: { city },
+  },
+} = data;
 
-console.log(city);  // "NYC"
+console.log(city); // "NYC"
 ```
 
 **Why is this useful for SDET?**
@@ -9645,14 +9665,16 @@ When you receive API responses or test data, destructuring makes your code clean
 
 ```javascript
 const apiResponse = {
-    status: 200,
-    body: { userId: 123, userName: "admin" }
+  status: 200,
+  body: { userId: 123, userName: "admin" },
 };
 
 // Clean extraction
-const { body: { userId, userName } } = apiResponse;
+const {
+  body: { userId, userName },
+} = apiResponse;
 
-console.log(userId, userName);  // 123, "admin"
+console.log(userId, userName); // 123, "admin"
 ```
 
 ---
@@ -9671,8 +9693,8 @@ const copy = { ...obj1 };
 
 copy.a = 99;
 
-console.log(obj1.a);  // 1   ← obj1 is NOT affected
-console.log(copy.a);  // 99  ← copy has the changed value
+console.log(obj1.a); // 1   ← obj1 is NOT affected
+console.log(copy.a); // 99  ← copy has the changed value
 ```
 
 #### Merging Multiple Objects
@@ -9707,7 +9729,7 @@ In test automation, you often merge default configs with test-specific overrides
 
 ```javascript
 const baseConfig = { browser: "Chrome", headless: true };
-const testConfig = { ...baseConfig, headless: false };  // Run with UI visible
+const testConfig = { ...baseConfig, headless: false }; // Run with UI visible
 
 console.log(testConfig);
 // { browser: "Chrome", headless: false }
@@ -9723,16 +9745,16 @@ console.log(testConfig);
 
 ```javascript
 const user = {
-    firstName: "Shujauddin",
-    lastName: "Shujauddin_1",
-    
-    // Getter — runs when you READ user.fullName
-    get fullName() {
-        return this.firstName + " " + this.lastName;
-    }
+  firstName: "Shujauddin",
+  lastName: "Shujauddin_1",
+
+  // Getter — runs when you READ user.fullName
+  get fullName() {
+    return this.firstName + " " + this.lastName;
+  },
 };
 
-console.log(user.fullName);  // "Shujauddin Shujauddin_1"
+console.log(user.fullName); // "Shujauddin Shujauddin_1"
 // It looks like a property, but it's actually running a function!
 ```
 
@@ -9740,25 +9762,25 @@ console.log(user.fullName);  // "Shujauddin Shujauddin_1"
 
 ```javascript
 const user = {
-    firstName: "Shujauddin",
-    lastName: "Shujauddin_1",
-    
-    get fullName() {
-        return this.firstName + " " + this.lastName;
-    },
-    
-    // Setter — runs when you WRITE to user.fullName
-    set fullName(value) {
-        // Split the value and update firstName and lastName
-        [this.firstName, this.lastName] = value.split(" ");
-    }
+  firstName: "Shujauddin",
+  lastName: "Shujauddin_1",
+
+  get fullName() {
+    return this.firstName + " " + this.lastName;
+  },
+
+  // Setter — runs when you WRITE to user.fullName
+  set fullName(value) {
+    // Split the value and update firstName and lastName
+    [this.firstName, this.lastName] = value.split(" ");
+  },
 };
 
-console.log(user.fullName);           // "Shujauddin Shujauddin_1"
-user.fullName = "Amit Sharma";        // Triggers the setter
-console.log(user.firstName);          // "Amit"
-console.log(user.lastName);           // "Sharma"
-console.log(user.fullName);           // "Amit Sharma"
+console.log(user.fullName); // "Shujauddin Shujauddin_1"
+user.fullName = "Amit Sharma"; // Triggers the setter
+console.log(user.firstName); // "Amit"
+console.log(user.lastName); // "Sharma"
+console.log(user.fullName); // "Amit Sharma"
 ```
 
 **Why are getters and setters useful for SDET?**
@@ -9766,22 +9788,22 @@ They add validation or transformation when properties are accessed:
 
 ```javascript
 const testConfig = {
-    _timeout: 5000,  // Private property (convention: _ prefix)
-    
-    // Validate when setting timeout
-    set timeout(value) {
-        if (value < 1000) {
-            throw new Error("Timeout must be at least 1000ms");
-        }
-        this._timeout = value;
-    },
-    
-    get timeout() {
-        return this._timeout;
+  _timeout: 5000, // Private property (convention: _ prefix)
+
+  // Validate when setting timeout
+  set timeout(value) {
+    if (value < 1000) {
+      throw new Error("Timeout must be at least 1000ms");
     }
+    this._timeout = value;
+  },
+
+  get timeout() {
+    return this._timeout;
+  },
 };
 
-testConfig.timeout = 500;  // Error: Timeout must be at least 1000ms
+testConfig.timeout = 500; // Error: Timeout must be at least 1000ms
 ```
 
 ---
@@ -9831,7 +9853,7 @@ console.log(Object.entries(obj));
 const user = { name: "John", age: 30 };
 
 for (const key in user) {
-    console.log(`${key}: ${user[key]}`);
+  console.log(`${key}: ${user[key]}`);
 }
 // Output:
 // name: John
@@ -9843,8 +9865,8 @@ for (const key in user) {
 ```javascript
 const user = { name: "John", age: 30 };
 
-Object.keys(user).forEach(key => {
-    console.log(key);  // "name", "age"
+Object.keys(user).forEach((key) => {
+  console.log(key); // "name", "age"
 });
 ```
 
@@ -9854,7 +9876,7 @@ Object.keys(user).forEach(key => {
 const user = { name: "John", age: 30 };
 
 Object.entries(user).forEach(([key, value]) => {
-    console.log(`${key}: ${value}`);
+  console.log(`${key}: ${value}`);
 });
 // Output:
 // name: John
@@ -9871,35 +9893,35 @@ In SDET and automation, objects are used extensively for **configuration** and *
 
 ```javascript
 const ENV = {
-    BASE_URL: "https://staging.myapp.com",
-    TIMEOUT: 5000,
-    RETRIES: 2,
-    BROWSER: "Chrome"
+  BASE_URL: "https://staging.myapp.com",
+  TIMEOUT: 5000,
+  RETRIES: 2,
+  BROWSER: "Chrome",
 };
 
 const EXPECTED_RESPONSE = {
-    status: 200,
-    body: {
-        user: { role: "admin", active: true }
-    }
+  status: 200,
+  body: {
+    user: { role: "admin", active: true },
+  },
 };
 
 const config = {
-    // Base URLs
-    baseUrl: 'http://localhost:3000',
-    apiBaseUrl: 'http://localhost:3000/api',
-    
-    // Test User Credentials
-    testUser: {
-        username: 'testuser@example.com',
-        password: 'SecurePass123',
-    },
-    
-    // Logging Configuration
-    logLevel: 'INFO',
-    
-    // Retry Configuration
-    retryCount: parseInt(process.env.RETRY_COUNT || '3', 10),
+  // Base URLs
+  baseUrl: "http://localhost:3000",
+  apiBaseUrl: "http://localhost:3000/api",
+
+  // Test User Credentials
+  testUser: {
+    username: "testuser@example.com",
+    password: "SecurePass123",
+  },
+
+  // Logging Configuration
+  logLevel: "INFO",
+
+  // Retry Configuration
+  retryCount: parseInt(process.env.RETRY_COUNT || "3", 10),
 };
 ```
 
@@ -9907,11 +9929,11 @@ const config = {
 
 ```javascript
 // Reading from config
-console.log(config.baseUrl);           // 'http://localhost:3000'
+console.log(config.baseUrl); // 'http://localhost:3000'
 console.log(config.testUser.username); // 'testuser@example.com'
 
 // Updating config for specific tests
-const testConfig = { ...config, logLevel: 'DEBUG' };
+const testConfig = { ...config, logLevel: "DEBUG" };
 ```
 
 ---
@@ -9958,13 +9980,13 @@ console.log(config);
 
 #### Summary Table
 
-| Operation                        | `let config` | `const config` |
-| -------------------------------- | ------------ | -------------- |
-| **Modify properties**            | ✅ Yes       | ✅ Yes         |
-| **Add new properties**           | ✅ Yes       | ✅ Yes         |
-| **Delete properties**            | ✅ Yes       | ✅ Yes         |
-| **Reassign entire object**       | ✅ Yes       | ❌ No          |
-| **Redeclare the variable**       | ❌ No        | ❌ No          |
+| Operation                  | `let config` | `const config` |
+| -------------------------- | ------------ | -------------- |
+| **Modify properties**      | ✅ Yes       | ✅ Yes         |
+| **Add new properties**     | ✅ Yes       | ✅ Yes         |
+| **Delete properties**      | ✅ Yes       | ✅ Yes         |
+| **Reassign entire object** | ✅ Yes       | ❌ No          |
+| **Redeclare the variable** | ❌ No        | ❌ No          |
 
 **Best Practice for SDET:**
 Use `const` for configuration objects that shouldn't be reassigned, but use `let` if you need to completely swap the object during testing:
@@ -9975,30 +9997,30 @@ const defaultConfig = { browser: "Chrome" };
 
 // Test-specific setup — might reassign
 let currentConfig = defaultConfig;
-currentConfig = { browser: "Firefox" };  // Can reassign
+currentConfig = { browser: "Firefox" }; // Can reassign
 ```
 
 ---
 
 ### 11.13 Summary — Objects Quick Reference
 
-| Concept                     | Syntax / Example                          | Use Case                                   |
-| --------------------------- | ----------------------------------------- | ------------------------------------------ |
-| **Create object**           | `let obj = { key: value }`               | Store related data together                |
-| **Access property**         | `obj.key` or `obj["key"]`                | Read property values                       |
-| **Modify property**         | `obj.key = newValue`                    | Update existing data                       |
-| **Add property**            | `obj.newKey = value`                    | Add new information to object              |
-| **Delete property**         | `delete obj.key`                        | Remove unwanted properties                 |
-| **Object method**           | `obj.method() { return this }`          | Add behavior to objects                    |
-| **Destructuring**           | `const { key } = obj`                   | Extract properties cleanly                 |
-| **Spread operator**         | `{ ...obj1, ...obj2 }`                  | Copy or merge objects                      |
-| **Getter**                  | `get propName() { }`                    | Run logic when reading properties          |
-| **Setter**                  | `set propName(val) { }`                 | Run logic when writing to properties       |
-| **Object.keys()**           | `Object.keys(obj)`                      | Get all property names                     |
-| **Object.values()**         | `Object.values(obj)`                    | Get all property values                    |
-| **Object.entries()**        | `Object.entries(obj)`                   | Get [key, value] pairs                     |
-| **for...in loop**           | `for (key in obj) { }`                  | Iterate over object properties             |
-| **Pass by reference**       | `let b = obj; b.key = x`               | Both variables share the same object       |
+| Concept               | Syntax / Example               | Use Case                             |
+| --------------------- | ------------------------------ | ------------------------------------ |
+| **Create object**     | `let obj = { key: value }`     | Store related data together          |
+| **Access property**   | `obj.key` or `obj["key"]`      | Read property values                 |
+| **Modify property**   | `obj.key = newValue`           | Update existing data                 |
+| **Add property**      | `obj.newKey = value`           | Add new information to object        |
+| **Delete property**   | `delete obj.key`               | Remove unwanted properties           |
+| **Object method**     | `obj.method() { return this }` | Add behavior to objects              |
+| **Destructuring**     | `const { key } = obj`          | Extract properties cleanly           |
+| **Spread operator**   | `{ ...obj1, ...obj2 }`         | Copy or merge objects                |
+| **Getter**            | `get propName() { }`           | Run logic when reading properties    |
+| **Setter**            | `set propName(val) { }`        | Run logic when writing to properties |
+| **Object.keys()**     | `Object.keys(obj)`             | Get all property names               |
+| **Object.values()**   | `Object.values(obj)`           | Get all property values              |
+| **Object.entries()**  | `Object.entries(obj)`          | Get [key, value] pairs               |
+| **for...in loop**     | `for (key in obj) { }`         | Iterate over object properties       |
+| **Pass by reference** | `let b = obj; b.key = x`       | Both variables share the same object |
 
 ---
 
@@ -10008,19 +10030,19 @@ currentConfig = { browser: "Firefox" };  // Can reassign
 
 ### 11.14 Computed Properties
 
-Computed properties allow you to set the name of an object's key using a variable or an expression inside square brackets `[]` when you create the object. 
+Computed properties allow you to set the name of an object's key using a variable or an expression inside square brackets `[]` when you create the object.
 
 ```javascript
 const prefix = "user_";
 const dynamicKey = "email";
 
 const student = {
-    [prefix + "name"]: "John",    // Key becomes "user_name"
-    [dynamicKey]: "john@test.com" // Key becomes "email"
+  [prefix + "name"]: "John", // Key becomes "user_name"
+  [dynamicKey]: "john@test.com", // Key becomes "email"
 };
 
 console.log(student.user_name); // "John"
-console.log(student.email);     // "john@test.com"
+console.log(student.email); // "john@test.com"
 ```
 
 This is very helpful when reading keys from an external file or when building configuration objects dynamically during automation testing.
@@ -10033,18 +10055,18 @@ Static properties and methods belong to the **class itself**, not to the individ
 
 ```javascript
 class Browser {
-    // Static property
-    static defaultTimeout = 5000;
+  // Static property
+  static defaultTimeout = 5000;
 
-    // Static method
-    static closeAll() {
-        console.log("Closing all browsers...");
-    }
+  // Static method
+  static closeAll() {
+    console.log("Closing all browsers...");
+  }
 }
 
 // You do NOT need to create a new object (new Browser())
 console.log(Browser.defaultTimeout); // 5000
-Browser.closeAll();                  // "Closing all browsers..."
+Browser.closeAll(); // "Closing all browsers..."
 ```
 
 ---
@@ -10055,12 +10077,12 @@ By default, everything in a JavaScript object is public. If you want to hide a p
 
 ```javascript
 class TestAccount {
-    // Private property
-    #password = "SecretPass123";
+  // Private property
+  #password = "SecretPass123";
 
-    getPassword() {
-        return this.#password; // It can only be used INSIDE the class
-    }
+  getPassword() {
+    return this.#password; // It can only be used INSIDE the class
+  }
 }
 
 const myAccount = new TestAccount();
@@ -10093,10 +10115,10 @@ The simplest way to link two objects is using `Object.create()`. Let's create a 
 ```javascript
 // 1. The Manager (The Prototype Object)
 const basePage = {
-    timeout: 5000,
-    takeScreenshot() {
-        console.log("📸 Snap! Screenshot saved.");
-    }
+  timeout: 5000,
+  takeScreenshot() {
+    console.log("📸 Snap! Screenshot saved.");
+  },
 };
 
 // 2. The Junior QA (The Child Object)
@@ -10104,19 +10126,19 @@ const basePage = {
 const loginPage = Object.create(basePage);
 
 // We give the child object its own specific skill
-loginPage.enterPassword = function() {
-    console.log("Typing password...");
+loginPage.enterPassword = function () {
+  console.log("Typing password...");
 };
 
 // --- LET'S SEE IT IN ACTION ---
 
 // Scenario A: The Junior QA knows what to do
-loginPage.enterPassword(); 
+loginPage.enterPassword();
 // Output: "Typing password..." (It found the method right inside loginPage)
 
 // Scenario B: The Junior QA DOES NOT know what to do!
-loginPage.takeScreenshot(); 
-// Output: "📸 Snap! Screenshot saved." 
+loginPage.takeScreenshot();
+// Output: "📸 Snap! Screenshot saved."
 ```
 
 **What just happened in Scenario B?**
@@ -10142,24 +10164,24 @@ Used for mathematical operations. You don't create it — you just call it direc
 
 ```javascript
 // Rounding
-console.log(Math.round(4.7));   // 5   — Rounds to the nearest whole number
-console.log(Math.round(4.4));   // 4   — Rounds down because 4.4 < 4.5
-console.log(Math.ceil(4.1));    // 5   — Always rounds UP (ceiling)
-console.log(Math.floor(4.9));   // 4   — Always rounds DOWN (floor)
+console.log(Math.round(4.7)); // 5   — Rounds to the nearest whole number
+console.log(Math.round(4.4)); // 4   — Rounds down because 4.4 < 4.5
+console.log(Math.ceil(4.1)); // 5   — Always rounds UP (ceiling)
+console.log(Math.floor(4.9)); // 4   — Always rounds DOWN (floor)
 
 // Min and Max
 console.log(Math.max(10, 50, 20, 35)); // 50 — Finds the highest value
 console.log(Math.min(10, 50, 20, 35)); // 10 — Finds the lowest value
 
 // Powers and Square Roots
-console.log(Math.pow(2, 3));    // 8   — 2 raised to the power of 3 (2³)
-console.log(Math.sqrt(25));     // 5   — Square root of 25
+console.log(Math.pow(2, 3)); // 8   — 2 raised to the power of 3 (2³)
+console.log(Math.sqrt(25)); // 5   — Square root of 25
 
 // Absolute Value
-console.log(Math.abs(-15));     // 15  — Removes the negative sign
+console.log(Math.abs(-15)); // 15  — Removes the negative sign
 
 // Constants
-console.log(Math.PI);           // 3.141592653589793
+console.log(Math.PI); // 3.141592653589793
 ```
 
 ##### `Math.random()` — Generating Test Data
@@ -10183,8 +10205,8 @@ console.log(randomBrowser); // e.g., "Firefox"
 ##### `Math.trunc()` — Remove Decimals Without Rounding
 
 ```javascript
-console.log(Math.trunc(4.9));   // 4  — Just chops the decimal off (no rounding)
-console.log(Math.trunc(-4.9));  // -4 — Works on negatives too
+console.log(Math.trunc(4.9)); // 4  — Just chops the decimal off (no rounding)
+console.log(Math.trunc(-4.9)); // -4 — Works on negatives too
 ```
 
 > 💡 **SDET Use Case:** Use `Math.random()` + `Math.floor()` to generate unique test user IDs, random ports, or random wait times to avoid flakiness in parallel test runs.
@@ -10200,14 +10222,14 @@ Used for capturing and working with dates and times. Unlike `Math`, you create a
 ```javascript
 const now = new Date();
 
-console.log(now);                   // e.g., 2026-05-11T06:20:18.000Z (full timestamp)
-console.log(now.getFullYear());     // 2026 — 4-digit year
-console.log(now.getMonth());        // 4    — ⚠️ Months are 0-indexed! (0 = Jan, 4 = May)
-console.log(now.getDate());         // 11   — Day of the month (1–31)
-console.log(now.getDay());          // 0    — Day of the week (0 = Sunday, 6 = Saturday)
-console.log(now.getHours());        // 6    — Current hour (0–23)
-console.log(now.getMinutes());      // 20   — Current minutes (0–59)
-console.log(now.getSeconds());      // 18   — Current seconds (0–59)
+console.log(now); // e.g., 2026-05-11T06:20:18.000Z (full timestamp)
+console.log(now.getFullYear()); // 2026 — 4-digit year
+console.log(now.getMonth()); // 4    — ⚠️ Months are 0-indexed! (0 = Jan, 4 = May)
+console.log(now.getDate()); // 11   — Day of the month (1–31)
+console.log(now.getDay()); // 0    — Day of the week (0 = Sunday, 6 = Saturday)
+console.log(now.getHours()); // 6    — Current hour (0–23)
+console.log(now.getMinutes()); // 20   — Current minutes (0–59)
+console.log(now.getSeconds()); // 18   — Current seconds (0–59)
 console.log(now.getMilliseconds()); // 0    — Milliseconds (0–999)
 ```
 
@@ -10219,8 +10241,8 @@ console.log(now.getMilliseconds()); // 0    — Milliseconds (0–999)
 // Creating a date from a string
 const releaseDate = new Date("2030-01-15");
 console.log(releaseDate.getFullYear()); // 2030
-console.log(releaseDate.getMonth());    // 0  — January (remember, 0-indexed!)
-console.log(releaseDate.getDate());     // 15
+console.log(releaseDate.getMonth()); // 0  — January (remember, 0-indexed!)
+console.log(releaseDate.getDate()); // 15
 
 // Creating a date from numbers: new Date(year, month, day, hours, minutes, seconds)
 const deployDate = new Date(2026, 4, 11, 9, 0, 0); // month 4 = May
@@ -10231,12 +10253,12 @@ console.log(deployDate.getMonth()); // 4  — May
 
 ```javascript
 const sessionStart = new Date("2026-05-11T06:00:00");
-const sessionEnd   = new Date("2026-05-11T06:30:00");
+const sessionEnd = new Date("2026-05-11T06:30:00");
 
 // Dates can be subtracted to get milliseconds
 const durationMs = sessionEnd - sessionStart;
-console.log(durationMs);               // 1800000 — 30 minutes in milliseconds
-console.log(durationMs / 1000 / 60);   // 30      — Convert to minutes
+console.log(durationMs); // 1800000 — 30 minutes in milliseconds
+console.log(durationMs / 1000 / 60); // 30      — Convert to minutes
 
 // Is the session expired?
 const now2 = new Date();
@@ -10279,10 +10301,10 @@ console.log(today.toLocaleString("en-IN")); // "11/5/2026, 6:20:18 am"
 
 JSON (JavaScript Object Notation) is the universal language of the internet. Every API request and response you work with in automation will be JSON. The `JSON` object gives you two critical tools.
 
-| Method | Direction | Use Case |
-|---|---|---|
+| Method             | Direction       | Use Case                                |
+| ------------------ | --------------- | --------------------------------------- |
 | `JSON.stringify()` | Object → String | Sending data in an API POST/PUT request |
-| `JSON.parse()` | String → Object | Reading data from an API GET response |
+| `JSON.parse()`     | String → Object | Reading data from an API GET response   |
 
 ##### `JSON.stringify()` — Object to String
 
@@ -10290,7 +10312,7 @@ JSON (JavaScript Object Notation) is the universal language of the internet. Eve
 const user = { name: "Shujauddin", role: "SDET", active: true };
 
 const jsonString = JSON.stringify(user);
-console.log(jsonString);        // '{"name":"Shujauddin","role":"SDET","active":true}'
+console.log(jsonString); // '{"name":"Shujauddin","role":"SDET","active":true}'
 console.log(typeof jsonString); // "string"
 ```
 
@@ -10300,9 +10322,9 @@ Pass `null, 2` as extra arguments to format the output with indentation — very
 
 ```javascript
 const payload = {
-    username: "testuser",
-    password: "Test@1234",
-    settings: { theme: "dark", notifications: true }
+  username: "testuser",
+  password: "Test@1234",
+  settings: { theme: "dark", notifications: true },
 };
 
 console.log(JSON.stringify(payload, null, 2));
@@ -10324,10 +10346,10 @@ console.log(JSON.stringify(payload, null, 2));
 const apiResponse = '{"status":200,"data":{"userId":42,"name":"Alice"}}';
 
 const parsed = JSON.parse(apiResponse);
-console.log(typeof parsed);          // "object"
-console.log(parsed.status);          // 200
-console.log(parsed.data.userId);     // 42
-console.log(parsed.data.name);       // "Alice"
+console.log(typeof parsed); // "object"
+console.log(parsed.status); // 200
+console.log(parsed.data.userId); // 42
+console.log(parsed.data.name); // "Alice"
 ```
 
 ##### Round-Trip: Stringify then Parse (Deep Clone Pattern)
@@ -10348,18 +10370,18 @@ console.log(deepCopy.settings.headless); // false — Clone is changed ✅
 
 ```javascript
 function safeParseJSON(str) {
-    try {
-        return JSON.parse(str);
-    } catch (error) {
-        console.log("Invalid JSON received:", error.message);
-        return null;
-    }
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    console.log("Invalid JSON received:", error.message);
+    return null;
+  }
 }
 
-const validJson   = '{"name": "Bob"}';
+const validJson = '{"name": "Bob"}';
 const invalidJson = "{ name: Bob }"; // ❌ Not valid JSON — missing quotes
 
-console.log(safeParseJSON(validJson));   // { name: "Bob" }
+console.log(safeParseJSON(validJson)); // { name: "Bob" }
 console.log(safeParseJSON(invalidJson)); // "Invalid JSON received: ..." → null
 ```
 
@@ -10374,6 +10396,7 @@ Before the Spread Operator (`...`) was introduced, developers used `Object.assig
 It takes a **target** object as the first parameter, and one or more **source** objects after that. It copies all properties from the sources into the target.
 
 #### 1. Copying an Object
+
 If you want to clone an object, you pass an empty object `{}` as the target.
 
 ```javascript
@@ -10386,6 +10409,7 @@ console.log(cloned); // { browser: "Chrome", headless: true }
 ```
 
 #### 2. Merging Multiple Objects
+
 ```javascript
 const defaultOptions = { timeout: 5000, retries: 2 };
 const userOptions = { retries: 5, log: true };
@@ -10403,6 +10427,7 @@ console.log(merged); // { timeout: 5000, retries: 5, log: true }
 This is arguably one of the greatest features ever added to JavaScript. It will save you from hundreds of framework crashes.
 
 #### The Analogy: The Missing Bridge
+
 Imagine you are driving across three connected islands.
 
 - **Without optional chaining:** You drive blindly. If the second bridge is missing, your car drives off a cliff and explodes. (Your code throws a fatal TypeError and your entire test suite stops running).
@@ -10413,6 +10438,7 @@ Imagine you are driving across three connected islands.
 `body` is just a **regular property name** — nothing special about the word itself, the same way you'd name a key `name`, `age`, or `timeout`.
 
 The name comes from **real-world HTTP API design**. When a server replies to a request, the response is split into two parts:
+
 - **Headers** — invisible metadata (status code, content type, etc.)
 - **Body** — the actual data payload you asked for
 
@@ -10431,6 +10457,7 @@ successResponse          ← outer object
 `failResponse` has **no `body` key at all**. It only has `status` and `error`. So when JavaScript tries `failResponse.body.data`, it first checks `failResponse.body` → gets `undefined` → then tries to do `undefined.data` → **CRASH**. That's exactly what `?.` prevents.
 
 #### Real SDET Example: Unpredictable API Responses
+
 When testing APIs, sometimes the server sends back a perfectly nested user object. But if the test fails, it might send back a completely different error object.
 
 If you try to read deeply nested data that isn't there, JavaScript panics.
@@ -10440,12 +10467,12 @@ const successResponse = { body: { data: { user: { name: "Shujauddin" } } } };
 const failResponse = { status: 404, error: "Not Found" }; // 'body' doesn't exist here!
 
 // ❌ THE OLD WAY (CRASHES YOUR TEST SUITE!)
-// console.log(failResponse.body.data.user.name); 
+// console.log(failResponse.body.data.user.name);
 // ERROR: Cannot read properties of undefined (reading 'data')
 
 // ✅ THE NEW WAY WITH OPTIONAL CHAINING
 // We put "?." before every dot where we think the data MIGHT be missing.
-console.log(failResponse.body?.data?.user?.name); 
+console.log(failResponse.body?.data?.user?.name);
 // Output: undefined (The test safely continues running!)
 ```
 
@@ -10458,22 +10485,23 @@ console.log(failResponse.body?.data?.user?.name);
 // --- SCENARIO: Your test calls an API that logs in a user ---
 // When login SUCCEEDS, the server returns this:
 const loginSuccess = {
-    status: 200,
-    body: {                         // ✅ 'body' EXISTS here
-        data: {
-            user: {
-                name: "Shujauddin",
-                role: "admin"
-            }
-        }
-    }
+  status: 200,
+  body: {
+    // ✅ 'body' EXISTS here
+    data: {
+      user: {
+        name: "Shujauddin",
+        role: "admin",
+      },
+    },
+  },
 };
 
 // When login FAILS, the server returns this:
 const loginFail = {
-    status: 401,
-    error: "Invalid credentials"    // ❌ 'body' does NOT exist here
-    // There is no 'body' key at all in this object
+  status: 401,
+  error: "Invalid credentials", // ❌ 'body' does NOT exist here
+  // There is no 'body' key at all in this object
 };
 
 // --- WITHOUT OPTIONAL CHAINING ---
@@ -10490,7 +10518,7 @@ console.log(loginSuccess.body?.data?.user?.name); // "Shujauddin"
 // Step 3: .user                → { name: "Shujauddin", role: "admin" }
 // Step 4: .name                → "Shujauddin" ✅
 
-console.log(loginFail.body?.data?.user?.name);    // undefined
+console.log(loginFail.body?.data?.user?.name); // undefined
 // Step 1: loginFail.body       → undefined  (no 'body' key)
 // Step 2: ?. sees undefined    → STOPS HERE immediately, returns undefined
 // Steps 3 & 4 never even run  → No crash ✅
@@ -10500,9 +10528,9 @@ console.log(loginFail.body?.data?.user?.name);    // undefined
 const userName = loginSuccess.body?.data?.user?.name;
 
 if (userName) {
-    console.log(`Login verified. Welcome, ${userName}!`); // "Login verified. Welcome, Shujauddin!"
+  console.log(`Login verified. Welcome, ${userName}!`); // "Login verified. Welcome, Shujauddin!"
 } else {
-    console.log("Login failed — no user found in the response.");
+  console.log("Login failed — no user found in the response.");
 }
 ```
 
@@ -10515,12 +10543,14 @@ It is the ultimate safety net for SDETs dealing with unpredictable API payloads 
 When you create an object from existing variables, you often find yourself typing the exact same word twice. Object Shorthand Properties is a modern JavaScript feature that removes this redundancy.
 
 #### The Analogy: The Name Tag
+
 Imagine you are attending a conference. You walk up to the registration desk holding a sticky note with your name: "Shujauddin".
 
 - **The Old Way (Repetitive):** The receptionist takes your sticky note, writes "Name:" on a proper badge, and then writes "Shujauddin" next to it. They wrote the label even though it was obvious.
 - **The New Way (Shorthand):** The receptionist sees your sticky note says "Shujauddin", assumes the label should also be "Shujauddin", and just slaps the sticky note directly onto your shirt. No double writing required.
 
 #### Real SDET Example: Building API Payloads
+
 When sending data in an API POST request (like creating a new user or a test account), you usually gather variables from different parts of your code and pack them into one JSON object.
 
 ```javascript
@@ -10531,17 +10561,17 @@ const environment = "staging";
 // ❌ THE OLD WAY (Repetitive)
 // You type the exact same word on the left (the key) and the right (the variable)
 const payloadOld = {
-    username: username,
-    password: password,
-    environment: environment
+  username: username,
+  password: password,
+  environment: environment,
 };
 
 // ✅ THE NEW WAY (Object Shorthand)
 // If the key name and the variable name are identical, just type it once!
 const payloadNew = {
-    username,
-    password,
-    environment
+  username,
+  password,
+  environment,
 };
 
 console.log(payloadNew);
@@ -10576,12 +10606,12 @@ class Car {
 }
 
 // Creating objects (instances) from the class
-let thar  = new Car();
+let thar = new Car();
 let lexus = new Car();
 
 thar.setBrand("Thar");
-thar.start();   // Output: start
-lexus.stop();   // Output: stop
+thar.start(); // Output: start
+lexus.stop(); // Output: stop
 ```
 
 > **Key Rule:** Every time you use the `new` keyword, JavaScript builds a **fresh, independent object** from the blueprint. `thar` and `lexus` are separate cars — changing one does not affect the other.
@@ -10591,15 +10621,18 @@ lexus.stop();   // Output: stop
 ### 12.2 The Constructor — The Setup Wizard 🏗️
 
 #### What is It?
+
 A `constructor()` is a **special method inside a class** that runs **automatically** the moment you create a new object with `new`. It acts as the Setup Wizard that builds the object and fills it with unique data.
 
 #### The Analogy: The Passport Machine
-| Scenario | What Happens |
-|---|---|
+
+| Scenario                  | What Happens                                                                                                                      |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Without a Constructor** | The machine spits out a blank passport. You must manually fill in the name and birthdate later — and if you forget, it's invalid. |
-| **With a Constructor** | You type the name and birthdate *before* pressing print. A completed, ready-to-use passport comes out instantly. |
+| **With a Constructor**    | You type the name and birthdate _before_ pressing print. A completed, ready-to-use passport comes out instantly.                  |
 
 #### ❌ The Pain — Without a Constructor
+
 ```javascript
 class LoginPage {
   // No setup wizard here!
@@ -10610,6 +10643,7 @@ qaPage.url = "qa.myapp.com"; // Must be added manually — easy to forget!
 ```
 
 #### ✅ The Fix — With a Constructor
+
 ```javascript
 class LoginPage {
   constructor(environmentUrl) {
@@ -10617,25 +10651,30 @@ class LoginPage {
   }
 }
 
-let qaPage   = new LoginPage("qa.myapp.com");
+let qaPage = new LoginPage("qa.myapp.com");
 let prodPage = new LoginPage("prod.myapp.com");
 ```
 
 #### Full Example with a Car
+
 ```javascript
 class Car {
   constructor(brand) {
     console.log("Creating an object...");
     this.brand = brand; // Slapping the nametag on the car
   }
-  start() { console.log("start"); }
-  stop()  { console.log("stop");  }
+  start() {
+    console.log("start");
+  }
+  stop() {
+    console.log("stop");
+  }
 }
 
-let thar  = new Car("Thar");
-let lexus = new Car();       // No brand passed
+let thar = new Car("Thar");
+let lexus = new Car(); // No brand passed
 
-console.log(thar.brand);  // "Thar"
+console.log(thar.brand); // "Thar"
 console.log(lexus.brand); // undefined
 ```
 
@@ -10647,7 +10686,8 @@ You can give your constructor a **default value** so that an object is never bor
 
 ```javascript
 class Car {
-  constructor(brand = "Unknown Car") { // Fallback value defined here
+  constructor(brand = "Unknown Car") {
+    // Fallback value defined here
     this.brand = brand;
   }
 }
@@ -10661,10 +10701,10 @@ console.log(mysteryCar.brand); // Output: "Unknown Car"
 
 ### 12.4 Properties vs. Methods
 
-| Feature | Description | Key Characteristic |
-|---|---|---|
-| **Property** | Stores information about the object | It is a **variable** (`this.name`) |
-| **Method** | Performs an action | It is a **function** (`viewData()`) |
+| Feature      | Description                         | Key Characteristic                  |
+| ------------ | ----------------------------------- | ----------------------------------- |
+| **Property** | Stores information about the object | It is a **variable** (`this.name`)  |
+| **Method**   | Performs an action                  | It is a **function** (`viewData()`) |
 
 > **Scannable Tip:** Properties do **not** have `()` at the end (`student.name`), but methods always do (`student.viewData()`).
 
@@ -10673,11 +10713,12 @@ console.log(mysteryCar.brand); // Output: "Unknown Car"
 ```javascript
 class User {
   constructor(name, email) {
-    this.name  = name;   // PROPERTY: stores the user's name
-    this.email = email;  // PROPERTY: stores the user's email
+    this.name = name; // PROPERTY: stores the user's name
+    this.email = email; // PROPERTY: stores the user's email
   }
 
-  viewData() {           // METHOD: an action the user can perform
+  viewData() {
+    // METHOD: an action the user can perform
     console.log("Website Data: Welcome to the College Portal.");
   }
 }
@@ -10685,7 +10726,7 @@ class User {
 let student1 = new User("Alice", "alice@college.edu");
 
 console.log(student1.name); // Accessing a PROPERTY (no parentheses)
-student1.viewData();        // Calling a METHOD (uses parentheses)
+student1.viewData(); // Calling a METHOD (uses parentheses)
 ```
 
 ---
@@ -10723,10 +10764,10 @@ obj.hello();
 
 The `super` keyword has **two jobs** inside a child class:
 
-| Usage | Purpose |
-|---|---|
-| `super()` | Calls the **parent's constructor** to initialize inherited properties |
-| `super.methodName()` | Calls a **specific method** from the parent class |
+| Usage                | Purpose                                                               |
+| -------------------- | --------------------------------------------------------------------- |
+| `super()`            | Calls the **parent's constructor** to initialize inherited properties |
+| `super.methodName()` | Calls a **specific method** from the parent class                     |
 
 #### Full SDET Example — `User` and `Admin`
 
@@ -10736,7 +10777,7 @@ The `super` keyword has **two jobs** inside a child class:
  */
 class User {
   constructor(name, email) {
-    this.name  = name;
+    this.name = name;
     this.email = email;
   }
 
@@ -10759,28 +10800,32 @@ class Admin extends User {
 }
 
 // --- TESTING ---
-const admin1   = new Admin("Principal Sayeeda", "principal@college.edu");
+const admin1 = new Admin("Principal Sayeeda", "principal@college.edu");
 const student1 = new User("Shujauddin", "student@college.edu");
 
-admin1.viewData();  // ✅ Inherited from User
-admin1.editData();  // ✅ Admin's own VIP skill
+admin1.viewData(); // ✅ Inherited from User
+admin1.editData(); // ✅ Admin's own VIP skill
 
 student1.viewData(); // ✅ Works fine
 // student1.editData(); // ❌ TypeError — User does not have editData!
 ```
 
 > 🔑 **Key Rules for `super()`:**
+>
 > - You **must** call `super()` before using `this` in a child constructor.
 > - JavaScript throws a `ReferenceError` if you access `this` before calling `super()`.
 > - JavaScript does **not** support multiple constructors (no constructor overloading).
 
 #### Class with Deeper Inheritance
+
 ```javascript
 class Persons {
   constructor() {
     this.species = "homo sapiens";
   }
-  eat() { console.log("eat"); }
+  eat() {
+    console.log("eat");
+  }
 }
 
 class Engineer extends Persons {
@@ -10788,12 +10833,14 @@ class Engineer extends Persons {
     super(); // Initializes 'species' from Persons
     this.branch = branch;
   }
-  work() { console.log("solve problems"); }
+  work() {
+    console.log("solve problems");
+  }
 }
 
 let eng = new Engineer("Software Engineering");
 console.log(eng.species); // "homo sapiens" (inherited)
-console.log(eng.branch);  // "Software Engineering"
+console.log(eng.branch); // "Software Engineering"
 ```
 
 **So… what exactly is `eng` here?**
@@ -10806,11 +10853,11 @@ Here's how to think about that one line:
 let eng = new Engineer("Software Engineering");
 ```
 
-| Part | What it is | Analogy |
-|---|---|---|
-| `Engineer` | The **blueprint** (class) | The paper instructions for building an engineer |
-| `new` | The **factory button** | You pressed "BUILD" to manufacture a real object |
-| `eng` | The **instance** | The finished, physical object that popped out of the factory |
+| Part       | What it is                | Analogy                                                      |
+| ---------- | ------------------------- | ------------------------------------------------------------ |
+| `Engineer` | The **blueprint** (class) | The paper instructions for building an engineer              |
+| `new`      | The **factory button**    | You pressed "BUILD" to manufacture a real object             |
+| `eng`      | The **instance**          | The finished, physical object that popped out of the factory |
 
 `Engineer` on its own is just a set of instructions — it's not real and holds no data. The moment you press `new`, JavaScript actually builds a real object in memory, fills it with data from the constructor, and hands it to you inside `eng`.
 
@@ -10822,10 +10869,9 @@ console.log(eng);
 ```
 
 Notice two things in that output:
+
 1. It says `Engineer` at the start — that's the blueprint it was built from.
 2. It shows both `species` (inherited from `Persons` via `super()`) and `branch` (its own property). Both live inside the same single object, `eng`.
-
-
 
 ---
 
@@ -10835,12 +10881,12 @@ Notice two things in that output:
 
 When you write `let myCar = new Car("Thar");`, the `new` keyword does **4 things** behind the scenes in a fraction of a millisecond:
 
-| Step | What Happens |
-|---|---|
-| **1. Creates a blank object** | Makes a new empty object `{}` in memory |
-| **2. Points `this`** | Tells `this` inside the constructor to point at that new empty object |
-| **3. Runs the constructor** | Executes your `constructor()` to fill the object with data |
-| **4. Returns the object** | Hands the finished object back to your variable (`myCar`) |
+| Step                          | What Happens                                                          |
+| ----------------------------- | --------------------------------------------------------------------- |
+| **1. Creates a blank object** | Makes a new empty object `{}` in memory                               |
+| **2. Points `this`**          | Tells `this` inside the constructor to point at that new empty object |
+| **3. Runs the constructor**   | Executes your `constructor()` to fill the object with data            |
+| **4. Returns the object**     | Hands the finished object back to your variable (`myCar`)             |
 
 #### What Happens if You Forget `new`?
 
@@ -10867,6 +10913,7 @@ let car2 = Car("Lexus");
 **Method chaining** lets you call multiple methods on the same object in a **single line**. For this to work, every intermediate method must `return this` to pass the object forward.
 
 #### The Analogy: The Drive-Thru Window
+
 Imagine you are holding a tray (the object `this`). Window 1 adds a Burger, then **hands the tray back** (`return this`). Because you have the tray, you can go to Window 2. If Window 1 forgets to hand the tray back, you arrive at Window 2 empty-handed and the system crashes.
 
 #### SDET Example — Browser Setup Chain
@@ -10907,10 +10954,10 @@ test.setBrowser("Chrome").setURL("google.com").startTest();
 
 A **static method** is a utility tool attached directly to the **class blueprint itself** — not to any individual object. You do **not** need the `new` keyword to use it.
 
-| Type | How to Call | Requires `new`? |
-|---|---|---|
-| Normal Method | `instance.login()` | ✅ Yes — must build an object first |
-| Static Method | `User.generateRandomPassword()` | ❌ No — call directly on the class |
+| Type          | How to Call                     | Requires `new`?                     |
+| ------------- | ------------------------------- | ----------------------------------- |
+| Normal Method | `instance.login()`              | ✅ Yes — must build an object first |
+| Static Method | `User.generateRandomPassword()` | ❌ No — call directly on the class  |
 
 ```javascript
 class User {
@@ -10944,21 +10991,432 @@ player1.login();
 
 ### 12.10 Classes — Quick Reference Summary
 
-| Concept | Syntax | Purpose |
-|---|---|---|
-| **Define a class** | `class Car { }` | Create a blueprint |
-| **Constructor** | `constructor(args) { this.x = args; }` | Initialize an object on creation |
-| **Default parameter** | `constructor(brand = "Unknown") { }` | Prevent `undefined` values |
-| **Create an instance** | `let obj = new Car("Thar")` | Build an object from the blueprint |
-| **Property** | `this.name = value` | Store data on the object |
-| **Method** | `drive() { console.log("vroom"); }` | Add behaviour to the object |
-| **Inheritance** | `class Admin extends User { }` | Child class gets parent's skills |
-| **super()** | `super(args)` | Call parent's constructor first |
-| **super.method()** | `super.viewData()` | Call parent's specific method |
-| **Method chaining** | `return this` inside a method | Enable chaining multiple calls |
-| **Static method** | `static toolName() { }` | Tool on the class, no `new` needed |
+| Concept                | Syntax                                 | Purpose                            |
+| ---------------------- | -------------------------------------- | ---------------------------------- |
+| **Define a class**     | `class Car { }`                        | Create a blueprint                 |
+| **Constructor**        | `constructor(args) { this.x = args; }` | Initialize an object on creation   |
+| **Default parameter**  | `constructor(brand = "Unknown") { }`   | Prevent `undefined` values         |
+| **Create an instance** | `let obj = new Car("Thar")`            | Build an object from the blueprint |
+| **Property**           | `this.name = value`                    | Store data on the object           |
+| **Method**             | `drive() { console.log("vroom"); }`    | Add behaviour to the object        |
+| **Inheritance**        | `class Admin extends User { }`         | Child class gets parent's skills   |
+| **super()**            | `super(args)`                          | Call parent's constructor first    |
+| **super.method()**     | `super.viewData()`                     | Call parent's specific method      |
+| **Method chaining**    | `return this` inside a method          | Enable chaining multiple calls     |
+| **Static method**      | `static toolName() { }`                | Tool on the class, no `new` needed |
 
 ---
 
+### JSON
 
+**JSON** stands for **JavaScript Object Notation**.
 
+- It is structured, so it is independent of any programming language — Python, Java, and JavaScript can all read it.
+- It is lightweight, which means it transfers quickly over the internet.
+- It is based on JavaScript object syntax, so it looks very familiar to JS developers.
+- It is used to **store and transfer data** between a client and a server.
+
+---
+
+#### Where is JSON used?
+
+- **API responses and requests** — REST APIs and GraphQL APIs send and receive data in JSON format.
+- **Config files** — Tools like Playwright, ESLint, and npm use `package.json` / config JSON files.
+- **Data storage** — Web apps and mobile apps store user preferences and settings as JSON.
+
+---
+
+#### The Two Core Scenarios
+
+JSON is used in two primary scenarios in JavaScript (and the web at large):
+
+1. **Parsing JSON strings:** JavaScript code needs to interpret a JSON-formatted string (common in API responses) and convert it into a live JavaScript object that the code can actually use (e.g., access properties like `user.name`).
+
+2. **Stringifying JavaScript objects:** JavaScript code needs to take an existing JavaScript object (e.g., user data) and convert it into a string so it can be sent over a network (e.g., posted to an API) or stored in text-based storage (like `localStorage`).
+
+This conversion process is fundamental for communication between web browsers and servers.
+
+---
+
+#### Basic Structure
+
+- Data is in **key-value pairs**.
+- Keys are **always strings in double quotes**.
+- Values can be: `string`, `number`, `boolean`, `array`, `object`, or `null`.
+
+```json
+{
+  "name": "Shujauddin",
+  "age": 30,
+  "isStudent": false,
+  "courses": ["API Testing", "Web UI Testing"],
+  "address": {
+    "street": "123 Tech Park Road",
+    "city": "Bangalore",
+    "pincode": "560030"
+  },
+  "test": null
+}
+```
+
+---
+
+#### Accessing JSON Data
+
+JSON data is stored in an object, so we can access it using **dot notation** or **bracket notation**.
+
+```javascript
+const json = {
+  name: "Shujauddin",
+  courses: ["API Testing", "Web UI Testing"]
+};
+
+console.log(json.name);        // Shujauddin
+console.log(json["name"]);     // Shujauddin
+console.log(json.courses[0]);  // API Testing
+```
+
+---
+
+#### Nested JSON
+
+JSON can contain objects inside objects, and arrays of objects.
+
+```json
+{
+  "name": "Shujauddin",
+  "address": {
+    "street": "123 Tech Park Road",
+    "city": "Bangalore",
+    "pincode": "560030"
+  },
+  "courses": [
+    {
+      "name": "API Testing",
+      "duration": "2 months"
+    },
+    {
+      "name": "Web UI Testing",
+      "duration": "2 months"
+    }
+  ]
+}
+```
+
+```javascript
+// Accessing nested data
+console.log(data.address.city);        // Bangalore
+console.log(data.courses[0].name);     // API Testing
+console.log(data.courses[1].duration); // 2 months
+```
+
+---
+
+#### JSON Rules
+
+1. JSON is **case sensitive** — `"Name"` and `"name"` are different keys.
+2. Keys **must be in double quotes** — single quotes are not allowed.
+3. Keys and values are separated by a **colon** `:`
+4. Key-value pairs are separated by **commas** `,`
+5. Strings are in **double quotes**.
+6. Numbers are **not** in quotes.
+7. Booleans are **not** in quotes (`true` / `false`).
+8. **No trailing commas** — the last key-value pair must not end with a comma.
+9. **No comments** are allowed inside JSON.
+10. Allowed data types: `string`, `number`, `boolean`, `array`, `object`, `null`
+
+```json
+// ❌ INVALID JSON — trailing comma and comment
+{
+  "name": "Shujauddin", // this comment breaks JSON
+  "age": 30,            // trailing comma below ↓
+}
+
+// ✅ VALID JSON
+{
+  "name": "Shujauddin",
+  "age": 30
+}
+```
+
+---
+
+#### JSON vs JavaScript Object — Key Differences
+
+| Feature        | JSON                              | JS Object                          |
+| -------------- | --------------------------------- | ---------------------------------- |
+| **Key quotes** | Keys must be in `"double quotes"` | Keys can be without quotes         |
+| **Strings**    | Must use `"double quotes"`        | Can use `'single'` or `"double"`   |
+| **Comments**   | ❌ Not allowed                    | ✅ Allowed                         |
+| **Functions**  | ❌ Not allowed as values          | ✅ Allowed as values               |
+| **Trailing ,** | ❌ Not allowed                    | ✅ Allowed (in modern JS)          |
+| **Purpose**    | Strict data exchange format       | Flexible, general programming tool |
+
+```javascript
+// JS Object — keys without quotes, single quotes for strings, functions allowed
+const user = {
+  name: 'Shujauddin',   // single quote ✅ in JS
+  greet() { return "hello"; }  // function ✅ in JS
+};
+
+// JSON — strict format, always double quotes, no functions
+// {"name": "Shujauddin"}
+```
+
+---
+
+#### `JSON.parse()` — Convert JSON String → JS Object
+
+`JSON.parse()` is used to **convert a JSON string into a JavaScript object** so you can actually use the data in your code.
+
+Think of it like opening a sealed envelope (string) and taking out the letter (object) you can read and work with.
+
+```javascript
+const jsonString = `{
+  "name": "Shujauddin",
+  "age": 30,
+  "isStudent": true
+}`;
+
+const user = JSON.parse(jsonString);
+
+console.log(user.name);        // Shujauddin
+console.log(user.age);         // 30
+console.log(typeof jsonString); // string  ← before parse
+console.log(typeof user);       // object  ← after parse
+```
+
+---
+
+#### `JSON.stringify()` — Convert JS Object → JSON String
+
+`JSON.stringify()` is used to **convert a JavaScript object into a JSON string** so it can be sent over the network or stored as text.
+
+Think of it like putting a letter (object) into a sealed envelope (string) ready to be sent.
+
+```javascript
+// This is a JS object
+const todo = {
+  fullName: "Shujauddin",
+  age: 23,
+};
+
+console.log(todo.age); // 23
+
+// Convert JS object to JSON string using JSON.stringify
+const obj_to_json = JSON.stringify(todo);
+console.log(obj_to_json);
+// Output: {"fullName":"Shujauddin","age":23}
+```
+
+---
+
+#### `JSON.stringify()` with Formatting (Spacing)
+
+By default, `JSON.stringify()` gives you one compact line. You can pass a **space** argument to make it look neat and readable — great for logging or saving to files.
+
+```javascript
+const data = {
+  name: "Shujauddin",
+  role: "SDET",
+  skills: ["Playwright", "API Testing"]
+};
+
+// 2 spaces indent makes it human-readable
+const prettyJson = JSON.stringify(data, null, 2);
+console.log(prettyJson);
+/*
+{
+  "name": "Shujauddin",
+  "role": "SDET",
+  "skills": [
+    "Playwright",
+    "API Testing"
+  ]
+}
+*/
+```
+
+---
+
+#### `JSON.stringify()` with Replacer
+
+The **replacer** is the second argument to `JSON.stringify()`. It lets you control **which keys to include** in the output. You can pass an array of key names to keep only those.
+
+```javascript
+const user = {
+  name: "Shujauddin",
+  password: "secret123",  // sensitive — don't want this in output!
+  role: "SDET",
+  age: 30
+};
+
+// Only include "name" and "role" — skip "password" and "age"
+const safeJson = JSON.stringify(user, ["name", "role"], 2);
+console.log(safeJson);
+/*
+{
+  "name": "Shujauddin",
+  "role": "SDET"
+}
+*/
+```
+
+> 💡 **SDET Use-case:** When logging API payloads, use the replacer to strip out sensitive fields like passwords and tokens before logging.
+
+---
+
+#### `JSON.parse()` with Reviver
+
+The **reviver** is an optional second argument to `JSON.parse()`. It is a function that runs on **every key-value pair** as the JSON is being parsed. You can use it to transform values — for example, converting date strings into actual `Date` objects.
+
+```javascript
+const jsonString = `{
+  "name": "Shujauddin",
+  "startDate": "2024-01-15",
+  "score": 95
+}`;
+
+const result = JSON.parse(jsonString, (key, value) => {
+  // If the key is "startDate", convert the string to a real Date object
+  if (key === "startDate") {
+    return new Date(value);
+  }
+  return value; // for all other keys, return the value unchanged
+});
+
+console.log(result.name);            // Shujauddin
+console.log(result.score);           // 95
+console.log(result.startDate);       // Mon Jan 15 2024 ... (a real Date object)
+console.log(typeof result.startDate); // object
+```
+
+---
+
+#### JSON in API Responses
+
+In real-world SDET work, the most common place you'll see JSON is in **API responses**. When you call an API, the server sends back JSON as a string, and you parse it to read the data.
+
+```javascript
+// Simulating an API response (fetch returns a promise)
+fetch("https://jsonplaceholder.typicode.com/users/1")
+  .then(response => response.json()) // .json() calls JSON.parse() internally
+  .then(data => {
+    console.log(data.name);    // Leanne Graham
+    console.log(data.email);   // Sincere@april.biz
+    console.log(data.address.city); // Gwenborough
+  });
+```
+
+> 💡 The `.json()` method on a `fetch` response is essentially calling `JSON.parse()` for you automatically.
+
+---
+
+#### Reading JSON Files in Node.js
+
+In Node.js, you can read a local JSON file using `require()` (synchronous) or `fs.promises.readFile()` (asynchronous).
+
+```javascript
+// Method 1: Using require() — simplest way, synchronous
+const config = require("./config.json");
+console.log(config.baseUrl); // reads and parses automatically
+
+// Method 2: Using fs module — async, more control
+const fs = require("fs");
+
+fs.readFile("./data.json", "utf-8", (err, data) => {
+  if (err) throw err;
+  const parsed = JSON.parse(data);
+  console.log(parsed.name);
+});
+```
+
+---
+
+#### Reading JSON Files in the Browser
+
+In the browser, there is no `fs` module. Instead, you use the `fetch` API to load a JSON file from the server.
+
+```javascript
+// In the browser — fetch a JSON file
+fetch("./data.json")
+  .then(response => response.json())  // parse the JSON automatically
+  .then(data => {
+    console.log(data.name); // use the data
+  })
+  .catch(error => {
+    console.error("Failed to load JSON:", error);
+  });
+```
+
+---
+
+#### What Happens When JSON is Not Valid
+
+If you try to `JSON.parse()` an invalid JSON string, JavaScript throws a **`SyntaxError`**. Always wrap `JSON.parse()` in a `try...catch` when the input comes from an external source.
+
+```javascript
+const badJson = `{ name: "Shujauddin" }`; // ❌ key is missing double quotes
+
+try {
+  const result = JSON.parse(badJson);
+} catch (error) {
+  console.error("Invalid JSON:", error.message);
+  // Output: Invalid JSON: Expected property name or '}' in JSON...
+}
+```
+
+> 💡 **SDET Tip:** Always use `try...catch` when parsing API responses in test automation. A bad API response can crash your tests if the JSON is malformed.
+
+---
+
+#### Deep Copy vs Shallow Copy using JSON
+
+One practical use of `JSON.stringify` + `JSON.parse` together is to create a **deep copy** of a nested object — meaning the copy is completely independent, with no shared references inside.
+
+**Shallow Copy** (using spread `...`) only copies the top level. Nested objects are still shared.
+
+```javascript
+const original = { name: "Shujauddin", address: { city: "Bangalore" } };
+
+// Shallow copy — top level is independent, but nested object is STILL shared
+const shallow = { ...original };
+shallow.address.city = "Mumbai";
+
+console.log(original.address.city); // "Mumbai" ← CHANGED! 😱 (shared reference)
+```
+
+**Deep Copy** (using JSON stringify + parse) creates a fully independent clone at all levels.
+
+```javascript
+const original = { name: "Shujauddin", address: { city: "Bangalore" } };
+
+// Deep copy — completely independent at ALL levels
+const deep = JSON.parse(JSON.stringify(original));
+deep.address.city = "Mumbai";
+
+console.log(original.address.city); // "Bangalore" ← SAFE! ✅ (independent copy)
+```
+
+> ⚠️ **Limitation:** The JSON deep copy trick does **not** work if your object contains `functions`, `undefined`, `Date` objects, or circular references — these will be lost or converted. For those cases, use `structuredClone()` (modern Node.js/browser) or a library like Lodash.
+
+```javascript
+// Modern alternative — structuredClone() handles Date objects correctly
+const original = { name: "Shujauddin", joined: new Date("2024-01-15") };
+const copy = structuredClone(original);
+
+console.log(copy.joined instanceof Date); // true ✅ — Date preserved correctly
+```
+
+---
+
+#### JSON Methods — Quick Reference
+
+| Method                          | What it does                                | Output type  |
+| ------------------------------- | ------------------------------------------- | ------------ |
+| `JSON.parse(str)`               | Converts JSON string → JS object            | `object`     |
+| `JSON.stringify(obj)`           | Converts JS object → JSON string            | `string`     |
+| `JSON.stringify(obj, null, 2)`  | Converts with 2-space indentation (pretty)  | `string`     |
+| `JSON.stringify(obj, ["key"])`  | Only includes specified keys (replacer)     | `string`     |
+| `JSON.parse(str, reviverFn)`    | Parses and transforms values using a function | `object`   |
+| `structuredClone(obj)`          | Modern built-in deep clone (handles Dates)  | `object`     |
