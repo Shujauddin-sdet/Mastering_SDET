@@ -11730,393 +11730,266 @@ Instruction 2 (after 2 seconds)
 
 ## 27. Callbacks in JavaScript
 
-> **What is a Callback?**
-> A callback is a function that is passed as an argument to another function, and is executed after some operation has been performed.
-> Any function passed inside the parentheses of another function is a callback.
+### 27.1 What is a Callback?
+A callback is a function that you give to another function, and that other function calls (executes) your function later when something happens.
+
+```javascript
+// You write this function
+function ringBell() {
+  console.log("Ding dong! Pizza is ready!");
+}
+
+// You give it to the waiter (setTimeout)
+setTimeout(ringBell, 5000); // after 5 seconds, ringBell runs
+
+console.log("Ordering pizza..."); // this runs immediately
+```
+**Output:**
+
+```text
+Ordering pizza...
+(5 seconds later) Ding dong! Pizza is ready!
+```
+See? `ringBell` is the callback. It runs later, not right away.
 
 ---
 
-### 27.1 Basic Callback Concept
+### 27.2 Why Do We Need Callbacks?
+JavaScript does things one at a time (single-threaded). But some tasks take time:
 
-A callback function is simply a function passed into another function as an argument, which is then invoked inside the outer function.
+*   Reading a file
+*   Fetching data from the internet
+*   Waiting for a user to click a button
 
-```javascript
-// Define a function that accepts another function as an argument
-function placeOrder(item, callback) {
-    console.log("Placing order for: " + item);
-    callback(); // Execute the callback function
-}
-
-// Define the callback function
-function orderComplete() {
-    console.log("Order placed successfully!");
-}
-
-// Call the function with the callback
-placeOrder("Burger", orderComplete);
-```
-
-In the example above, `orderComplete` is the callback function.
-
-**Why?** Because a "callback" isn't a special type of code; it is just a normal function that gets passed into another function to be used later. Because you handed `orderComplete` over to `placeOrder`, it officially became a "callback".
-
-#### 📝 Line-by-Line Breakdown
-
-Here is exactly what the computer is thinking as it reads your code top-to-bottom:
-
-**1. The Setup (The Main Function)**
-
-```javascript
-function placeOrder(item, callback) {
-```
-**What it means:** "I am creating a machine called `placeOrder`. To run this machine, you must give me two things: an `item` (like a name of food), and a `callback` (a set of instructions to run when I am finished)."
-
-**2. The Main Job**
-
-```javascript
-    console.log("Placing order for: " + item);
-```
-**What it means:** "I am doing my main job right now. I am printing out the food item you asked for."
-
-**3. Executing the Callback**
-
-```javascript
-    callback(); 
-}
-```
-**What it means:** "My main job is officially done! Now, I will take those instructions you gave me (the `callback`) and run them right now." (Notice the `()` here? This is where the trigger is actually pulled).
-
-**4. Creating the Instructions**
-
-```javascript
-function orderComplete() {
-    console.log("Order placed successfully!");
-}
-```
-**What it means:** "I am creating a separate set of instructions called `orderComplete`. It just prints a success message. I am NOT running this right now. I am just saving it for later."
-
-**5. The Action (Putting it all together)**
-
-```javascript
-placeOrder("Burger", orderComplete);
-```
-**What it means:** "Okay, let's actually run the machine! I am passing in `"Burger"` as the `item`. I am also handing over the `orderComplete` instructions. Notice there are no `()` after `orderComplete`! I am just handing over the instructions, I am not pulling the trigger."
+If JavaScript waited, the whole page would freeze. So instead, we say: "Hey, do this slow thing, and when you finish, CALL BACK this function".
 
 ---
 
-### 27.2 Three Ways to Define Callbacks
-
-#### **Way 1: Named Function as Callback**
-
+### 27.3 How to Write a Callback (Step by Step)
+**Step 1: Write a normal function**
 ```javascript
-function placeOrder(item, callback) {
-    console.log("Placing order");
-    callback();
+function greet() {
+  console.log("Hello there!");
 }
-
-function print() {
-    console.log("Done with the order");
-}
-
-placeOrder("Burger", print);
-// Output:
-// Placing order
-// Done with the order
 ```
 
-#### **Way 2: Anonymous Function as Callback**
-
+**Step 2: Give it to another function that expects a callback**
 ```javascript
-placeOrder("Burger", function () {
-    console.log("Anonymous function - I'm also a function without a name!");
-});
-// Output:
-// Placing order
-// Anonymous function - I'm also a function without a name!
+setTimeout(greet, 2000); // calls greet after 2 seconds
 ```
 
-#### **Way 3: Arrow Function as Callback**
+You can also write the callback directly inside (anonymous function):
 
 ```javascript
-placeOrder("Burger", () => {
-    console.log("Arrow function - I'm a callback too!");
-});
-// Output:
-// Placing order
-// Arrow function - I'm a callback too!
-```
-
----
-
-### 27.3 Callbacks with Parameters
-
-Callbacks can receive parameters from the outer function:
-
-```javascript
-function runTest(testName, callback) {
-    let status = "PASS";
-    callback(testName, status); // Pass parameters to the callback
-}
-
-runTest("Login Test", function (name, result) {
-    console.log(name + " → " + result);
-});
-// Output: Login Test → PASS
-```
-
----
-
-### 27.4 Synchronous Callbacks — forEach()
-
-The `forEach()` method uses callbacks to iterate over arrays:
-
-```javascript
-let testResults = ["PASS", "FAIL", "PASS", "SKIP"];
-
-testResults.forEach(function (result, index) {
-    console.log("Test " + index + " → " + result);
-});
-
-console.log("All done"); // Prints LAST because forEach is synchronous
-// Output:
-// Test 0 → PASS
-// Test 1 → FAIL
-// Test 2 → PASS
-// Test 3 → SKIP
-// All done
-```
-
-#### 🐛 Real QA Example — Logging a Bug List
-
-```javascript
-// ─────────────────────────────────────────────────────────────────
-// SYNC CALLBACK — forEach
-//
-// Step 1: We create an array that holds three bug names.
-//         An array is just a list. Each item sits at a position
-//         called an "index". The first item is at index 0.
-// ─────────────────────────────────────────────────────────────────
-let bugs = ["UI glitch", "API Timeout", "Wrong redirect"];
-
-// Step 2: We call forEach on the bugs array.
-//         forEach goes through EVERY item in the list, one at a time,
-//         and runs the function we hand to it for each item.
-//
-//         The function receives two things automatically:
-//           • bug   → the actual value at this position  (e.g. "UI glitch")
-//           • i     → the index / position number        (e.g. 0, 1, 2)
-bugs.forEach(function (bug, i) {
-
-  // Step 3: (i + 1) turns the index into a human-friendly bug number.
-  //         Index starts at 0, but bug numbers start at 1,
-  //         so we add 1 to make it readable: Bug #1, Bug #2, Bug #3.
-  console.log("Bug #" + (i + 1) + ": " + bug);
-
-});
-
-// Step 4: forEach is SYNCHRONOUS — it finishes the entire loop
-//         before JavaScript moves past it. So this line runs AFTER
-//         every bug has been printed, never before.
-//
-//         Note: bugs.length gives the total count of items in the array.
-//               (It was bugs.lenght before — that typo would return
-//                'undefined' because JavaScript would not know what
-//                .lenght means. Always double-check .length!)
-console.log("Total bugs: " + bugs.length);
-
-// ─────────────────────────────────────────────────────────────────
-// Output:
-// Bug #1: UI glitch
-// Bug #2: API Timeout
-// Bug #3: Wrong redirect
-// Total bugs: 3
-// ─────────────────────────────────────────────────────────────────
-```
-
-> 💡 **SDET Tip:** In test automation, you can loop over a list of failed test cases with `forEach` and log each one before your suite finishes — all synchronously, in order.
-
----
-
-### 27.5 Asynchronous Callbacks — setTimeout()
-
-Callbacks are often used for asynchronous operations like delays, API calls, and file reads:
-
-```javascript
-console.log("Test 1: started");
-
-setTimeout(function () {
-    console.log("Test 2: API response received!");
+setTimeout(function() {
+  console.log("Hello there!");
 }, 2000);
+```
 
-console.log("Test 3: Moving to next test");
+Or with an arrow function:
 
-// Output:
-// Test 1: started
-// Test 3: Moving to next test
-// Test 2: API response received! (after 2 seconds)
+```javascript
+setTimeout(() => {
+  console.log("Hello there!");
+}, 2000);
 ```
 
 ---
 
-### 27.6 Real QA Scenario — E2E Login Flow (Callback Hell ⚠️)
+### 27.4 Callbacks with Parameters
+Sometimes the callback needs data. Example: reading a file.
 
 ```javascript
-// Each step is dependent on the previous step — this is callback hell!
-
-function openBrowser(callback) {
-    console.log("Opening the browser");
-    setTimeout(function () {
-        console.log("Step 1 - Browser started");
-        callback();
-    }, 500);
+function processData(data) {
+  console.log("The data is:", data);
 }
 
-function goToLoginPage(callback) {
-    setTimeout(function () {
-        console.log("Step 2: Login page loaded");
-        callback();
-    }, 500);
-}
-
-function enterCredentials(callback) {
-    setTimeout(function () {
-        console.log("Step 3: Credentials entered");
-        callback();
-    }, 500);
-}
-
-function clickLogin(callback) {
-    setTimeout(function () {
-        console.log("Step 4: Login button clicked");
-        callback();
-    }, 500);
-}
-
-// 😱 THIS IS CALLBACK HELL — Deeply nested callbacks!
-openBrowser(function () {
-    goToLoginPage(function () {
-        enterCredentials(function () {
-            clickLogin(function () {
-                console.log("✅ Test Complete!");
-            })
-        })
-    })
-})
-
-// Output (after 2 seconds):
-// Opening the browser
-// Step 1 - Browser started
-// Step 2: Login page loaded
-// Step 3: Credentials entered
-// Step 4: Login button clicked
-// ✅ Test Complete!
+// Imagine a fake "readFile" function
+readFile("myfile.txt", processData);
 ```
-
-> **The Problem:** As you add more steps, the code becomes increasingly hard to read and maintain. This is known as **"Callback Hell"** or **"Pyramid of Doom"**. 
-> **The Solution:** Use **Promises** or **async/await** to flatten the structure.
+`readFile` will call `processData` and pass the file content as `data`.
 
 ---
 
-### 27.7 Key Takeaways
+### 27.5 Real Example: Button Click (Browser)
+```html
+<button id="myButton">Click me</button>
 
-✅ Callbacks are functions passed as arguments to other functions  
-✅ Callbacks execute **after** a specific operation completes  
-✅ Great for simple tasks, but can lead to "Callback Hell" with multiple nested calls  
-✅ For complex async flows, use **Promises** or **async/await** instead  
-✅ Commonly used in: `forEach()`, `setTimeout()`, `setInterval()`, event listeners, and API calls
+<script>
+  // This callback runs when the button is clicked
+  document.getElementById("myButton").addEventListener("click", function() {
+    alert("Button was clicked!");
+  });
+</script>
+```
+You gave a function to `addEventListener`. It calls your function every time the button is clicked.
 
-### 27.8 Callback Hell
+---
 
-**Callback Hell** is a situation where you have too many nested callbacks, forming a deep pyramid structure — also called the **"Pyramid of Doom"**. It makes code very hard to read and maintain because of the deep indentation.
+### 27.6 Callbacks in Array Methods
+You already used callbacks without knowing! `forEach`, `map`, `filter` all take callbacks.
 
-**Example — Callback Hell:**
+**`forEach` – do something with each item**
+```javascript
+const fruits = ["apple", "banana", "mango"];
+
+fruits.forEach(function(fruit) {
+  console.log("I like " + fruit);
+});
+```
+
+**`map` – transform each item**
+```javascript
+const numbers = [1, 2, 3];
+const doubled = numbers.map(function(num) {
+  return num * 2;
+});
+console.log(doubled); // [2, 4, 6]
+```
+
+**`filter` – keep only items that pass a test**
+```javascript
+const ages = [12, 18, 21, 15, 30];
+const adults = ages.filter(function(age) {
+  return age >= 18;
+});
+console.log(adults); // [18, 21, 30]
+```
+In each case, you give a function (callback) that says what to do with each element.
+
+---
+
+### 27.7 How to Identify a Callback (Easy Rules)
+A callback is simply a function passed as an argument to another function.
+
+**Rule 1: You give the function to another function.**
+*   You don't call it yourself (no parentheses `()` after it).
+*   The other function will call it for you.
+
+**Rule 2: It's usually inside the parentheses of another function call.**
+```javascript
+someFunction(   function() { ... }   )
+//                ↑ this is the callback
+```
+
+**Rule 3: In `forEach`, `map`, `filter`, etc., the callback runs once for each item in the array.**
+
+#### ✅ Step‑by‑Step Breakdown of `forEach`
+```javascript
+// 1. forEach is a method that expects ONE argument: a function.
+fruits.forEach(        ???        );
+
+// 2. You write the function right there:
+fruits.forEach(  function(fruit) { ... }  );
+
+// 3. That function is the callback.
+```
+When you run the code, JavaScript does this internally:
 
 ```javascript
-function getData(dataId, getNextData) {
-  setTimeout(() => {
-    console.log("data", dataId);
-    if (getNextData) {
-      getNextData(); // calls the next step
-    }
-  }, 1000);
+// Pseudo‑code (how forEach might work internally)
+function fakeForEach(callback) {
+  for (let i = 0; i < this.length; i++) {
+    const item = this[i];
+    callback(item);   // <<< it CALLS your function here
+  }
+}
+```
+So `forEach` calls your function for every fruit. That's why it's called a callback – you give it, and it calls back to you.
+
+#### 🧪 Compare with a Normal Function Call
+```javascript
+function sayHi() {
+  console.log("Hi!");
 }
 
-// 😱 Callback Hell — each step is nested deeper than the last
-getData(1, () => {
-  console.log("getting data -> 2 ...");
-  getData(2, () => {
-    console.log("getting data -> 3 ...");
-    getData(3, () => {
-      console.log("getting data -> 4 ...");
-      // Imagine 10 more steps here... 😱
+// Without parentheses – nothing prints now
+setTimeout(sayHi, 1000);    // "Hi!" appears after 1 sec
+
+// With parentheses – prints immediately
+setTimeout(sayHi(), 1000);   // "Hi!" prints now, then setTimeout gets undefined (no effect)
+```
+Try it in your console. You'll see the difference.
+
+**The biggest clue:** If you see a function name inside another function's parentheses without `()` after it, it's a callback.
+
+#### 🎯 Final Simple Rule
+| You write | Meaning |
+|---|---|
+| `myFunction` | "Here's the function. Use it later." |
+| `myFunction()` | "Run this function right now!" |
+
+#### 🚀 Quick Test – Identify the Callback
+```javascript
+const numbers = [1, 2, 3];
+numbers.filter(num => num > 1);
+```
+**Answer:** The callback is `num => num > 1` – it's passed to `filter`.
+
+**🎓 Remember:**
+*   **Callback** = a function you give to another function.
+*   You do **not** put `()` after it when you give it.
+*   The other function will call it when ready.
+
+---
+
+### 27.8 Callback Hell (The Pyramid of Doom)
+Imagine you want to:
+1. Get a user from a database (takes time)
+2. Then get their orders (needs user ID)
+3. Then get details of the first order
+
+With callbacks, it looks like this (the famous "pyramid of doom"):
+
+```javascript
+getUser(function(user) {
+  getOrders(user.id, function(orders) {
+    getOrderDetails(orders[0].id, function(details) {
+      console.log(details);
     });
   });
 });
 ```
-
-> ⚠️ **The Problem:** Each nested level makes the code harder to read. Adding error handling makes it even worse.  
-> ✅ **The Solution:** Use **Promises** or **async/await** to flatten the structure.
+Hard to read, hard to fix errors. This looks like a triangle. That's why later we learn Promises and async/await to flatten it.
 
 ---
 
-### 27.9 Callback Hell in a Loop Scenario
+### 27.9 Summary 
+*   A callback is a function you give to someone else.
+*   That someone else calls it back later.
+*   It's like giving your phone number to a friend: "Call me when you're ready".
 
-> 📌 **Note:** We will solve this same problem using `async/await` in an upcoming section. For now, just understand what Callback Hell looks like in a loop.
+We use callbacks for waiting – waiting for time to pass, waiting for a click, waiting for data from the internet.
 
-#### ⏳ The "Timer Trap" — Why All Timers Fire at Once
+---
 
-When you put a `setTimeout` inside a loop, JavaScript **does not pause the loop**. Instead, it instantly schedules all the timers at once. If you give them all the same wait time (e.g., `2000ms`), they will all fire and print at **the exact same moment**.
-
-**The Fix — The Math Trick:** Multiply the wait time by the loop's current index to stagger the alarms.
-
+### 27.10 🎮 Practice Exercise 
 ```javascript
-let testResults = ["Pass", "fail", "Pass", "fail", "Pass", "fail"];
+// 1. Simple callback with setTimeout
+setTimeout(() => {
+  console.log("3 seconds later!");
+}, 3000);
 
-console.log("Starting the test results printing...\n");
+// 2. Callback with array forEach
+const colors = ["red", "green", "blue"];
+colors.forEach((color) => {
+  console.log(color + " is a nice color.");
+});
 
-// Loop through the array
-// 'result' is the value ("Pass"), 'index' is the position (0, 1, 2...)
-testResults.forEach(function (result, index) {
+// 3. Your own function that accepts a callback
+function doHomework(subject, callback) {
+  console.log(`Starting my ${subject} homework.`);
+  callback(); // this calls the callback
+}
 
-  // setTimeout is placed INSIDE the loop
-  setTimeout(function () {
-    console.log("Test " + index + " -> " + result);
-
-  // 👇 THE MATH TRICK: multiply index by 2000 to stagger each timer
-  }, index * 2000);
-
+doHomework("math", function() {
+  console.log("Finished homework!");
 });
 ```
 
-#### 🧠 Why This Works — The Math Breakdown
-
-By multiplying the index by `2000`, each timer gets a unique delay:
-
-| Loop (Index) | Calculation   | Waits      |
-|---|---|---|
-| Index 0      | 0 × 2000 = 0  | Instantly  |
-| Index 1      | 1 × 2000 = 2000 | 2 seconds |
-| Index 2      | 2 × 2000 = 4000 | 4 seconds |
-| Index 3      | 3 × 2000 = 6000 | 6 seconds |
-
-#### 🖥️ Output
-
-*(Each line prints one at a time, with a 2-second gap between them)*
-
-```text
-Starting the test results printing...
-
-Test 0 -> Pass
-Test 1 -> fail
-Test 2 -> Pass
-Test 3 -> fail
-Test 4 -> Pass
-Test 5 -> fail
-```
-
 ---
 
-### 27.10 Pros and Cons of Callbacks
+### 27.11 Pros and Cons of Callbacks
 
 ![Callback Pros and Cons](Pros_and_cons_of_callbacks.png)
 
@@ -12146,9 +12019,11 @@ While you are holding that receipt, it can be in one of **three states**:
 
 | State | Meaning |
 |---|---|
-| **Pending** | You are standing there waiting. The food is cooking. |
-| **Fulfilled (Resolved)** | They call your number! You get the burger. The promise was kept. |
-| **Rejected** | The manager says, *"Sorry, the grill caught on fire."* The promise was broken. |
+| **Pending** | Work not finished yet (waiting for food). |
+| **Fulfilled (Resolved)** | Work completed successfully (we have the burger). The promise was kept. |
+| **Rejected** | Work failed (grill caught on fire). The promise was broken. |
+
+**Once a Promise is fulfilled or rejected, it's settled – it never changes.**
 
 ---
 
@@ -12163,7 +12038,10 @@ A Promise is split into **two parts**:
 
 **Part 1 — The Setup**
 
-When you build a Promise, you **must** pass it a callback function with two tools: `resolve` and `reject`.
+You create a Promise using `new Promise` and give it a function (called the **executor**) that takes two parameters: `resolve` and `reject`.
+
+*   `resolve(value)` – you call this when the async task succeeds, passing the result.
+*   `reject(error)` – you call this when it fails, passing the error.
 
 ```javascript
 // 1. Creating the Receipt (The Promise)
