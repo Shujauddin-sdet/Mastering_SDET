@@ -12140,5 +12140,28 @@ func1.then((res) => {
   });
 });
 ```
+```javascript
 
+// 1. Creating the Promise (The kitchen making your coffee)
+const orderCoffee = new Promise((resolve, reject) => {
+  const isCoffeeReady = true; // Change to false to see it fail
+
+  setTimeout(() => {
+    if (isCoffeeReady) {
+      resolve("Here is your coffee! Enjoy!"); // Success!
+    } else {
+      reject("Sorry, we ran out of coffee beans."); // Failure!
+    }
+  }, 2000); // Takes 2 seconds to complete
+});
+
+// 2. Using the Promise (Waiting for the coffee)
+orderCoffee
+  .then((result) => {
+    console.log(result); // Runs if the promise is successful
+  })
+  .catch((error) => {
+    console.log(error); // Runs if the promise fails
+  });
+```
 ---
