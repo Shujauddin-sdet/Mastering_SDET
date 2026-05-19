@@ -12109,6 +12109,8 @@ With Promises, you chain `.then()` calls in a **straight line** down the page. T
 
 ### 28.6 Promise Chaining
 
+When each step depends on the previous one, you can chain `.then()` calls in a flat, readable line instead of nesting them.
+
 ```javascript
 function asyncFunc1() {
   return new Promise((resolve, reject) => {
@@ -12140,8 +12142,10 @@ func1.then((res) => {
   });
 });
 ```
-```javascript
 
+Another example — a coffee order (change `isCoffeeReady` to `false` to test rejection):
+
+```javascript
 // 1. Creating the Promise (The kitchen making your coffee)
 const orderCoffee = new Promise((resolve, reject) => {
   const isCoffeeReady = true; // Change to false to see it fail
@@ -12164,4 +12168,343 @@ orderCoffee
     console.log(error); // Runs if the promise fails
   });
 ```
+
+---
+
+### 28.7 `.then()` with an Object Response
+
+A Promise can resolve with any value — including a full object. You access the object's properties normally inside `.then()`.
+
+```javascript
+let apiCall = new Promise(function (resolve, reject) {
+    resolve({ status: 200, body: "User Data" });
+});
+
+apiCall.then(function (response) {
+    console.log(response);         // { status: 200, body: 'User Data' }
+    console.log(response.status);  // 200
+    console.log(response.body);    // User Data
+});
+
+// .then() runs ONLY when the promise resolves successfully.
+```
+
+> 💡 **SDET Tip:** This mirrors a real API response — your status code and body are both available immediately inside `.then()`.
+
+---
+
+### 28.8 `.catch()` — Handling Rejection
+
+`.catch()` runs **only** when the Promise is rejected. The `.then()` before it is completely skipped.
+
+```javascript
+let apiCall = new Promise(function (resolve, reject) {
+    reject("500 Error");
+});
+
+apiCall.then(function (data) {
+    console.log("Data is success!!"); // ← SKIPPED
+}).catch(function (error) {
+    console.log(error); // Output: 500 Error
+});
+
+// .catch() runs ONLY when the promise is rejected.
+// .then() is completely skipped.
+```
+
+---
+
+### 28.9 `.finally()` — Always Runs
+
+`.finally()` runs **no matter what** — whether the Promise resolved or rejected. Use it for cleanup: closing a browser, logging a summary, tearing down test state.
+
+```javascript
+let testRun = new Promise(function (resolve, reject) {
+    reject("Assertion Failed");
+});
+
+testRun.then(function (data) {   // Resolve path
+    console.log(data);
+}).catch(function (error) {       // Reject path
+    console.log(error);           // Output: Assertion Failed
+}).finally(function () {          // ALWAYS runs
+    console.log("I will be executed anyhow!!");
+});
+
+// .finally() ALWAYS runs — whether the test passed or failed.
+// Just like afterEach() in Cypress or Playwright.
+```
+
+> 💡 **SDET Tip:** Use `.finally()` the same way you use `afterEach()` in Playwright — to run teardown code regardless of pass or fail.
+
+---
+
+### 28.10 Real QA Example — E2E Login Flow with Promise Chaining
+
+This is the same login flow from the Callback Hell section, but flattened using Promise chaining. Each `.then()` returns the next Promise, so the steps run in order — no nesting required.
+
+```javascript
+function openBrowser() {
+    return new Promise(function (resolve) {
+        resolve("Browser opened!");
+    });
+}
+
+function goToLogin() {
+    return new Promise(function (resolve) {
+        resolve("Login page loaded");
+    });
+}
+
+function enterCredentials() {
+    return new Promise(function (resolve) {
+        resolve("Credentials entered");
+    });
+}
+
+function clickLogin() {
+    return new Promise(function (resolve) {
+        resolve("Logged in successfully");
+    });
+}
+
+openBrowser()
+    .then(function (msg) {
+        console.log("Step 1:", msg);
+        return goToLogin();
+    }).then(function (msg) {
+        console.log("Step 2:", msg);
+        return enterCredentials();
+    }).then(function (msg) {
+        console.log("Step 3:", msg);
+        return clickLogin();
+    }).then(function (msg) {
+        console.log("Step 4:", msg);
+    }).catch(function (error) {
+        console.log("Error:", error);
+    }).finally(function () {
+        console.log("Done execution!");
+    });
+```
+
+**Output:**
+```text
+Step 1: Browser opened!
+Step 2: Login page loaded
+Step 3: Credentials entered
+Step 4: Logged in successfully
+Done execution!
+```
+
+> Compare this to the Callback Hell pyramid — same result, much cleaner code.
+
+---
+
+### 28.11 `Promise.all()` — Wait for All to Succeed
+
+`Promise.all()` takes an **array of Promises** and waits for **every one** to resolve. If even one rejects, the whole thing fails immediately.
+
+```javascript
+let checkAuth  = Promise.resolve("Auth OK");
+let checkDB    = Promise.resolve("DB OK");
+let checkCache = Promise.resolve("Cache OK");
+
+// All succeed → get all results at once
+Promise.all([checkAuth, checkDB, checkCache]).then(function (results) {
+    console.log("All checks:", results);
+    // Output: All checks: [ 'Auth OK', 'DB OK', 'Cache OK' ]
+});
+
+// One fails → entire Promise.all rejects immediately
+Promise.all([
+    Promise.resolve("OK"),
+    Promise.reject("DB DOWN"),
+    Promise.resolve("OK")
+])
+    .then(function (r) { console.log(r); })
+    .catch(function (err) { console.log("Failed:", err); });
+    // Output: Failed: DB DOWN
+```
+
+| Scenario | Result |
+|---|---|
+| All resolve | `.then()` gets an array of all values |
+| Any one rejects | `.catch()` gets the first rejection reason immediately |
+
+> 💡 **SDET Tip:** Use `Promise.all()` when you need all checks to pass before continuing — e.g., run three health-check API calls in parallel and only proceed if all return 200.
+
+---
+
+### 28.12 `Promise.allSettled()` — Get Results of All, Even Failures
+
+`Promise.allSettled()` waits for **every** Promise to finish — it never short-circuits. Each result tells you whether it was `"fulfilled"` or `"rejected"`, plus the value or reason.
+
+```javascript
+Promise.allSettled([
+    Promise.resolve("Test A Passed!"),
+    Promise.reject("Test B failed"),
+    Promise.resolve("Test C passed")
+]).then(function (results) {
+    results.forEach(function (r, i) {
+        console.log("Test " + (i + 1) + ":", r.status, "-", r.value || r.reason);
+    });
+});
+// Output:
+// Test 1: fulfilled - Test A Passed!
+// Test 2: rejected  - Test B failed
+// Test 3: fulfilled - Test C passed
+```
+
+Another example — useful for reading API statuses from a test report:
+
+```javascript
+Promise.allSettled([
+    Promise.resolve("API 200"),
+    Promise.reject("API 500"),
+    Promise.resolve("API 201")
+]).then(function (results) {
+    results.forEach(function (r) {
+        let val = r.status === "fulfilled" ? r.value : r.reason;
+        console.log(r.status + " → " + val);
+    });
+});
+// Output:
+// fulfilled → API 200
+// rejected  → API 500
+// fulfilled → API 201
+```
+
+| | `Promise.all()` | `Promise.allSettled()` |
+|---|---|---|
+| Stops on first failure? | ✅ Yes | ❌ No — waits for all |
+| Result format | Array of values | Array of `{ status, value/reason }` |
+| Use when | You need ALL to succeed | You want a full report of every outcome |
+
+> 💡 **SDET Tip:** `Promise.allSettled()` is like a test report — you want to see results for **all** tests, not just stop at the first failure.
+
+---
+
+### 28.13 `Promise.race()` — First One Wins
+
+`Promise.race()` resolves or rejects as soon as the **first** Promise in the array settles — whichever finishes first wins.
+
+```javascript
+let fastServer = new Promise(function (resolve) {
+    setTimeout(function () { resolve("Fast 100ms"); }, 100);
+});
+
+let slowServer = new Promise(function (resolve) {
+    setTimeout(function () { resolve("Slow 500ms"); }, 500);
+});
+
+Promise.race([fastServer, slowServer]).then(function (winner) {
+    console.log("Winner:", winner);
+    // Output: Winner: Fast 100ms
+});
+```
+
+> 💡 **SDET Tip:** Use `Promise.race()` to implement a **timeout** — race your actual API call against a timer Promise that rejects after N seconds.
+
+---
+
+### 28.14 🧪 Promise Practice — IQ Exercises
+
+Try each of these in your console one at a time. Predict the output before running.
+
+**Exercise 1 — Basic resolve:**
+```javascript
+let p = new Promise(function (resolve, reject) {
+    resolve(42);
+});
+
+p.then(function (value) {
+    console.log("Answer:", value); // Answer: 42
+});
+```
+
+**Exercise 2 — Basic reject:**
+```javascript
+let p = new Promise(function (resolve, reject) {
+    reject("Something broke");
+});
+
+p.catch(function (err) {
+    console.log("Caught:", err); // Caught: Something broke
+});
+```
+
+**Exercise 3 — Chaining with `Promise.resolve`:**
+```javascript
+let p = Promise.resolve(5);
+
+p.then(function (val) {
+    return val * 10;
+}).then(function (val) {
+    console.log("Result:", val); // Result: 50
+});
+```
+
+**Exercise 4 — Three chained `.then()` calls:**
+```javascript
+Promise.resolve(1)
+    .then(function (val) { console.log(val); return val + 1; })  // 1
+    .then(function (val) { console.log(val); return val + 1; })  // 2
+    .then(function (val) { console.log(val); });                 // 3
+```
+
+**Exercise 5 — `throw` inside `.then()` is caught by `.catch()`:**
+```javascript
+Promise.resolve("start")
+    .then(function (val) {
+        console.log(val);          // start
+        throw new Error("Broke at step 2");
+    })
+    .then(function () {
+        console.log("This will NOT run");
+    })
+    .catch(function (err) {
+        console.log("Caught:", err.message); // Caught: Broke at step 2
+    });
+```
+
+**Exercise 6 — `reject` → `.then()` skipped → `.catch()` → `.finally()`:**
+```javascript
+Promise.reject("Test failed")
+    .then(function (data) { console.log("Data:", data); })  // SKIPPED
+    .catch(function (err) { console.log("Error:", err); })  // Error: Test failed
+    .finally(function () { console.log("Cleanup done"); }); // Cleanup done
+```
+
+**Exercise 7 — `Promise.resolve` and `Promise.reject` shortcuts:**
+```javascript
+Promise.resolve("Quick win").then(function (msg) { console.log(msg); });
+// Output: Quick win
+
+Promise.reject("Quick loss").catch(function (msg) { console.log(msg); });
+// Output: Quick loss
+```
+
+**Exercise 8 — `Promise.all` all pass:**
+```javascript
+let t1 = Promise.resolve("Login: PASS");
+let t2 = Promise.resolve("Search: PASS");
+let t3 = Promise.resolve("Logout: PASS");
+
+Promise.all([t1, t2, t3]).then(function (results) {
+    console.log(results);
+    // [ 'Login: PASS', 'Search: PASS', 'Logout: PASS' ]
+});
+```
+
+**Exercise 9 — `Promise.all` one fails:**
+```javascript
+let t1 = Promise.resolve("PASS");
+let t2 = Promise.reject("FAIL");
+let t3 = Promise.resolve("PASS");
+
+Promise.all([t1, t2, t3])
+    .then(function (r) { console.log("All:", r); })
+    .catch(function (err) { console.log("Stopped:", err); }); // Stopped: FAIL
+```
+
 ---
