@@ -11733,6 +11733,47 @@ Instruction 2 (after 2 seconds)
 ### 27.1 What is a Callback?
 A callback is a function that you give to another function, and that other function calls (executes) your function later when something happens.
 
+#### Simple Callback Example
+Here is a clear, step-by-step example of how a function is passed and executed as a callback:
+
+```javascript
+// Example of synchronous callback
+// Declare an arrow function named 'sum' that accepts two parameters: 'a' and 'b'
+let sum = (a, b) => {
+  // Print the sum of 'a' and 'b' to the console
+  console.log(a + b);
+// End of the 'sum' function definition
+};
+
+// Declare an arrow function named 'total' that accepts three parameters: 'a', 'b', and 'sumCallBack'
+let total = (a, b, sumCallBack) => {
+  // Execute the callback function, passing 'a' and 'b' as its arguments
+  sumCallBack(a, b);
+// End of the 'total' function definition
+};
+
+// Invoke the 'total' function, passing 1 and 2 as numbers, and the 'sum' function itself
+total(1, 2, sum); // The function 'sum' is passed as an argument (without parentheses), making it a callback here, also you cannot call sum like this total(1, 2, sum()) as it will execute sum immediately and give a typeerror.
+// If you wrote total(1, 2, sum()), JavaScript would execute sum right there, print NaN (because 1 and 2 weren't passed to it yet), and then pass undefined into total. When total tried to run undefined(1, 2), it would crash.
+```
+```javascript
+// Example of asynchronous callback using setTimeot
+const hello = () => {
+  console.log("hello");
+};
+
+setTimeout(hello, 2000); // this will execute the hello function after 2 seconds, Here hello is a callback function as it is passed as an argument to the setTimeout function.
+
+```
+
+**Output:**
+
+```text
+3
+```
+
+#### Real-world Analogy (Asynchronous Callback)
+
 ```javascript
 // You write this function
 function ringBell() {
