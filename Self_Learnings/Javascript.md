@@ -3252,6 +3252,10 @@ if (!testPassed) {
 
 A **nested loop** is simply a loop placed **inside another loop**. The inner loop runs **completely** every time the outer loop runs once.
 
+> 📂 **Hands-on Practice & Exercises:**  
+> You can find dedicated, heavily-commented example files for each type of nested loop in the **[Nesting Folder](./Nesting/)**.  
+> (To go there, click the link or open the `Self_Learnings/Nesting/` folder).
+
 > Think of it like reading a book: the **outer loop** turns each page. The **inner loop** reads every word on that page.
 
 ![Nested Loops — Loop Inside a Loop](Images/Nested_Loops.svg)
