@@ -12238,7 +12238,84 @@ apiCall.then(function (response) {
 
 ---
 
-### 28.8 `.catch()` — Handling Rejection
+### 28.8 Mechanics of Data Flow and Parameter Binding in Promise Chains
+
+When chaining `.then()` callbacks, it is crucial to understand how values are passed and how parameters are bound between steps.
+
+Consider the following execution:
+
+```javascript
+Promise.resolve(1)
+  .then((x) => {
+    // The callback evaluates to 2 and returns it
+    return x + 1;   
+  })
+  .then((y) => {
+    // y is bound to 2 as its input parameter
+    console.log(y); 
+  });
+```
+
+#### How does the second callback receive the value `2`?
+1. The first `.then()` callback returns `2`.
+2. Any value returned from a `.then()` callback is wrapped in a resolved Promise, which becomes the input to the subsequent `.then()` callback.
+3. The next callback receives this resolved value as its parameter (`y`).
+
+#### 💡 Core Principles of Promise Data Flow
+
+* **Positional Binding (Parameter Names Do Not Matter):**  
+  The JavaScript engine passes the resolved value of the preceding Promise to the first argument of the next callback. The parameter name is arbitrary—whether named `x`, `y`, `result`, or `data`, the value is passed positionally.
+  
+* **Argument Binding Occurs Prior to Function Execution:**  
+  In the second block:
+  ```javascript
+  .then((y) => {
+    console.log(y); // This function evaluates to undefined because there is no return statement
+  })
+  ```
+  The parameter `y` is bound to the resolved value before the function body executes. Even though the second callback does not return a value (meaning its return evaluation is `undefined`), this has no impact on `y` receiving `2`. The lack of a return statement only affects the subsequent link in the chain.
+
+* **Explicit vs. Implicit Return Values:**  
+  The argument of a `.then()` callback is always the resolved value of the preceding Promise. What the current `.then()` returns becomes the input for the next `.then()`. If a callback does not explicitly return a value, the subsequent `.then()` receives `undefined`.
+
+#### Example 1: Operating on Received Values
+```javascript
+Promise.resolve(1)
+  .then((x) => {
+    return x + 1; // Evaluates to 2 and returns it
+  })
+  .then((y) => {
+    // y is 2 (passed from the previous step)
+    console.log(y + 2); // Outputs: 4
+  });
+```
+
+#### Example 2: Demonstrating the Result of Omiting Return Statements
+```javascript
+Promise.resolve(5)
+  .then((val) => {
+    console.log(val);   // Outputs: 5
+    return val * 2;     // Returns 10 (passed to next step)
+  })
+  .then((newVal) => {
+    console.log(newVal); // Outputs: 10 (received from previous step)
+    // No return statement here. Function evaluates to undefined.
+  })
+  .then((finalVal) => {
+    console.log(finalVal); // Outputs: undefined
+  });
+```
+
+#### Summary of Parameter Rules
+* **Why does a parameter get assigned without a return statement in its own body?**  
+  A function's parameters are populated by its caller before execution starts. The previous Promise resolves to a value, and that value is passed as the argument to the callback function.
+  
+* **Why do parameter name transitions work?**  
+  JavaScript matches values to parameters positionally. The value from the previous Promise is bound to whichever variable name you place in the parameter list.
+
+---
+
+### 28.9 `.catch()` — Handling Rejection
 
 `.catch()` runs **only** when the Promise is rejected. The `.then()` before it is completely skipped.
 
@@ -12259,7 +12336,7 @@ apiCall.then(function (data) {
 
 ---
 
-### 28.9 `.finally()` — Always Runs
+### 28.10 `.finally()` — Always Runs
 
 `.finally()` runs **no matter what** — whether the Promise resolved or rejected. Use it for cleanup: closing a browser, logging a summary, tearing down test state.
 
@@ -12284,7 +12361,7 @@ testRun.then(function (data) {   // Resolve path
 
 ---
 
-### 28.10 Real QA Example — E2E Login Flow with Promise Chaining
+### 28.11 Real QA Example — E2E Login Flow with Promise Chaining
 
 This is the same login flow from the Callback Hell section, but flattened using Promise chaining. Each `.then()` returns the next Promise, so the steps run in order — no nesting required.
 
@@ -12345,7 +12422,7 @@ Done execution!
 
 ---
 
-### 28.11 `Promise.all()` — Wait for All to Succeed
+### 28.12 `Promise.all()` — Wait for All to Succeed
 
 `Promise.all()` takes an **array of Promises** and waits for **every one** to resolve. If even one rejects, the whole thing fails immediately.
 
@@ -12380,7 +12457,7 @@ Promise.all([
 
 ---
 
-### 28.12 `Promise.allSettled()` — Get Results of All, Even Failures
+### 28.13 `Promise.allSettled()` — Get Results of All, Even Failures
 
 `Promise.allSettled()` waits for **every** Promise to finish — it never short-circuits. Each result tells you whether it was `"fulfilled"` or `"rejected"`, plus the value or reason.
 
@@ -12429,7 +12506,7 @@ Promise.allSettled([
 
 ---
 
-### 28.13 `Promise.race()` — First One Wins
+### 28.14 `Promise.race()` — First One Wins
 
 `Promise.race()` resolves or rejects as soon as the **first** Promise in the array settles — whichever finishes first wins.
 
@@ -12452,7 +12529,7 @@ Promise.race([fastServer, slowServer]).then(function (winner) {
 
 ---
 
-### 28.14 🧪 Promise Practice — IQ Exercises
+### 28.15 🧪 Promise Practice — IQ Exercises
 
 Try each of these in your console one at a time. Predict the output before running.
 
