@@ -12134,6 +12134,67 @@ orderBurger
 
 ---
 
+### 28.3.1 Simpler Example — `wait(seconds)`
+
+Here is the same Promise pattern written as a reusable function so the structure is concrete.
+
+```javascript
+// A function that wraps async work inside a Promise and returns it
+function wait(seconds) {
+  // new Promise(...) creates the Promise object
+  return new Promise((resolve, reject) => {
+    // setTimeout simulates async work (e.g., a network call)
+    setTimeout(() => {
+      // resolve() is called when the work finishes successfully
+      // The string value passed here becomes the argument received by .then()
+      resolve(`Waited ${seconds} seconds`);
+    }, seconds * 1000); // convert seconds to milliseconds
+  });
+}
+
+// Calling wait(1) immediately returns a Promise object
+// .then() registers a callback — it runs after 1 second
+// message → receives the resolved value from resolve()
+wait(1).then((message) => console.log(message)); // After 1 sec: "Waited 1 seconds"
+
+// wait(2) is a separate Promise — it runs independently
+wait(2).then((message) => console.log(message)); // After 2 sec: "Waited 2 seconds"
+```
+
+---
+
+### 28.3.2 Promise Function Skeleton
+
+Every Promise-based function follows this exact pattern. Use this as your reference template:
+
+```javascript
+// Step 1: Define the function with a meaningful name and parameter(s)
+function name(parameter) {
+
+  // Step 2: Return the Promise so the caller can attach .then() and .catch()
+  return new Promise((resolve, reject) => {
+
+    // Step 3: Put your async work here (setTimeout, fetch, file read, etc.)
+    setTimeout(() => {
+
+      // Step 4: When the work finishes successfully, call resolve() with the result
+      resolve(resultUsingParameter);
+
+    }, parameter * 1000); // parameter controls how long to wait
+
+  });
+}
+
+// Step 5: Call the function and handle the result with .then() and .catch()
+// name(2)
+//   .then((result) => console.log(result))
+//   .catch((err) => console.log(err));
+```
+
+> 💡 **Key:** Without `return`, the function gives back `undefined` and `.then()` cannot be attached.
+
+---
+
 ### 28.4 Why is this Better than Callbacks?
 
 With old callbacks, every dependent step had to be nested inside the previous one — leading to Callback Hell.
@@ -12154,65 +12215,296 @@ With Promises, you chain `.then()` calls in a **straight line** down the page. T
 
 ### 28.6 Promise Chaining
 
-When each step depends on the previous one, you can chain `.then()` calls in a flat, readable line instead of nesting them.
+When each step depends on the previous one, you chain `.then()` calls in a **flat, readable line** — no nesting required. Each `.then()` returns a new Promise, so the next `.then()` waits for it.
+
+---
+
+#### 🏅 The 3 Golden Rules of Chaining
+
+Before you read any code, lock these three rules in. Every chaining example below follows them.
+
+**Rule 1 — Every `.then()` automatically creates a brand new Promise.**
+You do not have to write `new Promise` inside a `.then()`. JavaScript creates it silently. That new Promise is what you attach the next `.then()` to.
+
+**Rule 2 — You MUST use the `return` keyword.**
+If you do not return anything inside a `.then()`, the next `.then()` receives `undefined`. Always check your `return` statements.
+
+**Rule 3 — What you return dictates the timing.**
+
+| What you return | What happens next |
+|---|---|
+| A normal value (e.g. `"Hello"`, `42`) | The next `.then()` runs **instantly** with that value |
+| Another Promise (e.g. `secondPromise()`) | The chain **pauses and waits** for that Promise to resolve before moving on |
+
+**Visualising the baton pass:**
 
 ```javascript
+// Step 1: Start the chain
+firstPromise()
+
+  // Step 2: First runner finishes and passes data to the next
+  .then((dataFromFirst) => {
+    console.log(dataFromFirst);         // Use the result from step 1
+
+    // THE MOST IMPORTANT LINE: return the next Promise
+    // Returning a Promise tells the chain to pause and wait for it to finish
+    // Returning a plain value would let the chain continue instantly
+    return secondPromise();             // ← pauses here until secondPromise resolves
+  })
+
+  // Step 3: Second runner finishes and passes their data
+  .then((dataFromSecond) => {
+    console.log(dataFromSecond);        // Use the result from step 2
+  })
+
+  // A single .catch() at the end acts as a safety net for the ENTIRE chain
+  .catch((error) => {
+    console.log("Someone dropped the baton:", error);
+  });
+```
+
+---
+
+#### Step-by-step breakdown of two chained async functions
+
+```javascript
+// ─────────────────────────────────────────────────────────────────────────────
+// Step 1: Define asyncFunc1
+// This is a regular function — not a Promise yet.
+// It only becomes a Promise when you CALL it: asyncFunc1()
+// ─────────────────────────────────────────────────────────────────────────────
 function asyncFunc1() {
+  // return → this is what makes the function usable with .then()
+  // Without return, the function gives back undefined and chaining breaks.
   return new Promise((resolve, reject) => {
+    // setTimeout simulates async work (e.g., an API call taking time)
     setTimeout(() => {
-      console.log("data1");
-      resolve("Success");
-    }, 3000);
+      console.log("data1");                 // Side effect — logged when done
+      resolve("Success from func1");        // resolve() sends this value to .then()
+    }, 4000);                               // Simulates a 4 second delay
   });
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Step 2: Define asyncFunc2 — same pattern as asyncFunc1
+// ─────────────────────────────────────────────────────────────────────────────
 function asyncFunc2() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       console.log("data2");
-      resolve("Success");
-    }, 3000);
+      resolve("Success from func2");        // resolve() sends this value to the next .then()
+    }, 4000);
   });
 }
 
-console.log("fetching data Please wait...");
+// ─────────────────────────────────────────────────────────────────────────────
+// Step 3: Call asyncFunc1() and chain the steps
+// ─────────────────────────────────────────────────────────────────────────────
+console.log("Fetching data 1");             // Runs immediately (synchronous)
 
-let func1 = asyncFunc1();
-func1.then((res) => {
-  console.log(res);
-  console.log("fetching data2 please wait...");
-  let func2 = asyncFunc2();
-  func2.then((res) => {
-    console.log(res);
+asyncFunc1()                                // Calls the function → returns a Promise
+  .then((res1) => {                         // res1 = "Success from func1" (resolved value)
+    console.log(res1);                      // Logs: "Success from func1"
+    console.log("Fetching data 2");
+    return asyncFunc2();                    // ← IMPORTANT: return the second Promise
+    // Without return here, the next .then() would run immediately with undefined
+    // With return, the next .then() WAITS for asyncFunc2 to finish
+  })
+  .then((res2) => {                         // res2 = "Success from func2"
+    console.log(res2);                      // Logs: "Success from func2"
+    console.log("All done!");
+  })
+  .catch((err) => {                         // Catches any error from ANY step above
+    console.log("Error:", err);
   });
-});
 ```
+
+**Output (after ~4 secs for step 1, then ~4 more secs for step 2):**
+```text
+Fetching data 1
+data1
+Success from func1
+Fetching data 2
+data2
+Success from func2
+All done!
+```
+
+---
+
+#### 🔑 Variable Scope Rule in Promise Chains
+
+Each `.then()` callback is a **separate function**. Variables declared inside one `.then()` are **not accessible** in the next `.then()`.
+
+```javascript
+Promise.resolve(100)
+  .then((x) => {
+    return x + 50;              // x = 100, returns 150
+  })
+  .then((y) => {
+    console.log(y);             // y = 150 ✅ — received from the previous step
+    // console.log(x);         // ❌ Error: x is not defined here
+    // x only exists inside the first .then() callback above
+  });
+```
+
+> `x` and `y` are local to their own `.then()` callback. The only way to pass a value to the next step is by `return`-ing it.
+
+---
+
+#### How chaining works — three rules
+
+| Rule | Explanation |
+|---|---|
+| Every `.then()` returns a new Promise | So you can always attach another `.then()` |
+| If you `return` a Promise from `.then()`, the next `.then()` **waits** for it | This is how sequential async steps work |
+| If you `return` nothing, the next `.then()` runs immediately with `undefined` | Always check your `return` statements |
+
+---
 
 Another example — a coffee order (change `isCoffeeReady` to `false` to test rejection):
 
 ```javascript
-// 1. Creating the Promise (The kitchen making your coffee)
+// Creating the Promise — the kitchen making your coffee
 const orderCoffee = new Promise((resolve, reject) => {
-  const isCoffeeReady = true; // Change to false to see it fail
+  const isCoffeeReady = true;   // Change to false to trigger .catch()
 
   setTimeout(() => {
     if (isCoffeeReady) {
-      resolve("Here is your coffee! Enjoy!"); // Success!
+      resolve("Here is your coffee! Enjoy!");   // Fulfils the Promise
     } else {
-      reject("Sorry, we ran out of coffee beans."); // Failure!
+      reject("Sorry, we ran out of coffee beans."); // Rejects the Promise
     }
-  }, 2000); // Takes 2 seconds to complete
+  }, 2000);
 });
 
-// 2. Using the Promise (Waiting for the coffee)
+// Using the Promise — waiting for the coffee
 orderCoffee
   .then((result) => {
-    console.log(result); // Runs if the promise is successful
+    console.log(result);   // Runs ONLY if resolve() was called
   })
   .catch((error) => {
-    console.log(error); // Runs if the promise fails
+    console.log(error);    // Runs ONLY if reject() was called
   });
 ```
+
+---
+
+### 28.6.1 Promise Chaining — Correct Way with 3 Steps
+
+Promise chaining lets you run asynchronous tasks one after another, where each task waits for the previous one to finish. Here is the correct pattern with three chained functions — read every line carefully.
+
+#### Step 1 — Create functions that return Promises
+
+```javascript
+// Each function wraps async work and returns a Promise
+// It only becomes a Promise when you CALL it: asyncFunc1()
+
+function asyncFunc1() {
+  // return → required so the caller can use .then() on the result
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("data1");                   // Logged when this step finishes
+      resolve("Success from func1");          // This value goes to the first .then()
+    }, 1000);
+  });
+}
+
+function asyncFunc2() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("data2");
+      resolve("Success from func2");          // This value goes to the second .then()
+    }, 1000);
+  });
+}
+
+function asyncFunc3() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("data3");
+      resolve("Success from func3");          // This value goes to the third .then()
+    }, 1000);
+  });
+}
+```
+
+#### Step 2 — Chain them using `.then()` and always `return` the next Promise
+
+```javascript
+console.log("Fetching data 1...");            // Runs immediately — synchronous
+
+asyncFunc1()                                  // Calls asyncFunc1 → returns a Promise
+  .then((res) => {                            // res = "Success from func1"
+    console.log(res);                         // Logs: "Success from func1"
+    console.log("Fetching data 2...");
+    return asyncFunc2();                      // ✅ return the second Promise — next .then() WAITS
+  })
+  .then((res2) => {                           // res2 = "Success from func2"
+    console.log(res2);                        // Logs: "Success from func2"
+    console.log("Fetching data 3...");
+    return asyncFunc3();                      // ✅ return the third Promise — next .then() WAITS
+  })
+  .then((res3) => {                           // res3 = "Success from func3"
+    console.log(res3);                        // Logs: "Success from func3"
+    console.log("All done!");
+  })
+  .catch((err) => {
+    console.log("Error:", err);               // Catches any rejection from ANY step above
+  });
+```
+
+**Output (each step takes 1 second):**
+```text
+Fetching data 1...
+data1
+Success from func1
+Fetching data 2...
+data2
+Success from func2
+Fetching data 3...
+data3
+Success from func3
+All done!
+```
+
+---
+
+#### 🔑 Key Rules of Promise Chaining
+
+| Rule | Detail |
+|---|---|
+| Every `.then()` returns a new Promise | That is why you can keep chaining |
+| To pass a value to the next `.then()`, `return` it | The returned value becomes the next callback's parameter |
+| If you `return` a Promise, the next `.then()` **waits** for it | This is the core of sequential async |
+| If you forget `return`, the next `.then()` runs immediately with `undefined` | A very common bug |
+| A single `.catch()` at the end handles errors from **any** step | You do not need `.catch()` on every step |
+
+---
+
+#### ❌ Common Mistake — Nesting Instead of Chaining
+
+This is the wrong way. It recreates Callback Hell inside Promises:
+
+```javascript
+// ❌ Wrong: nested .then() calls — hard to read, hard to maintain
+asyncFunc1().then((res) => {
+  asyncFunc2().then((res2) => {
+    asyncFunc3().then((res3) => {
+      // All logic buried deep inside — this is just Callback Hell with Promises
+    });
+  });
+});
+
+// ✅ Correct: flat chaining with return — readable and maintainable
+asyncFunc1()
+  .then((res) => { return asyncFunc2(); })
+  .then((res2) => { return asyncFunc3(); })
+  .then((res3) => { console.log("Done:", res3); })
+  .catch((err) => { console.log("Error:", err); });
+```
+
+> The nested version is "Callback Hell" disguised with Promises. Always use flat chaining with `return`.
 
 ---
 
@@ -12315,7 +12607,149 @@ Promise.resolve(5)
 
 ---
 
-### 28.9 `.catch()` — Handling Rejection
+### 28.9 A Function That Returns a Promise Is Still a Function
+
+This is a common point of confusion. `asyncFunc1` is a **function**. `asyncFunc1()` is the **Promise**.
+
+```javascript
+function asyncFunc1() {
+  // This function returns a Promise when called
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("done");
+    }, 1000);
+  });
+}
+
+// typeof the function itself → "function"
+console.log(typeof asyncFunc1);           // "function"
+
+// asyncFunc1 is NOT a Promise — it is the function definition
+console.log(asyncFunc1 instanceof Promise); // false
+
+// Calling it → NOW you get a Promise
+const promiseObj = asyncFunc1();
+console.log(typeof promiseObj);           // "object"
+console.log(promiseObj instanceof Promise); // true
+
+// You can attach .then() only on the result of calling the function
+promiseObj.then(console.log);             // After 1 sec: "done"
+```
+
+**Mental model:**
+
+| Expression | Type | Description |
+|---|---|---|
+| `asyncFunc1` | `"function"` | The function itself — not a Promise |
+| `asyncFunc1()` | `"object"` (Promise) | Calling the function returns the Promise |
+| `asyncFunc1().then(...)` | Chaining | You chain on the returned Promise, not the function |
+
+> 💡 You must **invoke** the function to get the Promise. The function is just the factory. The Promise is the product.
+
+---
+
+### 28.10 What Does `return new Promise(...)` Mean?
+
+When you write `return new Promise(...)` inside a function:
+
+```javascript
+// Step-by-step breakdown
+function giveMeAPromise() {
+  // new Promise(...) creates a Promise object immediately
+  // (resolve, reject) are two tools given by JavaScript
+  const myPromise = new Promise((resolve, reject) => {
+    // This async work runs in the background
+    setTimeout(() => {
+      resolve("done"); // Signals success — value "done" goes to .then()
+    }, 1000);
+  });
+
+  // return sends the Promise object back to the caller immediately
+  // The caller doesn't wait — they receive the Promise right away
+  return myPromise;
+}
+
+const promiseObj = giveMeAPromise(); // promiseObj is a Promise
+promiseObj.then(console.log);        // After 1 sec logs: "done"
+```
+
+**Why `return` is required:**
+
+```javascript
+// ✅ With return — chaining works
+function fetchSomething() {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve("data"), 1000);
+  });
+}
+
+fetchSomething()
+  .then((data) => console.log(data)); // "data" — works correctly
+
+// ❌ Without return — function gives back undefined
+function brokenFetch() {
+  new Promise((resolve) => {    // Promise is created but NOT returned
+    setTimeout(() => resolve("data"), 1000);
+  });
+  // implicit return undefined
+}
+
+brokenFetch()
+  .then((data) => console.log(data)); // TypeError: Cannot read property 'then' of undefined
+```
+
+> 💡 **The `return` inside a function allows the function to be asynchronous.** The caller gets a Promise immediately, and the actual async work runs in the background.
+
+---
+
+### 28.11 The `return` Keyword — Synchronous vs Asynchronous
+
+Understanding `return` in both contexts is critical.
+
+**In synchronous code:**
+
+```javascript
+// return exits the function and sends a value back to the caller
+function add(a, b) {
+  return a + b;  // Sends the result immediately
+}
+
+let sum = add(2, 3); // sum = 5 — gets it right away
+console.log(sum);     // 5
+```
+
+**In Promise chains — `return` has a special superpower:**
+
+When you are inside a `.then()` callback, returning a Promise **makes the next `.then()` wait** for that Promise to resolve.
+
+```javascript
+// Without return — the chain breaks
+asyncFunc1()
+  .then((res) => {
+    console.log(res);
+    asyncFunc2();   // ❌ No return. Promise runs, but nobody waits for it.
+  })
+  .then((res2) => {
+    console.log(res2); // runs immediately with undefined — NOT what you want
+  });
+
+// With return — the chain works correctly
+asyncFunc1()
+  .then((res) => {
+    console.log(res);
+    return asyncFunc2(); // ✅ Return the Promise. Next .then() waits for it.
+  })
+  .then((res2) => {
+    console.log(res2);   // Runs ONLY after asyncFunc2 finishes
+  });
+```
+
+**The golden rule:**
+> Inside a `.then()` callback, if you return a Promise, the next `.then()` waits for that Promise and receives its resolved value. If you return nothing (or a non-Promise value), the next `.then()` runs immediately and receives `undefined`.
+
+---
+
+### 28.12 `.catch()` — Handling Rejection
 
 `.catch()` runs **only** when the Promise is rejected. The `.then()` before it is completely skipped.
 
@@ -12336,7 +12770,7 @@ apiCall.then(function (data) {
 
 ---
 
-### 28.10 `.finally()` — Always Runs
+### 28.13 `.finally()` — Always Runs
 
 `.finally()` runs **no matter what** — whether the Promise resolved or rejected. Use it for cleanup: closing a browser, logging a summary, tearing down test state.
 
@@ -12361,7 +12795,7 @@ testRun.then(function (data) {   // Resolve path
 
 ---
 
-### 28.11 Real QA Example — E2E Login Flow with Promise Chaining
+### 28.14 Real QA Example — E2E Login Flow with Promise Chaining
 
 This is the same login flow from the Callback Hell section, but flattened using Promise chaining. Each `.then()` returns the next Promise, so the steps run in order — no nesting required.
 
@@ -12422,7 +12856,7 @@ Done execution!
 
 ---
 
-### 28.12 `Promise.all()` — Wait for All to Succeed
+### 28.15 `Promise.all()` — Wait for All to Succeed
 
 `Promise.all()` takes an **array of Promises** and waits for **every one** to resolve. If even one rejects, the whole thing fails immediately.
 
@@ -12457,17 +12891,37 @@ Promise.all([
 
 ---
 
-### 28.13 `Promise.allSettled()` — Get Results of All, Even Failures
+### 28.16 `Promise.allSettled()` — Get Results of All, Even Failures
 
 `Promise.allSettled()` waits for **every** Promise to finish — it never short-circuits. Each result tells you whether it was `"fulfilled"` or `"rejected"`, plus the value or reason.
 
+#### Where do `r.status`, `r.value`, and `r.reason` come from?
+
+When `Promise.allSettled()` finishes, it gives you an **array of result objects**. Each object looks like this:
+
+- If the Promise **resolved**: `{ status: "fulfilled", value: <the resolved value> }`
+- If the Promise **rejected**: `{ status: "rejected", reason: <the rejection reason> }`
+
+JavaScript automatically creates these objects. You do not write them yourself. The `r` variable in `.forEach()` is each of these objects in turn.
+
 ```javascript
 Promise.allSettled([
-    Promise.resolve("Test A Passed!"),
-    Promise.reject("Test B failed"),
-    Promise.resolve("Test C passed")
+    Promise.resolve("Test A Passed!"),  // Will produce: { status: "fulfilled", value: "Test A Passed!" }
+    Promise.reject("Test B failed"),    // Will produce: { status: "rejected", reason: "Test B failed" }
+    Promise.resolve("Test C passed")    // Will produce: { status: "fulfilled", value: "Test C passed" }
 ]).then(function (results) {
+    // results = [
+    //   { status: "fulfilled", value: "Test A Passed!" },
+    //   { status: "rejected",  reason: "Test B failed" },
+    //   { status: "fulfilled", value: "Test C passed" }
+    // ]
+
     results.forEach(function (r, i) {
+        // r      → one result object from the array above
+        // r.status → "fulfilled" or "rejected" (always present)
+        // r.value  → the resolved value (only present when status is "fulfilled")
+        // r.reason → the rejection reason (only present when status is "rejected")
+        // r.value || r.reason → picks whichever one exists
         console.log("Test " + (i + 1) + ":", r.status, "-", r.value || r.reason);
     });
 });
@@ -12481,11 +12935,12 @@ Another example — useful for reading API statuses from a test report:
 
 ```javascript
 Promise.allSettled([
-    Promise.resolve("API 200"),
-    Promise.reject("API 500"),
-    Promise.resolve("API 201")
+    Promise.resolve("API 200"),   // { status: "fulfilled", value: "API 200" }
+    Promise.reject("API 500"),    // { status: "rejected",  reason: "API 500" }
+    Promise.resolve("API 201")    // { status: "fulfilled", value: "API 201" }
 ]).then(function (results) {
     results.forEach(function (r) {
+        // Ternary check: if fulfilled, use r.value; if rejected, use r.reason
         let val = r.status === "fulfilled" ? r.value : r.reason;
         console.log(r.status + " → " + val);
     });
@@ -12506,30 +12961,177 @@ Promise.allSettled([
 
 ---
 
-### 28.14 `Promise.race()` — First One Wins
+### 28.17 `Promise.race()` — First One Wins
 
-`Promise.race()` resolves or rejects as soon as the **first** Promise in the array settles — whichever finishes first wins.
+`Promise.race()` resolves or rejects as soon as the **first** Promise in the array settles — whichever finishes first wins. The others are ignored once the winner is determined.
 
 ```javascript
+// fastServer resolves after 100ms
 let fastServer = new Promise(function (resolve) {
-    setTimeout(function () { resolve("Fast 100ms"); }, 100);
+    setTimeout(function () { resolve("Fast 100ms"); }, 100); // Wins the race
 });
 
+// slowServer resolves after 500ms
 let slowServer = new Promise(function (resolve) {
-    setTimeout(function () { resolve("Slow 500ms"); }, 500);
+    setTimeout(function () { resolve("Slow 500ms"); }, 500); // Loses the race
 });
 
+// Promise.race() watches both Promises simultaneously
+// The first one to resolve (or reject) triggers the .then() (or .catch())
 Promise.race([fastServer, slowServer]).then(function (winner) {
+    // winner = the resolved value of whichever Promise finished first
     console.log("Winner:", winner);
     // Output: Winner: Fast 100ms
 });
 ```
 
-> 💡 **SDET Tip:** Use `Promise.race()` to implement a **timeout** — race your actual API call against a timer Promise that rejects after N seconds.
+**Practical use — implementing a timeout:**
+
+```javascript
+function fetchData() {
+  // Simulates a slow network call taking 3 seconds
+  return new Promise((resolve) => setTimeout(() => resolve("data"), 3000));
+}
+
+function timeout(ms) {
+  // A Promise that rejects after ms milliseconds
+  return new Promise((_, reject) => setTimeout(() => reject("Timed out!"), ms));
+}
+
+// Race between the actual call and a 1-second timeout
+Promise.race([fetchData(), timeout(1000)])
+  .then((data) => console.log("Got:", data))     // Runs if fetchData wins
+  .catch((err) => console.log("Error:", err));   // Runs if timeout wins
+// Output: Error: Timed out!  (because timeout(1000) rejects first)
+```
+
+> 💡 **SDET Tip:** Use `Promise.race()` to enforce maximum response time — race your API call against a timer Promise that rejects after N seconds.
+
+### 28.18 How to Check If a Value Is a Promise
+
+In JavaScript, a Promise is a special object. You can verify whether a value is a Promise in several ways.
+
+#### Method 1: `instanceof Promise` — Most Common
+
+```javascript
+const myPromise = Promise.resolve("hello");
+
+// instanceof checks whether the object was created from the Promise constructor
+console.log(myPromise instanceof Promise); // true
+
+const notAPromise = { then: () => {} };
+// This object has a .then method but was NOT created by the Promise constructor
+console.log(notAPromise instanceof Promise); // false (thenable, but not a native Promise)
+```
+
+> **Note:** `instanceof Promise` works for native Promises in the same JS environment. If the Promise comes from a different realm (e.g., an iframe or a separate Node.js module context), it may return `false` even for real Promises.
 
 ---
 
-### 28.15 🧪 Promise Practice — IQ Exercises
+#### Method 2: `typeof` — Incorrect for this purpose
+
+```javascript
+const p = Promise.resolve();
+console.log(typeof p); // "object" — not helpful, because many things are objects
+// typeof does not distinguish a Promise from any other object
+```
+
+---
+
+#### Method 3: Check for `.then` — Works for All Thenables
+
+```javascript
+// A "thenable" is any object that has a .then method
+// The Promise specification uses this definition internally
+function isPromise(value) {
+  // Check that value exists AND that its .then property is a function
+  return value !== null && value !== undefined && typeof value.then === "function";
+}
+
+// Examples
+console.log(isPromise(Promise.resolve()));        // true — native Promise
+console.log(isPromise({ then: () => {} }));       // true — thenable (not a real Promise, but compatible)
+console.log(isPromise(42));                       // false — number has no .then
+console.log(isPromise(null));                     // false — guarded by the null check
+```
+
+#### Quick Reference Table
+
+| Method | Works for native Promises | Works for cross-realm Promises | Works for thenables |
+|---|---|---|---|
+| `value instanceof Promise` | ✅ Yes | ❌ No | ❌ No |
+| `typeof value.then === "function"` | ✅ Yes | ✅ Yes | ✅ Yes |
+
+> 💡 For maximum reliability, use the thenable check: `value && typeof value.then === "function"`. This is how the Promise specification itself identifies Promises internally.
+
+---
+
+### 28.19 The 5-Step Pattern for Writing Any Promise Function
+
+Every async function that uses Promises follows the same five steps. Once you know this pattern, you can write or read any Promise-based code.
+
+#### The 5 Steps
+
+```javascript
+// ─────────────────────────────────────────────────────────────────────────────
+// Step 1: Define the function with a meaningful name and parameters
+// ─────────────────────────────────────────────────────────────────────────────
+function fetchUser(userId) {
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Step 2: Return a new Promise
+  // — This is what allows the caller to use .then() and .catch()
+  // — Without return, the function gives back undefined
+  // ─────────────────────────────────────────────────────────────────────────
+  return new Promise((resolve, reject) => {
+
+    // ───────────────────────────────────────────────────────────────────────
+    // Step 3: Validate input or check pre-conditions
+    // — If something is wrong, reject immediately and stop
+    // ───────────────────────────────────────────────────────────────────────
+    if (userId <= 0) {
+      reject("Invalid ID"); // Signals failure — goes to .catch()
+      return;               // Stop execution — nothing after this runs
+    }
+
+    // ───────────────────────────────────────────────────────────────────────
+    // Step 4: Perform the async work
+    // — setTimeout here simulates a real API call or database query
+    // ───────────────────────────────────────────────────────────────────────
+    setTimeout(() => {
+
+      // Step 5: Decide success or failure
+      resolve({ id: userId, name: "User" + userId }); // Signals success — goes to .then()
+
+    }, 1000); // Simulates 1 second network delay
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Using the function
+// ─────────────────────────────────────────────────────────────────────────────
+fetchUser(2)
+  .then((user) => console.log(user.name))  // "User2" — after 1 second
+  .catch((err) => console.log(err));       // Only runs if reject() was called
+
+fetchUser(-1)
+  .then((user) => console.log(user.name)) // SKIPPED — userId <= 0
+  .catch((err) => console.log(err));      // "Invalid ID" — runs immediately
+```
+
+#### Summary of the 5 Steps
+
+| Step | What You Write | Why |
+|---|---|---|
+| 1 | `function name(params)` | Regular function definition |
+| 2 | `return new Promise(...)` | Makes `.then()` available to the caller |
+| 3 | Validate / `reject()` early | Guard against bad inputs before doing work |
+| 4 | Async work (setTimeout, fetch) | The actual operation |
+| 5 | `resolve()` or `reject()` | Signal the outcome to whoever called the function |
+
+---
+
+### 28.20 🧪 Promise Practice — IQ Exercises
 
 Try each of these in your console one at a time. Predict the output before running.
 
@@ -12628,5 +13230,92 @@ Promise.all([t1, t2, t3])
     .then(function (r) { console.log("All:", r); })
     .catch(function (err) { console.log("Stopped:", err); }); // Stopped: FAIL
 ```
+
+---
+
+**Exercise 10 — `delayedGreeting` Challenge**
+
+**Task:** Write a function `delayedGreeting(firstName, lastName)` that:
+- Waits **2 seconds** then logs `"Hello " + firstName`
+- Then waits **1 more second** and logs `"Hello " + lastName`
+- Finally **resolves** the whole chain with the full message `"Hello firstName lastName"`
+
+Requirements:
+- Use the provided `wait` helper function
+- Use promise chaining (`.then()` after `.then()`)
+- No `async/await`
+
+**Starter code — helper function:**
+
+```javascript
+// wait(seconds, message) returns a Promise that resolves with message after seconds seconds
+function wait(seconds, message) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(message);      // resolve() sends message to the next .then()
+    }, seconds * 1000);      // convert seconds to milliseconds
+  });
+}
+```
+
+**Solution with line-by-line explanation:**
+
+```javascript
+// The helper function — resolves with message after the given delay
+function wait(seconds, message) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(message);      // This value becomes the parameter in the next .then()
+    }, seconds * 1000);
+  });
+}
+
+// delayedGreeting — chains two wait() calls sequentially
+function delayedGreeting(firstName, lastName) {
+  // Step 1: Start the first wait — 2 seconds
+  // wait() immediately returns a Promise. We return it so the caller can chain .then() on us.
+  return wait(2, "Hello " + firstName)
+
+    .then((firstMessage) => {
+      // Step 2: This runs after 2 seconds
+      // firstMessage = "Hello John" (the resolved value from the first wait)
+      console.log(firstMessage);          // Logs: "Hello John"
+
+      // Return the second Promise — the next .then() WAITS for this to resolve
+      // Without return, the next .then() would run immediately with undefined
+      return wait(1, "Hello " + lastName);
+    })
+
+    .then((secondMessage) => {
+      // Step 3: This runs 1 second after step 2 (total: 3 seconds)
+      // secondMessage = "Hello Doe" (the resolved value from the second wait)
+      console.log(secondMessage);         // Logs: "Hello Doe"
+
+      // Return the final combined string
+      // This becomes the resolved value of the entire delayedGreeting() Promise
+      return "Hello " + firstName + " " + lastName;
+    });
+}
+
+// Calling the function
+// delayedGreeting() returns a Promise, so we can attach .then() to get the final result
+delayedGreeting("John", "Doe").then((finalResult) => {
+  console.log("Final resolved value:", finalResult);
+});
+```
+
+**Output (step by step):**
+```text
+// After 2 seconds:
+Hello John
+
+// After 1 more second (3 seconds total):
+Hello Doe
+Final resolved value: Hello John Doe
+```
+
+**Why does `firstName` and `lastName` work in the last `.then()`?**
+
+`firstName` and `lastName` are parameters of the outer `delayedGreeting` function. Inner `.then()` callbacks form a **closure** over the outer function's scope — they can access `firstName` and `lastName` directly, even though they were declared in the parent function. This is why the final `return "Hello " + firstName + " " + lastName` works without needing to pass those values through the chain.
 
 ---
