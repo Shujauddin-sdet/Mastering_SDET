@@ -90,6 +90,31 @@
     - [Asynchronous Callbacks — setTimeout()](#275-asynchronous-callbacks--settimeout)
     - [Real QA Scenario — E2E Login Flow](#276-real-qa-scenario--e2e-login-flow-callback-hell-️)
     - [Key Takeaways](#277-key-takeaways)
+28. [Promises in JavaScript](#28-promises-in-javascript)
+    - [28.1 What is a Promise?](#281-what-is-a-promise)
+    - [28.2 The McDonald's Receipt Analogy](#282-the-analogy--the-mcdonalds-receipt)
+    - [28.3 Syntax Breakdown](#283-syntax-breakdown)
+    - [28.3.3 Promise Shortcuts: Constructor vs. Promise.resolve()](#2833-promise-shortcuts-constructor-vs-promiseresolve)
+    - [28.4 Why is this Better than Callbacks?](#284-why-is-this-better-than-callbacks)
+    - [28.5.1 Detailed Explanation of .then()](#2851-detailed-explanation-what-is-then-and-why-do-we-use-it)
+    - [28.6 Promise Chaining](#286-promise-chaining)
+    - [28.7 .then() with an Object Response](#287-then-with-an-object-response)
+    - [28.8 Mechanics of Data Flow](#288-mechanics-of-data-flow-and-parameter-binding-in-promise-chains)
+    - [28.9 A Function that Returns a Promise is Still a Function](#289-a-function-that-returns-a-promise-is-still-a-function)
+    - [28.10 What Does return new Promise(...) Mean?](#2810-what-does-return-new-promise-mean)
+    - [28.11 The return Keyword — Sync vs Async](#2811-the-return-keyword--synchronous-vs-asynchronous)
+    - [28.12 .catch() — Handling Rejection](#2812-catch--handling-rejection)
+    - [28.13 .finally() — Always Runs](#2813-finally--always-runs)
+    - [28.14 Real QA Example — E2E Login Flow](#2814-real-qa-example--e2e-login-flow-with-promise-chaining)
+    - [28.15 Promise.all() — Wait for All to Succeed](#2815-promiseall--wait-for-all-to-succeed)
+    - [28.16 Promise.allSettled() — Get Results of All](#2816-promiseallsettled--get-results-of-all-even-failures)
+    - [28.17 Promise.race() — First One Wins](#2817-promiserace--first-one-wins)
+    - [28.18 How to Check if a Value is a Promise](#2818-how-to-check-if-a-value-is-a-promise)
+    - [28.19 The 5-Step Pattern for Promise Functions](#2819-the-5-step-pattern-for-writing-any-promise-function)
+    - [28.20 🧪 Promise Practice — IQ Exercises](#2820-promise-practice--iq-exercises)
+    - [28.21 Promise.any() — First Success Wins](#2821-promiseany--first-success-wins)
+    - [28.22 setInterval() — Repeat Code on a Timer](#2822-setinterval--repeat-code-on-a-timer)
+    - [28.23 📌 What is a Promise? — A Short Recap](#2823--what-is-a-promise--a-short-recap)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -10595,7 +10620,7 @@ This makes your code much cleaner and faster to read, especially when constructi
 
 ---
 
-## 12. Classes — Object-Oriented JavaScript
+ ## 12. Classes — Object-Oriented JavaScript
 
 > A **Class** is a **code template (blueprint)** used to create objects. Each object built from a class has its own **state** (data stored in properties) and **behaviour** (actions defined as methods).
 
@@ -12195,6 +12220,45 @@ function name(parameter) {
 
 ---
 
+### 28.3.3 Promise Shortcuts: Constructor vs. `Promise.resolve()`
+
+When you need a Promise that is already resolved with a value, you have two ways to write it. One is the standard constructor, and the other is a shorter static shortcut.
+
+#### 1. The Standard Constructor (`new Promise`)
+```javascript
+// Initialize a new Promise by calling the Promise constructor
+let checkAuth1 = new Promise((resolve) => {
+  // Call resolve to successfully complete the Promise with the payload
+  resolve("Auth Ok");
+});
+```
+
+#### 2. The Static Shortcut (`Promise.resolve`)
+```javascript
+// Directly instantiate an already-resolved Promise using the static shortcut method
+let checkAuth2 = Promise.resolve("Auth Ok");
+```
+*Both of the above return an identical Promise object that immediately resolves with `"Auth Ok"`. Way 2 is shorter and cleaner.*
+
+#### ⚠️ Common Syntax Pitfall
+```javascript
+// This will fail because resolve is a static method, not a constructor function
+let checkAuth3 = new Promise.resolve("Auth Ok"); // ❌ Wrong! Throws TypeError
+```
+*You cannot use the `new` keyword with `Promise.resolve()`. `new Promise` is a constructor that requires an executor function as an argument, whereas `Promise.resolve` is a static helper method.*
+
+
+#### Summary Comparison:
+
+| Code Syntax | Valid? | Under the Hood |
+|---|---|---|
+| `new Promise((resolve) => resolve(42))` | ✅ Yes | Uses the constructor with an executor function. |
+| `Promise.resolve(42)` | ✅ Yes | Uses the static helper method directly (no `new` keyword). |
+| `new Promise.resolve(42)` | ❌ No | Invalid syntax; throws a `TypeError`. |
+
+---
+
+
 ### 28.4 Why is this Better than Callbacks?
 
 With old callbacks, every dependent step had to be nested inside the previous one — leading to Callback Hell.
@@ -12211,7 +12275,95 @@ With Promises, you chain `.then()` calls in a **straight line** down the page. T
 | `.catch((err) => { ... })` | Error / rejection | `reject()` is called |
 | `.finally(() => { ... })` | Cleanup | Always — success or failure |
 
+### 28.5.1 Detailed Explanation: What is `.then()` and Why Do We Use It?
+
+#### 🔍 What is `.then()`?
+
+`.then()` is a prototype method available on every Promise object in JavaScript. Think of it as a **receiver** or a **listener** function. It tells the JavaScript engine: 
+*"Run this callback function as soon as the Promise completes successfully."*
+
+##### Method Signature:
+```javascript
+promise.then(onFulfilled, onRejected);
+```
+- **`onFulfilled`**: A callback function that runs when the Promise transitions from `pending` to `fulfilled`. It receives the resolved value.
+- **`onRejected`** *(Optional)*: A callback function that runs if the Promise is rejected. (Most developers omit this and use a `.catch()` block at the end of the chain instead).
+
 ---
+
+#### 💡 Why Do We Use `.then()`?
+
+1. **Accessing Async Results:** Because JavaScript executes code asynchronously (non-blocking), you cannot get the result of an API call or database query immediately. `.then()` holds the block of code that must wait for that result to arrive.
+2. **Handling Sequential Workflows:** It allows you to coordinate tasks that must happen one after another.
+3. **Decoupled Error Handling:** When combined with `.catch()`, you don't need inline try-catch blocks for every single line of async code.
+
+---
+
+#### ⚙️ How `.then()` Executes (The Timeline)
+
+The callback inside `.then()` is **never executed immediately**. It is placed in the **Microtask Queue** and runs only when the Promise resolves.
+
+```javascript
+// 1. Create a Promise that takes 1 second to fetch data
+const fetchScore = new Promise((resolve) => {
+  // Set a timeout of 1000 milliseconds to simulate latency
+  setTimeout(() => {
+    // Resolve the Promise with the value 95, passing it to the listener
+    resolve(95); 
+  }, 1000);
+});
+
+// Log the start message immediately to the console
+console.log("Step 1: Starting the program...");
+
+// 2. Register what to do with the score once resolved
+fetchScore.then((score) => {
+  // Log the received resolved score once the Promise completes successfully
+  console.log("Step 3: The score is ready! Value received:", score);
+});
+
+// Log the registration finished message immediately to the console
+console.log("Step 2: Program registration finished.");
+```
+
+##### Output Flow in the Console:
+```text
+Step 1: Starting the program...
+Step 2: Program registration finished.
+(1 second delay)
+Step 3: The score is ready! Value received: 95
+```
+
+---
+
+#### ⚠️ Crucial Rule: Logging a Promise vs. Accessing Its Value
+
+A common point of confusion is trying to log a Promise object directly to read its value.
+
+If you log the Promise object itself using `console.log`, you do not get the inner resolved value directly. Instead, you print the Promise wrapper object showing its state and value:
+
+```javascript
+// Create a new Promise using the standard constructor
+let order = new Promise((resolve) => {
+  // Resolve the Promise immediately with a success message
+  resolve("Food is ready Enjoy");
+});
+
+// Log the Promise wrapper object directly to the console
+console.log(order); 
+// Output in Node.js: Promise { 'Food is ready Enjoy' }
+// You are logging the container/wrapper, not the data itself.
+```
+
+
+To actually extract and work with the resolved data (like response status, response body, etc.), you **must** access it inside `.then()` callback parameters. See **Section 28.7** for a detailed example of handling object responses inside `.then()`.
+
+*Key Takeaway: `.then()` runs only when the Promise resolves successfully. Its callback parameter is the only way to retrieve the resolved value for use.*
+
+---
+
+
+
 
 ### 28.6 Promise Chaining
 
@@ -13180,15 +13332,57 @@ Promise.resolve(1)
 ```javascript
 Promise.resolve("start")
     .then(function (val) {
-        console.log(val);          // start
-        throw new Error("Broke at step 2");
+        console.log(val);                     // logs: "start"
+        throw new Error("Broke at step 2");    // manually throw an error
     })
     .then(function () {
-        console.log("This will NOT run");
+        console.log("This will NOT run");     // skipped due to the error
     })
     .catch(function (err) {
-        console.log("Caught:", err.message); // Caught: Broke at step 2
+        console.log("Caught:", err.message);  // logs: "Caught: Broke at step 2"
     });
+```
+
+##### 🔍 Step-by-Step Breakdown:
+1. `Promise.resolve("start")` returns a Promise resolved with the string `"start"`.
+2. The first `.then()` receives `"start"` as the parameter `val`, prints it, and then executes `throw new Error(...)`.
+3. Throwing an exception inside a `.then()` callback automatically rejects that Promise step with the thrown error.
+4. Because the Promise is now rejected, JavaScript skips any subsequent `.then()` success handlers down the chain.
+5. Control immediately jumps to the nearest `.catch()` handler, which catches the Error object and prints the message.
+
+##### 🧸 Conceptual Analogy:
+- You ask for a snack (resolve).
+- You are handed the snack ("start").
+- You drop the snack on the floor (throw error).
+- Your next step (eating the snack) cannot happen.
+- You skip straight to your cleanup plan (`.catch()`) to resolve the situation.
+
+##### 🔑 Throwing Values vs. Error Objects
+The `throw` keyword in JavaScript allows you to throw *any* expression (not just Error objects). Inside a `.then()`, throwing any value will reject the Promise and pass that value to `.catch()`.
+
+```javascript
+// Example 1: Throwing a simple string
+Promise.resolve("start")
+  .then(() => {
+    throw "Just a string error"; 
+  })
+  .catch((err) => {
+    console.log(typeof err); // "string"
+    console.log(err);        // "Just a string error"
+  });
+
+// Example 2: Throwing a standard Error object (Best Practice)
+Promise.resolve("start")
+  .then(() => {
+    throw new Error("Standard error object"); 
+  })
+  .catch((err) => {
+    console.log(typeof err); // "object"
+    console.log(err.message); // "Standard error object"
+  });
+```
+*Note: Throwing a real `new Error(...)` is the standard practice because it captures a stack trace, which helps trace exactly where the problem occurred in the code.*
+
 ```
 
 **Exercise 6 — `reject` → `.then()` skipped → `.catch()` → `.finally()`:**
@@ -13317,5 +13511,288 @@ Final resolved value: Hello John Doe
 **Why does `firstName` and `lastName` work in the last `.then()`?**
 
 `firstName` and `lastName` are parameters of the outer `delayedGreeting` function. Inner `.then()` callbacks form a **closure** over the outer function's scope — they can access `firstName` and `lastName` directly, even though they were declared in the parent function. This is why the final `return "Hello " + firstName + " " + lastName` works without needing to pass those values through the chain.
+
+---
+
+---
+
+### 28.21 `Promise.any()` — First Success Wins
+
+#### 🔍 What is `Promise.any()`?
+
+Think back to `Promise.race()`, which returns the result of the **first promise to finish** — whether it succeeded or failed.
+
+`Promise.any()` is the optimistic sibling. It only cares about **success**:
+
+- It waits for the **first promise that fulfills** (resolves successfully) and returns its value.
+- If a promise **rejects first**, it simply ignores that rejection and keeps waiting.
+- Only if **every single promise rejects** does `Promise.any()` itself reject — with a special error called an `AggregateError` that bundles together all the individual rejection reasons.
+
+> **New term — `AggregateError`:** A built-in JavaScript error object that holds multiple errors at once. It has a `.errors` property which is an array of all the individual rejection reasons from each failed promise.
+
+> **New term — iterable:** An iterable is any value you can loop over, such as an array. `Promise.any()` accepts an array (or any iterable) of Promise objects as its input.
+
+---
+
+#### 📋 Official Definition
+
+> *"`Promise.any()` takes an iterable of Promises and returns a single Promise. It fulfills with the fulfillment value of the first promise that successfully resolves, ignoring any promises that reject earlier in the process. This is useful when you only care about getting a single successful response from a set of operations, like querying multiple redundant API endpoints. If all input promises reject, `Promise.any()` rejects with an `AggregateError`."*
+
+---
+
+#### ⚙️ Quick Comparison: `race()` vs `any()`
+
+| Behaviour | `Promise.race()` | `Promise.any()` |
+|---|---|---|
+| Returns immediately when | The **first** promise settles (success **or** failure) | The **first** promise **succeeds** |
+| Ignores failures? | ❌ No — a failure triggers it | ✅ Yes — failures are ignored until all fail |
+| If all fail | Rejects with the first rejection reason | Rejects with an `AggregateError` of all reasons |
+
+---
+
+#### 🧩 Code Example 1 — Basic Success Case
+
+```javascript
+// Three promises: the first one rejects, the second one resolves after 100ms
+let p1 = new Promise((resolve, reject) => {
+  // This promise fails immediately
+  reject("Server A is down");
+});
+
+let p2 = new Promise((resolve, reject) => {
+  // This promise succeeds after 100 milliseconds
+  setTimeout(() => {
+    resolve("Server B responded: Data received");
+  }, 100);
+});
+
+let p3 = new Promise((resolve, reject) => {
+  // This promise also fails
+  reject("Server C timed out");
+});
+
+// Promise.any() receives an array of all three promises
+// It will ignore p1 and p3 (both rejected) and return p2's value
+Promise.any([p1, p2, p3])
+  .then((result) => {
+    // This runs because p2 resolved successfully
+    console.log("First success:", result);
+    // Output: First success: Server B responded: Data received
+  })
+  .catch((err) => {
+    // This would only run if ALL three promises had rejected
+    console.log("All failed. Reasons:", err.errors);
+  });
+```
+
+**Output:**
+```text
+First success: Server B responded: Data received
+```
+
+---
+
+#### 🧩 Code Example 2 — All Promises Fail (`AggregateError`)
+
+```javascript
+// All three promises reject — Promise.any() will reject with AggregateError
+let a = new Promise((resolve, reject) => {
+  // Immediately reject with a reason
+  reject("Server A failed");
+});
+
+let b = new Promise((resolve, reject) => {
+  // Immediately reject with a different reason
+  reject("Server B failed");
+});
+
+let c = new Promise((resolve, reject) => {
+  // Immediately reject with yet another reason
+  reject("Server C failed");
+});
+
+// Since all promises fail, Promise.any() itself rejects
+Promise.any([a, b, c])
+  .then((result) => {
+    // This block will NOT run because no promise succeeded
+    console.log("Success:", result);
+  })
+  .catch((aggregateError) => {
+    // aggregateError is an AggregateError object — it holds all rejection reasons
+    console.log("All promises rejected.");
+
+    // .errors is an array containing each individual rejection reason
+    console.log("Reasons:", aggregateError.errors);
+    // Output: Reasons: [ 'Server A failed', 'Server B failed', 'Server C failed' ]
+  });
+```
+
+**Output:**
+```text
+All promises rejected.
+Reasons: [ 'Server A failed', 'Server B failed', 'Server C failed' ]
+```
+
+---
+
+### 28.22 `setInterval()` — Repeat Code on a Timer
+
+#### 🔍 What is `setInterval()`?
+
+`setInterval()` is a built-in JavaScript function that lets you **run a block of code repeatedly** at a fixed time interval, automatically, until you stop it.
+
+It is the repeating version of `setTimeout()`. Where `setTimeout()` runs your code once after a delay, `setInterval()` runs your code **over and over again** at the interval you specify.
+
+> **New term — Node.js:** Node.js is the runtime environment that lets you run JavaScript code outside of a browser (for example, in a terminal on your computer). It is built on the V8 JavaScript engine (the same engine that powers Google Chrome). All code examples in these notes run in Node.js.
+
+> **New term — milliseconds:** `setInterval()` and `setTimeout()` accept time values in **milliseconds** (ms). There are 1000 milliseconds in 1 second. So passing `2000` means 2 seconds.
+
+---
+
+#### 📋 Syntax
+
+```javascript
+// Basic setInterval syntax:
+// setInterval(callbackFunction, delayInMilliseconds)
+
+// The callbackFunction runs every delayInMilliseconds milliseconds.
+// setInterval() returns a numeric ID — you use this ID to stop the interval later.
+let intervalId = setInterval(callbackFunction, delayInMilliseconds);
+
+// To stop the interval from running, call clearInterval() with the ID
+clearInterval(intervalId);
+```
+
+---
+
+#### 🧩 Code Example 1 — Simple Repeating Log
+
+```javascript
+// Define a counter variable to track how many times the callback has run
+let count = 0;
+
+// setInterval() starts a timer that fires every 1000 milliseconds (1 second)
+// It returns a numeric ID — stored in 'intervalId' so we can stop it later
+let intervalId = setInterval(() => {
+
+  // Increment the counter by 1 each time the callback fires
+  count = count + 1;
+
+  // Print the current tick number to the console
+  console.log("Tick:", count);
+
+  // After 3 ticks, stop the interval from firing again
+  if (count === 3) {
+    // clearInterval() takes the ID returned by setInterval() and stops it
+    clearInterval(intervalId);
+    console.log("Interval stopped.");
+  }
+
+}, 1000); // ← The interval delay: 1000ms = 1 second between each execution
+```
+
+**Output (one line printed each second):**
+```text
+Tick: 1
+Tick: 2
+Tick: 3
+Interval stopped.
+```
+
+---
+
+#### 🧩 Code Example 2 — `setInterval()` Used Inside a Promise Chain
+
+This example shows `setInterval()` combined with Promises — a common pattern in test automation when polling for a condition.
+
+```javascript
+// A helper function that returns a Promise
+// It resolves after a set number of seconds using setTimeout
+function wait(seconds) {
+  return new Promise((resolve) => {
+    // setTimeout fires once after the given delay and resolves the Promise
+    setTimeout(() => {
+      resolve("Ready after " + seconds + " second(s)");
+    }, seconds * 1000); // Convert seconds to milliseconds
+  });
+}
+
+// Start an interval that logs a "polling" message every 500ms
+// Simulates checking for a condition repeatedly (like waiting for a UI element)
+let pollId = setInterval(() => {
+  // This callback fires every 500 milliseconds
+  console.log("Polling: Checking if the page is loaded...");
+}, 500);
+
+// After 2 seconds, stop the polling interval and log the final result
+wait(2).then((message) => {
+  // The wait Promise has resolved — stop the polling interval
+  clearInterval(pollId); // Pass the interval ID to stop it
+
+  // Log the resolved message from the wait() Promise
+  console.log(message);
+  console.log("Polling complete. Proceeding with the test.");
+});
+```
+
+**Output (printed every 500ms, stops after 2 seconds):**
+```text
+Polling: Checking if the page is loaded...
+Polling: Checking if the page is loaded...
+Polling: Checking if the page is loaded...
+Polling: Checking if the page is loaded...
+Ready after 2 second(s)
+Polling complete. Proceeding with the test.
+```
+
+---
+
+### 28.23 📌 What is a Promise? — A Short Recap
+
+A **Promise** in JavaScript is an object that represents the **eventual result of an asynchronous operation**. You use it whenever you need to do something that takes time — like fetching data from a server, reading a file, or waiting for a timer — and you want your program to do other work while it waits.
+
+A Promise has exactly **three states**:
+
+| State | Meaning |
+|---|---|
+| `pending` | The async operation is still running — no result yet |
+| `fulfilled` | The operation completed successfully — a value is ready |
+| `rejected` | The operation failed — an error reason is available |
+
+Once a Promise moves from `pending` to either `fulfilled` or `rejected`, it **never changes state again**.
+
+You access the result using:
+- `.then(callback)` — runs when the Promise fulfills (success)
+- `.catch(callback)` — runs when the Promise rejects (failure)
+- `.finally(callback)` — always runs, regardless of success or failure (used for cleanup)
+
+```javascript
+// A simple Promise that resolves immediately with a message
+let myPromise = new Promise((resolve, reject) => {
+  // resolve() marks the Promise as fulfilled and sends a value forward
+  resolve("The operation was successful");
+});
+
+// .then() receives the value from resolve()
+myPromise
+  .then((result) => {
+    // result = "The operation was successful"
+    console.log("Result:", result);
+  })
+  .catch((err) => {
+    // This block is skipped because the Promise resolved (not rejected)
+    console.log("Error:", err);
+  })
+  .finally(() => {
+    // This always runs — success or failure
+    console.log("Done.");
+  });
+```
+
+**Output:**
+```text
+Result: The operation was successful
+Done.
+```
 
 ---
