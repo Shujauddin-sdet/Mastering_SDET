@@ -115,6 +115,21 @@
     - [28.21 Promise.any() — First Success Wins](#2821-promiseany--first-success-wins)
     - [28.22 setInterval() — Repeat Code on a Timer](#2822-setinterval--repeat-code-on-a-timer)
     - [28.23 📌 What is a Promise? — A Short Recap](#2823--what-is-a-promise--a-short-recap)
+29. [Async/Await in JavaScript](#29-asyncawait-in-javascript)
+    - [29.1 Why Async Code? — What Problem Does It Solve?](#291-why-async-code--what-problem-does-it-solve)
+    - [29.2 What is Async/Await?](#292-what-is-asyncawait)
+    - [29.3 The `async` Keyword — Making Functions Return Promises](#293-the-async-keyword--making-functions-return-promises)
+    - [29.4 The `await` Keyword — Pausing Until a Promise Resolves](#294-the-await-keyword--pausing-until-a-promise-resolves)
+    - [29.5 Basic Async/Await Examples](#295-basic-asyncawait-examples)
+    - [29.6 Converting .then() Chains to Async/Await](#296-converting-then-chains-to-asyncawait)
+    - [29.7 The Rule for Passing Arguments Between Chained Calls](#297-the-rule-for-passing-arguments-between-chained-calls)
+    - [29.8 Error Handling with try/catch](#298-error-handling-with-trycatch)
+    - [29.9 Sequential vs Parallel Execution](#299-sequential-vs-parallel-execution)
+    - [29.10 When to Use Sequential vs Parallel](#2910-when-to-use-sequential-vs-parallel)
+    - [29.11 Common Mistakes with Async/Await](#2911-common-mistakes-with-asyncawait)
+    - [29.12 Async/Await with Fetch API (Real-World Example)](#2912-asyncawait-with-fetch-api-real-world-example)
+    - [29.13 Retry Pattern with Async/Await — Real QA Scenario](#2913-retry-pattern-with-asyncawait--real-qa-scenario)
+    - [29.14 🧪 Async/Await Practice Exercises](#2914--asyncawait-practice-exercises)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -13793,6 +13808,1407 @@ myPromise
 ```text
 Result: The operation was successful
 Done.
+```
+
+---
+
+## 29. Async/Await in JavaScript
+
+In the previous section (28), we learned about **Promises** — the `.then()/.catch()/.finally()` way of handling asynchronous code. Async/Await is a **cleaner syntax built on top of Promises**. It lets you write asynchronous code that **looks and reads like synchronous code**, making it much easier to understand, write, and debug.
+
+> 🧠 **Connection to Node.js:** Node.js (covered in Section 1) has a built-in library called `util` that includes a tool called `util.promisify`. It converts older callback-style functions into Promise-returning functions — which you can then use with async/await. You don't need to learn `util` deeply now, just know it exists and is used behind the scenes in many Node.js tools including Playwright.
+
+---
+
+### 29.1 Why Async Code? — What Problem Does It Solve?
+
+Some tasks take time to finish — network requests, timers, reading files, or waiting for user input. If JavaScript waited for each of these tasks to complete before moving on, the entire page (or program) would **freeze**.
+
+**Asynchronous code** solves this by letting the rest of the program continue to run while the slow task happens in the background. When the task finishes, its result is handled.
+
+- **Asynchronous flow** refers to how JavaScript allows certain operations to **run in the background** and lets their results be **handled when they are ready**
+- Async code does **not** run immediately — it runs when its condition is met:
+  - **Timers** run after a specified number of milliseconds
+  - **Events** run when triggered by a user action (click, keypress)
+  - **Network requests** run when the data arrives from the server
+
+> 💡 **Why this matters for you:** In Playwright test automation, almost every action is asynchronous — opening a page, clicking a button, waiting for an element. Understanding async code is essential for writing reliable tests.
+
+---
+
+### 29.2 What is Async/Await?
+
+`async/await` is a cleaner way to write Promises. Instead of chaining `.then().then().then()`, you write code that **looks synchronous** but works **asynchronously** under the hood.
+
+**Two keywords to remember:**
+
+| Keyword | Where to use it | What it does |
+|---|---|---|
+| `async` | Before a **function definition** | Makes the function **return a Promise** automatically |
+| `await` | Before a **function call** (inside an async function) | **Pauses** the function, waits for the Promise to finish, then gives you the resolved value |
+
+**The simple version:**
+- `async` → put before a **function** to make it **return a Promise**
+- `await` → pause here, **wait for the Promise to finish**, then give me the value
+
+> Think of it this way: whenever you are **waiting for something to resolve**, use `await`. Whenever you are **defining a function** that uses `await` inside, mark it with `async`.
+
+**Key differences from raw Promises:**
+- `async/await` allows you to write **asynchronous code in a synchronous manner** — the code reads top to bottom, no callbacks
+- Unlike `new Promise((resolve, reject) => {...})`, an `async` function does **not** take `resolve` or `reject` parameters — it uses `return` (for success) and `throw` (for failure) instead
+- Everything **after** an `await` line is placed in the **microtask queue** — it does not run immediately, it waits until the current synchronous code finishes
+
+---
+
+### 29.3 The `async` Keyword — Making Functions Return Promises
+
+When you put `async` before a function, that function **automatically returns a Promise** — even if you don't write `new Promise` yourself.
+
+```javascript
+// A normal function — returns whatever value you specify
+function normalFunction() {
+  return "Hello"; // returns the string "Hello" directly
+}
+
+// An async function — automatically wraps the return value in a Promise
+async function asyncFunction() {
+  return "Hello"; // returns Promise.resolve("Hello") behind the scenes
+}
+
+// Proof: calling the async function gives us a Promise, not a string
+console.log(normalFunction());  // "Hello" — just a plain string
+console.log(asyncFunction());   // Promise { "Hello" } — a Promise object
+```
+
+**Key rules:**
+- **Normal function** (without `async`) → returns whatever you say (a number, a string, an object, etc.)
+- **`async` function** → **always returns a Promise**:
+  - If you `return` a value → it wraps it in a **resolved** Promise
+  - If you `throw` an error → it wraps it in a **rejected** Promise
+
+```javascript
+// Returning a value from async function = resolved Promise
+async function getGreeting() {
+  return "Good morning"; // same as: return Promise.resolve("Good morning")
+}
+
+// You can consume it with .then() since it's a Promise
+getGreeting().then(function (message) {
+  console.log(message); // "Good morning"
+});
+```
+
+```javascript
+// Throwing an error from async function = rejected Promise
+async function failingFunction() {
+  throw new Error("Something went wrong"); // same as: return Promise.reject(new Error(...))
+}
+
+// You can catch it with .catch()
+failingFunction().catch(function (error) {
+  console.log(error.message); // "Something went wrong"
+});
+```
+
+```javascript
+// A basic async function that just logs a message
+async function sayHello() {
+  console.log("hello"); // this line runs normally, nothing async here
+}
+
+sayHello(); // prints "hello" — the function still runs, it just returns a Promise too
+```
+
+---
+
+### 29.4 The `await` Keyword — Pausing Until a Promise Resolves
+
+`await` pauses the execution of its surrounding `async` function until the Promise it's waiting for **settles** (either resolves or rejects).
+
+**Think of it like ordering a pizza online:**
+- **Without `await`:** You click "order" and immediately run off to do other things, but you have to keep checking your phone for the delivery status
+- **With `await`:** You click "order" and wait right there until the pizza arrives in your hands. Then you continue with the rest of your day
+
+**What `await` does step by step:**
+
+1. You call an `async` function
+2. Inside it, you write `await somePromise`
+3. JavaScript **pauses the function** at that line
+4. It waits for `somePromise` to resolve or reject
+5. If it **resolves** → the `await` expression becomes the resolved value
+6. If it **rejects** → the `await` throws the error (which you can catch with `try/catch` — covered in 29.8)
+7. The function **continues** after the `await`
+
+```javascript
+// A function that returns a Promise (simulates a task that takes 1 second)
+function walkDog() {
+  return new Promise((resolve, reject) => { // create a new Promise
+    setTimeout(() => { // simulate a 1-second delay
+      const dogWalked = true; // pretend the task succeeded
+
+      if (dogWalked) {
+        resolve("You walked the dog 🐕"); // success — send this message forward
+      } else {
+        reject("You didn't walk the dog"); // failure — send error forward
+      }
+    }, 1000); // wait 1000 milliseconds (1 second)
+  });
+}
+
+// An async function that WAITS for walkDog() to finish
+async function startDay() {
+  const result = await walkDog(); // pause here until walkDog's Promise resolves
+  console.log(result);            // only runs AFTER walkDog is done → "You walked the dog 🐕"
+}
+
+startDay(); // kick off the function
+```
+
+**How this applies in Playwright:**
+
+```javascript
+// In Playwright, every page action returns a Promise
+// We don't know how long it takes to open a website (depends on internet speed)
+// So we use await to pause until each action completes
+
+test("login test", async ({ page }) => {
+  await page.goto("https://example.com");       // wait for the page to fully load
+  await page.locator("#username").fill("admin"); // wait for the element to appear, then type
+  await page.locator("#password").fill("secret"); // wait for password field, then type
+  await page.click("#loginButton");               // wait for button click to register
+});
+```
+
+> ⚠️ **Note about non-Promise values:** If you `await` something that is NOT a Promise (like a number), JavaScript wraps it in `Promise.resolve()` automatically. It still works — it's just unnecessary.
+
+```javascript
+async function example() {
+  const result = await 42; // 42 is NOT a Promise, but this still works
+  console.log(result);     // 42 — JavaScript wrapped it as Promise.resolve(42)
+}
+
+example();
+```
+
+---
+
+### 29.5 Basic Async/Await Examples
+
+Here are simple examples to build muscle memory with the syntax.
+
+#### 🧩 Example 1 — Async function returns a Promise
+
+```javascript
+// When you mark a function as async, its return value becomes a Promise
+async function getTestResults() {
+  return "Pass"; // this becomes Promise.resolve("Pass") automatically
+}
+
+// Since it returns a Promise, you can use .then() to get the value
+getTestResults().then(function (result) {
+  console.log(result); // "Pass"
+});
+```
+
+#### 🧩 Example 2 — Using await to get resolved values
+
+```javascript
+async function runTest() {
+  // await pauses here until Promise.resolve("Login test passed") settles
+  let result = await Promise.resolve("Login test passed");
+  console.log(result); // "Login test passed"
+
+  // await pauses again until this Promise settles
+  let result2 = await Promise.resolve("Dashboard test passed");
+  console.log(result2); // "Dashboard test passed"
+}
+
+runTest(); // runs both steps one after the other
+```
+
+#### 🧩 Example 3 — Proof that async wraps return values
+
+```javascript
+async function test() {
+  return "Hello"; // returns Promise.resolve("Hello"), not the raw string
+}
+
+// Logging the function call directly shows the Promise object
+console.log(test()); // Promise { 'Hello' } — NOT the string "Hello"
+
+// To get the actual value, use .then() or await
+test().then(function (value) {
+  console.log(value); // "Hello" — now we have the actual string
+});
+```
+
+#### 🧩 Example 4 — Two weather API calls using .then() vs async/await
+
+```javascript
+// Two functions that simulate API calls (each takes 2 seconds)
+function fetchWeatherAPI1() {
+  return new Promise((resolve) => { // creates a new Promise
+    setTimeout(() => {              // simulates a 2-second network delay
+      console.log("Weather data 1 received"); // log when data arrives
+      resolve(200);                 // resolve with HTTP status code 200
+    }, 2000);                       // 2000ms = 2 seconds
+  });
+}
+
+function fetchWeatherAPI2() {
+  return new Promise((resolve) => { // creates a new Promise
+    setTimeout(() => {              // simulates a 2-second network delay
+      console.log("Weather data 2 received"); // log when data arrives
+      resolve(200);                 // resolve with HTTP status code 200
+    }, 2000);                       // 2000ms = 2 seconds
+  });
+}
+
+// ❌ Old way: using .then() chaining
+fetchWeatherAPI1()
+  .then((statusCode) => {              // runs after fetchWeatherAPI1 resolves
+    console.log("API 1 status:", statusCode); // logs: "API 1 status: 200"
+    return fetchWeatherAPI2();         // starts API 2 after API 1 is done
+  })
+  .then((statusCode) => {              // runs after fetchWeatherAPI2 resolves
+    console.log("API 2 status:", statusCode); // logs: "API 2 status: 200"
+  });
+
+// ✅ Cleaner way: using async/await
+async function getWeather() {
+  const status1 = await fetchWeatherAPI1();   // pause until API 1 responds
+  console.log("API 1 status:", status1);      // logs: "API 1 status: 200"
+
+  const status2 = await fetchWeatherAPI2();   // pause until API 2 responds
+  console.log("API 2 status:", status2);      // logs: "API 2 status: 200"
+}
+
+getWeather(); // both calls happen sequentially (one after the other)
+```
+
+---
+
+### 29.6 Converting .then() Chains to Async/Await
+
+One of the most common things you'll do is take existing `.then()` chain code and convert it to the cleaner `async/await` syntax. The logic stays exactly the same — only the way you write it changes.
+
+**Comparison:**
+- With `.then()`: You call the next function after each step using callbacks and `return`
+- With `async/await`: You just write each step on a new line with `await` — no nesting, no callbacks
+
+#### 🔁 Example 1 — Task Chaining: Old Way vs New Way
+
+```javascript
+// Three functions that each return a Promise (simulating tasks that take 1 second)
+function cleanRoom() {
+  return new Promise((resolve) => {       // creates a Promise
+    setTimeout(() => resolve("Room cleaned"), 1000); // resolves after 1 second
+  });
+}
+
+function doHomework() {
+  return new Promise((resolve) => {       // creates a Promise
+    setTimeout(() => resolve("Homework done"), 1000); // resolves after 1 second
+  });
+}
+
+function eatDinner() {
+  return new Promise((resolve) => {       // creates a Promise
+    setTimeout(() => resolve("Dinner eaten"), 1000); // resolves after 1 second
+  });
+}
+
+// ❌ Old way: chaining with .then() — works but deeply nested
+cleanRoom()
+  .then((msg1) => {              // msg1 = "Room cleaned" (resolved value from cleanRoom)
+    console.log(msg1);           // prints: "Room cleaned"
+    return doHomework();         // starts next task, passes its Promise forward
+  })
+  .then((msg2) => {              // msg2 = "Homework done" (resolved value from doHomework)
+    console.log(msg2);           // prints: "Homework done"
+    return eatDinner();          // starts next task, passes its Promise forward
+  })
+  .then((msg3) => {              // msg3 = "Dinner eaten" (resolved value from eatDinner)
+    console.log(msg3);           // prints: "Dinner eaten"
+    console.log("All done!");    // final log after all tasks complete
+  });
+
+// ✅ Cleaner way: async/await — reads like a to-do list
+async function doTasks() {
+  const msg1 = await cleanRoom();   // pause until cleanRoom resolves → "Room cleaned"
+  console.log(msg1);                // prints: "Room cleaned"
+
+  const msg2 = await doHomework();  // pause until doHomework resolves → "Homework done"
+  console.log(msg2);                // prints: "Homework done"
+
+  const msg3 = await eatDinner();   // pause until eatDinner resolves → "Dinner eaten"
+  console.log(msg3);                // prints: "Dinner eaten"
+
+  console.log("All done!");         // only runs after all three are finished
+}
+
+doTasks(); // kick off the task sequence
+```
+
+**Benefits of async/await over .then():**
+- No nested `.then()` or `return` inside callbacks
+- Looks like normal synchronous code — reads top to bottom
+- Much easier to read and debug
+
+#### 🔁 Example 2 — Real QA Scenario: Login Flow Conversion
+
+This is a real-world test automation scenario. Compare the `.then()` chain version (commented out) with the `async/await` version below it.
+
+```javascript
+// Four functions simulating Playwright-like browser actions
+// Each returns a Promise that resolves with a success message
+function openBrowser() {
+  return new Promise(function (resolve) { // creates a Promise
+    resolve("Browser opened!");           // resolves immediately with success message
+  });
+}
+
+function goToLogin() {
+  return new Promise(function (resolve) { // creates a Promise
+    resolve("Login page loaded");         // resolves immediately
+  });
+}
+
+function enterCredentials() {
+  return new Promise(function (resolve) { // creates a Promise
+    resolve("Credentials entered");       // resolves immediately
+  });
+}
+
+function clickLogin() {
+  return new Promise(function (resolve) { // creates a Promise
+    resolve("Logged in successfully");    // resolves immediately
+  });
+}
+
+// ❌ Old way with .then() chaining:
+// openBrowser()
+//   .then(function (msg) {
+//     console.log("Step 1:", msg);
+//     return goToLogin();
+//   })
+//   .then(function (msg) {
+//     console.log("Step 2:", msg);
+//     return enterCredentials();
+//   })
+//   .then(function (msg) {
+//     console.log("Step 3:", msg);
+//     return clickLogin();
+//   })
+//   .then(function (msg) {
+//     console.log("Step 4:", msg);
+//   })
+//   .catch(function (error) {
+//     console.log("Error:", error);
+//   })
+//   .finally(function () {
+//     console.log("Done execution!");
+//   });
+
+// ✅ Clean async/await version:
+async function runLoginFlow() {
+  let msg1 = await openBrowser();        // Step 1: wait for browser to open
+  console.log("Step 1:", msg1);          // prints: "Step 1: Browser opened!"
+
+  let msg2 = await goToLogin();          // Step 2: wait for login page to load
+  console.log("Step 2:", msg2);          // prints: "Step 2: Login page loaded"
+
+  let msg3 = await enterCredentials();   // Step 3: wait for credentials to be typed
+  console.log("Step 3:", msg3);          // prints: "Step 3: Credentials entered"
+
+  let msg4 = await clickLogin();         // Step 4: wait for login button click
+  console.log("Step 4:", msg4);          // prints: "Step 4: Logged in successfully"
+}
+
+runLoginFlow(); // executes all four steps in order
+```
+
+**Output:**
+```text
+Step 1: Browser opened!
+Step 2: Login page loaded
+Step 3: Credentials entered
+Step 4: Logged in successfully
+```
+
+> 💡 **Key insight:** Each `await` pauses the function and assigns the resolved value to the variable. You must mark the function as `async` to use `await` inside it. If any Promise rejects, the function stops and throws an error (handle it with `try/catch` — see Section 29.8).
+
+#### 🔁 Example 3 — Converting .then() to async/await (Quick Reference from Chapter 142)
+
+```javascript
+// ❌ .then() version — token from step 1 is passed to step 2
+getToken()
+  .then(function (token) {     // receives the resolved token value
+    return getUser(token);     // passes token to the next function
+  })
+  .then(function (user) {      // receives the resolved user object
+    console.log(user);         // prints the user
+  });
+
+// ✅ async/await version — same logic, much cleaner
+async function run() {
+  let token = await getToken(); // pause until getToken resolves, store the token
+  let user = await getUser(token); // pause until getUser resolves, pass the token
+  console.log(user);            // prints the user
+}
+
+run(); // execute the function
+```
+
+---
+
+### 29.7 The Rule for Passing Arguments Between Chained Calls
+
+When you chain multiple async calls, the most common confusion is: **"What do I put inside the parentheses when calling the next function?"**
+
+**The rule is simple:** Look at the function definition to see what parameter it expects, then pass the previous result (or a property of it).
+
+**Think of it like an assembly line:**
+- Station 1 produces a box
+- Station 2 needs the box to paint it
+- Station 3 needs the painted box to pack it
+
+**In code:**
+- Function 1 returns a value
+- Function 2 expects that value (or a property of it) as a parameter
+- Function 3 expects the result of Function 2
+
+#### 📦 Full Working Example — fetchUser → fetchPosts → getPostCount
+
+```javascript
+// ============================================================
+// STEP 1: Define three functions that return Promises
+// ============================================================
+
+// This function takes a userId (number) and returns a user object
+function fetchUser(userId) {
+  return new Promise((resolve) => {           // creates a new Promise
+    setTimeout(() => {                        // simulates a 1-second delay
+      resolve({ id: userId, name: "User" + userId }); // resolves with an object: { id: 5, name: "User5" }
+    }, 1000);                                 // 1000ms = 1 second
+  });
+}
+
+// This function takes a user OBJECT (not just an id) and returns a posts array
+function fetchPosts(userObject) {
+  return new Promise((resolve) => {           // creates a new Promise
+    setTimeout(() => {                        // simulates a 1-second delay
+      resolve([`Post for ${userObject.name}`, "Second post"]); // uses userObject.name to personalize
+    }, 1000);                                 // 1000ms = 1 second
+  });
+}
+
+// This function takes a posts ARRAY and returns the total count
+function getPostCount(postsArray) {
+  return new Promise((resolve) => {           // creates a new Promise
+    setTimeout(() => {                        // simulates a 0.5-second delay
+      resolve(postsArray.length);             // resolves with the number of posts
+    }, 500);                                  // 500ms = 0.5 seconds
+  });
+}
+
+// ============================================================
+// Old way: Chaining with .then() — to understand the data flow
+// ============================================================
+
+fetchUser(5)
+  .then((user) => {                  // user = { id: 5, name: "User5" }
+    console.log("User fetched:", user);
+    return fetchPosts(user);         // pass the WHOLE user object (because fetchPosts expects it)
+  })
+  .then((posts) => {                 // posts = ["Post for User5", "Second post"]
+    console.log("Posts:", posts);
+    return getPostCount(posts);      // pass the WHOLE posts array (because getPostCount expects it)
+  })
+  .then((count) => {                 // count = 2 (the length of the posts array)
+    console.log("Total posts:", count);
+  });
+
+// ============================================================
+// Clean way: Same logic with async/await
+// ============================================================
+
+async function displayUserData(userId) {
+  const user = await fetchUser(userId);     // user = { id: 5, name: "User5" }
+  console.log("User fetched:", user);
+
+  const posts = await fetchPosts(user);     // pass the user object (fetchPosts needs it)
+  console.log("Posts:", posts);
+
+  const count = await getPostCount(posts);  // pass the posts array (getPostCount needs it)
+  console.log("Total posts:", count);
+}
+
+displayUserData(5); // starts the whole chain with userId = 5
+```
+
+**Key takeaway — how to know what to pass:**
+
+| Function | Expects | Where does that value come from? |
+|---|---|---|
+| `fetchUser(userId)` | `userId` (number) | You provide it when calling: `fetchUser(5)` |
+| `fetchPosts(userObject)` | `userObject` (object) | It comes from `await fetchUser(...)` — the returned user object |
+| `getPostCount(postsArray)` | `postsArray` (array) | It comes from `await fetchPosts(...)` — the returned posts |
+
+> 💡 **You do not guess.** You look at the function definition to see what parameter name and type it has, and you pass the previous result (or a property of it like `user.token` or `user.id`).
+
+#### 📦 Another Example — Passing specific properties
+
+```javascript
+// A function that takes an ID and returns a user object with multiple properties
+function getUser(id) {
+  return Promise.resolve({ userId: id, token: "abc123" }); // resolves instantly
+}
+
+// A function that needs BOTH a token AND a userId
+function getDashboard(token, userId) {
+  return Promise.resolve(`Dashboard for user ${userId} with token ${token}`); // resolves instantly
+}
+
+// Using async/await to chain them together
+async function showDashboard(id) {
+  const user = await getUser(id);       // user = { userId: 7, token: "abc123" }
+  console.log(user);                    // prints the full user object
+
+  // getDashboard expects (token, userId) — so we access user.token and user.userId
+  const dashboard = await getDashboard(user.token, user.userId);
+  console.log(dashboard);              // "Dashboard for user 7 with token abc123"
+}
+
+showDashboard(7); // pass 7 as the id → getUser(7) → getDashboard(user.token, user.userId)
+```
+
+> Here `getUser(id)` expects an `id` argument. When you call `showDashboard(7)`, the `7` becomes the `id` parameter inside the function, which you then pass to `getUser(id)`. The returned object has `.token` and `.userId` properties — you use those to call `getDashboard`.
+
+---
+
+### 29.8 Error Handling with try/catch
+
+With Promises, you handle errors using `.catch()`. With `async/await`, you handle errors using `try/catch` — the same error handling pattern used everywhere in JavaScript.
+
+**The mapping is direct:**
+
+| Promises | Async/Await |
+|---|---|
+| `.then()` | Code inside `try` block |
+| `.catch()` | Code inside `catch` block |
+| `.finally()` | Code inside `finally` block |
+
+**Think of it this way:**
+- `try` = You attempt to run some code that might fail
+- `catch` = If anything goes wrong, this block catches the error before it crashes the program
+- `finally` = This always runs, whether there was an error or not (great for cleanup)
+
+#### ✅ Basic try/catch Example
+
+```javascript
+// A function that may fail — rejects if the id is invalid
+function fetchUser(id) {
+  return new Promise((resolve, reject) => {  // creates a Promise that can succeed or fail
+    setTimeout(() => {                       // simulates a 1-second delay
+      if (id <= 0) {
+        reject("Invalid user ID");           // FAIL — sends error message forward
+      } else {
+        resolve({ id: id, name: "User" + id }); // SUCCESS — sends user object forward
+      }
+    }, 1000);                                // 1000ms = 1 second
+  });
+}
+
+// Async function with try/catch to handle the error safely
+async function showUser(id) {
+  try {
+    const user = await fetchUser(id);        // pause and wait for the Promise
+    console.log("Success:", user.name);      // only runs if fetchUser resolved
+  } catch (error) {
+    console.log("Caught error:", error);     // only runs if fetchUser rejected
+  }
+}
+
+// Test with valid and invalid IDs
+showUser(5);   // After 1 sec → "Success: User5"
+showUser(-1);  // After 1 sec → "Caught error: Invalid user ID"
+// No crash. No unhandled rejection. Just a clean message.
+```
+
+#### 🧩 try/catch/finally — Full Example
+
+```javascript
+async function testAPI() {
+  try {
+    // This Promise will REJECT (simulating a server error)
+    let result = await Promise.reject("503 Service Unavailable");
+    console.log("Result:", result);    // this line is SKIPPED because the Promise rejected
+  } catch (error) {
+    console.log("Error:", error);      // catches the rejection → "Error: 503 Service Unavailable"
+  } finally {
+    console.log("Clean up!");          // ALWAYS runs, whether try or catch executed
+  }
+}
+
+testAPI();
+// Output:
+// Error: 503 Service Unavailable
+// Clean up!
+```
+
+> 💡 `try/catch/finally` maps directly to `.then()/.catch()/.finally()` — same logic, cleaner syntax.
+
+#### 🧠 Catching Errors from Multiple Awaits
+
+When you have multiple `await` calls inside a single `try` block, **the first one that rejects** will skip all remaining `await` calls and jump straight to `catch`.
+
+```javascript
+async function processAll() {
+  try {
+    const user = await fetchUser(1);           // if this rejects, jumps to catch
+    const posts = await fetchPosts(user.id);   // if this rejects, jumps to catch
+    const total = await calculateTotal(posts); // if this rejects, jumps to catch
+    console.log(total);                        // only runs if ALL three succeeded
+  } catch (err) {
+    console.log("Something failed:", err);     // catches the FIRST error from any await
+  }
+}
+// If fetchUser fails, fetchPosts and calculateTotal never run.
+```
+
+#### 🧪 Practice Exercise — Error Handling
+
+```javascript
+// Given: a function that rejects for invalid IDs
+function fetchUser(id) {
+  return new Promise((resolve, reject) => {    // creates a Promise
+    setTimeout(() => {                         // simulates a delay
+      if (id <= 0) reject("Invalid ID");       // reject if id is 0 or negative
+      else resolve({ name: "User " + id });    // resolve with user object
+    }, 500);                                   // 500ms delay
+  });
+}
+
+// Solution: async function with try/catch
+async function getUserWithErrorHandling(id) {
+  try {
+    const user = await fetchUser(id);          // pause until fetchUser settles
+    console.log(user);                         // only runs on success → { name: "User 10" }
+  } catch (error) {
+    console.log(error);                        // only runs on failure → "Invalid ID"
+  }
+}
+
+// Test with both valid and invalid inputs
+getUserWithErrorHandling(10);  // { name: "User 10" }
+getUserWithErrorHandling(-5);  // "Invalid ID"
+```
+
+---
+
+### 29.9 Sequential vs Parallel Execution
+
+When you have multiple async tasks, you have two choices for **how to run them**:
+
+#### 📚 What Do "Sequential" and "Parallel" Mean?
+
+**Sequential (one after another)**
+Like waiting in a queue: first person finishes, then the second starts, then the third.
+- In code: Task A finishes → Task B starts → Task C starts
+- **Total time = sum of all task times**
+- Example: You eat breakfast, then brush teeth, then get dressed — you cannot do them at the same time
+
+**Parallel (all at the same time)**
+Like asking three friends for help: they all start together, each finishes when ready.
+- In code: Task A, Task B, Task C all start together. You wait for all to finish
+- **Total time = the longest single task time** (not the sum)
+- Example: You ask three different friends to bring chips, soda, and pizza — they all leave at once, and you wait for the last one to arrive
+
+**Time math example:**
+Imagine three tasks: Task A takes 3 seconds, Task B takes 2 seconds, Task C takes 1 second.
+- **Sequential:** You do them one by one → total wait = 3 + 2 + 1 = **6 seconds**
+- **Parallel:** You start all three at once → total wait = **3 seconds** (the longest one)
+
+`Promise.all` lets you run them in parallel. You get all results together in an array.
+
+**Quick reference — when to use which pattern:**
+
+```javascript
+// ✅ Use SEQUENTIAL when each step depends on the previous one
+const user = await fetchUser();           // step 1
+const posts = await fetchPosts(user.id);  // step 2 NEEDS user.id from step 1
+// Total time = time1 + time2
+```
+
+```javascript
+// ✅ Use PARALLEL when tasks are independent (none needs data from the other)
+const [user, posts, comments] = await Promise.all([
+  fetchUser(),       // starts immediately
+  fetchPosts(),      // starts immediately
+  fetchComments()    // starts immediately
+]);
+// Total time = the longest of the three
+```
+
+---
+
+#### ⏱️ What is `Date.now()`?
+
+Think of `Date.now()` as clicking the button on a digital stopwatch.
+
+When you run `Date.now()`, JavaScript looks at the clock and returns a massive number — the exact number of milliseconds that have passed since January 1, 1970 (the "starting point" for computer time).
+
+We don't usually care about the giant number itself. We use it to **measure how long our code takes to run:**
+
+```javascript
+// 1. Click the stopwatch at the START
+const startTime = Date.now();  // records the current time in milliseconds
+
+// ... do some long task here ...
+
+// 2. Click the stopwatch at the END
+const endTime = Date.now();    // records the time again
+
+// 3. Subtract start from end to see how long it took
+const totalTime = endTime - startTime; // difference = duration in milliseconds
+console.log(`That took ${totalTime} milliseconds!`);
+```
+
+---
+
+#### ✅ Sequential Execution — One After Another
+
+Use sequential when **each task depends on the previous one's result**. You can't type a password until you've typed the username.
+
+```javascript
+// Sequential = each await waits for the previous to finish before starting
+
+async function sequentialExample() {
+  console.log("Start sequential");          // logs immediately
+
+  // Task 1 starts and completes in 1 second
+  const result1 = await new Promise((resolve) => setTimeout(() => resolve("A"), 1000));
+  console.log(result1);                     // "A" — after 1 second
+
+  // Task 2 starts ONLY after Task 1 is done. Takes 2 seconds.
+  const result2 = await new Promise((resolve) => setTimeout(() => resolve("B"), 2000));
+  console.log(result2);                     // "B" — after 1 + 2 = 3 seconds total
+
+  // Task 3 starts ONLY after Task 2 is done. Takes 0.5 seconds.
+  const result3 = await new Promise((resolve) => setTimeout(() => resolve("C"), 500));
+  console.log(result3);                     // "C" — after 3 + 0.5 = 3.5 seconds total
+
+  console.log("Finished sequential – total time ~3.5 sec");
+}
+
+sequentialExample();
+```
+
+**Real-world example — Sequential API calls with timing:**
+
+```javascript
+// A function that simulates an API call (takes 1 second each)
+function apiCall(name) {
+  return new Promise(function (resolve) {  // creates a new Promise
+    setTimeout(function () {               // simulates a 1-second network delay
+      resolve({ name: name, status: "200 OK" }); // resolves with an object
+    }, 1000);                              // 1000ms = 1 second
+  });
+}
+
+// Sequential test — each call waits for the previous one
+async function sequentialTest() {
+  console.log("Starting of the test");     // log the start
+  let start = Date.now();                  // record the start time
+
+  let r1 = await apiCall("Login");         // call 1 — wait 1 second
+  console.log(r1.name);                    // "Login"
+
+  let r2 = await apiCall("Dashboard");     // call 2 — wait another 1 second
+  console.log(r2.name);                    // "Dashboard"
+
+  let r3 = await apiCall("Report");        // call 3 — wait another 1 second
+  console.log(r3.name);                    // "Report"
+
+  console.log(`Total Time: ${Date.now() - start}ms`); // ~3000ms (3 calls × 1 second each)
+}
+
+sequentialTest();
+```
+
+**Output:**
+```text
+Starting of the test
+Login
+Dashboard
+Report
+Total Time: ~3000ms
+```
+
+---
+
+#### ✅ Parallel Execution — All at the Same Time
+
+Use parallel with `Promise.all` when **tasks are independent** (none needs data from the other).
+
+```javascript
+// Parallel = all promises start together, then Promise.all waits for all to finish
+
+async function parallelExample() {
+  console.log("Start parallel");            // logs immediately
+
+  // Create all three promises but DO NOT await them individually
+  const task1 = new Promise((resolve) => setTimeout(() => resolve("A"), 1000)); // 1 sec
+  const task2 = new Promise((resolve) => setTimeout(() => resolve("B"), 2000)); // 2 sec
+  const task3 = new Promise((resolve) => setTimeout(() => resolve("C"), 500));  // 0.5 sec
+
+  // Promise.all starts them together and waits for ALL to finish
+  const results = await Promise.all([task1, task2, task3]);
+  // Total time = longest task = 2000ms (2 seconds), NOT 1 + 2 + 0.5 = 3.5
+
+  console.log(results); // ["A", "B", "C"] — results arrive in the ORDER they were passed
+  console.log("Finished parallel – total time ~2 sec");
+}
+
+parallelExample();
+```
+
+**Real-world example — Parallel API calls with timing:**
+
+```javascript
+// Same apiCall function from above
+function apiCall(name) {
+  return new Promise(function (resolve) {   // creates a new Promise
+    setTimeout(function () {                // simulates a 1-second delay
+      resolve(name + ": 200 OK");           // resolves with a success message
+    }, 1000);                               // 1000ms = 1 second
+  });
+}
+
+// Parallel test — all calls start at the same time
+async function parallelTest() {
+  console.log("Starting of the test");      // log the start
+  let start = Date.now();                   // record the start time
+
+  // Destructure the results array into individual variables
+  let [r1, r2, r3] = await Promise.all([    // start all three at once
+    apiCall("Auth Service"),                // call 1 — starts immediately
+    apiCall("User Service"),                // call 2 — starts immediately
+    apiCall("Payment Service")              // call 3 — starts immediately
+  ]);
+
+  console.log(r1);                          // "Auth Service: 200 OK"
+  console.log(r2);                          // "User Service: 200 OK"
+  console.log(r3);                          // "Payment Service: 200 OK"
+
+  console.log("Time: ~" + (Date.now() - start) + "ms"); // ~1000ms (all ran in parallel!)
+}
+
+parallelTest();
+```
+
+**Output:**
+```text
+Starting of the test
+Auth Service: 200 OK
+User Service: 200 OK
+Payment Service: 200 OK
+Time: ~1000ms
+```
+
+**Another parallel example — fetching weather and news at the same time:**
+
+```javascript
+// Two independent API calls
+function fetchWeather() {
+  return new Promise((resolve) => setTimeout(() => resolve("Sunny"), 1000));   // 1 second
+}
+function fetchNews() {
+  return new Promise((resolve) => setTimeout(() => resolve("Headlines"), 2000)); // 2 seconds
+}
+
+async function getBoth() {
+  // Both start at the same time — we wait for the slower one
+  const results = await Promise.all([fetchWeather(), fetchNews()]);
+  console.log(results); // ["Sunny", "Headlines"]
+}
+
+getBoth();
+// Output after ~2 seconds (the longest is fetchNews = 2000ms):
+// ["Sunny", "Headlines"]
+```
+
+---
+
+#### 🔑 Key Difference — Sequential vs Parallel
+
+| Feature | Sequential | Parallel |
+|---|---|---|
+| **How to write** | `await task1`, then `await task2`, then `await task3` | `await Promise.all([task1, task2, task3])` |
+| **When does task2 start?** | After task1 finishes | Immediately (at same time as task1) |
+| **Total time** | Sum of all durations | Duration of the longest task |
+| **Use when** | Tasks depend on each other | Tasks are independent |
+
+---
+
+### 29.10 When to Use Sequential vs Parallel
+
+| Use Sequential When... | Use Parallel When... |
+|---|---|
+| Step 2 needs Step 1's result | Steps are independent |
+| Login → then fetch data | Health check 5 APIs |
+| Create user → then verify | Validate 3 form fields |
+| Order matters | Order doesn't matter |
+| `await` one by one | `await Promise.all([...])` |
+
+**Playwright example — Sequential (order matters):**
+
+```javascript
+// These steps MUST happen in order — you can't type a password before the username
+await page.fill('#username', 'testuser');    // Step 1: fill username first
+await page.fill('#password', 'secret123');   // Step 2: fill password second
+await page.click('#loginButton');            // Step 3: click login last
+```
+
+**Playwright example — Parallel (listening + triggering at the same time):**
+
+```javascript
+// Classic Playwright pattern: click a button and wait for navigation simultaneously
+// If you do them sequentially, you might MISS the navigation event!
+await Promise.all([
+  page.waitForNavigation(),   // start listening for the page to change
+  page.click('#submitButton') // click the button that triggers the change
+]);
+```
+
+> 💡 **In the parallel Playwright example:** If you `await page.click()` first and THEN `await page.waitForNavigation()`, the navigation might already have finished by the time you start listening. `Promise.all` ensures both actions start at the same time.
+
+---
+
+### 29.11 Common Mistakes with Async/Await
+
+Here are the most common mistakes beginners make — and how to fix each one.
+
+#### ❌ Mistake 1: Using `await` Without `async`
+
+```javascript
+// ❌ WRONG — await can only be used inside an async function
+function getData() {
+  const result = await fetch('url'); // SyntaxError: await is only valid in async functions
+  return result;
+}
+```
+
+```javascript
+// ✅ FIX — add async before the function keyword
+async function getData() {
+  const result = await fetch('url'); // now await works because the function is async
+  return result;
+}
+```
+
+#### ❌ Mistake 2: Forgetting to `await` a Promise
+
+```javascript
+// ❌ WRONG — without await, user is a Promise object, not the actual value
+async function showUser() {
+  const user = fetchUser();      // user = Promise { <pending> }, NOT the user data
+  console.log(user.name);        // undefined — because Promises don't have a .name property
+}
+```
+
+```javascript
+// ✅ FIX — add await to get the resolved value
+async function showUser() {
+  const user = await fetchUser(); // user = { name: "User5" } — the actual resolved value
+  console.log(user.name);         // "User5" — now it works
+}
+```
+
+#### ❌ Mistake 3: Using `await` at Top Level in a Non-Module Script
+
+```javascript
+// ❌ WRONG — in a regular .js file (not a module), you can't use await at the top level
+const data = await fetch('url'); // SyntaxError: await is only valid in async functions
+```
+
+```javascript
+// ✅ FIX — wrap it in an async IIFE (Immediately Invoked Function Expression)
+(async () => {
+  const data = await fetch('url'); // works because it's inside an async function
+  console.log(data);
+})(); // the () at the end immediately calls the function
+```
+
+> 💡 IIFE stands for **Immediately Invoked Function Expression** — you define a function and call it in the same line.
+
+#### ❌ Mistake 4: Forgetting That `async` Functions Return a Promise
+
+```javascript
+// ❌ WRONG — getNumber() returns a Promise, not the number 42
+async function getNumber() {
+  return 42; // this becomes Promise.resolve(42), NOT just 42
+}
+
+const num = getNumber(); // num = Promise { 42 } — a Promise, not a number
+console.log(num + 1);    // NaN — you can't add 1 to a Promise object
+```
+
+```javascript
+// ✅ FIX — use await (inside another async function) or .then()
+// Option 1: await
+async function main() {
+  const num = await getNumber(); // num = 42 — the resolved value
+  console.log(num + 1);          // 43 — works correctly now
+}
+main();
+
+// Option 2: .then()
+getNumber().then((num) => {
+  console.log(num + 1); // 43
+});
+```
+
+#### ❌ Mistake 5: Not Handling Errors with `try/catch`
+
+```javascript
+// ❌ WRONG — if fetch fails, the error is unhandled and crashes silently
+async function getData() {
+  const data = await fetch('wrong-url'); // throws if network error occurs
+  console.log(data);                     // never reaches here on error
+}
+
+getData(); // Unhandled promise rejection — bad practice
+```
+
+```javascript
+// ✅ FIX — wrap in try/catch to handle errors gracefully
+async function getData() {
+  try {
+    const data = await fetch('wrong-url');  // attempt the fetch
+    console.log(data);                      // only runs if fetch succeeds
+  } catch (err) {
+    console.log("Error:", err);             // catches the error safely
+  }
+}
+
+getData(); // no crash — error is caught and logged
+```
+
+---
+
+### 29.12 Async/Await with Fetch API (Real-World Example)
+
+Now you'll see how `async/await` is used in real web development — calling APIs and handling responses.
+
+**What is `fetch()`?**
+`fetch()` is a built-in browser/Node function that makes HTTP requests (gets data from a server). It returns a **Promise**.
+
+```javascript
+async function getTodo() {
+  try {
+    // Step 1: fetch() sends an HTTP request and returns a Promise
+    // await pauses until we get a response from the server
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+
+    // Step 2: response.json() reads the response body and parses the JSON
+    // This ALSO returns a Promise, so we need await again
+    const data = await response.json();
+
+    // Step 3: now we have the actual data as a JavaScript object
+    console.log(data);
+  } catch (error) {
+    // If the network fails or any step throws an error, we catch it here
+    console.log("Fetch failed:", error);
+  }
+}
+
+getTodo();
+// Output (example):
+// { userId: 1, id: 1, title: "delectus aut autem", completed: false }
+```
+
+**What happens step by step:**
+
+1. `fetch(url)` returns a Promise that resolves to a **response object**
+2. `await` waits for the response
+3. `response.json()` reads the body and returns **another Promise** (it parses the raw text into a JavaScript object)
+4. `await` waits for the parsed data
+5. The `data` variable now holds the actual JavaScript object you can use
+
+> 💡 Notice that `fetch()` involves **two awaits** — one for the network response and one for parsing the body. This is because both operations are asynchronous.
+
+---
+
+### 29.13 Retry Pattern with Async/Await — Real QA Scenario
+
+In real test automation, some tests are **flaky** — they sometimes pass and sometimes fail (due to network issues, slow servers, etc.). A common pattern is to **retry** a failing test a few times before giving up.
+
+```javascript
+// Simulates a flaky API: fails on the first 2 attempts, succeeds on the 3rd
+let attempt = 0; // tracks how many times the API has been called
+
+function flakyAPI() {
+  attempt++;                              // increment the attempt counter
+  if (attempt < 3) {
+    // First 2 attempts: reject with a failure message
+    return Promise.reject("Attempt " + attempt + ": failed");
+  }
+  // 3rd attempt onwards: resolve with a success message
+  return Promise.resolve("Attempt " + attempt + ": success!");
+}
+
+// Retry function: keeps calling flakyAPI up to maxRetries times
+async function retryTesting(maxRetries) {
+  for (let i = 1; i <= maxRetries; i++) { // loop from attempt 1 to maxRetries
+    try {
+      let result = await flakyAPI();      // try calling the flaky API
+      console.log("Pass! Exiting.", result); // if it resolves, log success
+      break;                              // EXIT the loop — no need to retry anymore
+    } catch (error) {
+      console.log("Fail!", error);        // if it rejects, log the failure and try again
+    }
+  }
+}
+
+retryTesting(5); // allow up to 5 retries
+// Output:
+// Fail! Attempt 1: failed
+// Fail! Attempt 2: failed
+// Pass! Exiting. Attempt 3: success!
+```
+
+> 💡 **The `break` statement** is critical here. Without it, the loop would keep running all 5 times even after the test passes. `break` exits the loop as soon as you get a success.
+
+---
+
+### 29.14 🧪 Async/Await Practice Exercises
+
+These exercises help you build confidence with async/await patterns. Try to solve each one before looking at the solution.
+
+#### Exercise 1 — Basic: Return a Message
+
+```javascript
+// Write an async function that returns "Hello, QA!" and log it using .then()
+
+// Solution:
+async function sayHello() {
+  return "Hello, QA!"; // async wraps this in Promise.resolve("Hello, QA!")
+}
+
+sayHello().then(function (msg) {
+  console.log(msg); // "Hello, QA!"
+});
+```
+
+#### Exercise 2 — Await a Resolved Value
+
+```javascript
+// Write an async function that awaits a resolved status code and logs it
+
+// Solution:
+async function getStatus() {
+  let status = await Promise.resolve(200); // await the resolved value 200
+  console.log("Status code:", status);     // "Status code: 200"
+}
+
+getStatus();
+```
+
+#### Exercise 3 — Multiple Awaits in Sequence
+
+```javascript
+// Write an async function that runs 3 test steps sequentially
+
+// Solution:
+async function testFlow() {
+  let step1 = await Promise.resolve("Opened browser");     // step 1
+  console.log(step1);                                       // "Opened browser"
+
+  let step2 = await Promise.resolve("Clicked login");      // step 2
+  console.log(step2);                                       // "Clicked login"
+
+  let step3 = await Promise.resolve("Verified dashboard"); // step 3
+  console.log(step3);                                       // "Verified dashboard"
+}
+
+testFlow();
+```
+
+#### Exercise 4 — Error Handling with try/catch
+
+```javascript
+// Write an async function that tries to await a rejected Promise
+
+// Solution:
+async function riskyTest() {
+  try {
+    let data = await Promise.reject("Element not found"); // this will reject
+    console.log(data);                                     // SKIPPED — never runs
+  } catch (err) {
+    console.log("Test failed:", err);                      // "Test failed: Element not found"
+  }
+}
+
+riskyTest();
+```
+
+#### Exercise 5 — try/catch/finally with an Object Response
+
+```javascript
+// Write an async function that handles an API response object with all three blocks
+
+// Solution:
+async function apiTest() {
+  try {
+    // Simulate a successful API response with a status and body
+    let response = await Promise.resolve({ status: 201, body: "Created" });
+    console.log("Status:", response.status); // "Status: 201"
+    console.log("Body:", response.body);     // "Body: Created"
+  } catch (err) {
+    console.log("Error:", err);              // skipped because Promise resolved
+  } finally {
+    console.log("Test complete");            // ALWAYS runs → "Test complete"
+  }
+}
+
+apiTest();
+```
+
+#### Exercise 6 — Understanding Execution Order
+
+```javascript
+// What is the output order? Think carefully before running!
+
+console.log("A");                    // 1st — synchronous, runs immediately
+
+async function test() {
+  console.log("B");                  // 2nd — synchronous part of the async function
+  await Promise.resolve();           // pauses here — everything after goes to the microtask queue
+  console.log("C");                  // 4th — runs after the current synchronous code finishes
+}
+
+test();                              // calls the function
+console.log("D");                    // 3rd — synchronous, runs while test() is paused at await
+
+// Output: A, B, D, C
+// Why? "C" is delayed because await puts the rest of the function in the microtask queue.
+// The synchronous code (console.log("D")) runs first before the microtask queue is processed.
+```
+
+#### Exercise 7 — Promise.all with Await
+
+```javascript
+// Run three independent checks in parallel and log all results
+
+// Solution:
+async function runAll() {
+  // Destructure the results array into three variables
+  let [a, b, c] = await Promise.all([        // start all three at once
+    Promise.resolve("Login: OK"),             // resolves instantly
+    Promise.resolve("Cart: OK"),              // resolves instantly
+    Promise.resolve("Checkout: OK")           // resolves instantly
+  ]);
+
+  console.log(a); // "Login: OK"
+  console.log(b); // "Cart: OK"
+  console.log(c); // "Checkout: OK"
+}
+
+runAll();
+```
+
+#### Exercise 8 — Promise.allSettled with Await
+
+```javascript
+// Run a health check where some services might be down — get ALL results (not just successes)
+
+// Solution:
+async function healthCheck() {
+  let results = await Promise.allSettled([     // waits for ALL to settle (resolve OR reject)
+    Promise.resolve("Auth: UP"),               // this will fulfill
+    Promise.reject("DB: DOWN"),                // this will reject
+    Promise.resolve("Cache: UP")               // this will fulfill
+  ]);
+
+  // Loop through each result and log with a status emoji
+  results.forEach(function (r) {
+    let status = r.status === "fulfilled" ? "✅" : "❌"; // check if it succeeded or failed
+    let msg = r.value || r.reason;             // fulfilled has .value, rejected has .reason
+    console.log(status + " " + msg);
+  });
+}
+
+healthCheck();
+// Output:
+// ✅ Auth: UP
+// ❌ DB: DOWN
+// ✅ Cache: UP
+```
+
+#### Exercise 9 — Await Inside a Loop
+
+```javascript
+// Check multiple API endpoints sequentially using a loop
+
+// Solution:
+async function checkEndpoints() {
+  let endpoints = ["/login", "/users", "/orders"]; // array of endpoints to check
+
+  for (let i = 0; i < endpoints.length; i++) {     // loop through each endpoint
+    let result = await Promise.resolve(endpoints[i] + " → 200"); // simulate checking each one
+    console.log(result);                            // log the result before moving to the next
+  }
+
+  console.log("All checks done");                  // runs after ALL endpoints are checked
+}
+
+checkEndpoints();
+// Output:
+// /login → 200
+// /users → 200
+// /orders → 200
+// All checks done
+```
+
+#### Exercise 10 — Async IIFE (Immediately Invoked)
+
+```javascript
+// Run an async block without defining a named function
+// Useful for quick one-off async operations
+
+// IIFE = Immediately Invoked Function Expression
+// You define the function and call it in the same statement
+
+(async function () {
+  let msg = await Promise.resolve("Quick async test"); // await inside the IIFE
+  console.log(msg);                                     // "Quick async test"
+})(); // the () at the end immediately invokes the function
+
+console.log("Outside");
+// Output:
+// "Outside"           ← runs first (synchronous)
+// "Quick async test"  ← runs second (async, from the microtask queue)
+```
+
+#### Exercise 11 — Chaining Async Results (Using One Result in the Next Call)
+
+```javascript
+// An async function that adds two numbers
+async function add(a, b) {
+  return a + b; // returns Promise.resolve(a + b)
+}
+
+async function main() {
+  let result = await add(10, 20);     // result = 30
+  console.log("Sum:", result);         // "Sum: 30"
+
+  let result2 = await add(result, 30); // pass the previous result (30) + 30
+  console.log("Total:", result2);      // "Total: 60"
+}
+
+main();
 ```
 
 ---
