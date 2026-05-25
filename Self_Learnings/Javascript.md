@@ -130,6 +130,21 @@
     - [29.12 Async/Await with Fetch API (Real-World Example)](#2912-asyncawait-with-fetch-api-real-world-example)
     - [29.13 Retry Pattern with Async/Await — Real QA Scenario](#2913-retry-pattern-with-asyncawait--real-qa-scenario)
     - [29.14 🧪 Async/Await Practice Exercises](#2914--asyncawait-practice-exercises)
+30. [Error Handling in JavaScript](#30-error-handling-in-javascript)
+    - [30.1 The Problem — What Happens Without Error Handling?](#301-the-problem--what-happens-without-error-handling)
+    - [30.2 The Solution — try / catch / finally](#302-the-solution--try--catch--finally)
+    - [30.3 Basic Syntax](#303-basic-syntax)
+    - [30.4 Catching a Real Error](#304-catching-a-real-error)
+    - [30.5 The throw Statement — Creating Your Own Errors](#305-the-throw-statement--creating-your-own-errors)
+    - [30.6 throw new Error() and Error Properties (message, stack)](#306-throw-new-error-and-error-properties-message-stack)
+    - [30.7 JavaScript's Built-in Error Types](#307-javascripts-built-in-error-types)
+    - [30.8 Custom Error Classes — Your Own Error Types](#308-custom-error-classes--your-own-error-types)
+    - [30.9 Global Error Handling in Node.js](#309-global-error-handling-in-nodejs)
+    - [30.10 Error Handling with Promises](#3010-error-handling-with-promises)
+    - [30.11 Error Handling with async/await](#3011-error-handling-with-asyncawait)
+    - [30.12 SDET Pattern — Error Handling in Playwright Tests](#3012-sdet-pattern--error-handling-in-playwright-tests)
+    - [30.13 Practice Exercises](#3013-practice-exercises)
+    - [30.14 Quick Reference Summary](#3014-quick-reference-summary)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -15210,5 +15225,825 @@ async function main() {
 
 main();
 ```
+
+---
+
+## 30. Error Handling in JavaScript
+
+> **What is an error?**
+> An error is JavaScript's way of saying *"something unexpected happened and I cannot continue."* Instead of silently breaking, it throws an error — a special object that tells you **what** went wrong, **where**, and **why**.
+
+**Error handling** is the practice of writing code that anticipates, catches, and responds to errors gracefully — instead of letting your program crash. Errors occur often with user input or when establishing a connection.
+
+| Term | Meaning |
+|---|---|
+| **Error** | An object created to represent a problem that occurs during execution. |
+| **`try {}`** | Encloses code that might potentially cause an error. |
+| **`catch {}`** | Catches and handles any error thrown from the `try` block. |
+| **`finally {}`** | (Optional) Always executes regardless of success or failure. Used mostly for cleanup — closing files, closing connections, releasing resources. |
+
+---
+
+### 30.1 The Problem — What Happens Without Error Handling?
+
+**What does "no error handling" mean?**
+
+It means you wrote code that could fail, but you did not prepare any backup plan. When the error happens, JavaScript does not know what to do — so it **kills your entire program**. Every line of code after the error is simply never executed.
+
+```javascript
+// ❌ No error handling — the entire script crashes the moment something fails
+
+let user = null;                        // user is set to null (no data)
+
+console.log(user.name);                 // 💥 TypeError: Cannot read properties of null
+// ⚠️  Everything below this line NEVER runs — your program is dead.
+console.log("Program continues...");    // this line is never reached
+```
+
+> **The real-world danger:** In test automation, if one API call fails and there is no error handling, the entire test suite crashes. Every test after the failure is simply never executed.
+
+---
+
+### 30.2 The Solution — `try / catch / finally`
+
+**What is `try / catch / finally`?**
+
+The `try / catch / finally` construct is how you **wrap risky code** and tell JavaScript what to do when something breaks. Instead of crashing, the program executes your backup plan.
+
+**The analogy:** Think of it like a safety net under a trapeze artist.
+- The `try` block is the trapeze act — the risky thing you *attempt*.
+- The `catch` block is the safety net — it *catches* the fall and saves the show.
+- The `finally` block is the stage crew — they clean up *regardless* of whether the act went perfectly or ended in a fall.
+
+![try/catch/finally Execution Flow](Images/Try_Catch_Finally_Flow.svg)
+
+---
+
+### 30.3 Basic Syntax
+
+**What is the basic syntax of `try / catch / finally`?**
+
+You write three blocks in sequence. The `try` block holds the risky code, the `catch` block handles any error, and the optional `finally` block runs cleanup logic no matter what.
+
+```javascript
+try {
+  // 🟢 Step 1: Put your risky code here.
+  //    JavaScript attempts to run every line in this block.
+  //    If any line throws an error, execution STOPS immediately and jumps to catch.
+  let result = riskyOperation();        // attempt the risky operation
+  console.log("Result:", result);       // only runs if no error occurred above
+
+} catch (err) {
+  // 🔴 Step 2: This block only runs IF an error was thrown in try.
+  //    'err' is the Error object — it contains details about what went wrong.
+  //    The program does NOT crash; you handle the problem here.
+  console.log("Something went wrong:", err.message);  // log the error description
+
+} finally {
+  // 🔵 Step 3: This block ALWAYS runs — no matter what.
+  //    Use it for cleanup: closing database connections, stopping spinners, etc.
+  console.log("Cleanup complete.");     // always executes, success or failure
+}
+```
+
+---
+
+### 30.4 Catching a Real Error
+
+**What does "catching an error" mean?**
+
+Catching an error means intercepting an error that JavaScript throws (automatically or manually) and handling it inside a `catch` block — instead of letting the program crash.
+
+```javascript
+// Scenario: Reading a property from something that could be null
+
+function getUserName(user) {
+  try {
+    // 🟢 We TRY to read user.name.
+    // If 'user' is null or undefined, JavaScript throws a TypeError automatically.
+    let name = user.name;                           // attempt to access the 'name' property
+    console.log("User name is:", name);             // ✅ runs only if user is valid
+
+  } catch (err) {
+    // 🔴 Control lands here only when there is an error.
+    // 'err.name'    → the type of error (e.g. "TypeError")
+    // 'err.message' → a description of what went wrong
+    console.log("Error caught!");                   // notify that an error was caught
+    console.log("Type   :", err.name);              // log the error type (e.g. "TypeError")
+    console.log("Reason :", err.message);           // log what went wrong
+
+  } finally {
+    // 🔵 This always runs — success or failure.
+    console.log("getUserName() finished.");         // cleanup/completion message
+  }
+}
+
+// ✅ Case 1: Valid user — no error is thrown, catch is skipped
+getUserName({ name: "Shujauddin" });
+// Output:
+// User name is: Shujauddin
+// getUserName() finished.
+
+// ❌ Case 2: null user — TypeError is thrown, catch runs
+getUserName(null);
+// Output:
+// Error caught!
+// Type   : TypeError
+// Reason : Cannot read properties of null (reading 'name')
+// getUserName() finished.
+```
+
+> **Key insight:** `finally` ran in **both** cases. This is what makes it ideal for cleanup tasks — you never have to guess whether it will run.
+
+---
+
+### 30.5 The `throw` Statement — Creating Your Own Errors
+
+**What is `throw`?**
+
+`throw` is a keyword that lets you **manually create and raise an error** on purpose. JavaScript throws errors automatically for technical problems (like accessing `null`), but sometimes *you* need to raise an error when a business rule is violated — for example, a price that is negative or an age that is impossible.
+
+When you `throw`, execution stops immediately and control jumps to the nearest `catch` block.
+
+```javascript
+// Scenario: A function that should only accept positive numbers
+
+function calculateDiscount(price) {
+  // 🟡 We manually throw an error if the input breaks our rules.
+  //    'throw' stops the function immediately and sends the error to whoever called us.
+  if (typeof price !== "number") {                  // check if price is not a number
+    throw new TypeError("Price must be a number, got: " + typeof price);  // wrong type
+  }
+  if (price <= 0) {                                 // check if price is zero or negative
+    throw new RangeError("Price must be positive, got: " + price);        // out of range
+  }
+
+  // If we reach here, the input is valid.
+  return price * 0.10;                              // calculate 10% discount
+}
+
+// ✅ Valid call
+try {
+  let discount = calculateDiscount(500);            // 500 is a valid positive number
+  console.log("Discount:", discount);               // Output: Discount: 50
+
+} catch (err) {
+  console.log(err.name + ":", err.message);         // skipped because no error was thrown
+}
+
+// ❌ Invalid call — wrong type
+try {
+  let discount = calculateDiscount("hello");        // "hello" is a string, not a number
+} catch (err) {
+  console.log(err.name + ":", err.message);
+  // Output: TypeError: Price must be a number, got: string
+}
+
+// ❌ Invalid call — negative number
+try {
+  let discount = calculateDiscount(-100);           // -100 is negative
+} catch (err) {
+  console.log(err.name + ":", err.message);
+  // Output: RangeError: Price must be positive, got: -100
+}
+```
+
+---
+
+### 30.6 `throw new Error()` and Error Properties (`message`, `stack`)
+
+**What is `throw new Error()`?**
+
+When you write `throw new Error("message")`, you are doing two things:
+1. `new Error("message")` — creates an Error object with a `message` property.
+2. `throw` — stops execution and signals the exception.
+
+You can throw anything (strings, numbers, objects), but throwing an `Error` object is **best practice** because it gives you a **stack trace** — a trail showing exactly where the error happened.
+
+**Error Properties:**
+
+| Property | What It Contains |
+|---|---|
+| `.message` | The human-readable error description you passed when creating the error. |
+| `.name` | The type of error (e.g., `"Error"`, `"TypeError"`, `"RangeError"`). |
+| `.stack` | A string showing where the error occurred — file name, line number, and the full call stack. |
+
+```javascript
+try {
+  throw new Error("Something broke");               // create and throw an Error object
+} catch (err) {
+  console.log(err.message);                         // "Something broke" — the description you wrote
+  console.log(err.stack);                           // "Error: Something broke at <file>:<line>" — full trace
+}
+```
+
+---
+
+### 30.7 JavaScript's Built-in Error Types
+
+**What are built-in error types?**
+
+JavaScript has several built-in error types that extend the base `Error` class. Each type represents a specific category of problem. Knowing which one was thrown tells you **exactly what went wrong** — without having to guess.
+
+![JavaScript Error Types Hierarchy](Images/Error_Types_Tree.svg)
+
+| Error Type | When It Happens | Quick Example |
+|---|---|---|
+| `SyntaxError` | Your code has a typo or missing symbol. Caught **before** the code runs. | `let x = ;` |
+| `ReferenceError` | You used a variable that was never declared. | `console.log(y)` → `y is not defined` |
+| `TypeError` | You used a value in the wrong way (e.g., calling `null` as a function). | `null.name` → crash |
+| `RangeError` | A number is outside an allowed range. | `new Array(-1)` |
+| `URIError` | A URI function received a malformed string. | `decodeURI('%')` |
+| `EvalError` | Relates to `eval()` — rarely seen in modern code. | — |
+| **Custom Error** | You define your own error class for domain logic. | `class LoginError extends Error {}` |
+
+```javascript
+// Reading error details inside catch
+
+try {
+  let x = null;                                     // x is null
+  x.doSomething();                                  // throws TypeError — null has no methods
+
+} catch (err) {
+  console.log(err.name);                            // "TypeError" — the category of error
+  console.log(err.message);                         // "Cannot read properties of null (reading 'doSomething')"
+  console.log(err.stack);                           // full stack trace — shows exactly which line caused it
+}
+```
+
+---
+
+#### 30.7.1 `TypeError` — Detailed Examples
+
+**What is a `TypeError`?**
+
+A `TypeError` occurs when you try to perform an operation on a value that is **not the expected type**. The value exists, but you are using it incorrectly — like trying to call a number as a function, or reading a property from `null`.
+
+```javascript
+// Example 1: Calling a non-function as a function
+let x = 5;                                         // x is a number, not a function
+x();                                               // ❌ TypeError: x is not a function
+
+// Example 2: Reading a property of null or undefined
+let obj = null;                                    // obj is intentionally empty
+console.log(obj.name);                             // ❌ TypeError: Cannot read property 'name' of null
+
+// Example 3: Using a string method on a number
+let num = 42;                                      // num is a number
+num.toUpperCase();                                 // ❌ TypeError: num.toUpperCase is not a function
+```
+
+---
+
+#### 30.7.2 `ReferenceError` — Detailed Examples
+
+**What is a `ReferenceError`?**
+
+A `ReferenceError` occurs when you try to use a variable that **has not been declared** anywhere in the current scope. JavaScript has no idea what you are referring to.
+
+```javascript
+console.log(myVariable);                           // ❌ ReferenceError: myVariable is not defined
+// This variable was never created with let, const, or var
+```
+
+---
+
+#### 30.7.3 `SyntaxError` — Detailed Examples
+
+**What is a `SyntaxError`?**
+
+A `SyntaxError` occurs when you write code that JavaScript **cannot parse** — it is a grammar mistake in your code, like a missing bracket or a misspelled keyword.
+
+```javascript
+function {                                         // ❌ SyntaxError: missing function name
+}
+// Every function declaration needs a name (or must be assigned to a variable)
+```
+
+> ⚠️ You **cannot catch** `SyntaxError` with `try/catch` because the code will not run at all. JavaScript finds the syntax mistake during the compilation phase, before any code executes. It is a coding mistake you must fix before running.
+
+---
+
+### 30.8 Custom Error Classes — Your Own Error Types
+
+**What are custom error classes?**
+
+When you build applications, generic errors like `Error: something went wrong` are not descriptive enough. You can create **custom error classes** that carry extra context — such as which field failed validation, what HTTP status code was returned, or which service is down.
+
+Custom errors are created by **extending** the built-in `Error` class using the `class` keyword.
+
+#### Basic Custom Error — `ValidationError`
+
+```javascript
+// Step 1: Create your custom error class by extending the built-in Error
+class ValidationError extends Error {
+
+  constructor(field, message) {
+    // 'super(message)' passes the message up to the built-in Error class.
+    // This sets err.message for you automatically.
+    super(message);                                 // call the parent Error constructor
+
+    this.name = "ValidationError";                  // override the default name ("Error")
+    this.field = field;                             // store extra context (which field failed)
+  }
+}
+
+// Step 2: Use it in a function
+function validateEmail(email) {
+  if (!email.includes("@")) {                       // check if email contains '@'
+    // We throw our custom error, not a generic one
+    throw new ValidationError("email", `"${email}" is not a valid email address`);
+  }
+  return true;                                      // email is valid
+}
+
+// Step 3: Catch it and handle by type
+try {
+  validateEmail("shujauddin-at-gmail.com");         // no '@' symbol — will throw
+
+} catch (err) {
+  // We can check the TYPE of error and respond differently
+  if (err instanceof ValidationError) {
+    console.log("Validation failed on field:", err.field);
+    // Output: Validation failed on field: email
+    console.log("Reason:", err.message);
+    // Output: Reason: "shujauddin-at-gmail.com" is not a valid email address
+  } else {
+    // Re-throw anything we did not expect
+    throw err;                                      // pass unexpected errors up
+  }
+}
+```
+
+> **Why `instanceof` matters:** When you have multiple custom error types (`ValidationError`, `NetworkError`, `AuthError`), `instanceof` lets you handle each one differently in the same `catch` block.
+
+#### Another Example — `MyCustomError`
+
+```javascript
+// Create your own error type
+class MyCustomError extends Error {
+  constructor(message) {
+    super(message);                                 // pass message to the parent Error class
+    this.name = "MyCustomError";                    // set a custom name for stack traces
+  }
+}
+
+// Function that uses your custom error
+function doSomething(badInput) {
+  if (badInput) {                                   // if input is truthy (bad)
+    throw new MyCustomError("This is my custom error message");  // throw custom error
+  }
+  return "All good";                                // return success if input is falsy
+}
+
+// Using it with try/catch
+try {
+  console.log(doSomething(true));                   // true = bad input, throws MyCustomError
+} catch (err) {
+  if (err instanceof MyCustomError) {               // check if it is our custom error type
+    console.log("Caught my custom error:", err.message);  // handle it specifically
+  } else {
+    console.log("Other error:", err);               // handle any other error type
+  }
+}
+// Output: Caught my custom error: This is my custom error message
+```
+
+#### Network Error Example
+
+```javascript
+// Custom error class for network failures
+class NetworkError extends Error {
+  constructor(message) {
+    super(message);                                 // pass message to the parent Error class
+    this.name = "NetworkError";                     // set name to "NetworkError" for clarity
+  }
+}
+
+// Function that simulates a network request
+function fetchData(shouldFail) {
+  if (shouldFail === true) {                        // simulate a failure condition
+    throw new NetworkError("Network request failed");  // throw our custom NetworkError
+  }
+  return "Data received";                           // return success data
+}
+
+// Catch and handle the NetworkError
+try {
+  console.log(fetchData(true));                     // true = simulate failure
+} catch (err) {
+  if (err instanceof NetworkError) {                // check if it is a NetworkError
+    console.log("Network issue: " + err.message);   // handle network-specific error
+  } else {
+    console.log("Other error:", err);               // handle any other error
+  }
+}
+// Output: Network issue: Network request failed
+```
+
+#### Key Points About Custom Errors
+
+| Concept | Meaning |
+|---|---|
+| `extends Error` | You are inheriting from the built-in `Error` class — your custom class gets all of Error's features (`.message`, `.stack`, etc.). |
+| `super(message)` | Calls the parent `Error` constructor to set the `message` property automatically. |
+| `this.name = "..."` | Optional but recommended — overrides the default name (`"Error"`) so stack traces clearly show your custom error type. |
+| Custom properties | You can add any extra properties (e.g., `this.code = 500`, `this.field = "email"`). |
+
+---
+
+### 30.9 Global Error Handling in Node.js
+
+**What is global error handling?**
+
+Global error handling is a **safety net** for your entire application. It catches any error that no `try/catch` block caught. Think of it this way: `try/catch` is your local shield that blocks most errors. But if you miss one, the global error handler is a last-resort force field — it catches anything that got past your shield, so your program does not explode silently.
+
+In code:
+- `try/catch` = you handle errors **locally**, where they happen.
+- `process.on('uncaughtException')` = catches any error that **no** `try/catch` caught.
+
+#### Key Terms
+
+| Word / Phrase | Meaning |
+|---|---|
+| `process` | A global object in Node.js that represents your running program. |
+| `.on()` | A method that listens for events. You say: "When this event happens, run this function." |
+| `'uncaughtException'` | An event name. Means: "an error happened that no `try/catch` caught." |
+| `(error) => { ... }` | A callback function that receives the error object when the event fires. |
+| `console.log` | Prints output to the terminal. |
+| `process.exit(1)` | Tells Node.js to stop the program. `1` means "exiting due to an error." |
+| `'unhandledRejection'` | An event for when a Promise rejects but you did not use `.catch()` or `try/catch` around `await`. |
+
+#### `uncaughtException` — Catching Unhandled Synchronous Errors
+
+**What is `uncaughtException`?**
+
+It is an event that fires when a synchronous error (like `throw new Error(...)`) happens and **no** `try/catch` block is around it to catch it.
+
+```javascript
+// 1. Global error handler for regular errors (throw new Error...)
+process.on('uncaughtException', (err) => {          // listen for uncaught errors
+  console.log("GLOBAL HANDLER CAUGHT:", err.message);  // log the error message
+  process.exit(1);                                  // stop the program (1 = error exit code)
+});
+
+// 2. This line throws an error with NO try/catch around it
+throw new Error("I forgot try/catch!");             // no local handler — goes to global
+
+console.log("This line will never run because error happened above");
+// Output:
+// GLOBAL HANDLER CAUGHT: I forgot try/catch!
+// Then the program exits.
+```
+
+#### `unhandledRejection` — Catching Unhandled Promise Rejections
+
+**What is `unhandledRejection`?**
+
+It is an event that fires when a Promise rejects but you did **not** attach `.catch()` and did **not** use `await` inside a `try/catch`.
+
+```javascript
+process.on('unhandledRejection', (reason) => {      // listen for unhandled promise rejections
+  console.log("GLOBAL HANDLER CAUGHT PROMISE REJECTION:", reason);  // log the rejection reason
+  process.exit(1);                                  // stop the program
+});
+
+// This Promise rejects, but no .catch() and no await in try/catch
+Promise.reject("Database down");                    // rejected promise with no handler
+// Output:
+// GLOBAL HANDLER CAUGHT PROMISE REJECTION: Database down
+```
+
+#### `uncaughtException` vs `unhandledRejection`
+
+These are **two different events** because JavaScript has two different ways to fail:
+
+| Event | When It Happens | What Triggers It |
+|---|---|---|
+| `uncaughtException` | A synchronous error (or `throw`) is not caught by any `try/catch`. | `throw new Error("...")` without `try/catch` around it. |
+| `unhandledRejection` | A Promise rejects and you do not attach `.catch()` nor use `await` inside a `try/catch`. | `Promise.reject("...")` or an `async` function throwing without handling. |
+
+**Why two different events?**
+
+Synchronous code (`throw`, `ReferenceError`, `TypeError`) and asynchronous Promises have **separate error-handling models**. Promises were added to JavaScript later and have their own rejection mechanism. That is why each has its own global event.
+
+```javascript
+// ✅ Example of uncaughtException (regular synchronous error)
+process.on('uncaughtException', (err) => {          // register global handler
+  console.log("GLOBAL caught:", err.message);       // log the error
+});
+
+// No try/catch around this throw
+throw new Error("Boom!");                           // goes straight to global handler
+// Output: GLOBAL caught: Boom!
+```
+
+```javascript
+// ✅ Example of unhandledRejection (promise rejection without handling)
+process.on('unhandledRejection', (reason) => {      // register global handler for promises
+  console.log("GLOBAL caught rejection:", reason);  // log the rejection reason
+});
+
+// Promise rejects with no .catch()
+Promise.reject("Network failed");                   // no handler attached — goes to global
+// Output: GLOBAL caught rejection: Network failed
+```
+
+> 💡 **The most important thing:** Just know that these global handlers exist in Node.js as a safety net. In real tests, frameworks like Playwright already catch errors for you.
+
+---
+
+### 30.10 Error Handling with Promises
+
+**What is error handling with Promises?**
+
+Before `async/await`, errors in asynchronous code were caught using `.catch()` on a Promise chain. The `.catch()` method is the Promise equivalent of a `catch` block.
+
+| Promise Method | Equivalent To | What It Does |
+|---|---|---|
+| `.then()` | `try` block | Runs when the promise **resolves** (succeeds). |
+| `.catch()` | `catch` block | Runs when the promise **rejects** (fails). |
+| `.finally()` | `finally` block | Always runs at the end — success or failure. |
+
+```javascript
+// Simulating an API call that fails
+function fetchUserData(userId) {
+  return new Promise(function (resolve, reject) {
+    // Imagine this is a real network call
+    if (userId <= 0) {
+      reject(new RangeError("User ID must be a positive number"));
+      // ↑ reject() is the Promise equivalent of 'throw'
+    } else {
+      resolve({ id: userId, name: "Shujauddin" });
+      // ↑ resolve() is the Promise equivalent of a successful 'return'
+    }
+  });
+}
+
+// ✅ Calling with a valid ID
+fetchUserData(5)
+  .then(function (user) {                           // runs because the promise resolved
+    console.log("Got user:", user.name);             // Output: Got user: Shujauddin
+  })
+  .catch(function (err) {                           // skipped because no error
+    console.log("Error:", err.message);
+  })
+  .finally(function () {                            // always runs
+    console.log("Request finished.");               // Output: Request finished.
+  });
+
+// ❌ Calling with an invalid ID
+fetchUserData(-1)
+  .then(function (user) {                           // skipped because the promise rejected
+    console.log("Got user:", user.name);
+  })
+  .catch(function (err) {                           // runs because the promise rejected
+    console.log("Error:", err.message);             // Output: Error: User ID must be a positive number
+  })
+  .finally(function () {                            // always runs
+    console.log("Request finished.");               // Output: Request finished.
+  });
+```
+
+> **The mapping:** `.then()` = `try`, `.catch()` = `catch`, `.finally()` = `finally`. Same logic, different syntax.
+
+---
+
+### 30.11 Error Handling with `async / await`
+
+**What is error handling with `async/await`?**
+
+`async/await` lets you write asynchronous code that *reads* like synchronous code. Error handling works exactly like synchronous `try/catch` — if an awaited Promise rejects, execution jumps to the `catch` block, just like a `throw`.
+
+```javascript
+// Same fetchUserData function from 30.10 above
+
+async function loadUser(userId) {
+  try {
+    // 'await' pauses here until the promise resolves or rejects.
+    // If it rejects, execution jumps to the catch block — just like a throw.
+    let user = await fetchUserData(userId);         // wait for the promise to settle
+
+    console.log("Loaded:", user.name);              // runs only on success
+
+  } catch (err) {
+    // If fetchUserData rejects, 'err' contains the rejection reason (the Error object).
+    console.log("Failed to load user:", err.message);  // log the failure
+
+  } finally {
+    // Cleanup — close loaders, reset state, etc.
+    console.log("Done loading.");                   // always runs
+  }
+}
+
+// ✅ Valid ID
+loadUser(10);
+// Output:
+// Loaded: Shujauddin
+// Done loading.
+
+// ❌ Invalid ID
+loadUser(-1);
+// Output:
+// Failed to load user: User ID must be a positive number
+// Done loading.
+```
+
+---
+
+### 30.12 SDET Pattern — Error Handling in Playwright Tests
+
+**What is the SDET pattern for error handling?**
+
+This is how you apply everything above in a real Playwright test. The pattern is: `try` the test steps, `catch` any failure (log it, take a screenshot, then re-throw), and `finally` clean up resources.
+
+```javascript
+const { test, expect } = require('@playwright/test');  // import Playwright test and expect
+
+test("Login with valid credentials", async ({ page }) => {
+  try {
+    // 🟢 TRY: Perform the test steps
+    await page.goto("https://example.com/login");              // navigate to login page
+    await page.fill("#username", "testuser@example.com");      // fill the username field
+    await page.fill("#password", "SecurePass123");             // fill the password field
+    await page.click("#loginBtn");                             // click the login button
+
+    // Assertion — throws an error if this fails
+    await expect(page.locator("#dashboard")).toBeVisible();     // verify dashboard is visible
+
+    console.log("✅ Login test passed.");                      // log success
+
+  } catch (err) {
+    // 🔴 CATCH: Log exactly what failed and where
+    console.log("❌ Login test failed:", err.message);         // log the failure reason
+
+    // Take a screenshot so you can debug visually
+    await page.screenshot({ path: "login_failure.png" });      // save screenshot for debugging
+
+    // Re-throw so Playwright marks the test as FAILED (not just logged)
+    throw err;                                                  // IMPORTANT: re-throw the error
+
+  } finally {
+    // 🔵 FINALLY: Always close the session cleanly
+    await page.close();                                        // close the browser page
+    console.log("🧹 Browser page closed.");                   // log cleanup completion
+  }
+});
+```
+
+> **Why `throw err` in catch?** If you catch an error but do not re-throw it, Playwright thinks the test passed — because no error escaped. Always re-throw after logging if you want the test to be marked as failed.
+
+---
+
+### 30.13 Practice Exercises
+
+#### Exercise 1 — Basic Division with `try / catch`
+
+```javascript
+// Scenario: Divide two numbers and handle errors for zero division and invalid input
+
+try {
+  const dividend = 10;                              // the number being divided
+  const divisor = 2;                                // the number to divide by
+
+  if (divisor === 0) {                              // check if divisor is zero
+    throw new Error("You can't divide by the Number Zero");  // manually throw an error
+  }
+  if (isNaN(dividend) || isNaN(divisor)) {          // check if either value is not a number
+    throw new Error("Values must be a Number");     // throw error for invalid input
+  }
+
+  const result = dividend / divisor;                // perform the division
+  console.log(`Result: ${result}`);                 // Output: Result: 5
+} catch (error) {
+  console.error(error.message);                     // log the error message if something went wrong
+}
+```
+
+> 💡 In a browser environment, you could use `window.prompt()` to get user input instead of hardcoded values. The error handling logic remains the same.
+
+#### Exercise 2 — String Length Validation
+
+```javascript
+// Write a function that returns the length of a string.
+// If the input is not a string, throw an Error.
+
+function getStringLength(str) {
+  if (typeof str !== "string") {                    // check if str is NOT a string type
+    throw new Error("Input must be a string");      // throw error for non-string input
+  }
+  return str.length;                                // return the number of characters
+}
+
+// Test with valid and invalid inputs
+try {
+  console.log(getStringLength("hello"));            // 5 — valid string
+  console.log(getStringLength(10));                 // throws error — 10 is a number, not a string
+} catch (error) {
+  console.error(error.message);                     // Output: Input must be a string
+}
+```
+
+#### Exercise 3 — Division with `try / catch / finally`
+
+```javascript
+// Write a function divide(a, b) that throws if b is zero.
+// Use try/catch/finally when calling it.
+
+function divide(a, b) {
+  if (b === 0) {                                    // check if divisor is zero
+    throw new Error("cannot divide by zero");       // throw error — division by zero is undefined
+  }
+  return a / b;                                     // return the division result
+}
+
+try {
+  console.log(divide(10, 2));                       // 5 — valid division
+  console.log(divide(10, 0));                       // throws Error — divisor is zero
+} catch (error) {
+  console.log(error.message);                       // Output: cannot divide by zero
+} finally {
+  console.log("Division attempt finished");         // always runs — regardless of success/failure
+}
+```
+
+#### Exercise 4 — `TypeError` Validation
+
+```javascript
+// Write a function that doubles a number.
+// If the input is not a number, throw a TypeError.
+
+function doubleNumber(num) {
+  if (typeof num !== "number") {                    // check if num is NOT a number type
+    throw new TypeError("Not a number");            // throw TypeError for wrong type
+  }
+  return num * 2;                                   // return double the value
+}
+
+try {
+  console.log(doubleNumber(2));                     // 4 — valid number input
+  console.log(doubleNumber("hi"));                  // throws TypeError — "hi" is a string
+} catch (error) {
+  console.log(error.name + ": " + error.message);  // Output: TypeError: Not a number
+}
+```
+
+#### Exercise 5 — Custom Error Class (`NetworkError`)
+
+```javascript
+// Create a custom error class NetworkError.
+// Write a function fetchData(shouldFail) that:
+// - If shouldFail === true, throw a NetworkError with message "Network request failed".
+// - Otherwise return "Data received".
+// In the catch block, check if the error is a NetworkError using instanceof.
+
+class NetworkError extends Error {
+  constructor(message) {
+    super(message);                                 // pass message to the parent Error class
+    this.name = "NetworkError";                     // set name for clearer stack traces
+  }
+}
+
+function fetchData(shouldFail) {
+  if (shouldFail === true) {                        // check if we should simulate a failure
+    throw new NetworkError("Network request failed");  // throw custom NetworkError
+  }
+  return "Data received";                           // return success data
+}
+
+try {
+  console.log(fetchData(true));                     // true = simulate failure, throws NetworkError
+} catch (err) {
+  if (err instanceof NetworkError) {                // check if the error is specifically a NetworkError
+    console.log("Network issue: " + err.message);   // Output: Network issue: Network request failed
+  } else {
+    console.log("Other error:", err);               // handle any other unexpected error
+  }
+}
+```
+
+---
+
+### 30.14 Quick Reference Summary
+
+| Concept | Syntax | When to Use |
+|---|---|---|
+| **`try`** | `try { riskyCode() }` | Wrap any code that might fail. |
+| **`catch`** | `catch (err) { handle }` | Respond to an error without crashing. |
+| **`finally`** | `finally { cleanup() }` | Cleanup that must always happen. |
+| **`throw`** | `throw new Error("msg")` | Signal a problem from your own code. |
+| **Custom error** | `class MyErr extends Error {}` | Create domain-specific error types. |
+| **`instanceof`** | `err instanceof TypeError` | Handle different error types differently. |
+| **Promise `.catch()`** | `.then().catch().finally()` | Handle errors in promise chains. |
+| **`async/await`** | `try { await fn() } catch {}` | Handle async errors like sync code. |
+| **`err.name`** | — | Read the error type as a string. |
+| **`err.message`** | — | Read the human-readable reason. |
+| **`err.stack`** | — | Read the full stack trace for debugging. |
+| **`uncaughtException`** | `process.on('uncaughtException', ...)` | Global handler for unhandled synchronous errors in Node.js. |
+| **`unhandledRejection`** | `process.on('unhandledRejection', ...)` | Global handler for unhandled Promise rejections in Node.js. |
+
+---
+
+> 💡 **SDET Takeaway:** Error handling is not optional in test automation — it is what separates fragile scripts from professional test suites. Use `try/catch/finally` around every network call, file operation, and browser interaction. Always re-throw inside a test's catch block so the failure is visible in your report. Build custom error classes when you want your failure messages to clearly describe the domain problem (`AuthenticationError`, `ElementNotFoundError`) rather than a generic crash message.
 
 ---
