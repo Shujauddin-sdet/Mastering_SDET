@@ -456,7 +456,7 @@ console.log(city);
 
 ---
 
-### Easy Explanation of `var`, `let`, and `const`
+### Explanation of `var`, `let`, and `const`
 
 Here is a simple table showing the differences based on the image:
 
@@ -811,7 +811,7 @@ When you write `let copy = { ...original };`, you are actually doing two things 
 
 So, why "Object B"? In my previous explanation, "Object B" was just a name I gave to that "New Red Box" to show it’s different from the Blue one. You didn't have to assign "B"; the curly braces `{ }` automatically created it in the computer's memory.
 
-#### Key Terms to Remember for Interviews:
+#### Key Technical Concepts:
 
 - **Object Literal Creation:** Using `{}` tells JavaScript to create a new object.
 - **Memory Allocation:** The computer sets aside a new "shelf" for the new object.
@@ -5256,7 +5256,7 @@ console.log(failures.length); // 2
 Syntax: `reduce((accumulator, current) => ..., initialValue)`
 
 ```javascript
-let prices = [29.99, 59.99, 89.99]; // This is a easy example than in the Image.
+let prices = [29.99, 59.99, 89.99]; 
 
 // Add up all prices
 let total = prices.reduce((sum, price) => {
@@ -6805,7 +6805,7 @@ console.log(results[1][1][1]); // "pass"
 
 ## Pattern Generation
 
-Pattern generation is common in coding interviews and useful for understanding nested loops.
+Pattern generation is a great logical exercise and is extremely useful for mastering nested loops.
 
 ### Right Triangle
 
@@ -8448,7 +8448,7 @@ Why do we need apply?
 It is incredibly useful when you already have an array of data (like from a database or an API) and you want to pass it into a function without having to unpack it manually.
 
 3. bind() — Build a New Function (Does NOT run immediately)
-This is the most important one for interviews.
+This is often considered the most crucial of the three to master for real-world development.
 Unlike call and apply, bind() does not execute the function. Instead, it creates a brand new copy of the function with this permanently locked to the object you provided.
 
 Mnemonic Trick: Bind Builds a new function.
