@@ -145,6 +145,7 @@
     - [30.12 SDET Pattern — Error Handling in Playwright Tests](#3012-sdet-pattern--error-handling-in-playwright-tests)
     - [30.13 Practice Exercises](#3013-practice-exercises)
     - [30.14 Quick Reference Summary](#3014-quick-reference-summary)
+31. [JavaScript Modules (CommonJS vs ES Modules)](#31-javascript-modules-commonjs-vs-es-modules)
 - [Appendix](#appendix-comparison-recap--vs-)
 
 ---
@@ -16045,5 +16046,79 @@ try {
 ---
 
 > 💡 **SDET Takeaway:** Error handling is not optional in test automation — it is what separates fragile scripts from professional test suites. Use `try/catch/finally` around every network call, file operation, and browser interaction. Always re-throw inside a test's catch block so the failure is visible in your report. Build custom error classes when you want your failure messages to clearly describe the domain problem (`AuthenticationError`, `ElementNotFoundError`) rather than a generic crash message.
+
+---
+
+# 31. JavaScript Modules (CommonJS vs ES Modules)
+
+In modern JavaScript (and especially in Node.js and Playwright frameworks), code is split into multiple files called **Modules**. A module is simply a JavaScript file that exports its code so other files can import and use it.
+
+There are two main module systems in JavaScript that you must know as an SDET:
+
+1. **CommonJS (CJS)** - The older, traditional Node.js way (`require()` and `module.exports`).
+2. **ES Modules (ESM)** - The modern, standard JavaScript way (`import` and `export`).
+
+### 31.1 CommonJS (Node.js Default)
+
+By default, if you create a `.js` file in Node.js, it uses CommonJS.
+
+**Exporting (utils.js):**
+```javascript
+function login() {
+  console.log("Logging in...");
+}
+
+const url = "https://example.com";
+
+// Export multiple things as an object
+module.exports = {
+  login,
+  url
+};
+```
+
+**Importing (test.js):**
+```javascript
+// Use require() to import
+const utils = require('./utils.js');
+
+utils.login();
+console.log(utils.url);
+```
+
+### 31.2 ES Modules (The Modern Standard)
+
+ES Modules are the official standard for JavaScript. To use them in Node.js, you must either:
+- Set `"type": "module"` in your `package.json`
+- Use the `.mjs` file extension
+
+**Exporting (utils.mjs):**
+```javascript
+// Export directly
+export function login() {
+  console.log("Logging in...");
+}
+
+export const url = "https://example.com";
+
+// Or export a default value
+export default function setup() {
+  console.log("Setting up...");
+}
+```
+
+**Importing (test.mjs):**
+```javascript
+// Import named exports with curly braces, and default export without braces
+import setup, { login, url } from './utils.mjs';
+
+setup();
+login();
+console.log(url);
+```
+
+### 31.3 Why it matters for SDETs
+
+When writing Playwright tests, you will see ES Modules (`import { test, expect } from '@playwright/test';`). Modern automation frameworks strongly prefer ES Modules over CommonJS. Always check your `package.json` to see if `"type": "module"` is enabled when deciding whether to use `import` or `require()`.
 
 ---
