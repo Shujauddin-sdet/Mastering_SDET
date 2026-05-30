@@ -14,7 +14,7 @@
    - [BigInt](#-bigint)
    - [Dynamic Typing vs Static Typing](#-dynamic-typing-vs-static-typing)
    - [Type Coercion](#-type-coercion)
-     3.5 [Execution Context — Creation & Execution Phase](#35-execution-context)
+   - [3.5 Execution Context — Creation & Execution Phase](#35-execution-context)
 4. [Operators](#4-operators)
    - [Nullish Coalescing (??) vs ||](#11-nullish-coalescing-operator-)
 5. [Truthy and Falsy Values](#truthy-and-falsy-values)
@@ -30,22 +30,18 @@
    - [break](#a-break-statement)
    - [continue](#b-continue-statement)
    - [Labels](#c-labels-with-break-and-continue)
-10. [Loop Control Statements](#8-loop-control-statements)
-    - [break](#a-break-statement)
-    - [continue](#b-continue-statement)
-    - [Labels](#c-labels-with-break-and-continue)
-11. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
-12. [Nested Loops](#10-nested-loops-loop-inside-a-loop)
-13. [Counting Down — Reverse Loops](#11-counting-down--reverse-loops-i--)
-14. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
-15. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
-16. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
-    16.1 [Variable Shadowing](#variable-shadowing-in-javascript)
-17. [for...of with Map and Set](#15-forof-with-map-and-set)
-18. [Map and Set Commands (Cheat Sheet)](#17-map-and-set-commands-cheat-sheet-for-sdets)
-19. [Escape Characters](#18-escape-characters-in-strings)
-20. [String Methods](#19-string-methods-in-js)
-21. [Arrays — Comprehensive Guide](#20-arrays--comprehensive-guide)
+10. [Advanced Loop Concepts & Safety](#9-advanced-loop-concepts--safety)
+11. [Nested Loops](#10-nested-loops-loop-inside-a-loop)
+12. [Counting Down — Reverse Loops](#11-counting-down--reverse-loops-i--)
+13. [for...of with Index — Array.entries()](#12-forof-with-index--arrayentries)
+14. [forEach() — The Array Method Loop](#13-foreach--the-array-method-loop)
+15. [Loop Variable Scope — let vs var](#14-loop-variable-scope--let-vs-var-gotcha)
+   - [15.1 Variable Shadowing](#variable-shadowing-in-javascript)
+16. [for...of with Map and Set](#15-forof-with-map-and-set)
+17. [Map and Set Commands (Cheat Sheet)](#16-map-and-set-commands-cheat-sheet-for-sdets)
+18. [Escape Characters](#17-escape-characters-in-strings)
+19. [String Methods](#18-string-methods-in-js)
+20. [Arrays — Comprehensive Guide](#20-arrays--comprehensive-guide)
     - [Array Creation](#️-array-creation)
     - [Accessing & Modifying](#️-accessing--modifying)
     - [Adding & Removing](#️-adding--removing)
@@ -58,14 +54,14 @@
     - [Copying Arrays](#-copying-arrays)
     - [Array Destructuring](#️-array-destructuring)
     - [Pure vs Impure Methods](#️-pure-vs-impure-methods--quick-reference)
-22. [Multi-Dimensional Arrays](#21-multi-dimensional-arrays)
+21. [Multi-Dimensional Arrays](#21-multi-dimensional-arrays)
     - [2D Arrays (Matrices)](#2d-arrays-matrices)
     - [Accessing & Modifying 2D](#accessing--modifying-2d-arrays)
     - [Iterating 2D Arrays](#iterating-through-2d-arrays)
     - [Common 2D Operations](#common-2d-operations)
     - [3D Arrays](#3d-arrays)
     - [Pattern Generation](#pattern-generation)
-23. [Objects — Comprehensive Guide](#11-objects--comprehensive-guide)
+22. [Objects — Comprehensive Guide](#11-objects--comprehensive-guide)
     - [Creating Objects (Object Literals)](#111-creating-objects-object-literals)
     - [Accessing Object Properties](#112-accessing-object-properties)
     - [Modifying and Adding Properties](#113-modifying-and-adding-properties)
@@ -79,10 +75,10 @@
     - [Real-World Objects](#1111-real-world-objects--configuration-and-test-data)
     - [let vs const with Objects](#1112-let-vs-const-with-objects)
     - [Objects Quick Reference](#1113-summary--objects-quick-reference)
-24. [Classes — Object-Oriented JavaScript](#12-classes--object-oriented-javascript)
-25. [JSON (JavaScript Object Notation)](#25-json-javascript-object-notation)
-26. [Synchronous vs Asynchronous JS](#26-synchronous-vs-asynchronous-js)
-27. [Callbacks in JavaScript](#27-callbacks-in-javascript)
+23. [Classes — Object-Oriented JavaScript](#12-classes--object-oriented-javascript)
+24. [JSON (JavaScript Object Notation)](#25-json-javascript-object-notation)
+25. [Synchronous vs Asynchronous JS](#26-synchronous-vs-asynchronous-js)
+26. [Callbacks in JavaScript](#27-callbacks-in-javascript)
     - [Basic Callback Concept](#271-basic-callback-concept)
     - [Three Ways to Define Callbacks](#272-three-ways-to-define-callbacks)
     - [Callbacks with Parameters](#273-callbacks-with-parameters)
@@ -90,7 +86,7 @@
     - [Asynchronous Callbacks — setTimeout()](#275-asynchronous-callbacks--settimeout)
     - [Real QA Scenario — E2E Login Flow](#276-real-qa-scenario--e2e-login-flow-callback-hell-️)
     - [Key Takeaways](#277-key-takeaways)
-28. [Promises in JavaScript](#28-promises-in-javascript)
+27. [Promises in JavaScript](#28-promises-in-javascript)
     - [28.1 What is a Promise?](#281-what-is-a-promise)
     - [28.2 The McDonald's Receipt Analogy](#282-the-analogy--the-mcdonalds-receipt)
     - [28.3 Syntax Breakdown](#283-syntax-breakdown)
@@ -115,7 +111,7 @@
     - [28.21 Promise.any() — First Success Wins](#2821-promiseany--first-success-wins)
     - [28.22 setInterval() — Repeat Code on a Timer](#2822-setinterval--repeat-code-on-a-timer)
     - [28.23 📌 What is a Promise? — A Short Recap](#2823--what-is-a-promise--a-short-recap)
-29. [Async/Await in JavaScript](#29-asyncawait-in-javascript)
+28. [Async/Await in JavaScript](#29-asyncawait-in-javascript)
     - [29.1 Why Async Code? — What Problem Does It Solve?](#291-why-async-code--what-problem-does-it-solve)
     - [29.2 What is Async/Await?](#292-what-is-asyncawait)
     - [29.3 The `async` Keyword — Making Functions Return Promises](#293-the-async-keyword--making-functions-return-promises)
@@ -130,7 +126,7 @@
     - [29.12 Async/Await with Fetch API (Real-World Example)](#2912-asyncawait-with-fetch-api-real-world-example)
     - [29.13 Retry Pattern with Async/Await — Real QA Scenario](#2913-retry-pattern-with-asyncawait--real-qa-scenario)
     - [29.14 🧪 Async/Await Practice Exercises](#2914--asyncawait-practice-exercises)
-30. [Error Handling in JavaScript](#30-error-handling-in-javascript)
+29. [Error Handling in JavaScript](#30-error-handling-in-javascript)
     - [30.1 The Problem — What Happens Without Error Handling?](#301-the-problem--what-happens-without-error-handling)
     - [30.2 The Solution — try / catch / finally](#302-the-solution--try--catch--finally)
     - [30.3 Basic Syntax](#303-basic-syntax)
@@ -145,7 +141,8 @@
     - [30.12 SDET Pattern — Error Handling in Playwright Tests](#3012-sdet-pattern--error-handling-in-playwright-tests)
     - [30.13 Practice Exercises](#3013-practice-exercises)
     - [30.14 Quick Reference Summary](#3014-quick-reference-summary)
-- [Appendix](#appendix-comparison-recap--vs-)
+- [Appendix: Comparison Recap (== vs ===)](#appendix-comparison-recap--vs-)
+- [Appendix: Bracket Notation](#appendix-bracket-notation)
 
 ---
 
@@ -568,40 +565,46 @@ let UserAge = 25; // PascalCase (used for class names, not variables)
 
 A temporary variable (often called temp) is a variable used to hold a value temporarily while you rearrange or swap other variables. It's like using an extra cup when you want to swap the contents of two cups – you pour one into the extra cup, then the other into the first, then the extra into the second.
 
-📝 Why Do You Need It for Swapping?
+**📝 Why Do You Need It for Swapping?**
+
 Imagine you have two variables:
 
-javascript
+```javascript
 let a = 3;
 let b = 7;
-If you simply do a = b;, you lose the original value of a (3) forever. Then you can't put it into b. The temporary variable saves that original value so you can complete the swap.
+```
 
-✅ Correct Swap Using a Temporary Variable
-javascript
+If you simply do `a = b;`, you lose the original value of `a` (`3`) forever. Then you can't put it into `b`. The temporary variable saves that original value so you can complete the swap.
+
+**✅ Correct Swap Using a Temporary Variable**
+
+```javascript
 let a = 3;
 let b = 7;
 
 let temp = a; // temp now holds 3 (original a)
-a = b; // a becomes 7 (value of b)
-b = temp; // b becomes 3 (value saved in temp)
+a = b;         // a becomes 7 (value of b)
+b = temp;      // b becomes 3 (value saved in temp)
 
 console.log(a); // 7
 console.log(b); // 3
+```
+
 Now the values are swapped! This works no matter what the original values are.
 
-🧠 Key Takeaway
-The temporary variable is just a storage box – it lets you keep a value safe while you move other values around. You'll see this pattern often in programming, not just for swapping but also for rotating values, reversing arrays, etc.
+> 🧠 **Key Takeaway:** The temporary variable is just a storage box – it lets you keep a value safe while you move other values around. You'll see this pattern often in programming, not just for swapping but also for rotating values, reversing arrays, etc.
 
-📝 Your Notes
-Write down:
+**📝 Your Notes**
 
-Temporary variable: A variable used to hold a value temporarily during operations like swapping.
+- **Temporary variable:** A variable used to hold a value temporarily during operations like swapping.
+- **Swap algorithm:**
 
-Swap algorithm:
-
+```
 temp = a
 a = b
 b = temp
+```
+
 
 ---
 
@@ -3753,7 +3756,7 @@ for (let i = 0; i < 3; i++) {
 
 ---
 
-## Variable Shadowing in JavaScript
+### Variable Shadowing in JavaScript
 
 In JavaScript, **Variable Shadowing** occurs when you declare a new variable inside a local scope (like inside a function or a block) that has the exact same name as a variable in an outer scope.
 
@@ -3999,7 +4002,7 @@ console.log("\n📊 Summary: " + passed + " passed, " + failed + " failed");
 
 ---
 
-## 17. Map and Set Commands (Cheat Sheet for SDETs)
+## 16. Map and Set Commands (Cheat Sheet for SDETs)
 
 As an SDET, you will frequently need to store unique values (like test IDs) or map keys to values (like storing test data). Let's learn the exact commands to manage `Set` and `Map` easily.
 
@@ -4111,7 +4114,7 @@ JavaScript provides built-in methods to handle strings easily:
 - **Case Conversion**: `.toUpperCase()` or `.toLowerCase()` changes the entire string's case.
 - **Searching**: `.includes()` or `.indexOf()` helps find specific words or letters inside a string.
 
-## 18. Escape Characters in Strings
+## 17. Escape Characters in Strings
 
 When you write a string in JavaScript, you use quotes around it — either `"double"` or `'single'`. But what if the text you want to print **contains** a quote, a new line, or a tab? That's where **escape characters** come in.
 
@@ -4317,7 +4320,7 @@ console.log(screenshotPath);
 
 > 💡 **SDET Tip:** Prefer **template literals** (backticks) in your test code whenever possible. They are cleaner, easier to read, and you won't need to escape quotes. Save `\n` and `\t` for when you need precise control over formatting in logs or reports.
 
-## 19. String Methods in JS
+## 18. String Methods in JS
 
 ![String_Methods](Images/String_methods_1.png)
 ![String_Methods](Images/String_methods_2.png)
@@ -4866,7 +4869,7 @@ console.log(testSuites.length); // 3 (total items)
 
 ---
 
-## 1️⃣ Array Creation
+### 1️⃣ Array Creation
 
 ### Literal Syntax (Preferred)
 
@@ -4935,7 +4938,7 @@ let buttons = Array.from(document.querySelectorAll("button"));
 
 ---
 
-## 2️⃣ Accessing & Modifying
+### 2️⃣ Accessing & Modifying
 
 ### Access by Index
 
@@ -4978,7 +4981,7 @@ console.log(statuses); // ["pass", "blocked", "skip"]
 
 ---
 
-## 3️⃣ Adding & Removing
+### 3️⃣ Adding & Removing
 
 ### `push()` — Add to END
 
@@ -5042,7 +5045,7 @@ console.log(envs); // ["dev", "qa", "uat", "prod"]
 
 ---
 
-## 4️⃣ Searching
+### 4️⃣ Searching
 
 ### `includes(item)` — Check if Item Exists
 
@@ -5161,7 +5164,7 @@ console.log(lastFailIdx); // 2 (Payment is at index 2)
 
 ---
 
-## 5️⃣ Iterating Through Arrays
+### 5️⃣ Iterating Through Arrays
 
 ### Classic `for` Loop
 
@@ -5223,7 +5226,7 @@ for (let i in tests) {
 
 ---
 
-## 6️⃣ Transforming Arrays
+### 6️⃣ Transforming Arrays
 
 ### `map()` — Transform Every Item (Create NEW Array)
 
@@ -5340,7 +5343,7 @@ console.log(wordsFlat); // ["Hello", "world", "Learning", "JS"]
 
 ---
 
-## 7️⃣ Sorting
+### 7️⃣ Sorting
 
 ### `sort()` — Sort Array In Place
 
@@ -5384,7 +5387,7 @@ console.log(steps); // original untouched ✅
 
 ---
 
-## 8️⃣ Slicing & Combining
+### 8️⃣ Slicing & Combining
 
 ### `slice(start, end)` — Copy a Portion (Pure)
 
@@ -5451,7 +5454,7 @@ console.log(frameworks.join()); // "Playwright,Cypress,Selenium"
 
 ---
 
-## 9️⃣ Checking & Validation
+### 9️⃣ Checking & Validation
 
 ### `Array.isArray()` — Verify It's an Array
 
@@ -5516,7 +5519,7 @@ if (results.some((r) => r === "FAIL")) {
 
 ---
 
-## 🔟 Copying Arrays
+### 🔟 Copying Arrays
 
 ### Reference vs Copy (Important!)
 
@@ -5591,7 +5594,7 @@ console.log(deepCopy[1]); // ["P1", "Smoke", "Regression"]
 
 ---
 
-## 1️⃣1️⃣ Array Destructuring
+### 1️⃣1️⃣ Array Destructuring
 
 ### Basic Destructuring
 
@@ -5632,7 +5635,7 @@ console.log(a, b); // 2, 1
 
 ---
 
-## 1️⃣2️⃣ Pure vs Impure Methods — Quick Reference
+### 1️⃣2️⃣ Pure vs Impure Methods — Quick Reference
 
 | Method          | Pure | Impure | Returns             |
 | --------------- | ---- | ------ | ------------------- |
@@ -5720,7 +5723,7 @@ let totalSum = arr.reduce((acc, val) => {
 
 ---
 
-## 1️⃣3️⃣ The New ES2023 Pure Methods 🚀
+### 1️⃣3️⃣ The New ES2023 Pure Methods 🚀
 
 JavaScript developers used to hate that `sort()`, `reverse()`, and `splice()` modified the original array because mutating data can cause bugs.
 
@@ -6429,7 +6432,7 @@ console.log(failedNames); // ["Checkout", "Payment"]
 
 ---
 
-# 20.5 Understanding Rows and Columns
+## 20.5 Understanding Rows and Columns
 
 Before learning about multi-dimensional arrays, understand how **rows** and **columns** work. Think of a Google Sheet:
 
@@ -6517,7 +6520,7 @@ let users = [
 
 Multi-dimensional arrays are arrays **containing other arrays**. Think of them as **grids, tables, or spreadsheets**. Essential for SDET when dealing with test data tables, API responses with nested structures, or visual grid testing.
 
-## 2D Arrays (Matrices)
+### 2D Arrays (Matrices)
 
 A **2D array** is an array of arrays — like a **table with rows and columns**.
 
@@ -6754,7 +6757,7 @@ for (let row of matrix) {
 
 ---
 
-## 3D Arrays
+### 3D Arrays
 
 A **3D array** is an array of 2D arrays — like **multiple sheets/layers**.
 
@@ -7156,7 +7159,7 @@ If you look closely at that code, you'll see a very specific pattern. It works e
 
 ---
 
-# Basic Functions in JavaScript
+## Basic Functions in JavaScript
 
 Functions can be categorized based on two things:
 
@@ -7165,7 +7168,7 @@ Functions can be categorized based on two things:
 
 ---
 
-## 1. No Parameters, No Return
+### 1. No Parameters, No Return
 
 Only performs an action, returns nothing.
 
@@ -7179,7 +7182,7 @@ greet(); // Output: Hello World
 
 ---
 
-## 2. With Parameters, No Return
+### 2. With Parameters, No Return
 
 Takes input, but returns nothing.
 
@@ -7193,7 +7196,7 @@ greet("Shuja"); // Output: Hello Shuja
 
 ---
 
-## 3. No Parameters, With Return
+### 3. No Parameters, With Return
 
 Returns a value, but takes no input.
 
@@ -7207,7 +7210,7 @@ console.log(greet()); // Output: Hello World
 
 ---
 
-## 4. With Parameters, With Return
+### 4. With Parameters, With Return
 
 Takes input AND returns a value. (Most common in real projects)
 
@@ -10650,7 +10653,7 @@ This makes your code much cleaner and faster to read, especially when constructi
 
 ---
 
- ## 12. Classes — Object-Oriented JavaScript
+## 12. Classes — Object-Oriented JavaScript
 
 > A **Class** is a **code template (blueprint)** used to create objects. Each object built from a class has its own **state** (data stored in properties) and **behaviour** (actions defined as methods).
 
