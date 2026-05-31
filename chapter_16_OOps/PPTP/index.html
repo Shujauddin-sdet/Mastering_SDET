@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 16: OOPs - PPTP Tutorial</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; min-height: 100vh; background: #f5f5f5; }
+    .sidebar { width: 280px; background: #1a1a2e; color: #e0e0e0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; padding: 20px 0; z-index: 10; }
+    .sidebar h2 { padding: 10px 20px 20px; font-size: 18px; color: #fff; border-bottom: 1px solid #333; margin-bottom: 10px; }
+    .sidebar a { display: block; padding: 10px 20px; color: #b0b0c0; text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar a:hover, .sidebar a.active { background: #16213e; color: #64ffda; border-left-color: #64ffda; }
+    .sidebar .section-label { padding: 15px 20px 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+    .main { margin-left: 280px; padding: 40px; flex: 1; max-width: 900px; }
+    .main h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 10px; }
+    .main .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+    .topic { background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .topic h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #64ffda; }
+    .topic h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    .topic p { line-height: 1.8; color: #444; margin-bottom: 15px; }
+    .topic ul, .topic ol { margin: 10px 0 15px 20px; line-height: 1.8; color: #444; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 6px; overflow-x: auto; margin: 15px 0; font-size: 14px; line-height: 1.6; }
+    code { font-family: 'Fira Code', 'Consolas', monospace; }
+    .inline-code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 13px; color: #d63384; }
+    .kw { color: #569cd6; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cm { color: #6a9955; }
+    .fn { color: #dcdcaa; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 5px; }
+    .badge-file { background: #e3f2fd; color: #1565c0; }
+    .badge-concept { background: #f3e5f5; color: #7b1fa2; }
+    .badge-folder { background: #e8f5e9; color: #2e7d32; }
+    .footer { text-align: center; padding: 30px; color: #999; font-size: 13px; }
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main { margin-left: 0; }
+      body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Ch 16: OOPs</h2>
+    <div class="section-label">Export / Import</div>
+    <a href="#topic-150">150 - Export &amp; Import</a>
+    <a href="#topic-151">151 - Named Exports</a>
+    <a href="#topic-152">152 - Default Export</a>
+    <div class="section-label">Class &amp; Object</div>
+    <a href="#topic-153">153 - Class Blueprint</a>
+    <a href="#topic-154">154 - Constructor</a>
+    <a href="#topic-155">155 - TestCase Class</a>
+    <a href="#topic-156">156 - Browser Class</a>
+    <a href="#topic-157">157 - APIClient IQ</a>
+    <a href="#topic-158">158 - Private &amp; Public</a>
+    <a href="#topic-159">159 - Static Members</a>
+    <a href="#topic-160">160 - Static Part 2</a>
+    <div class="section-label">Encapsulation</div>
+    <a href="#topic-161">161 - Private Fields</a>
+    <a href="#topic-162">162 - Car Encapsulation</a>
+    <a href="#topic-163">163 - Bank Account</a>
+  </nav>
+  <main class="main">
+    <h1>Chapter 16: OOPs</h1>
+    <p class="subtitle">Object-Oriented Programming in JavaScript — classes, constructors, export/import modules, private fields, static members, and encapsulation patterns.</p>
+
+    <div class="topic" id="topic-150">
+      <h2>150 - Export &amp; Import</h2>
+      <span class="badge badge-file">150_Export_import.js</span>
+      <span class="badge badge-folder">EXPORT_IMPORT</span>
+      <span class="badge badge-concept">ES Modules</span>
+      <p>Using <code class="inline-code">import</code> to bring in named exports from another module. Demonstrates importing <code class="inline-code">BASE_URL</code> and a utility function from <code class="inline-code">testutil.js</code>. Non-exported variables remain private to their module.</p>
+      <pre><code><span class="kw">import</span> { BASE_URL, formatUpperCaseString } <span class="kw">from</span> <span class="str">"../testutil.js"</span>;
+
+console.log(BASE_URL); <span class="cm">// "https://app.vwo.com"</span>
+
+<span class="kw">let</span> result = <span class="fn">formatUpperCaseString</span>(<span class="str">"Pramod"</span>);
+console.log(result); <span class="cm">// "PRAMOD"</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-151">
+      <h2>151 - Named Exports</h2>
+      <span class="badge badge-file">testutil.js</span>
+      <span class="badge badge-concept">Named Export</span>
+      <p>Creating named exports with the <code class="inline-code">export</code> keyword. Only exported items are accessible from other modules — non-exported variables like <code class="inline-code">fname</code> stay private.</p>
+      <pre><code><span class="kw">export let</span> BASE_URL = <span class="str">"https://app.vwo.com"</span>;
+
+<span class="kw">export function</span> <span class="fn">formatUpperCaseString</span>(sname) {
+    <span class="kw">return</span> sname.toUpperCase();
+}
+
+<span class="kw">let</span> fname = <span class="str">"Pramod"</span>; <span class="cm">// NOT exported — private to this module</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-152">
+      <h2>152 - Default Export</h2>
+      <span class="badge badge-file">logger.js</span>
+      <span class="badge badge-concept">Default Export</span>
+      <p>A module can have ONE default export (the main thing it provides) plus additional named exports. Default exports can be imported with any name.</p>
+      <pre><code><span class="cm">// Default Export → Export One Main Thing</span>
+<span class="kw">export default function</span> <span class="fn">log</span>(message) {
+    console.log(<span class="str">"[LOG] "</span> + message);
+}
+
+<span class="kw">export function</span> <span class="fn">log2</span>(message) {
+    console.log(<span class="str">"[LOGS] "</span> + message);
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-153">
+      <h2>153 - Class Blueprint</h2>
+      <span class="badge badge-file">153_Class_Objects.js</span>
+      <span class="badge badge-folder">CLASS_OBJECT</span>
+      <span class="badge badge-concept">CAB Pattern</span>
+      <p>A class is a blueprint: it defines Attributes (data) and Behaviour (methods). CAB = Class contains Attributes and Behaviour. Objects are instances created from this blueprint.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Person</span> {
+    <span class="cm">// Attributes</span>
+    name;
+    email;
+    salary;
+
+    <span class="cm">// Behaviour</span>
+    <span class="fn">sleep</span>() { }
+    <span class="fn">eat</span>() { }
+}
+
+<span class="cm">// CAB → Class contains Attribute, Behaviour</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-154">
+      <h2>154 - Constructor</h2>
+      <span class="badge badge-file">154_Car.js</span>
+      <span class="badge badge-concept">Constructor</span>
+      <p>The <code class="inline-code">constructor()</code> method runs when you create a new object with <code class="inline-code">new</code>. It initializes the object's properties using <code class="inline-code">this</code> to bind parameters to the instance.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Car</span> {
+    <span class="fn">constructor</span>(assigned_name) {
+        <span class="kw">this</span>.name = assigned_name;
+    }
+    <span class="fn">drive</span>() {
+        console.log(<span class="str">"Driving the car "</span> + <span class="kw">this</span>.name);
+    }
+}
+
+<span class="kw">let</span> hyndai_car = <span class="kw">new</span> Car(<span class="str">"i10"</span>);
+hyndai_car.drive(); <span class="cm">// "Driving the car i10"</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-155">
+      <h2>155 - TestCase Class</h2>
+      <span class="badge badge-file">155_Class_Object_Browser.js</span>
+      <span class="badge badge-concept">Real QA Class</span>
+      <p>A practical TestCase class with name, status, and priority — modeling real QA test data. Demonstrates creating multiple instances from the same class template.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">TestCase</span> {
+    <span class="fn">constructor</span>(name, status, priority) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.status = status;
+        <span class="kw">this</span>.priority = priority;
+    }
+    <span class="fn">display</span>() {
+        console.log(<span class="kw">this</span>.name + <span class="str">" → "</span> + <span class="kw">this</span>.status + <span class="str">" → "</span> + <span class="kw">this</span>.priority);
+    }
+}
+
+<span class="kw">let</span> loginTest = <span class="kw">new</span> TestCase(<span class="str">"Login Test"</span>, <span class="str">"PASS"</span>, <span class="str">"P0"</span>);
+loginTest.display();</code></pre>
+    </div>
+
+    <div class="topic" id="topic-156">
+      <h2>156 - Browser Class</h2>
+      <span class="badge badge-file">156_Browser.js</span>
+      <span class="badge badge-concept">Constructor Logic</span>
+      <p>A Browser class where the constructor sets up initial state (<code class="inline-code">isOpen = true</code>) and logs a message when launched. Shows how constructors can run logic beyond simple assignment.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Browser</span> {
+    <span class="fn">constructor</span>(name) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.isOpen = <span class="kw">true</span>;
+        console.log(name + <span class="str">" launched"</span>);
+    }
+    <span class="fn">startBrowser</span>() { console.log(<span class="str">"starting"</span>); }
+    <span class="fn">closeBrowser</span>() { console.log(<span class="str">"closing"</span>); }
+}
+
+<span class="kw">let</span> chrome = <span class="kw">new</span> Browser(<span class="str">"Chrome"</span>);
+<span class="kw">let</span> firefox = <span class="kw">new</span> Browser(<span class="str">"Firefox"</span>);</code></pre>
+    </div>
+
+    <div class="topic" id="topic-157">
+      <h2>157 - APIClient IQ</h2>
+      <span class="badge badge-file">157_IQ.js</span>
+      <span class="badge badge-concept">Multiple Instances</span>
+      <p>Interview-style question: creating multiple APIClient instances with different base URLs (staging vs production). Each object maintains its own independent state.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">APIClient</span> {
+    <span class="fn">constructor</span>(baseURL) {
+        <span class="kw">this</span>.baseURL = baseURL;
+    }
+    <span class="fn">get</span>(path) {
+        <span class="kw">return</span> <span class="kw">this</span>.baseURL + path;
+    }
+}
+
+<span class="kw">let</span> staging = <span class="kw">new</span> APIClient(<span class="str">"https://staging.api.com"</span>);
+<span class="kw">let</span> prod = <span class="kw">new</span> APIClient(<span class="str">"https://prod.api.com"</span>);
+console.log(staging.get(<span class="str">"/users"</span>));
+console.log(prod.get(<span class="str">"/users"</span>));</code></pre>
+    </div>
+
+    <div class="topic" id="topic-158">
+      <h2>158 - Private &amp; Public</h2>
+      <span class="badge badge-file">158_Private_Public.js</span>
+      <span class="badge badge-concept">Private Fields (#)</span>
+      <p>JavaScript private fields use the <code class="inline-code">#</code> prefix. Private fields can only be accessed within the class — not from outside. Public fields have no prefix and are accessible anywhere.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Credentials</span> {
+    #apiKey;
+    user;
+
+    <span class="fn">constructor</span>(user, key) {
+        <span class="kw">this</span>.user = user;     <span class="cm">// public</span>
+        <span class="kw">this</span>.#apiKey = key;   <span class="cm">// private</span>
+    }
+    <span class="fn">pramodgetAuthHeader</span>() {
+        <span class="kw">return</span> <span class="str">"Bearer "</span> + <span class="kw">this</span>.#apiKey;
+    }
+}
+
+<span class="kw">let</span> cred = <span class="kw">new</span> Credentials(<span class="str">"admin"</span>, <span class="str">"secret_key_1234"</span>);
+console.log(cred.user);     <span class="cm">// ✅ "admin"</span>
+<span class="cm">// console.log(cred.#apiKey); // ❌ SyntaxError!</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-159">
+      <h2>159 - Static Members</h2>
+      <span class="badge badge-file">159_Static.js</span>
+      <span class="badge badge-concept">Static</span>
+      <p>Static properties and methods belong to the class itself, not to instances. Use <code class="inline-code">ClassName.method()</code> to access them — perfect for counters, summaries, or shared utilities.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">TestRunner</span> {
+    <span class="kw">static</span> totalTests = <span class="num">0</span>;
+    <span class="kw">static</span> passCount = <span class="num">0</span>;
+
+    <span class="fn">constructor</span>(name, passed) {
+        <span class="kw">this</span>.name = name;
+        TestRunner.totalTests++;
+        <span class="kw">if</span> (passed) TestRunner.passCount++;
+    }
+
+    <span class="kw">static</span> <span class="fn">summary</span>() {
+        <span class="kw">return</span> TestRunner.passCount + <span class="str">"/"</span> + TestRunner.totalTests + <span class="str">" passed"</span>;
+    }
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-160">
+      <h2>160 - Static Part 2</h2>
+      <span class="badge badge-file">160_Static_p2.js</span>
+      <span class="badge badge-concept">Shared Data</span>
+      <p>A <code class="inline-code">Student</code> class with a static <code class="inline-code">collegeName</code> shared across all instances. Static properties store data that belongs to the class, not individual objects — like a batch name shared by all students.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Student</span> {
+    <span class="kw">static</span> collegeName = <span class="str">"PW AT Batch"</span>;
+
+    <span class="fn">constructor</span>(name) {
+        <span class="kw">this</span>.name = name;
+    }
+}
+
+<span class="kw">let</span> amit = <span class="kw">new</span> Student(<span class="str">"amit"</span>);
+console.log(Student.collegeName); <span class="cm">// "PW AT Batch" — class-level</span>
+console.log(amit.name);          <span class="cm">// "amit" — instance-level</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-161">
+      <h2>161 - Private Fields (Encapsulation)</h2>
+      <span class="badge badge-file">161_Pramod_Child.js</span>
+      <span class="badge badge-folder">Encapsulation</span>
+      <span class="badge badge-concept">Getters &amp; Setters</span>
+      <p>Encapsulation in action: hiding private fields (<code class="inline-code">#child1</code>, <code class="inline-code">#child2</code>) and exposing them only through getter and setter methods. This controls access and adds validation logic.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Person</span> {
+    #child1;
+    #child2;
+
+    <span class="fn">constructor</span>(name, ch1, ch2) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.#child1 = ch1;
+        <span class="kw">this</span>.#child2 = ch2;
+    }
+    <span class="fn">getChild1</span>() { <span class="kw">return</span> <span class="kw">this</span>.#child1; }
+    <span class="fn">setChild1</span>(changed_name) { <span class="kw">this</span>.#child1 = changed_name; }
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-162">
+      <h2>162 - Car Encapsulation</h2>
+      <span class="badge badge-file">162_Car.js</span>
+      <span class="badge badge-concept">Private Engine</span>
+      <p>A <code class="inline-code">Car</code> class where the <code class="inline-code">#engine</code> is private — you can only read or change it through <code class="inline-code">getEngine()</code> and <code class="inline-code">setEngine()</code> methods. This pattern protects internal state.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Car</span> {
+    #engine;
+
+    <span class="fn">constructor</span>(name, engineName) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.#engine = engineName;
+    }
+    <span class="fn">getEngine</span>() { <span class="kw">return</span> <span class="kw">this</span>.#engine; }
+    <span class="fn">setEngine</span>(nameEngine) { <span class="kw">this</span>.#engine = nameEngine; }
+}
+
+<span class="kw">let</span> tesla = <span class="kw">new</span> Car(<span class="str">"Tesla"</span>, <span class="str">"V8"</span>);
+tesla.setEngine(<span class="str">"V9"</span>);
+console.log(tesla.getEngine()); <span class="cm">// "V9"</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-163">
+      <h2>163 - Bank Account</h2>
+      <span class="badge badge-file">163_Bank.js</span>
+      <span class="badge badge-concept">Access Control</span>
+      <p>Real-world encapsulation: an ICICI bank class with private <code class="inline-code">#balance</code>. The setter includes an authorization check (<code class="inline-code">isCashier</code>) — only authorized users can modify the balance.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">ICICI</span> {
+    #balance;
+
+    <span class="fn">constructor</span>(name, balance) {
+        <span class="kw">this</span>.#balance = balance;
+        <span class="kw">this</span>.name = name;
+    }
+    <span class="fn">getBalance</span>() { <span class="kw">return</span> <span class="kw">this</span>.#balance; }
+    <span class="fn">setBalance</span>(balance, isCashier) {
+        <span class="kw">if</span> (isCashier) {
+            <span class="kw">this</span>.#balance = balance;
+        } <span class="kw">else</span> {
+            console.log(<span class="str">"Not allowed"</span>);
+        }
+    }
+}</code></pre>
+    </div>
+
+    <div class="footer">PPTP - Playwright &amp; Programming Tutorial Portal | TheTestingAcademy</div>
+  </main>
+  <script>
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic');
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.id;
+      });
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

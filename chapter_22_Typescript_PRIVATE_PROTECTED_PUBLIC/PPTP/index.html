@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 22: TypeScript Access Modifiers - PPTP Tutorial</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; min-height: 100vh; background: #f5f5f5; }
+    .sidebar { width: 280px; background: #1a1a2e; color: #e0e0e0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; padding: 20px 0; z-index: 10; }
+    .sidebar h2 { padding: 10px 20px 20px; font-size: 18px; color: #fff; border-bottom: 1px solid #333; margin-bottom: 10px; }
+    .sidebar a { display: block; padding: 10px 20px; color: #b0b0c0; text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar a:hover, .sidebar a.active { background: #16213e; color: #64ffda; border-left-color: #64ffda; }
+    .sidebar .section-label { padding: 15px 20px 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+    .main { margin-left: 280px; padding: 40px; flex: 1; max-width: 900px; }
+    .main h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 10px; }
+    .main .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+    .topic { background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .topic h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #64ffda; }
+    .topic h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    .topic p { line-height: 1.8; color: #444; margin-bottom: 15px; }
+    .topic ul, .topic ol { margin: 10px 0 15px 20px; line-height: 1.8; color: #444; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 6px; overflow-x: auto; margin: 15px 0; font-size: 14px; line-height: 1.6; }
+    code { font-family: 'Fira Code', 'Consolas', monospace; }
+    .inline-code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 13px; color: #d63384; }
+    .kw { color: #569cd6; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cm { color: #6a9955; }
+    .fn { color: #dcdcaa; }
+    .tp { color: #4ec9b0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 5px; }
+    .badge-file { background: #e3f2fd; color: #1565c0; }
+    .badge-concept { background: #f3e5f5; color: #7b1fa2; }
+    .footer { text-align: center; padding: 30px; color: #999; font-size: 13px; }
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main { margin-left: 0; }
+      body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Ch 22: Access Modifiers</h2>
+    <div class="section-label">Topics</div>
+    <a href="#topic-200">200 - Public / Private / Protected</a>
+    <a href="#topic-201">201 - Page Object Model</a>
+    <a href="#topic-202">202 - Readonly</a>
+    <a href="#topic-203">203 - Abstract Class</a>
+    <a href="#topic-204">204 - Type Assertion (as)</a>
+    <a href="#topic-205">205 - Override Keyword</a>
+    <a href="#topic-206">206 - Override Part 2</a>
+    <a href="#topic-207">207 - Decorators</a>
+  </nav>
+  <main class="main">
+    <h1>Chapter 22: TypeScript Access Modifiers</h1>
+    <p class="subtitle">Advanced TypeScript OOP — public/private/protected, readonly, abstract classes, type assertion, method override, and decorators.</p>
+
+    <div class="topic" id="topic-200">
+      <h2>200 - Public / Private / Protected</h2>
+      <span class="badge badge-file">200_PRIVATE_PUBLIC_PROTECTED.ts</span>
+      <span class="badge badge-concept">Access Control</span>
+      <p>TypeScript's three access modifiers: <code class="inline-code">public</code> (accessible everywhere), <code class="inline-code">private</code> (only within the class), and <code class="inline-code">protected</code> (within the class and its subclasses).</p>
+      <pre><code><span class="kw">class</span> <span class="fn">APIClient</span> {
+    <span class="kw">public</span> baseURL: <span class="tp">string</span>;
+    <span class="kw">private</span> apiKey: <span class="tp">string</span>;
+    <span class="kw">protected</span> timeout: <span class="tp">number</span>;
+
+    <span class="fn">constructor</span>(baseURL: <span class="tp">string</span>, apiKey: <span class="tp">string</span>, timeout: <span class="tp">number</span>) {
+        <span class="kw">this</span>.baseURL = baseURL;
+        <span class="kw">this</span>.apiKey = apiKey;
+        <span class="kw">this</span>.timeout = timeout;
+    }
+
+    <span class="kw">private</span> <span class="fn">getAuthHeader</span>(): <span class="tp">string</span> {
+        <span class="kw">return</span> <span class="str">"Bearer "</span> + <span class="kw">this</span>.apiKey;
+    }
+
+    <span class="kw">public</span> <span class="fn">sendRequest</span>(path: <span class="tp">string</span>): <span class="tp">void</span> {
+        console.log(<span class="str">"GET "</span> + <span class="kw">this</span>.baseURL + path);
+        console.log(<span class="str">"Auth: "</span> + <span class="kw">this</span>.getAuthHeader());
+    }
+}
+
+<span class="kw">class</span> <span class="fn">UserAPIClient</span> <span class="kw">extends</span> APIClient {
+    <span class="fn">getUsers</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"Timeout: "</span> + <span class="kw">this</span>.timeout); <span class="cm">// ✅ protected</span>
+        <span class="cm">// this.apiKey  // ❌ private — Error!</span>
+    }
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-201">
+      <h2>201 - Page Object Model</h2>
+      <span class="badge badge-file">201_PageObjectModel.ts</span>
+      <span class="badge badge-concept">Protected in POM</span>
+      <p>Using <code class="inline-code">protected</code> in a real Page Object Model: BasePage's <code class="inline-code">baseURL</code> and <code class="inline-code">navigate()</code> are protected — available to child pages but hidden from external code.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">BasePage</span> {
+    <span class="kw">protected</span> baseURL: <span class="tp">string</span>;
+
+    <span class="fn">constructor</span>(url: <span class="tp">string</span>) {
+        <span class="kw">this</span>.baseURL = url;
+    }
+    <span class="kw">protected</span> <span class="fn">navigate</span>(path: <span class="tp">string</span>): <span class="tp">void</span> {
+        console.log(<span class="str">"Navigating to: "</span> + <span class="kw">this</span>.baseURL + path);
+    }
+}
+
+<span class="kw">class</span> <span class="fn">LoginPage</span> <span class="kw">extends</span> BasePage {
+    <span class="fn">constructor</span>() { <span class="kw">super</span>(<span class="str">"https://app.staging.com"</span>); }
+
+    <span class="fn">login</span>(user: <span class="tp">string</span>): <span class="tp">void</span> {
+        <span class="kw">this</span>.navigate(<span class="str">"/login"</span>); <span class="cm">// ✅ protected access</span>
+        console.log(<span class="str">"Typing "</span> + user);
+    }
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-202">
+      <h2>202 - Readonly</h2>
+      <span class="badge badge-file">202_READONLY.ts</span>
+      <span class="badge badge-concept">readonly Modifier</span>
+      <p><code class="inline-code">readonly</code> properties can only be set in the constructor — never changed afterward. Perfect for configuration values that must stay constant throughout the test run.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">PlaywrightConfig</span> {
+    <span class="kw">readonly</span> baseURL: <span class="tp">string</span>;
+    <span class="kw">readonly</span> timeout: <span class="tp">number</span>;
+    <span class="kw">readonly</span> retries: <span class="tp">number</span>;
+
+    <span class="fn">constructor</span>(url: <span class="tp">string</span>, timeout: <span class="tp">number</span>, retries: <span class="tp">number</span>) {
+        <span class="kw">this</span>.baseURL = url;
+        <span class="kw">this</span>.timeout = timeout;
+        <span class="kw">this</span>.retries = retries;
+    }
+    <span class="fn">showConfig</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"URL: "</span> + <span class="kw">this</span>.baseURL);
+        console.log(<span class="str">"Timeout: "</span> + <span class="kw">this</span>.timeout + <span class="str">"ms"</span>);
+    }
+}
+
+<span class="kw">let</span> config = <span class="kw">new</span> PlaywrightConfig(<span class="str">"https://staging.app.com"</span>, <span class="num">30000</span>, <span class="num">2</span>);
+<span class="cm">// config.baseURL = "new"; // ❌ Error: readonly!</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-203">
+      <h2>203 - Abstract Class</h2>
+      <span class="badge badge-file">203_Abstract_Class.ts</span>
+      <span class="badge badge-concept">abstract</span>
+      <p>Abstract classes can't be instantiated — they're templates that force child classes to implement specific methods. <code class="inline-code">abstract</code> methods have no body; each child must provide its own implementation.</p>
+      <pre><code><span class="kw">abstract class</span> <span class="fn">BaseTest</span> {
+    <span class="kw">protected</span> testName: <span class="tp">string</span>;
+    <span class="fn">constructor</span>(testName: <span class="tp">string</span>) {
+        <span class="kw">this</span>.testName = testName;
+    }
+
+    <span class="kw">abstract</span> <span class="fn">setup</span>(): <span class="tp">void</span>;
+    <span class="kw">abstract</span> <span class="fn">execute</span>(): <span class="tp">void</span>;
+    <span class="kw">abstract</span> <span class="fn">teardown</span>(): <span class="tp">void</span>;
+}
+
+<span class="kw">class</span> <span class="fn">UITest</span> <span class="kw">extends</span> BaseTest {
+    <span class="fn">setup</span>(): <span class="tp">void</span> { console.log(<span class="str">"  Setup: launch browser"</span>); }
+    <span class="fn">execute</span>(): <span class="tp">void</span> { console.log(<span class="str">"  Execute: click, fill forms"</span>); }
+    <span class="fn">teardown</span>(): <span class="tp">void</span> { console.log(<span class="str">"  Teardown: close browser"</span>); }
+}
+
+<span class="cm">// let test = new BaseTest(); // ❌ Cannot instantiate abstract!</span>
+<span class="kw">let</span> test = <span class="kw">new</span> UITest(<span class="str">"Login"</span>); <span class="cm">// ✅</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-204">
+      <h2>204 - Type Assertion (as)</h2>
+      <span class="badge badge-file">204_As_Alias.ts / 204_AS_Part2.ts</span>
+      <span class="badge badge-concept">as Keyword</span>
+      <p>Type assertion (<code class="inline-code">as</code>) tells TypeScript to treat a value as a specific type. Useful when you know the shape of <code class="inline-code">unknown</code> data (like API responses) but TypeScript doesn't.</p>
+      <pre><code><span class="kw">let</span> rawResponse: <span class="tp">unknown</span> = {
+    status: <span class="num">200</span>,
+    body: { user: <span class="str">"admin"</span>, role: <span class="str">"tester"</span> }
+};
+
+<span class="kw">interface</span> <span class="tp">UserResponse</span> {
+    status: <span class="tp">number</span>;
+    body: { user: <span class="tp">string</span>; role: <span class="tp">string</span> };
+}
+
+<span class="kw">let</span> response = rawResponse <span class="kw">as</span> <span class="tp">UserResponse</span>;
+console.log(<span class="str">"Status:"</span>, response.status); <span class="cm">// 200</span>
+console.log(<span class="str">"User:"</span>, response.body.user);   <span class="cm">// "admin"</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-205">
+      <h2>205 - Override Keyword</h2>
+      <span class="badge badge-file">205_Override.ts</span>
+      <span class="badge badge-concept">override</span>
+      <p>TypeScript's <code class="inline-code">override</code> keyword explicitly marks a method as overriding a parent method. If the parent method doesn't exist, TypeScript catches the mistake at compile time.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">BaseTest</span> {
+    <span class="fn">setup</span>(): <span class="tp">void</span> { console.log(<span class="str">"[BASE] Open browser"</span>); }
+    <span class="fn">teardown</span>(): <span class="tp">void</span> { console.log(<span class="str">"[BASE] Close browser"</span>); }
+}
+
+<span class="kw">class</span> <span class="fn">LoginTest</span> <span class="kw">extends</span> BaseTest {
+    <span class="kw">override</span> <span class="fn">setup</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"[LoginTest] Open browser"</span>);
+        console.log(<span class="str">"[LoginTest] Maximize"</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="fn">APITest</span> <span class="kw">extends</span> BaseTest {
+    <span class="kw">override</span> <span class="fn">setup</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"[APITest] Init HTTP client"</span>);
+    }
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-206">
+      <h2>206 - Override Part 2</h2>
+      <span class="badge badge-file">206_Override.ts</span>
+      <span class="badge badge-concept">Override Pattern</span>
+      <p>Another override example showing a Father/Son relationship where the child class provides its own implementation of the <code class="inline-code">home()</code> method.</p>
+      <pre><code><span class="kw">class</span> <span class="fn">Father</span> {
+    <span class="fn">home</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"2BHK"</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="fn">Pramod</span> <span class="kw">extends</span> Father {
+    <span class="fn">home</span>(): <span class="tp">void</span> {
+        console.log(<span class="str">"3BHK"</span>);
+    }
+}
+
+<span class="kw">let</span> pramod = <span class="kw">new</span> Pramod();
+pramod.home(); <span class="cm">// "3BHK" — child's version</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-207">
+      <h2>207 - Decorators</h2>
+      <span class="badge badge-file">207_Decorator.ts</span>
+      <span class="badge badge-concept">Decorators (Preview)</span>
+      <p>Decorators are special functions that modify classes, methods, or properties using the <code class="inline-code">@</code> syntax. They're an experimental feature used heavily in frameworks like NestJS and Angular. (Placeholder for future content)</p>
+      <pre><code><span class="cm">// Decorators are an experimental TypeScript feature</span>
+<span class="cm">// Enable with: "experimentalDecorators": true in tsconfig.json</span>
+
+<span class="cm">// Example decorator syntax:</span>
+<span class="cm">// @log</span>
+<span class="cm">// class MyClass { ... }</span>
+
+<span class="cm">// Coming soon — real decorator examples!</span></code></pre>
+    </div>
+
+    <div class="footer">PPTP - Playwright &amp; Programming Tutorial Portal | TheTestingAcademy</div>
+  </main>
+  <script>
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic');
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.id;
+      });
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

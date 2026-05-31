@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 18: TypeScript - PPTP Tutorial</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; min-height: 100vh; background: #f5f5f5; }
+    .sidebar { width: 280px; background: #1a1a2e; color: #e0e0e0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; padding: 20px 0; z-index: 10; }
+    .sidebar h2 { padding: 10px 20px 20px; font-size: 18px; color: #fff; border-bottom: 1px solid #333; margin-bottom: 10px; }
+    .sidebar a { display: block; padding: 10px 20px; color: #b0b0c0; text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar a:hover, .sidebar a.active { background: #16213e; color: #64ffda; border-left-color: #64ffda; }
+    .sidebar .section-label { padding: 15px 20px 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+    .main { margin-left: 280px; padding: 40px; flex: 1; max-width: 900px; }
+    .main h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 10px; }
+    .main .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+    .topic { background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .topic h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #64ffda; }
+    .topic h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    .topic p { line-height: 1.8; color: #444; margin-bottom: 15px; }
+    .topic ul, .topic ol { margin: 10px 0 15px 20px; line-height: 1.8; color: #444; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 6px; overflow-x: auto; margin: 15px 0; font-size: 14px; line-height: 1.6; }
+    code { font-family: 'Fira Code', 'Consolas', monospace; }
+    .inline-code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 13px; color: #d63384; }
+    .kw { color: #569cd6; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cm { color: #6a9955; }
+    .fn { color: #dcdcaa; }
+    .tp { color: #4ec9b0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 5px; }
+    .badge-file { background: #e3f2fd; color: #1565c0; }
+    .badge-concept { background: #f3e5f5; color: #7b1fa2; }
+    .footer { text-align: center; padding: 30px; color: #999; font-size: 13px; }
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main { margin-left: 0; }
+      body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Ch 18: TypeScript</h2>
+    <div class="section-label">Topics</div>
+    <a href="#topic-175">175 - JS vs TS</a>
+    <a href="#topic-176">176 - TS Hello World</a>
+    <a href="#topic-177">177 - Basic Types</a>
+    <a href="#topic-178">178 - Type Annotations</a>
+    <a href="#topic-179">179 - Unknown &amp; Functions</a>
+    <a href="#topic-180">180 - void &amp; never</a>
+    <a href="#topic-181">181 - Function IQ</a>
+    <a href="#topic-182">182 - Arrays &amp; Objects</a>
+    <a href="#topic-183">183 - Filter Array</a>
+  </nav>
+  <main class="main">
+    <h1>Chapter 18: TypeScript</h1>
+    <p class="subtitle">Introduction to TypeScript — type annotations, basic types, function signatures, unknown, void, never, and typed arrays for safer code.</p>
+
+    <div class="topic" id="topic-175">
+      <h2>175 - JS vs TS</h2>
+      <span class="badge badge-file">175_TS.js</span>
+      <span class="badge badge-concept">Comparison</span>
+      <p>A plain JavaScript file showing untyped code — variables and functions without type annotations. This is the "before" that TypeScript improves upon by adding static type checking.</p>
+      <pre><code><span class="kw">let</span> testName = <span class="str">"Login Test"</span>;
+
+<span class="kw">function</span> <span class="fn">add</span>(a, b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="kw">let</span> big = <span class="num">123456789012345678901234567890n</span>;</code></pre>
+    </div>
+
+    <div class="topic" id="topic-176">
+      <h2>176 - TS Hello World</h2>
+      <span class="badge badge-file">176_TS_Helloworld.ts</span>
+      <span class="badge badge-concept">First TS File</span>
+      <p>Your first TypeScript file: adding type annotations to variables and function parameters. <code class="inline-code">: string</code> ensures only strings are assigned, <code class="inline-code">: number</code> ensures numbers — caught at compile time.</p>
+      <pre><code><span class="kw">let</span> testName1: <span class="tp">string</span> = <span class="str">"Login Test"</span>;
+
+<span class="kw">function</span> <span class="fn">add_ts</span>(a: <span class="tp">number</span>, b: <span class="tp">number</span>): <span class="tp">number</span> {
+    <span class="kw">return</span> a + b;
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-177">
+      <h2>177 - Basic Types</h2>
+      <span class="badge badge-file">177_Basic_Types.ts</span>
+      <span class="badge badge-concept">Primitive Types</span>
+      <p>All TypeScript primitive types: <code class="inline-code">string</code>, <code class="inline-code">number</code>, <code class="inline-code">boolean</code>, <code class="inline-code">null</code>, <code class="inline-code">undefined</code>. Plus typed arrays with both <code class="inline-code">number[]</code> and <code class="inline-code">Array&lt;string&gt;</code> syntax. And the escape hatches: <code class="inline-code">any</code> and <code class="inline-code">unknown</code>.</p>
+      <pre><code><span class="kw">let</span> name: <span class="tp">string</span> = <span class="str">"John"</span>;
+<span class="kw">let</span> age: <span class="tp">number</span> = <span class="num">30</span>;
+<span class="kw">let</span> pi: <span class="tp">number</span> = <span class="num">3.14</span>;
+<span class="kw">let</span> isActive: <span class="tp">boolean</span> = <span class="kw">true</span>;
+<span class="kw">let</span> nothing: <span class="tp">null</span> = <span class="kw">null</span>;
+<span class="kw">let</span> notDefined: <span class="tp">undefined</span> = <span class="kw">undefined</span>;
+
+<span class="cm">// Arrays</span>
+<span class="kw">let</span> numbers: <span class="tp">number</span>[] = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>];
+<span class="kw">let</span> names: <span class="tp">Array</span>&lt;<span class="tp">string</span>&gt; = [<span class="str">"John"</span>, <span class="str">"Jane"</span>];
+
+<span class="cm">// Any (avoid!) and Unknown (safer)</span>
+<span class="kw">let</span> anything: <span class="tp">any</span> = <span class="str">"hello"</span>;</code></pre>
+    </div>
+
+    <div class="topic" id="topic-178">
+      <h2>178 - Type Annotations</h2>
+      <span class="badge badge-file">178_TS_Basic_Types.ts</span>
+      <span class="badge badge-concept">Annotations</span>
+      <p>Declaring typed variables with explicit annotations. TypeScript checks these at compile time to prevent type errors before your code even runs.</p>
+      <pre><code><span class="kw">let</span> message: <span class="tp">string</span> = <span class="str">"Hello, TypeScript!"</span>;
+<span class="kw">let</span> count: <span class="tp">number</span> = <span class="num">42</span>;
+<span class="kw">let</span> isActive: <span class="tp">boolean</span> = <span class="kw">true</span>;
+
+console.log(<span class="str">"Message:"</span>, message);
+console.log(<span class="str">"Count:"</span>, count);
+console.log(<span class="str">"Is Active:"</span>, isActive);</code></pre>
+    </div>
+
+    <div class="topic" id="topic-179">
+      <h2>179 - Unknown &amp; Functions</h2>
+      <span class="badge badge-file">179_Unknown.ts</span>
+      <span class="badge badge-concept">unknown &amp; Annotations</span>
+      <p>The <code class="inline-code">unknown</code> type is safer than <code class="inline-code">any</code> — you must type-check before using it. Also covers function annotations for parameters and return types, including arrow function syntax.</p>
+      <pre><code><span class="kw">let</span> unknown: <span class="tp">unknown</span> = <span class="str">"hello"</span>;
+
+<span class="kw">if</span> (<span class="kw">typeof</span> unknown === <span class="str">"string"</span>) {
+    console.log(<span class="str">"It's a string!"</span>);
+}
+
+<span class="cm">// Function annotations</span>
+<span class="kw">function</span> <span class="fn">greet</span>(name: <span class="tp">string</span>): <span class="tp">string</span> {
+    <span class="kw">return</span> `Hello, ${name}!`;
+}
+
+<span class="cm">// Arrow function annotations</span>
+<span class="kw">const</span> multiply = (a: <span class="tp">number</span>, b: <span class="tp">number</span>): <span class="tp">number</span> =&gt; a * b;</code></pre>
+    </div>
+
+    <div class="topic" id="topic-180">
+      <h2>180 - void &amp; never</h2>
+      <span class="badge badge-file">180_Fn_NoReturn.ts</span>
+      <span class="badge badge-concept">void / never</span>
+      <p><code class="inline-code">void</code> means a function returns nothing (like <code class="inline-code">console.log</code>). <code class="inline-code">never</code> means a function never returns at all — it either throws an error or runs an infinite loop.</p>
+      <pre><code><span class="cm">// void — no return value</span>
+<span class="kw">function</span> <span class="fn">sayHello</span>(msg: <span class="tp">string</span>): <span class="tp">void</span> {
+    console.log(msg);
+}
+
+<span class="cm">// Function with return type</span>
+<span class="kw">function</span> <span class="fn">greet</span>(name: <span class="tp">string</span>): <span class="tp">string</span> {
+    <span class="kw">return</span> `Hello, ${name}!`;
+}
+
+<span class="cm">// never — function never returns</span>
+<span class="kw">function</span> <span class="fn">throwError</span>(message: <span class="tp">string</span>): <span class="tp">never</span> {
+    <span class="kw">throw new</span> Error(message);
+}</code></pre>
+    </div>
+
+    <div class="topic" id="topic-181">
+      <h2>181 - Function IQ</h2>
+      <span class="badge badge-file">181_IQ.ts</span>
+      <span class="badge badge-concept">Typed Functions</span>
+      <p>Real QA-flavored typed functions: <code class="inline-code">buildEndpoint()</code> returns a string, <code class="inline-code">isSuccessCode()</code> returns a boolean, and <code class="inline-code">logTestStep()</code> returns void. TypeScript enforces the contracts.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">buildEndpoint</span>(base: <span class="tp">string</span>, path: <span class="tp">string</span>): <span class="tp">string</span> {
+    <span class="kw">return</span> base + path;
+}
+
+<span class="kw">function</span> <span class="fn">isSuccessCode</span>(code: <span class="tp">number</span>): <span class="tp">boolean</span> {
+    <span class="kw">return</span> code &gt;= <span class="num">200</span> &amp;&amp; code &lt; <span class="num">300</span>;
+}
+
+<span class="kw">function</span> <span class="fn">logTestStep</span>(step: <span class="tp">string</span>): <span class="tp">void</span> {
+    console.log(<span class="str">"[STEP] "</span> + step);
+}
+
+console.log(<span class="fn">buildEndpoint</span>(<span class="str">"https://api.com"</span>, <span class="str">"/users"</span>));
+console.log(<span class="fn">isSuccessCode</span>(<span class="num">200</span>)); <span class="cm">// true</span>
+console.log(<span class="fn">isSuccessCode</span>(<span class="num">404</span>)); <span class="cm">// false</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-182">
+      <h2>182 - Arrays &amp; Objects</h2>
+      <span class="badge badge-file">182_IQ.ts</span>
+      <span class="badge badge-concept">Typed Collections</span>
+      <p>Typed arrays (<code class="inline-code">number[]</code>, <code class="inline-code">string[]</code>) and inline object types with specific property types. TypeScript catches typos and wrong types at compile time.</p>
+      <pre><code><span class="kw">let</span> statusCode: <span class="tp">number</span>[] = [<span class="num">200</span>, <span class="num">201</span>, <span class="num">404</span>, <span class="num">500</span>];
+<span class="kw">let</span> testSuites: <span class="tp">string</span>[] = [<span class="str">"Smoke"</span>, <span class="str">"Regression"</span>, <span class="str">"Sanity"</span>];
+
+<span class="kw">let</span> testResult: { name: <span class="tp">string</span>; status: <span class="tp">string</span>; duration: <span class="tp">number</span> } = {
+    name: <span class="str">"Login Test"</span>,
+    status: <span class="str">"PASS"</span>,
+    duration: <span class="num">1200</span>
+};
+
+console.log(testResult.name + <span class="str">" → "</span> + testResult.status);</code></pre>
+    </div>
+
+    <div class="topic" id="topic-183">
+      <h2>183 - Filter Array</h2>
+      <span class="badge badge-file">183_Filter_Array.ts</span>
+      <span class="badge badge-concept">Typed Filter</span>
+      <p>A fully typed function that filters HTTP response codes to find failures (≥ 400). Demonstrates typed parameters, return types, and typed callback functions with <code class="inline-code">.filter()</code>.</p>
+      <pre><code><span class="kw">let</span> responseCodes: <span class="tp">number</span>[] = [<span class="num">200</span>, <span class="num">201</span>, <span class="num">404</span>, <span class="num">500</span>, <span class="num">302</span>, <span class="num">403</span>];
+
+<span class="kw">function</span> <span class="fn">getFailedCodes</span>(codes: <span class="tp">number</span>[]): <span class="tp">number</span>[] {
+    <span class="kw">return</span> codes.<span class="fn">filter</span>(<span class="kw">function</span>(code: <span class="tp">number</span>): <span class="tp">boolean</span> {
+        <span class="kw">return</span> code &gt;= <span class="num">400</span>;
+    });
+}
+
+console.log(<span class="str">"All codes:"</span>, responseCodes);
+console.log(<span class="str">"Failed codes:"</span>, <span class="fn">getFailedCodes</span>(responseCodes));
+<span class="cm">// Failed codes: [404, 500, 403]</span></code></pre>
+    </div>
+
+    <div class="footer">PPTP - Playwright &amp; Programming Tutorial Portal | TheTestingAcademy</div>
+  </main>
+  <script>
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic');
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.id;
+      });
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

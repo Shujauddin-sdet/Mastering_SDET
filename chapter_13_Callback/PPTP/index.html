@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 13: Callback - PPTP Tutorial</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; min-height: 100vh; background: #f5f5f5; }
+    .sidebar { width: 280px; background: #1a1a2e; color: #e0e0e0; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; padding: 20px 0; z-index: 10; }
+    .sidebar h2 { padding: 10px 20px 20px; font-size: 18px; color: #fff; border-bottom: 1px solid #333; margin-bottom: 10px; }
+    .sidebar a { display: block; padding: 10px 20px; color: #b0b0c0; text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar a:hover, .sidebar a.active { background: #16213e; color: #64ffda; border-left-color: #64ffda; }
+    .sidebar .section-label { padding: 15px 20px 5px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; }
+    .main { margin-left: 280px; padding: 40px; flex: 1; max-width: 900px; }
+    .main h1 { font-size: 28px; color: #1a1a2e; margin-bottom: 10px; }
+    .main .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+    .topic { background: #fff; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .topic h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #64ffda; }
+    .topic h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    .topic p { line-height: 1.8; color: #444; margin-bottom: 15px; }
+    .topic ul, .topic ol { margin: 10px 0 15px 20px; line-height: 1.8; color: #444; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 6px; overflow-x: auto; margin: 15px 0; font-size: 14px; line-height: 1.6; }
+    code { font-family: 'Fira Code', 'Consolas', monospace; }
+    .inline-code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 13px; color: #d63384; }
+    .kw { color: #569cd6; }
+    .str { color: #ce9178; }
+    .num { color: #b5cea8; }
+    .cm { color: #6a9955; }
+    .fn { color: #dcdcaa; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-right: 5px; }
+    .badge-file { background: #e3f2fd; color: #1565c0; }
+    .badge-concept { background: #f3e5f5; color: #7b1fa2; }
+    .footer { text-align: center; padding: 30px; color: #999; font-size: 13px; }
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main { margin-left: 0; }
+      body { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Ch 13: Callback</h2>
+    <div class="section-label">Topics</div>
+    <a href="#topic-126">126 - Callback Basics</a>
+    <a href="#topic-127">127 - Sync Callback</a>
+    <a href="#topic-128">128 - Async Callback</a>
+    <a href="#topic-129">129 - Callback Hell</a>
+    <a href="#topic-130">130 - Callback Exercise</a>
+    <a href="#topic-131">131 - Callback Return</a>
+    <a href="#topic-132">132 - Pyramid of Doom</a>
+  </nav>
+  <main class="main">
+    <h1>Chapter 13: Callback</h1>
+    <p class="subtitle">Understanding callbacks — passing functions as arguments, synchronous vs asynchronous callbacks, and the infamous callback hell problem.</p>
+
+    <div class="topic" id="topic-126">
+      <h2>126 - Callback Basics</h2>
+      <span class="badge badge-file">126_Callback.js</span>
+      <span class="badge badge-concept">Callbacks</span>
+      <p>A callback is a function passed as an argument to another function. Demonstrates three ways to pass callbacks: named function, anonymous function, and arrow function. This is the foundation of Playwright's <code class="inline-code">test()</code> API.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">placeOrder</span>(item, callback) {
+    console.log(<span class="str">"Placing order"</span>);
+    callback();
+}
+
+<span class="cm">// Way 1: Named function</span>
+placeOrder(<span class="str">"Burger"</span>, print);
+
+<span class="cm">// Way 2: Anonymous function</span>
+placeOrder(<span class="str">"Burger"</span>, <span class="kw">function</span>() {
+    console.log(<span class="str">"Anonymous callback!"</span>);
+});
+
+<span class="cm">// Way 3: Arrow function</span>
+placeOrder(<span class="str">"Burger"</span>, () =&gt; {
+    console.log(<span class="str">"Arrow callback!"</span>);
+});</code></pre>
+    </div>
+
+    <div class="topic" id="topic-127">
+      <h2>127 - Sync Callback</h2>
+      <span class="badge badge-file">127_Sync_Callback.js</span>
+      <span class="badge badge-concept">Synchronous</span>
+      <p>Synchronous callbacks execute immediately and block the next line until they finish. <code class="inline-code">forEach()</code> is a classic example — it completes all iterations before moving on.</p>
+      <pre><code><span class="kw">let</span> testResults = [<span class="str">"PASS"</span>, <span class="str">"FAIL"</span>, <span class="str">"PASS"</span>, <span class="str">"SKIP"</span>];
+
+testResults.<span class="fn">forEach</span>(<span class="kw">function</span>(result, index) {
+    console.log(<span class="str">"Test"</span> + index + <span class="str">" -> "</span> + result);
+});
+
+<span class="cm">// "All done" prints LAST because forEach is synchronous</span>
+<span class="cm">// — it finishes all 4 iterations first.</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-128">
+      <h2>128 - Async Callback</h2>
+      <span class="badge badge-file">128_Async_Callback.js</span>
+      <span class="badge badge-concept">Asynchronous</span>
+      <p>Asynchronous callbacks are scheduled to run later (e.g., after a timer or network call). <code class="inline-code">setTimeout()</code> demonstrates this: the callback fires after the delay, while the rest of the code continues executing immediately.</p>
+      <pre><code>console.log(<span class="str">"Test 1: started"</span>);
+
+<span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+    console.log(<span class="str">"Test 2: API response received!"</span>);
+}, <span class="num">2000</span>);
+
+console.log(<span class="str">"Test 3: Moving to next"</span>);
+
+<span class="cm">// Output order: Test 1 → Test 3 → Test 2 (after 2s)</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-129">
+      <h2>129 - Callback Hell</h2>
+      <span class="badge badge-file">129_Callback_hell.js</span>
+      <span class="badge badge-concept">Nesting Problem</span>
+      <p>When multiple async operations depend on each other, callbacks nest deeper and deeper — creating the "Pyramid of Doom." This real QA scenario simulates an E2E login flow with nested <code class="inline-code">setTimeout()</code> callbacks.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">openBrowser</span>(callback) {
+    <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+        console.log(<span class="str">"Step 1 - browser starting..."</span>);
+        callback();
+    }, <span class="num">500</span>);
+}
+
+<span class="kw">function</span> <span class="fn">goToLoginPage</span>(callback) {
+    <span class="fn">setTimeout</span>(<span class="kw">function</span>() {
+        console.log(<span class="str">"Step 2: Login page loaded"</span>);
+        callback();
+    }, <span class="num">500</span>);
+}
+
+<span class="cm">// Nested callbacks = Callback Hell!</span>
+openBrowser(<span class="kw">function</span>() {
+    goToLoginPage(<span class="kw">function</span>() {
+        <span class="cm">// deeper and deeper...</span>
+    });
+});</code></pre>
+    </div>
+
+    <div class="topic" id="topic-130">
+      <h2>130 - Callback Exercise</h2>
+      <span class="badge badge-file">130_Call_Ex01_.js</span>
+      <span class="badge badge-concept">Practice</span>
+      <p>A simple callback exercise: a <code class="inline-code">greetTester()</code> function accepts a name and a callback. The callback is invoked after the greeting, showing how callbacks extend function behavior.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">greetTester</span>(name, callback) {
+    console.log(<span class="str">"Welcome, "</span> + name);
+    callback();
+}
+
+greetTester(<span class="str">"Dev"</span>, <span class="kw">function</span>() {
+    console.log(<span class="str">"Let's start testing!"</span>);
+});</code></pre>
+    </div>
+
+    <div class="topic" id="topic-131">
+      <h2>131 - Callback Return</h2>
+      <span class="badge badge-file">131_Callback_Return.js</span>
+      <span class="badge badge-concept">Return Values</span>
+      <p>Callbacks can also return values. Here a <code class="inline-code">calculate()</code> function takes an operation callback and returns its result — a pattern used in array methods like <code class="inline-code">.map()</code> and <code class="inline-code">.filter()</code>.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">calculate</span>(a, b, operation) {
+    <span class="kw">return</span> operation(a, b);
+}
+
+<span class="kw">let</span> sum = calculate(<span class="num">10</span>, <span class="num">5</span>, <span class="kw">function</span>(x, y) {
+    <span class="kw">return</span> x + y;
+});
+
+console.log(sum); <span class="cm">// 15</span></code></pre>
+    </div>
+
+    <div class="topic" id="topic-132">
+      <h2>132 - Pyramid of Doom</h2>
+      <span class="badge badge-file">132_Py_of_DON.js</span>
+      <span class="badge badge-concept">Sequential Steps</span>
+      <p>A sync version of the Pyramid of Doom pattern — chaining sequential steps (open browser → navigate → click) using callbacks. This motivates why Promises and async/await were invented.</p>
+      <pre><code><span class="kw">function</span> <span class="fn">step1</span>(callback) {
+    console.log(<span class="str">"Open browser"</span>);
+    callback();
+}
+
+<span class="kw">function</span> <span class="fn">step2</span>(callback) {
+    console.log(<span class="str">"Navigate to page"</span>);
+    callback();
+}
+
+<span class="kw">function</span> <span class="fn">step3</span>(callback) {
+    console.log(<span class="str">"Click button"</span>);
+    callback();
+}
+
+<span class="cm">// Pyramid of Doom</span>
+step1(<span class="kw">function</span>() {
+    step2(<span class="kw">function</span>() {
+        step3(<span class="kw">function</span>() {
+            console.log(<span class="str">"Done!"</span>);
+        });
+    });
+});</code></pre>
+    </div>
+
+    <div class="footer">PPTP - Playwright &amp; Programming Tutorial Portal | TheTestingAcademy</div>
+  </main>
+  <script>
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.sidebar a').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    });
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.topic');
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 100;
+        if (window.scrollY >= top) current = section.id;
+      });
+      document.querySelectorAll('.sidebar a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
