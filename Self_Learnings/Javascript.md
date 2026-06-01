@@ -16123,5 +16123,4 @@ console.log(url);
 ### 31.3 Why it matters for SDETs
 
 When writing Playwright tests, you will see ES Modules (`import { test, expect } from '@playwright/test';`). Modern automation frameworks strongly prefer ES Modules over CommonJS. Always check your `package.json` to see if `"type": "module"` is enabled when deciding whether to use `import` or `require()`.
-
 ---
