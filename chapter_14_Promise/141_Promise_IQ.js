@@ -47,7 +47,6 @@
 //         console.log("Caught:", err.message);
 //     });
 
-
 // Promise.reject("Test failed")
 //     .then(function (data) {
 //         console.log("Data:", data);
@@ -59,7 +58,6 @@
 //         console.log("Cleanup done");
 //     });
 
-
 // Promise.resolve("Quick win").then(function (msg) {
 //     console.log(msg);
 // });
@@ -67,7 +65,6 @@
 // Promise.reject("Quick loss").catch(function (msg) {
 //     console.log(msg);
 // });
-
 
 // let t1 = Promise.resolve("Login: PASS");
 // let t2 = Promise.resolve("Search: PASS");
@@ -86,12 +83,12 @@
 //     .catch(function (err) { console.log("Stopped:", err); });
 
 Promise.allSettled([
-    Promise.resolve("API 200"),
-    Promise.reject("API 500"),
-    Promise.resolve("API 201")
+  Promise.resolve("API 200"),
+  Promise.reject("API 500"),
+  Promise.resolve("API 201"),
 ]).then(function (results) {
-    results.forEach(function (r) {
-        let val = r.status === "fulfilled" ? r.value : r.reason;
-        console.log(r.status + " → " + val);
-    });
+  results.forEach(function (r) {
+    let val = r.status === "fulfilled" ? r.value : r.reason;
+    console.log(r.status + " → " + val);
+  });
 });
