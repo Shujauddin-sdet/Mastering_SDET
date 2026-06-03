@@ -12,3 +12,5 @@ class Person {
 }
 
 // CAB -> Class contains attribute, behaviour
+
+// attributes are called properties and behaviours are called methods
