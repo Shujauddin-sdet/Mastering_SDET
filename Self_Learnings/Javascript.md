@@ -142,6 +142,36 @@
     - [30.13 Practice Exercises](#3013-practice-exercises)
     - [30.14 Quick Reference Summary](#3014-quick-reference-summary)
 31. [JavaScript Modules (CommonJS vs ES Modules)](#31-javascript-modules-commonjs-vs-es-modules)
+32. [Object-Oriented Programming (OOP) — Complete Guide](#32-object-oriented-programming-oop--complete-guide)
+    - [32.1 What is an Object? (OOP Context)](#321-what-is-an-object-oop-context)
+    - [32.2 What is OOP?](#322-what-is-oop)
+    - [32.3 Classes and Instances](#323-classes-and-instances)
+    - [32.4 The `this` Keyword](#324-the-this-keyword)
+    - [32.5 Encapsulation (`#` Private Fields)](#325-encapsulation--private-fields)
+    - [32.6 Inheritance (`extends` and `super`)](#326-inheritance-extends-and-super)
+    - [32.7 Abstraction](#327-abstraction)
+    - [32.8 Polymorphism](#328-polymorphism)
+    - [32.9 The Prototype Chain](#329-the-prototype-chain)
+    - [32.10 What is `__proto__`?](#3210-what-is-__proto__)
+    - [32.10.1 Prototype vs Class — The Key Difference](#32101-prototype-vs-class--the-key-difference)
+    - [32.11 Method Overriding](#3211-method-overriding)
+    - [32.12 Mixins](#3212-mixins)
+    - [32.13 Composition vs Inheritance](#3213-composition-vs-inheritance)
+    - [32.14 Static Methods & Static Properties](#3214-static-methods--static-properties)
+    - [32.15 Getter & Setter (`get` / `set`)](#3215-getter--setter-get--set)
+    - [32.16 Types of Inheritance](#3216-types-of-inheritance)
+    - [32.17 ES Modules (Export / Import)](#3217-es-modules-export--import)
+    - [32.18 Page Object Model (POM)](#3218-page-object-model-pom)
+    - [32.19 Private & Public Class Fields (`#` Syntax)](#3219-private--public-class-fields--syntax)
+    - [32.20 Pass by Value vs Pass by Reference (OOP Context)](#3220-pass-by-value-vs-pass-by-reference-oop-context)
+    - [32.21 Object Property Descriptors](#3221-object-property-descriptors)
+    - [32.22 Built-in Object Lockdown Methods (`freeze`, `seal`, `preventExtensions`)](#3222-built-in-object-lockdown-methods-freeze-seal-preventextensions)
+    - [32.23 Object Spread Operator & Cloning](#3223-object-spread-operator--cloning)
+    - [32.24 `const` vs `let` Behavior with Objects](#3224-const-vs-let-behavior-with-objects)
+    - [32.25 `call()`, `apply()`, and `bind()` Methods](#3225-call-apply-and-bind-methods)
+    - [32.26 ES5 Constructor Functions vs ES6 Classes](#3226-es5-constructor-functions-vs-es6-classes)
+    - [32.27 The `instanceof` Operator](#3227-the-instanceof-operator)
+    - [32.28 Deep Copy vs Shallow Copy](#3228-deep-copy-vs-shallow-copy)
 - [Appendix: Comparison Recap (== vs ===)](#appendix-comparison-recap--vs-)
 - [Appendix: Bracket Notation](#appendix-bracket-notation)
 
@@ -16123,4 +16153,1835 @@ console.log(url);
 ### 31.3 Why it matters for SDETs
 
 When writing Playwright tests, you will see ES Modules (`import { test, expect } from '@playwright/test';`). Modern automation frameworks strongly prefer ES Modules over CommonJS. Always check your `package.json` to see if `"type": "module"` is enabled when deciding whether to use `import` or `require()`.
+---
+
+# 32. Object-Oriented Programming (OOP) — Complete Guide
+
+> This section brings together everything about OOP in JavaScript — from the four pillars (Encapsulation, Inheritance, Abstraction, Polymorphism) to advanced patterns like Mixins, Composition, the Prototype Chain, and real-world SDET applications like the Page Object Model.
+
+---
+
+## 32.1 What is an Object? (OOP Context)
+
+An **object** in JavaScript is a container that bundles **data (properties)** and **functions (methods)** together. It is a collection of key-value pairs, where keys are strings (or Symbols) and values can be any data type — including functions (called methods).
+
+> 💡 This is a general programming concept — not the same as a Promise object. A Promise is one specific kind of object used for async operations. Here we learn how to create your own objects to model real-world entities.
+
+**Analogy:** You have a toy car. It has **properties**: `color = red`, `wheels = 4`, `brand = HotWheels`. It has **actions**: `drive()`, `honk()`, `brake()`. An object bundles all of that together.
+
+```javascript
+// Creating an object literal — the simplest way to make an object
+const car = {
+  brand: "Toyota",       // property: stores the brand name as a string
+  color: "red",          // property: stores the color as a string
+  year: 2020,            // property: stores the year as a number
+  start() {              // method: a function that belongs to this object
+    console.log("Engine started!");
+  }
+};
+
+// Accessing properties using dot notation
+console.log(car.brand);   // "Toyota" — reads the value stored in the 'brand' key
+console.log(car.color);   // "red"    — reads the value stored in the 'color' key
+
+// Calling a method — a function that lives inside the object
+car.start();              // "Engine started!" — executes the start function
+```
+
+---
+
+## 32.2 What is OOP?
+
+**Object-Oriented Programming** is a programming paradigm — a style or way of writing code — that organizes code around **objects** containing data (properties) and functions (methods).
+
+**Analogy:** Imagine you are building with LEGO blocks. Each block is a small, self-contained piece (like an object). You can reuse the same block design many times (like a class). You can combine blocks to make bigger structures (like composition). You can take a basic block and add special features (like inheritance).
+
+The **four main pillars** of OOP are:
+
+| Pillar | Meaning |
+|---|---|
+| **Encapsulation** | Hiding internal details — protecting data from direct access |
+| **Inheritance** | Reusing code from a parent class in a child class |
+| **Polymorphism** | One interface, many implementations — same method name, different behavior |
+| **Abstraction** | Exposing only what's necessary, hiding the complex steps |
+
+```javascript
+// Two objects that share similar structure — this is the problem OOP solves
+// Without classes, we duplicate code for every object:
+const car1 = { brand: "Toyota", start() { console.log("Vroom!"); } };
+const car2 = { brand: "Honda",  start() { console.log("Vroom!"); } };
+
+// With OOP (classes), we write the blueprint once and reuse it (covered next)
+```
+
+---
+
+## 32.3 Classes and Instances
+
+A **class** is a template or blueprint for creating objects. An **instance** is a concrete object created from that class using the `new` keyword. Each instance has its own copy of the properties but shares the same method definitions.
+
+**Analogy:** You have a blueprint of a toy car. The blueprint is not a toy — it is just instructions. When you build an actual toy car from it, that toy is an **instance**. You can build many toy cars from the same blueprint.
+
+| Term | Meaning |
+|---|---|
+| `class` keyword | Defines a blueprint |
+| `constructor` | Special method that runs automatically when you create a new instance. It sets up properties. |
+| `this` | Refers to the current instance being created (or used) |
+| `new` | Keyword that creates a new instance from a class |
+
+```javascript
+// Step 1: Define a class (blueprint)
+// The class keyword tells JavaScript: "this is a template, not a real object yet"
+class Car {
+  constructor(brand, color) {
+    // 'this' refers to the specific object being created right now
+    this.brand = brand;   // property: stores the brand passed in
+    this.color = color;   // property: stores the color passed in
+  }
+
+  start() {               // method: shared behavior for all Car instances
+    // Template literal uses the instance's own brand value
+    console.log(`${this.brand} engine started!`);
+  }
+}
+
+// Step 2: Create instances (actual objects from the blueprint)
+// 'new' triggers the constructor, passing "Toyota" and "red" as arguments
+const car1 = new Car("Toyota", "red");
+const car2 = new Car("Honda", "blue");
+
+// Step 3: Use the instances — each has its own independent data
+console.log(car1.brand);   // "Toyota" — car1's own brand
+console.log(car2.color);   // "blue"   — car2's own color
+car1.start();              // "Toyota engine started!" — uses car1's brand
+car2.start();              // "Honda engine started!"  — uses car2's brand
+```
+
+### What is a Constructor?
+
+The constructor is like the machine operator that runs **automatically** when you say `new ClassName(...)`. It takes the values you give and assigns them to the new object's properties. You cannot call the constructor yourself — JavaScript calls it when you use `new`.
+
+```javascript
+class Phone {
+  constructor(brand, model) {   // ← runs when you write new Phone(...)
+    this.brand = brand;         // ← assigns the argument to the new object
+    this.model = model;
+  }
+
+  ring() {
+    // 'this.brand' reads the brand of whichever instance calls this method
+    console.log(`The ${this.brand} ${this.model} is ringing`);
+  }
+}
+
+// When you write 'new Phone("Apple", "iPhone 15")', JavaScript does:
+// 1. Creates a new empty object {}
+// 2. Runs the constructor with 'this' pointing to that new object
+// 3. Sets this.brand = "Apple", this.model = "iPhone 15"
+// 4. Returns the new object and stores it in the variable
+const iphone  = new Phone("Apple", "iPhone 15");
+const samsung = new Phone("Samsung", "Galaxy S24");
+
+iphone.ring();   // "The Apple iPhone 15 is ringing"
+samsung.ring();  // "The Samsung Galaxy S24 is ringing"
+```
+
+---
+
+## 32.4 The `this` Keyword
+
+`this` is a special keyword in JavaScript that refers to the **execution context** — the object that owns the currently executing code. In a class constructor, `this` refers to the new instance being created. In a method, `this` refers to the object the method was called on.
+
+**Analogy:** Imagine you have a robot that can say its own name. If the robot's name is "Robo1", when you ask "What is your name?" it says "Robo1". The word "my" in "my name" changes meaning depending on which robot you ask. In JavaScript, `this` works like the word "my".
+
+### 1. `this` in a Class Method (Most Common in OOP)
+
+```javascript
+class Dog {
+  constructor(name) {
+    this.name = name;   // 'this' = the new instance being built
+  }
+  bark() {
+    // 'this' = whichever instance calls bark()
+    console.log(`${this.name} says woof!`);
+  }
+}
+
+const dog1 = new Dog("Rex");
+dog1.bark(); // "Rex says woof!" — 'this' is dog1
+```
+
+### 2. `this` in a Regular Function (Can Be Confusing)
+
+```javascript
+function showThis() {
+  console.log(this);
+}
+showThis();
+// In Node.js: global object (or undefined in strict mode)
+// Rule: In a regular function, 'this' is the global object
+// (or undefined in strict mode). That's why we use classes to avoid confusion.
+```
+
+### 3. Arrow Functions — No Own `this`
+
+```javascript
+const obj = {
+  name: "Alice",
+  greet: () => {
+    // Arrow functions do NOT bind their own 'this'
+    // 'this' here is the outer scope (likely global), NOT 'obj'
+    console.log(this.name);
+  }
+};
+obj.greet(); // undefined — arrow functions don't bind their own 'this'
+// Rule: In classes, use regular methods (not arrows) unless you have a good reason.
+```
+
+### Common Mistake: Losing `this` Context
+
+```javascript
+class Counter {
+  constructor() {
+    this.count = 0;      // 'this' = the new Counter instance
+  }
+  increment() {
+    this.count++;         // 'this' should be the Counter instance
+    console.log(this.count);
+  }
+}
+
+const counter = new Counter();
+const inc = counter.increment; // extracting the method into a standalone variable
+inc(); // ❌ TypeError: Cannot read property 'count' of undefined
+// Why? Because inc() is called without an object, so 'this' is undefined (strict mode)
+```
+
+### Fix 1: Use `.bind()` to Permanently Lock `this`
+
+```javascript
+class Person {
+  constructor(name) {
+    this.name = name;
+    // bind() creates a new function where 'this' is permanently fixed
+    // to this specific instance, no matter how the function is called later
+    this.introduce = this.introduce.bind(this);
+  }
+  introduce() {
+    console.log(`Hi, I am ${this.name}`);
+  }
+}
+
+const me = new Person("Alex");
+const myFunction = me.introduce;  // extracting the method
+myFunction(); // ✅ "Hi, I am Alex" — bind keeps 'this' locked to 'me'
+```
+
+### Fix 2: Use an Arrow Function as a Class Field (Modern Way)
+
+```javascript
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  // Arrow function as a class field — uses 'this' from the constructor
+  // Arrow functions do NOT have their own 'this', they inherit it
+  introduce = () => {
+    console.log(`Hi, I am ${this.name}`);
+  }
+}
+
+const me = new Person("Alex");
+const myFunction = me.introduce;
+myFunction(); // ✅ "Hi, I am Alex" — arrow function inherits 'this' from constructor
+```
+
+---
+
+## 32.5 Encapsulation (`#` Private Fields)
+
+**Encapsulation** means hiding the internal data of an object so it cannot be accessed or modified directly from the outside. You force users to interact through specific **public methods** rather than touching properties directly.
+
+**Analogy:** When you want your car to go faster, you press the **Gas Pedal** (a public method). You do not open the hood and manually pour gasoline into the engine block (direct property access). The engine is hidden under the hood — it is **encapsulated**.
+
+In modern JavaScript, we make properties private by putting a **hashtag (`#`)** in front of the property name.
+
+```javascript
+class BankAccount {
+  // The '#' makes the balance completely private — it cannot be accessed from outside
+  #balance;
+
+  constructor(ownerName, startingBalance) {
+    this.owner = ownerName;           // public property — anyone can read this
+    this.#balance = startingBalance;  // private property — only methods inside this class can touch it
+  }
+
+  // Public method: the safe way for users to add money
+  deposit(amount) {
+    if (amount > 0) {                   // validation: only positive amounts allowed
+      this.#balance += amount;          // safely modifies the private balance
+      console.log(`Deposited $${amount}.`);
+    }
+  }
+
+  // Public method: the safe way for users to check their balance
+  getBalance() {
+    return this.#balance;               // returns the private value without exposing direct access
+  }
+}
+
+const myAccount = new BankAccount("Alex", 100);
+
+// ✅ Safe: using the public method to interact with the hidden data
+myAccount.deposit(50);
+console.log(myAccount.getBalance()); // 150
+
+// ❌ Direct access attempt — this will CRASH!
+// myAccount.#balance = 1000000;
+// SyntaxError: Private field '#balance' must be declared in an enclosing class
+```
+
+### Practice: CoffeeMachine Encapsulation
+
+```javascript
+class CoffeeMachine {
+  #waterLevel;          // private field — no one outside can touch this directly
+
+  constructor() {
+    this.#waterLevel = 0; // start the machine with 0ml of water
+  }
+
+  // Public method: the only safe way to add water
+  fillWater(total) {
+    if (total > 0) {                           // guard: reject negative or zero amounts
+      this.#waterLevel += total;               // safely increase the hidden water level
+      console.log(
+        `Success! Added ${total}ml. Total water is now ${this.#waterLevel}ml.`
+      );
+    }
+  }
+}
+
+const officeMachine = new CoffeeMachine();  // creates a new machine with waterLevel = 0
+officeMachine.fillWater(100);               // "Success! Added 100ml. Total water is now 100ml."
+
+// officeMachine.#waterLevel = 500;         // ❌ This would crash — private field!
+```
+
+---
+
+## 32.6 Inheritance (`extends` and `super`)
+
+**Inheritance** lets you create a new class **based on an existing class**. The new class automatically receives all the properties and methods from the old class, so you do not have to copy and paste code.
+
+We use two keywords:
+- **`extends`**: Links the child class to the parent class
+- **`super()`**: A special call that passes initial setup data from the child's constructor up to the parent's constructor
+
+**Analogy:** You already have a blueprint for a basic Vehicle. Now your boss wants you to build an ElectricCar. Instead of rewriting everything from scratch, you tell JavaScript: "Make ElectricCar inherit from Vehicle."
+
+```javascript
+// 1. THE PARENT CLASS (The original blueprint)
+class Vehicle {
+  constructor(brand) {
+    this.brand = brand;  // sets the brand for any vehicle
+  }
+
+  startEngine() {
+    console.log(`The ${this.brand} engine is humming!`);
+  }
+}
+
+// 2. THE CHILD CLASS (Inherits from Vehicle using 'extends')
+class ElectricCar extends Vehicle {
+  constructor(brand, batteryCapacity) {
+
+    // THE GOLDEN RULE: You MUST call super() before using 'this'!
+    // super() sends the 'brand' up to the Parent (Vehicle) constructor
+    super(brand);
+
+    // Now handle the unique property just for Electric Cars
+    this.batteryCapacity = batteryCapacity;
+  }
+
+  charge() {
+    // 'this.brand' works because super() set it up via the parent constructor
+    console.log(`Charging the ${this.brand} up to 100%!`);
+  }
+}
+
+// Build a Tesla
+const myTesla = new ElectricCar("Tesla", "100kWh");
+
+// Call the child's unique method
+myTesla.charge();       // "Charging the Tesla up to 100%!"
+
+// Call the parent's inherited method — ElectricCar didn't write this!
+myTesla.startEngine();  // "The Tesla engine is humming!"
+```
+
+### `super()` — The First Floor Must Be Built First
+
+Think of `super()` like building a two-story house. The first floor is the Parent. The second floor is the Child. You cannot build the second floor until the first floor is finished.
+
+```javascript
+class Employee {
+  constructor(name, salary) {
+    this.name = name;       // parent sets up 'name'
+    this.salary = salary;   // parent sets up 'salary'
+  }
+
+  work() {
+    console.log(`${this.name} is working hard.`);
+  }
+}
+
+// Manager IS-AN Employee, but also has a 'department'
+class Manager extends Employee {
+  constructor(name, salary, department) {
+    // super() passes name and salary UP to the Employee constructor
+    // This MUST be called before any 'this' usage in the child
+    super(name, salary);
+    this.department = department;  // unique to Manager only
+  }
+}
+
+// Create two managers using the SAME class blueprint
+const manager1 = new Manager("Shujauddin", 45678, "IT");
+const manager2 = new Manager("Alex", 456789, "QA");
+
+console.log(manager1.name);       // "Shujauddin" — inherited from Employee
+console.log(manager1.salary);     // 45678        — inherited from Employee
+console.log(manager2.name);       // "Alex"
+console.log(manager2.department); // "QA"         — unique to Manager
+
+// The child can also use the parent's methods!
+manager1.work();                  // "Shujauddin is working hard."
+```
+
+---
+
+## 32.7 Abstraction
+
+**Abstraction** means hiding the complex, ugly details of how something works behind the scenes, and only giving the user a **simple, clean interface** to interact with.
+
+**Analogy:** When you get in your car, you just press the gas pedal. You do not manually inject fuel, calculate the air-to-gas ratio, and trigger the spark plugs. The car engineers hid all that complex engine logic away from you — they **abstracted** the complexity behind a single pedal.
+
+> **Encapsulation** is about **protecting data** (hiding the water level so people don't break it).
+> **Abstraction** is about **simplifying the experience** (hiding the complex steps so people don't have to think about them).
+
+In JavaScript, we achieve abstraction by creating complex **private methods** (the engine) and exposing only one simple **public method** (the gas pedal).
+
+```javascript
+class CoffeeMachine {
+
+  // --- THE COMPLEX ENGINE (Hidden / Abstracted away using #) ---
+  #boilWater() {
+    console.log("1. Heating water to exactly 90°C...");
+  }
+
+  #grindBeans() {
+    console.log("2. Grinding beans to medium-fine...");
+  }
+
+  #pourMilk() {
+    console.log("3. Steaming and pouring milk...");
+  }
+
+  // --- THE SIMPLE INTERFACE (What the user actually uses) ---
+  makeLatte() {
+    // The user just calls this ONE method, and all the complex steps happen inside
+    this.#boilWater();    // step 1 — hidden from the user
+    this.#grindBeans();   // step 2 — hidden from the user
+    this.#pourMilk();     // step 3 — hidden from the user
+    console.log("☕ Here is your Latte!");
+  }
+}
+
+const officeMachine = new CoffeeMachine();
+
+// The user doesn't know HOW it works. They just press the simple button.
+officeMachine.makeLatte();
+// Output:
+// 1. Heating water to exactly 90°C...
+// 2. Grinding beans to medium-fine...
+// 3. Steaming and pouring milk...
+// ☕ Here is your Latte!
+
+// If they try to trigger the complex steps manually, they get rejected!
+// officeMachine.#boilWater();  // ❌ SyntaxError: Private method!
+```
+
+### Practice: Smartphone Abstraction
+
+```javascript
+class Smartphone {
+  constructor(phoneNumber) {
+    this.phoneNumber = phoneNumber;  // store the phone number as a public property
+  }
+
+  // Private method: complex internal step (hidden from the user)
+  #connectToCellTower() {
+    console.log("Connecting to nearest tower...");
+  }
+
+  // Private method: another complex internal step (hidden from the user)
+  #encryptVoiceData() {
+    console.log("Encrypting voice data...");
+  }
+
+  // Public method: the simple interface the user interacts with
+  makeCall(phoneNumber) {
+    this.#connectToCellTower();    // internal step 1 — abstracted away
+    this.#encryptVoiceData();      // internal step 2 — abstracted away
+    console.log(`Calling ${phoneNumber}...`);
+  }
+}
+
+const phone = new Smartphone();
+phone.makeCall(78912345678);
+// Output:
+// Connecting to nearest tower...
+// Encrypting voice data...
+// Calling 78912345678...
+```
+
+---
+
+## 32.8 Polymorphism
+
+**Polymorphism** comes from Greek: **Poly** (many) and **Morph** (forms). In programming, it means "**One command, many different reactions.**" It allows you to use the exact same method name on different objects, and each object will automatically know how to do it in its own unique way.
+
+Polymorphism relies heavily on **Inheritance** — a child class overrides a parent's method to provide its own version.
+
+```javascript
+// Parent class: defines a generic pay() method
+class PaymentMethod {
+  pay(amount) {
+    console.log(`Processing payment of $${amount}`);
+  }
+}
+
+// Child class 1: overrides pay() with credit card behavior
+class CreditCard extends PaymentMethod {
+  pay(amount) {
+    // Same method name, completely different implementation
+    console.log(`Swiping credit card for $${amount}`);
+  }
+}
+
+// Child class 2: overrides pay() with PayPal behavior
+class PayPal extends PaymentMethod {
+  pay(amount) {
+    // Same method name, yet another different implementation
+    console.log(`Redirecting to PayPal to pay $${amount}`);
+  }
+}
+
+// Both objects respond to the SAME .pay() command differently
+const creditcard = new CreditCard();
+creditcard.pay(50);  // "Swiping credit card for $50"
+
+const paypal = new PayPal();
+paypal.pay(50);      // "Redirecting to PayPal to pay $50"
+
+// This is polymorphism: one method name (.pay), many different forms
+```
+
+---
+
+## 32.9 The Prototype Chain
+
+Before modern classes (the `class` keyword added in ES6/2015), JavaScript used a completely different system called **Prototypes**.
+
+> **The secret:** Classes in JavaScript are actually "fake." Under the hood, JavaScript is still using Prototypes. The `class` keyword is just a nice, clean wrapper called **"syntactic sugar"** to make JavaScript look like Java or C#.
+
+The **Prototype Chain** is JavaScript's hidden "Chain of Command." When you ask an object to do something, if it doesn't know how, it asks its **parent (its Prototype)**. If the parent doesn't know, it asks the grandparent — all the way up.
+
+**Analogy:** You are a Junior Developer. Your boss asks you: "How do you configure Playwright?" You don't know, so you ask your Senior Dev. The Senior Dev doesn't know either, so they ask the CTO. The CTO knows the answer! If the CTO didn't know, the answer would be `undefined`.
+
+### Building the Chain with Three Objects
+
+```javascript
+// 1. Create three separate objects (unconnected)
+const grandParent = {
+  lastName: "Smith"                // only grandParent has lastName
+};
+
+const parent = {
+  hasCar: true                     // only parent has hasCar
+};
+
+const child = {
+  name: "Shujauddin"              // only child has name
+};
+
+// 2. BUILD THE CHAIN — connect the objects using __proto__
+// __proto__ is a physical link plugging one object into another
+child.__proto__ = parent;          // child → parent
+parent.__proto__ = grandParent;    // parent → grandParent
+
+// 3. SEE THE CHAIN IN ACTION
+console.log(child.lastName);       // "Smith"
+// How it worked:
+// 1. JS looked inside 'child' — no 'lastName' here
+// 2. Crossed the __proto__ link to 'parent' — no 'lastName' here either
+// 3. Crossed the __proto__ link to 'grandParent' — FOUND IT!
+```
+
+### Every Object Has a Hidden Prototype
+
+```javascript
+// Even an empty object has hidden methods inherited through the Prototype Chain
+const myObject = {};
+
+// We never wrote toString(), but it works because of the Prototype Chain!
+console.log(myObject.toString()); // "[object Object]"
+
+// JS looked inside myObject — no .toString()
+// JS followed the hidden chain up to Object.prototype (the "CTO" of JavaScript)
+// Object.prototype DOES have .toString(), so myObject borrowed it!
+```
+
+### Using `Object.create()` to Set a Prototype
+
+```javascript
+// 1. The Parent Object
+const animal = {
+  eats: true,
+  sleep() {
+    console.log("Zzzzz...");
+  }
+};
+
+// 2. The Child Object — Object.create() sets the prototype cleanly
+// This is the modern, recommended way (instead of manually setting __proto__)
+const rabbit = Object.create(animal);
+
+// 3. Give the rabbit its own unique property
+rabbit.jumps = true;
+
+console.log(rabbit.jumps);  // true   — found directly on rabbit
+console.log(rabbit.eats);   // true   — not on rabbit, found on animal via prototype chain
+rabbit.sleep();              // "Zzzzz..." — not on rabbit, found on animal via prototype chain
+```
+
+---
+
+## 32.10 What is `__proto__`?
+
+`__proto__` is a special, hidden property that exists on **every single object** in JavaScript. Its only job is to point to the **parent object** (the prototype). Developers call it **"dunder proto"** (short for double-underscore proto).
+
+**Analogy:** Imagine you have two boxes on your desk. Box 1 (User) has `isLoggedIn: true`. Box 2 (Admin) has `deleteAccount()`. Right now, if you ask the Admin "Are you logged in?", the Admin has no idea. `__proto__` is the **cable** that connects the Admin box to the User box. Once plugged in, questions the Admin can't answer travel down the cable to the User box.
+
+```javascript
+const user = {
+  isLoggedIn: true,               // only the user object has this
+  logout() {
+    console.log("Logging out...");
+  }
+};
+
+const admin = {
+  deleteAccount() {               // only the admin object has this
+    console.log("Account deleted!");
+  }
+};
+
+// THIS IS THE CABLE — plug admin's hidden __proto__ into the user object
+admin.__proto__ = user;
+
+// Now ask the Admin if it is logged in
+console.log(admin.isLoggedIn);    // true
+// Why? JS looked inside admin — no isLoggedIn
+// But admin.__proto__ points to user — found it there!
+
+admin.logout();                   // "Logging out..." — borrowed from user via the chain
+admin.deleteAccount();            // "Account deleted!" — admin's own method
+```
+
+---
+
+### 32.10.1 Prototype vs Class — The Key Difference
+
+JavaScript is a **prototype-based** language, not a class-based one. When the `class` keyword was added in ES6 (2015), it did not change how JavaScript works under the hood — it simply put a pretty label on the existing prototype system. Understanding this difference is critical.
+
+**Analogy:** Think of a restaurant menu.
+- A **class** (Java, C#) is like a menu with a recipe book in the kitchen. When you order a dish, the chef builds it from scratch using the recipe. Every dish is independent.
+- A **prototype** (JavaScript) is like a buffet table. Plates are already sitting out. When you want food, you walk up to the table and grab from what's already there. If the table you're at doesn't have bread, you walk over to the next table (the parent prototype) and grab bread from there.
+
+#### The Comparison Table
+
+| Feature | Prototype (How JS Actually Works) | Class (What JS Pretends To Be) |
+|---|---|---|
+| **What is it?** | A real JavaScript object that other objects link to via `__proto__` | Syntactic sugar — a cleaner way to write prototype-based code |
+| **How objects share behavior** | Objects are linked in a chain. When a method isn't found, JS walks up the chain to the parent prototype. | Methods are defined inside the `class` body, but JS secretly puts them on the `.prototype` object behind the scenes. |
+| **Inheritance mechanism** | `Object.create(parent)` or manually setting `__proto__` | `extends` keyword (which internally uses `Object.create()`) |
+| **Creating instances** | `Object.create(prototype)` | `new ClassName()` |
+| **Method storage** | Methods live directly on a plain object | Methods live on `ClassName.prototype` (same thing!) |
+| **Introduced in** | JavaScript 1.0 (1995) — always existed | ES6 / ES2015 — cosmetic addition |
+
+#### Proof: Classes Are Just Prototypes
+
+```javascript
+// THE CLASS WAY — clean, modern syntax
+class Dog {
+  constructor(name) {
+    this.name = name;           // the instance gets its own 'name'
+  }
+  bark() {
+    console.log(`${this.name} says woof!`); // this method is shared
+  }
+}
+
+const rex = new Dog("Rex");
+rex.bark();  // "Rex says woof!"
+
+// NOW LET'S PROVE THE CLASS IS JUST PROTOTYPE SUGAR:
+
+// 1. The bark() method does NOT live on 'rex' — it lives on Dog.prototype
+console.log(rex.hasOwnProperty("bark"));   // false — rex doesn't own bark
+console.log(rex.hasOwnProperty("name"));   // true  — rex owns its own name
+
+// 2. The bark() method lives on Dog.prototype (the shared toolbox)
+console.log(Dog.prototype.bark);           // [Function: bark] — it's here!
+
+// 3. rex.__proto__ IS Dog.prototype — they are the EXACT SAME object
+console.log(rex.__proto__ === Dog.prototype);  // true ✅
+
+// 4. typeof Dog is still just a function, not some special "class" type
+console.log(typeof Dog);  // "function" — classes are just functions!
+```
+
+#### The Same Thing Written the Prototype Way (ES5)
+
+```javascript
+// THE PROTOTYPE WAY — what JavaScript is actually doing behind the scenes
+function DogOld(name) {
+  this.name = name;              // same as the constructor in a class
+}
+
+// We manually put the method on the prototype (the shared toolbox)
+DogOld.prototype.bark = function() {
+  console.log(this.name + " says woof!");
+};
+
+const buddy = new DogOld("Buddy");
+buddy.bark();  // "Buddy says woof!"
+
+// The result is IDENTICAL to the class version
+console.log(buddy.__proto__ === DogOld.prototype);  // true ✅
+```
+
+#### Visual: What Happens in Memory
+
+```
+┌───────────────────────┐
+│  Dog.prototype        │  ← The shared toolbox (one copy in memory)
+│  ┌─────────────────┐  │
+│  │ bark: function() │  │  ← All Dog instances borrow bark() from here
+│  └─────────────────┘  │
+└───────────┬───────────┘
+            │  __proto__ points here
+            │
+┌───────────┴───────────┐
+│  rex (instance)       │  ← A real object with its own data
+│  ┌─────────────────┐  │
+│  │ name: "Rex"      │  │  ← Own property
+│  └─────────────────┘  │
+└───────────────────────┘
+```
+
+When you call `rex.bark()`:
+1. JS looks inside `rex` — no `bark` method found
+2. JS follows `rex.__proto__` → arrives at `Dog.prototype`
+3. Finds `bark()` there and runs it with `this = rex`
+
+#### Why This Matters for SDETs
+
+```javascript
+// Understanding this prevents confusion when debugging frameworks:
+
+class BasePage {
+  navigate(url) {
+    console.log("Going to " + url);
+  }
+}
+
+class LoginPage extends BasePage {}
+
+const page = new LoginPage();
+
+// LoginPage never defined navigate(), so how does this work?
+page.navigate("google.com");  // "Going to google.com"
+
+// Because of the prototype chain:
+// page.__proto__             → LoginPage.prototype (no navigate here)
+// page.__proto__.__proto__   → BasePage.prototype  (navigate IS here!)
+console.log(page.__proto__.__proto__ === BasePage.prototype);  // true ✅
+```
+
+> 💡 **Key takeaway:** There is **no functional difference** between prototypes and classes. Classes are just cleaner syntax ("syntactic sugar") over the same prototype system. When you write `class Dog`, JavaScript still creates `Dog.prototype` behind the scenes. When you write `extends`, JavaScript still chains `__proto__` links. Understanding this means you'll never be confused by framework internals or legacy codebases.
+
+---
+
+## 32.11 Method Overriding
+
+**Method Overriding** is when a parent class has a method, but the child class creates a method with the **exact same name**. Because of the Prototype Chain, JavaScript always finds the child's method first and executes it, ignoring the parent's version.
+
+### Using `super.methodName()` to Include the Parent's Logic
+
+Sometimes you want to override a method but also include the parent's original code so you don't have to rewrite it.
+
+```javascript
+class BasePage {
+  login() {
+    // The parent's login does the common steps
+    console.log("1. Typing username...");
+    console.log("2. Typing password...");
+    console.log("3. Clicking Submit...");
+  }
+}
+
+class AdminPage extends BasePage {
+  // We OVERRIDE the login method for Admins
+  login() {
+    // super.login() triggers the Parent's version first
+    // This runs steps 1, 2, 3 from BasePage
+    super.login();
+
+    // Then we add the unique Admin-only steps
+    console.log("4. Typing 2FA Auth Code...");
+    console.log("5. Welcome, Admin!");
+  }
+}
+
+const myAdmin = new AdminPage();
+myAdmin.login();
+// Output:
+// 1. Typing username...
+// 2. Typing password...
+// 3. Clicking Submit...
+// 4. Typing 2FA Auth Code...
+// 5. Welcome, Admin!
+```
+
+### Practice: CustomBrowser with Method Overriding
+
+```javascript
+class StandardBrowser {
+  launch() {
+    console.log("Launching Chromium...");
+  }
+}
+
+class CustomBrowser extends StandardBrowser {
+  launch() {
+    super.launch();           // call the parent's launch() first
+    console.log("Loading custom user extensions...");
+  }
+}
+
+const myTest = new CustomBrowser();
+myTest.launch();
+// Output:
+// Launching Chromium...
+// Loading custom user extensions...
+```
+
+---
+
+## 32.12 Mixins
+
+**The Problem:** In JavaScript, a child class can only have **ONE** parent. You cannot write `class SDET extends Employee, Manager` — this will crash.
+
+**The Solution:** A **Mixin** is a plain object full of methods (like a backpack full of tools). Instead of using `extends`, you copy the tools from the Mixin directly into the class's prototype using `Object.assign()`.
+
+**Analogy:** A Mixin is a backpack. Instead of inheriting from a parent, you just force the class to put on the backpack.
+
+```javascript
+// 1. THE MIXIN — just a normal object containing reusable methods
+const LoggerMixin = {
+  logError(errorMsg) {
+    console.log(`[ERROR LOGGED]: ${errorMsg}`);
+  }
+};
+
+// 2. THE CLASS — has its own methods
+class BasePage {
+  navigate() {
+    console.log("Navigating to URL...");
+  }
+}
+
+// 3. THE MAGIC — Object.assign(Receiver, Giver)
+// We copy the methods from LoggerMixin into BasePage's prototype
+// Now ALL instances of BasePage will have access to logError()
+Object.assign(BasePage.prototype, LoggerMixin);
+
+const myPage = new BasePage();
+myPage.navigate();                        // "Navigating to URL..."
+myPage.logError("Page failed to load!");  // "[ERROR LOGGED]: Page failed to load!"
+// The page now has the mixin's superpower without using extends!
+```
+
+### Practice: Screenshot Mixin
+
+```javascript
+// A mixin that gives any page the ability to take screenshots
+const ScreenshotMixin = {
+  takeScreenshot() {
+    console.log("📸 Click! Screenshot saved.");
+  }
+};
+
+// An empty class that needs screenshot capability
+class CheckoutPage {}
+
+// Mix the screenshot ability into CheckoutPage
+Object.assign(CheckoutPage.prototype, ScreenshotMixin);
+
+const newCheck = new CheckoutPage();
+newCheck.takeScreenshot();  // "📸 Click! Screenshot saved."
+```
+
+---
+
+## 32.13 Composition vs Inheritance
+
+This is one of the most famous design pattern questions for Automation Engineers.
+
+- **Inheritance** is an **"IS-A"** relationship. (An SDET **is** an Employee.)
+- **Composition** is a **"HAS-A"** relationship. (A Car **has** an Engine.)
+
+**The Gorilla Banana Problem:** "You wanted a banana, but what you got was a gorilla holding the banana, and the entire jungle attached to it." If you make a giant inheritance chain, your child classes inherit 1,000 methods they don't even need.
+
+**The Solution:** Modern developers prefer **Composition over Inheritance**. Instead of building a massive parent class, you build tiny, independent classes (LEGO blocks) and snap them together inside a main class.
+
+```javascript
+// 1. THE LEGO BLOCKS — tiny, independent classes
+class Header {
+  clickHome() {
+    console.log("Navigating home...");
+  }
+}
+
+class Footer {
+  clickContact() {
+    console.log("Opening contact form...");
+  }
+}
+
+// 2. THE COMPOSITION — building the master class
+// HomePage doesn't extend Header or Footer — it just OWNS them
+class HomePage {
+  constructor() {
+    // We "compose" the page by creating blocks inside it
+    this.header = new Header();  // snap in a Header block
+    this.footer = new Footer();  // snap in a Footer block
+  }
+
+  testNavigation() {
+    this.header.clickHome();     // use the Header block's method
+    this.footer.clickContact();  // use the Footer block's method
+  }
+}
+
+// 3. IN ACTION
+const myPage = new HomePage();
+myPage.header.clickHome();    // "Navigating home..." — accessed via composition
+myPage.footer.clickContact(); // "Opening contact form..."
+```
+
+### The Car and Engine Example
+
+```javascript
+// THE LEGO BLOCK — a standalone class
+class Engine {
+  start() {
+    console.log("Vroom! Engine is running.");
+  }
+}
+
+// THE COMPOSITION — Car doesn't extend Engine, it just creates one inside
+class Car {
+  constructor() {
+    // We build a brand new Engine and save it INSIDE the Car
+    this.myEngine = new Engine();
+  }
+
+  drive() {
+    // Whenever the Car wants to drive, it uses its own engine
+    this.myEngine.start();
+  }
+}
+
+const myTesla = new Car();
+myTesla.drive();             // "Vroom! Engine is running."
+myTesla.myEngine.start();    // "Vroom! Engine is running." — direct access also works
+```
+
+---
+
+## 32.14 Static Methods & Static Properties
+
+Normally, properties and methods belong to the **objects** that the class builds. But what if you want a property to belong to the **class (blueprint) itself**?
+
+The `static` keyword glues a property or method directly to the blueprint, meaning you do **not** need the `new` keyword to use it.
+
+**Analogy:** A specific car has `this.color = "Red"` — you have to build the car first to see its color. But the **factory itself** has a master counter: `totalCarsBuilt = 1000`. You don't ask a single car how many cars the factory built — you ask the Factory.
+
+In SDET work, we use `static` for global configurations (like timeouts or base URLs) or helper functions (like a random email generator), because we don't want to build a whole new object just to use a utility.
+
+```javascript
+class PlaywrightConfig {
+  // Static Property — belongs to the class, not to any instance
+  static defaultTimeout = 30000;
+
+  // Static Method — belongs to the class, not to any instance
+  static generateRandomEmail() {
+    // Math.random() generates a random decimal number
+    return "testuser" + Math.random() + "@qa.com";
+  }
+}
+
+// We DO NOT use the 'new' keyword — we talk directly to the class name!
+console.log(PlaywrightConfig.defaultTimeout);
+// Output: 30000
+
+const myFakeEmail = PlaywrightConfig.generateRandomEmail();
+console.log(myFakeEmail);
+// Output: "testuser0.12345@qa.com" (random number varies)
+```
+
+### Practice: APIClient with Static Members
+
+```javascript
+class APIClient {
+  // Static property: belongs to the class itself, accessible without 'new'
+  static baseURL = "https://api.testing.com";
+
+  // Static method: a utility function on the class
+  static getHeaders() {
+    console.log("Returning auth headers...");
+  }
+}
+
+// Access without 'new' — directly on the class name
+console.log(APIClient.baseURL);    // "https://api.testing.com"
+APIClient.getHeaders();            // "Returning auth headers..."
+```
+
+---
+
+## 32.15 Getter & Setter (`get` / `set`)
+
+Normally, if you have an object, anyone can reach in and change the data. If you have `this.timeout = 5000`, another developer could accidentally write `myPage.timeout = -10`.
+
+**Getters and Setters** act like **security bouncers**:
+- **`set`** intercepts data **before it gets saved**, so you can validate it (e.g., "Is this number greater than 0?")
+- **`get`** intercepts data **when someone asks for it**, so you can format it (e.g., automatically capitalizing a name)
+
+> **Pro-tip:** When using getters and setters, put an underscore `_` in front of the real property name (like `_timeout`). This is the universal developer signal for "this is private — use the bouncer instead!"
+
+```javascript
+class PlaywrightSetup {
+  constructor() {
+    this._browser = "chromium";  // the real, hidden data (underscore convention)
+  }
+
+  // The GET bouncer — runs when you READ the property
+  get browser() {
+    // Formats the raw data before returning it
+    return this._browser.toUpperCase();
+  }
+
+  // The SET bouncer — runs when you WRITE to the property
+  set browser(newBrowser) {
+    if (newBrowser === "internet explorer") {
+      console.log("❌ Error: We do not support IE!");
+    } else {
+      this._browser = newBrowser;  // only save if it passes validation
+    }
+  }
+}
+
+const myTest = new PlaywrightSetup();
+
+// 1. Using the SETTER — no parentheses! We just use equals (=)
+myTest.browser = "internet explorer"; // "❌ Error: We do not support IE!"
+myTest.browser = "firefox";           // quietly updates _browser to "firefox"
+
+// 2. Using the GETTER — no parentheses! We access it like a property
+console.log(myTest.browser);          // "FIREFOX" — getter formats it to uppercase
+```
+
+### Practice: ApiConfig with Validation
+
+```javascript
+class ApiConfig {
+  constructor() {
+    this._retries = 2;          // the real property, hidden behind the bouncer
+  }
+
+  // Getter: returns the current retry count
+  get retries() {
+    return this._retries;
+  }
+
+  // Setter: validates before saving — rejects negative numbers
+  set retries(value) {
+    if (value < 0) {
+      console.log("❌ Retries cannot be negative!");
+    } else {
+      this._retries = value;    // only save if valid
+    }
+  }
+}
+
+const myConfig = new ApiConfig();
+
+myConfig.retries = -5;   // "❌ Retries cannot be negative!" — setter rejected it
+myConfig.retries = 10;   // quietly updates _retries to 10
+console.log(myConfig.retries);  // 10 — getter returns the updated value
+```
+
+---
+
+## 32.16 Types of Inheritance
+
+In OOP, there are **4 main ways** classes can inherit from each other:
+
+| Type | Supported in JS? | Description | Example |
+|---|---|---|---|
+| **Single** | ✅ Yes | One child has one parent | `class SDET extends Employee` |
+| **Hierarchical** | ✅ Yes | One parent has multiple children | `class Admin extends User` AND `class Guest extends User` |
+| **Multilevel** | ✅ Yes | Grandparent → Parent → Child chain | `Animal → Dog → Puppy` |
+| **Multiple** | ❌ No | One child has two parents via `extends` | `class SDET extends Employee, Manager` — **CRASHES!** |
+
+> **The Fix for Multiple Inheritance:** Use a **Mixin** (section 32.12) or **Composition** (section 32.13).
+
+### Multilevel Inheritance in Playwright
+
+```javascript
+// 1. THE GRANDPARENT — the most basic page
+class BasePage {
+  open() {
+    console.log("Opening the browser...");
+  }
+}
+
+// 2. THE PARENT — extends BasePage, adds security
+class SecurePage extends BasePage {
+  login() {
+    console.log("Typing username and password...");
+  }
+}
+
+// 3. THE CHILD — extends SecurePage, adds dashboard features
+class DashboardPage extends SecurePage {
+  viewStats() {
+    console.log("Viewing user statistics...");
+  }
+}
+
+const myDash = new DashboardPage();
+
+// The child can use its own method
+myDash.viewStats();  // "Viewing user statistics..."
+
+// AND the parent's method (inherited from SecurePage)
+myDash.login();      // "Typing username and password..."
+
+// AND the grandparent's method (inherited from BasePage via SecurePage)
+myDash.open();       // "Opening the browser..."
+```
+
+### Practice: Shape → Circle → ColoredCircle
+
+```javascript
+// Grandparent class
+class Shape {
+  draw() {
+    console.log("Drawing a shape");
+  }
+}
+
+// Parent class — extends Shape
+class Circle extends Shape {
+  calculateArea() {
+    console.log("Calculating area");
+  }
+}
+
+// Child class — extends Circle (and by extension, Shape)
+class ColoredCircle extends Circle {
+  fillColor() {
+    console.log("Filling with red color");
+  }
+}
+
+const myCircle = new ColoredCircle();
+myCircle.fillColor();      // "Filling with red color"     — own method
+myCircle.calculateArea();  // "Calculating area"           — from Circle
+myCircle.draw();           // "Drawing a shape"            — from Shape (grandparent)
+```
+
+---
+
+## 32.17 ES Modules (Export / Import)
+
+Imagine your codebase is a giant warehouse.
+- `export` is you packing a piece of code into a shipping box and slapping a label on it.
+- `import` is you receiving that box in a completely different file and unpacking it so you can use it.
+- You can export **anything**: Classes, Functions, Variables, or Objects.
+
+### File 1: The Provider (`helpers.js`)
+
+We use the `export` keyword to pack the boxes.
+
+```javascript
+// Exporting a Variable — any other file can import and use this value
+export const defaultTimeout = 5000;
+
+// Exporting a Function — any other file can call this function
+export function getUrl() {
+  return "https://google.com";
+}
+
+// Exporting a Class — any other file can create instances of this class
+export class CheckoutPage {
+  pay() {
+    console.log("Paying...");
+  }
+}
+```
+
+### File 2: The Consumer (`test.spec.js`)
+
+We use `import { itemNames } from './filePath.js'` to unpack the boxes.
+> Note: `./` means "look in the same folder I am in right now"
+
+```javascript
+// 1. Unpack the exact tools we need from helpers.js
+// The names inside { } must match the exported names exactly
+import { defaultTimeout, getUrl, CheckoutPage } from './helpers.js';
+
+// 2. Use them like they were written in this file!
+console.log(defaultTimeout);       // 5000
+console.log(getUrl());             // "https://google.com"
+
+const page = new CheckoutPage();
+page.pay();                         // "Paying..."
+```
+
+---
+
+## 32.18 Page Object Model (POM)
+
+**POM** is a design pattern used by SDETs. It means: **"Do not put HTML locators inside your tests. Put them inside a Class, and let the test talk to the Class."**
+
+**Analogy:** A universal remote control. Without a remote, you have to walk up to the TV, unscrew the back panel, find wires, and touch them together to change the channel. With a remote, you just press a button. POM is building a remote control for a webpage.
+
+### Why SDETs Use POM
+
+**Without POM** — 100 tests all contain raw HTML locators:
+
+```javascript
+// Test 1 (and tests 2 through 100 look the same)
+await page.locator('#weird-username-html-id-77').fill('admin');
+await page.locator('#weird-password-html-id-88').fill('password');
+await page.locator('.btn-green-submit').click();
+// Problem: If the button changes from .btn-green-submit to .btn-blue-login,
+// you must manually edit 100 files!
+```
+
+**With POM** — locators live inside a class:
+
+```javascript
+// Test 1 (and tests 2 through 100 look the same)
+await loginPage.login('admin', 'password');
+// If the button changes, update ONE place (the LoginPage class). All 100 tests work!
+```
+
+### Practice: CartPage Page Object
+
+```javascript
+// 1. THE PAGE OBJECT — the digital twin of the webpage
+class CartPage {
+  constructor() {
+    // Store the HTML locator as a property, hidden inside the class
+    this.checkoutBtn = ".checkout-button";
+  }
+
+  // A clean method representing a user's action
+  clickCheckout() {
+    console.log("Clicking " + this.checkoutBtn);
+  }
+}
+
+// 2. THE TEST — the QA engineer running the test
+const cart = new CartPage();
+cart.clickCheckout();  // "Clicking .checkout-button"
+// Notice: there is NO raw HTML ('.checkout-button') in the test code!
+// That is how you know it's POM — the test doesn't touch the HTML directly.
+```
+
+---
+
+## 32.19 Private & Public Class Fields (`#` Syntax)
+
+Normal properties (like `this.username = "admin"`) are like a **name tag** pinned to your shirt — anyone can read, rip off, or scribble a new name on it.
+
+Adding the `#` (like `#password`) is like writing the password inside a **locked diary**.
+- **Inside the class:** Methods have the key and can read the diary.
+- **Outside the class:** If external code tries to grab the diary (`page.#password`), JavaScript acts as a security guard and crashes the program.
+
+```javascript
+class LoginPage {
+  #password;               // private field — declared at the top of the class
+
+  constructor() {
+    this.#password = "admin123";  // set the private field's value
+  }
+
+  doLogin() {
+    // Methods inside the class CAN read the private field
+    console.log("Logging in with " + this.#password);
+  }
+}
+
+const page = new LoginPage();
+page.doLogin();            // "Logging in with admin123" — works from inside the class
+
+// console.log(page.#password);
+// ❌ SyntaxError: Private field '#password' must be declared in an enclosing class
+// The security guard slapped our hand away!
+```
+
+---
+
+## 32.20 Pass by Value vs Pass by Reference (OOP Context)
+
+When you save data to a variable and try to share it, JavaScript handles simple data differently than complex data. This has major implications for test automation.
+
+### Pass by Value (Primitives — Strings, Numbers, Booleans)
+
+Like making a **photocopy** of a piece of paper. If you scribble on the copy, the original stays untouched.
+
+```javascript
+let age = 25;
+let copyOfAge = age;       // JavaScript makes a physical copy of the value 25
+
+copyOfAge = 99;            // we change the copy
+
+console.log(age);          // 25  — the original is safe!
+console.log(copyOfAge);    // 99  — only the copy changed
+```
+
+### Pass by Reference (Objects, Arrays)
+
+Like sharing a **Google Doc link**. JavaScript doesn't make a copy — it just shares the memory address. If one person edits the doc, it changes for everyone.
+
+```javascript
+let testUser = { name: "John" };
+let referenceUser = testUser;    // JavaScript shares the Google Doc link, NOT a copy
+
+referenceUser.name = "HACKED";  // we change the shared document
+
+console.log(testUser.name);     // "HACKED" — the original was destroyed! 😱
+console.log(referenceUser.name); // "HACKED" — both point to the same object
+```
+
+### Why This Causes Flaky Playwright Tests
+
+```javascript
+// A default config object used across tests
+let baseConfig = { timeout: 5000 };
+
+// Another test grabs a "copy" (but it's really a reference!)
+let flakeyConfig = baseConfig;
+flakeyConfig.timeout = 10000;      // changes the shared object
+
+console.log(baseConfig.timeout);   // 10000 — the original was silently changed!
+// Every other test using baseConfig now has timeout = 10000
+```
+
+> 💡 **Fix:** Use the Spread Operator (`{ ...obj }`) or `structuredClone()` to make true copies. See sections 32.23 and 32.28.
+
+---
+
+## 32.21 Object Property Descriptors
+
+When you create a property on an object (like `user.name = "John"`), JavaScript attaches a hidden **"settings menu"** to every property. These settings are called **Descriptors**.
+
+Think of them like **file permissions** on your computer:
+
+| Setting | Meaning | Default |
+|---|---|---|
+| `writable` | Can this value be changed? (Read-only vs Edit) | `true` |
+| `enumerable` | Will this show up in a `for` loop? (Visible vs Hidden) | `true` |
+| `configurable` | Can someone delete this property using `delete`? (Permanent vs Removable) | `true` |
+
+To access and change these settings, we use `Object.defineProperty()`.
+
+```javascript
+let testEnv = {};
+
+// Use defineProperty to create 'baseURL' and configure its settings
+Object.defineProperty(testEnv, 'baseURL', {
+  value: "https://qa.mywebsite.com",
+  writable: false,      // ❌ NO ONE can overwrite this value
+  enumerable: true,     // ✅ Shows up in loops
+  configurable: false   // ❌ NO ONE can delete this property
+});
+
+// Try to hack the URL...
+testEnv.baseURL = "https://hacked.com";
+
+// Because writable is false, JavaScript ignores the change!
+console.log(testEnv.baseURL);
+// Output: "https://qa.mywebsite.com" — it stayed safe!
+```
+
+### Practice: Read-Only Employee ID
+
+```javascript
+let employee = {};
+
+// Define a read-only property using Object.defineProperty
+Object.defineProperty(employee, "employeeID", {
+  value: 999,
+  writable: false        // ❌ strictly READ-ONLY
+});
+
+// In strict mode (which ES modules use by default), this CRASHES:
+// employee.employeeID = 1234;
+// TypeError: Cannot assign to read only property 'employeeID'
+
+console.log(employee.employeeID);  // 999 — the read-only lock worked!
+```
+
+> ⚠️ **In strict mode** (which classes and ES modules use by default), writing to a non-writable property throws a `TypeError`. In sloppy mode, the write is silently ignored.
+
+---
+
+## 32.22 Built-in Object Lockdown Methods (`freeze`, `seal`, `preventExtensions`)
+
+JavaScript provides three built-in tools to lock down an **entire object** at once.
+
+### The `const` Lie
+
+```javascript
+const testConfig = { browser: "chrome" };
+
+testConfig.browser = "firefox";          // THIS WORKS! 😱
+console.log(testConfig.browser);         // "firefox"
+```
+
+Why? Because `const` only locks the **variable name** (the leash). It does NOT lock the **properties inside** the object (the dog). Anyone can still reach inside and change values.
+
+### The 3 Lockdown Levels
+
+Think of your object as a **house** and properties as **rooms**.
+
+#### Level 1: `Object.preventExtensions()` — Low Security
+
+**Rule:** No building new rooms. You CAN edit existing rooms and demolish rooms.
+
+```javascript
+let house = { kitchen: "clean" };
+Object.preventExtensions(house);
+
+house.kitchen = "dirty";   // ✅ Works — editing existing properties is allowed
+delete house.kitchen;      // ✅ Works — deleting properties is allowed
+house.bedroom = "cozy";    // ❌ Fails — cannot add new properties
+```
+
+#### Level 2: `Object.seal()` — Medium Security
+
+**Rule:** The floorplan is locked. No new rooms, no demolishing rooms. You CAN still edit existing values.
+
+```javascript
+let house = { kitchen: "clean" };
+Object.seal(house);
+
+house.kitchen = "dirty";   // ✅ Works — editing values is allowed
+delete house.kitchen;      // ❌ Fails — cannot delete properties
+house.bedroom = "cozy";    // ❌ Fails — cannot add new properties
+```
+
+#### Level 3: `Object.freeze()` — Maximum Security 🏆
+
+**Rule:** The house is frozen in ice. It is a museum exhibit. You can only **look at it** (read). This is what SDETs use 99% of the time.
+
+```javascript
+let house = { kitchen: "clean" };
+Object.freeze(house);
+
+house.kitchen = "dirty";   // ❌ Fails — cannot edit values
+delete house.kitchen;      // ❌ Fails — cannot delete properties
+house.bedroom = "cozy";    // ❌ Fails — cannot add new properties
+
+console.log(house.kitchen); // "clean" — completely unchanged
+```
+
+| Level | Method | Add | Delete | Edit |
+|---|---|---|---|---|
+| Low | `preventExtensions()` | ❌ | ✅ | ✅ |
+| Medium | `seal()` | ❌ | ❌ | ✅ |
+| Maximum | `freeze()` | ❌ | ❌ | ❌ |
+
+> **How is this different from section 32.21?** In 32.21 (`defineProperty`), you lock down **one single property**. Here (`freeze`), you lock down the **entire object** with one line of code.
+
+### Practice: Freezing HTTP Codes
+
+```javascript
+let httpCodes = { success: 200, notFound: 404 };
+Object.freeze(httpCodes);               // apply maximum security
+
+httpCodes.success = 500;                 // ❌ silently fails (or crashes in strict mode)
+console.log(httpCodes.success);          // 200 — it stayed safe!
+```
+
+---
+
+## 32.23 Object Spread Operator & Cloning
+
+Remember section 32.20 (Pass by Reference)? If you write `let newObj = oldObj`, JavaScript doesn't make a copy — both variables point to the same object.
+
+JavaScript introduced the **Spread Operator** (`...`) to solve this.
+
+**Analogy:** Your object is a LEGO house. When you use `...legoHouse`, you are telling JavaScript: "Smash this house into individual bricks, dump them all out, and use them to build a brand new, separate house." The Google Doc link is officially broken — you have a true, independent photocopy.
+
+### Superpower 1: Making a Safe Clone
+
+```javascript
+let baseUser = { name: "John", role: "Admin" };
+
+// Make a true photocopy using the Spread Operator
+// The { } creates a NEW object, and ... dumps the old properties into it
+let clonedUser = { ...baseUser };
+
+// Change the clone
+clonedUser.name = "HACKED";
+
+// The original is safe!
+console.log(baseUser.name);    // "John"    — untouched
+console.log(clonedUser.name);  // "HACKED"  — only the clone changed
+```
+
+### Superpower 2: Upgrading an Object (Spread + New Properties)
+
+```javascript
+let defaultBrowser = { browser: "chromium", headless: true };
+
+// Dump the default settings AND add a new 'timeout' property
+let myTestConfig = {
+  ...defaultBrowser,        // spreads: browser: "chromium", headless: true
+  timeout: 5000             // adds a new property
+};
+
+console.log(myTestConfig);
+// { browser: "chromium", headless: true, timeout: 5000 }
+```
+
+### Practice: Spreading Headers
+
+```javascript
+let defaultHeaders = { accept: "application/json" };
+
+// Spread the default headers and add a new 'token' property
+let secureHeaders = {
+  ...defaultHeaders,         // copies: accept: "application/json"
+  token: "12345"             // adds: token: "12345"
+};
+
+console.log(secureHeaders);
+// { accept: "application/json", token: "12345" }
+```
+
+> ⚠️ The Spread Operator only makes a **shallow copy** (Level 1 only). For nested objects, see section 32.28 (Deep Copy vs Shallow Copy).
+
+---
+
+## 32.24 `const` vs `let` Behavior with Objects
+
+**The Analogy: The Dog and the Leash**
+
+Think of `const` as a **dog leash** and the object `{}` as the **dog**.
+
+- **What `const` DOES lock:** The leash. The variable name is permanently tied to that specific dog. You cannot swap the dog.
+- **What `const` DOES NOT lock:** The dog itself. The dog can eat, grow, get a haircut, or learn tricks (you can change properties inside the object).
+
+```javascript
+// 1. Tie the leash (const) to the dog (the object)
+const user = { name: "John" };
+
+// ✅ ALLOWED — changing the dog's collar (mutating properties)
+user.name = "Mike";
+user.age = 30;
+
+console.log(user);  // { name: "Mike", age: 30 }
+
+// ❌ BLOCKED — trying to swap the entire dog (reassigning the variable)
+// user = { name: "Sarah" };
+// TypeError: Assignment to constant variable.
+```
+
+**The Ultimate Rule:**
+
+| Goal | Tool |
+|---|---|
+| Lock the **leash** (prevent replacing the object) | Use `const` |
+| Lock the **dog** (prevent editing properties) | Use `Object.freeze()` |
+| Lock **both** | Use `const` + `Object.freeze()` together |
+
+```javascript
+// Senior SDET approach: lock both the leash AND the dog
+const PRODUCTION_CONFIG = Object.freeze({
+  baseURL: "https://production.myapp.com",
+  timeout: 30000
+});
+
+// ❌ Cannot reassign: PRODUCTION_CONFIG = {};
+// ❌ Cannot edit: PRODUCTION_CONFIG.baseURL = "hacked";
+// This config is 100% bulletproof
+```
+
+---
+
+## 32.25 `call()`, `apply()`, and `bind()` Methods
+
+**The Problem:** You have two objects. One has a useful method. The other has no methods but needs to borrow the first object's method.
+
+**Analogy:** Instead of buying your own power drill, you borrow your neighbor's. JavaScript gives us three ways to "borrow" a method, and they differ only in how you pass the arguments.
+
+| Method | How Arguments Are Passed | When It Runs |
+|---|---|---|
+| `call()` | **Comma-separated** (one by one) | Immediately |
+| `apply()` | **Array** (inside a toolbox) | Immediately |
+| `bind()` | Can be pre-set or passed later | **Later** (returns a new function) |
+
+> **Memory trick:** **C**all = **C**ommas. **A**pply = **A**rrays.
+
+```javascript
+const admin = {
+  name: "John",
+  greet: function(greeting, punctuation) {
+    // 'this.name' will refer to whichever object borrows this method
+    console.log(greeting + ", I am " + this.name + punctuation);
+  }
+};
+
+const guest = { name: "Sarah" };  // ❌ guest has no greet method!
+
+// 1. call() — pass the new owner (guest), then arguments separated by commas
+admin.greet.call(guest, "Hello", "!");
+// Output: "Hello, I am Sarah!"
+// 'this' inside greet is now 'guest', so this.name = "Sarah"
+
+// 2. apply() — pass the new owner (guest), then arguments in an ARRAY
+admin.greet.apply(guest, ["Welcome", "!!!"]);
+// Output: "Welcome, I am Sarah!!!"
+// Same result, just arguments wrapped in [ ]
+
+// 3. bind() — borrow it, save it to a variable, trigger it LATER
+const sarahGreeting = admin.greet.bind(guest, "Hi", ".");
+// bind() does NOT run the function — it creates a new one with 'this' locked to guest
+sarahGreeting();  // We pull the trigger later!
+// Output: "Hi, I am Sarah."
+```
+
+### Practice: Borrowing a Run Method
+
+```javascript
+let runner1 = {
+  name: "Alice",
+  run: function(speed) {
+    console.log(this.name + " runs " + speed);
+  }
+};
+
+let runner2 = { name: "Bob" };  // Bob has no run method!
+
+// Use .call() — arguments are comma-separated
+runner1.run.call(runner2, "fast");
+// Output: "Bob runs fast"
+
+// Use .apply() — arguments are inside an array
+runner1.run.apply(runner2, ["slow"]);
+// Output: "Bob runs slow"
+```
+
+---
+
+## 32.26 ES5 Constructor Functions vs ES6 Classes
+
+**The Big Secret:** JavaScript doesn't actually have "real" classes. When the `class` keyword was added in 2015 (ES6), it didn't change how JavaScript works under the hood. It just added a pretty wrapper called **"syntactic sugar"**. It makes the code look like Java, but underneath, it's still the old-school ES5 Constructor Functions.
+
+### The Old Way (ES5 Constructor Functions)
+
+Before 2015, we capitalized a normal function to tell other developers it was a blueprint.
+
+```javascript
+// 1. The Blueprint — a capitalized function (convention, not enforced)
+function OldLoginPage(url) {
+  this.url = url;                           // 'this' refers to the new object (same as class)
+}
+
+// 2. Adding methods — manually attach them to the "prototype"
+// The prototype is the shared toolbox that all instances of OldLoginPage can access
+OldLoginPage.prototype.login = function() {
+  console.log("Logging into: " + this.url);
+};
+
+// 3. Build the object — uses 'new' exactly the same way
+const oldPage = new OldLoginPage("google.com");
+oldPage.login();                             // "Logging into: google.com"
+```
+
+### The Modern Way (ES6 Classes)
+
+It does the exact same thing — it just looks cleaner.
+
+```javascript
+class ModernLoginPage {
+  constructor(url) {
+    this.url = url;                          // same as ES5: this.url = url
+  }
+
+  // The 'class' wrapper automatically puts this on the prototype for us!
+  // No need to manually write .prototype.login = function() { }
+  login() {
+    console.log("Logging into: " + this.url);
+  }
+}
+
+const modernPage = new ModernLoginPage("google.com");
+modernPage.login();                          // "Logging into: google.com"
+```
+
+> **"What is the difference between an ES5 Constructor Function and an ES6 Class?"**
+> "There is no functional difference. ES6 Classes are just 'syntactic sugar' over ES5 Constructor Functions. They both use prototype-based inheritance under the hood."
+
+---
+
+## 32.27 The `instanceof` Operator
+
+When working in a large framework, you are often handed random objects. The `instanceof` operator lets you ask JavaScript: **"Was this object built using this specific blueprint?"** It gives you a simple `true` or `false` answer.
+
+**Analogy:** You find a shirt on the ground. You check the tag. "Is this shirt an **instance of** the Nike brand?" If the tag says Nike → `true`. If the tag says Adidas → `false`.
+
+```javascript
+class LoginPage {}
+class CartPage {}
+
+const myPage = new LoginPage();
+
+// "Was myPage built by the LoginPage blueprint?"
+console.log(myPage instanceof LoginPage);   // true  ✅
+
+// "Was myPage built by the CartPage blueprint?"
+console.log(myPage instanceof CartPage);    // false ❌
+
+// "Is myPage an Array?"
+console.log(myPage instanceof Array);       // false ❌
+```
+
+### Practice: Checking User Types
+
+```javascript
+class AdminUser {}
+class GuestUser {}
+
+let activeUser = new AdminUser();
+
+// Check: is activeUser an instance of AdminUser?
+console.log(activeUser instanceof AdminUser);  // true  ✅
+
+// Check: is activeUser an instance of GuestUser?
+console.log(activeUser instanceof GuestUser);  // false ❌
+```
+
+---
+
+## 32.28 Deep Copy vs Shallow Copy
+
+When making a copy of an object, the method you use determines how **"deep"** the photocopy goes.
+
+### The Analogy: The House and the Safe
+
+- **Shallow Copy:** You make a replica of the house, but instead of building a new safe, the builders dig a tunnel connecting both houses to the **same safe**. If the new owner takes money out, the original owner's money disappears too.
+- **Deep Copy:** You make a replica of the house **AND** build a brand new, independent safe. A true 100% clone.
+
+### Shallow Copy (Spread Operator `...`)
+
+The Spread Operator only copies the **first level** of properties. For nested objects, it shares the memory reference.
+
+```javascript
+let originalUser = {
+  name: "John",                    // Level 1: standard property
+  address: { city: "New York" }    // Level 2: nested object (the "safe")
+};
+
+// Shallow Copy using Spread Operator
+let clonedUser = { ...originalUser };
+
+// ✅ LEVEL 1 IS SAFE
+clonedUser.name = "HACKED";
+console.log(originalUser.name);
+// "John" — the original house is untouched
+
+// ❌ LEVEL 2 IS COMPROMISED — both share the same nested object!
+clonedUser.address.city = "Los Angeles";
+console.log(originalUser.address.city);
+// "Los Angeles" — the shared safe was altered! Original is destroyed!
+```
+
+### Deep Copy (`structuredClone()`)
+
+To make a true, 100% independent copy from top to bottom (including all nested objects), modern JavaScript uses `structuredClone()`.
+
+```javascript
+let originalUser = {
+  name: "John",
+  address: { city: "New York" }
+};
+
+// Deep Copy — creates a completely independent clone
+let deepClone = structuredClone(originalUser);
+
+// Change the nested property in the clone
+deepClone.address.city = "Los Angeles";
+
+// ✅ THE ORIGINAL REMAINS 100% UNTOUCHED
+console.log(originalUser.address.city);
+// "New York" — the deep copy built a new, independent safe!
+```
+
+### Rule of Thumb for Automation
+
+| Object Type | Copy Method | Why |
+|---|---|---|
+| Simple, flat object | `{ ...obj }` (Spread) | Fast and sufficient — no nested objects to worry about |
+| Object with nested objects/arrays | `structuredClone(obj)` | Must use deep copy to protect original test data |
+
+### Practice: Deep Cloning a Config
+
+```javascript
+let baseConfig = { timeout: 5000, api: { env: "QA" } };
+
+// Deep clone — completely independent copy
+let secureConfig = structuredClone(baseConfig);
+secureConfig.api.env = "PROD";             // change the nested property
+
+console.log(baseConfig.api.env);           // "QA" — original is safe!
+console.log(secureConfig.api.env);         // "PROD" — only the clone changed
+```
+
+---
+
+> 💡 **SDET Takeaway:** OOP is the foundation of every modern test automation framework. Page Object Model uses **classes and inheritance**. Playwright fixtures use **composition**. Framework configs should be **frozen** with `Object.freeze()`. Test data should be **deep cloned** with `structuredClone()` to prevent cross-test contamination. Mastering these OOP concepts is what separates a script writer from a framework architect.
+
 ---
