@@ -175,6 +175,40 @@
     - [32.28 Deep Copy vs Shallow Copy](#3228-deep-copy-vs-shallow-copy)
 - [Appendix: Comparison Recap (== vs ===)](#appendix-comparison-recap--vs-)
 - [Appendix: Bracket Notation](#appendix-bracket-notation)
+33. [DOM — Document Object Model](#33-dom--document-object-model)
+    - [33.1 What is the DOM?](#331-what-is-the-dom)
+    - [33.2 `window` vs `document`](#332-window-vs-document)
+    - [33.3 The DOM Tree — Parents, Children, Siblings](#333-the-dom-tree--parents-children-siblings)
+    - [33.4 Nodes vs Elements — The Hidden Difference](#334-nodes-vs-elements--the-hidden-difference)
+    - [33.5 Querying the DOM — Finding Elements](#335-querying-the-dom--finding-elements)
+      - [33.5.1 The Old School Methods](#3351-the-old-school-methods)
+      - [33.5.2 The Modern Way — `querySelector` and `querySelectorAll`](#3352-the-modern-way--queryselector-and-queryselectorall)
+      - [33.5.3 What Goes Inside the Parentheses — The Rule](#3353-what-goes-inside-the-parentheses--the-rule)
+      - [33.5.4 CSS Selectors vs XPath](#3354-css-selectors-vs-xpath)
+      - [33.5.5 Practice: Querying the DOM](#3355-practice-querying-the-dom)
+    - [33.6 Traversing the DOM — Navigating the Tree](#336-traversing-the-dom--navigating-the-tree)
+      - [33.6.1 Moving Up — `parentElement` and `closest()`](#3361-moving-up--parentelement-and-closest)
+      - [33.6.2 Moving Down — `children`, `firstElementChild`, `lastElementChild`](#3362-moving-down--children-firstelementchild-lastelementchild)
+      - [33.6.3 Moving Sideways — `nextElementSibling` and `previousElementSibling`](#3363-moving-sideways--nextelementsibling-and-previouselementsibling)
+      - [33.6.4 Practice: Traversing the DOM](#3364-practice-traversing-the-dom)
+    - [33.7 Reading and Modifying Elements — Assertions](#337-reading-and-modifying-elements--assertions)
+      - [33.7.1 Reading Text — `innerText` vs `textContent` vs `innerHTML` vs `value`](#3371-reading-text--innertext-vs-textcontent-vs-innerhtml-vs-value)
+      - [33.7.2 Reading Attributes — `getAttribute()` and `hasAttribute()`](#3372-reading-attributes--getattribute-and-hasattribute)
+      - [33.7.3 Setting Attributes — `setAttribute()`](#3373-setting-attributes--setattribute)
+      - [33.7.4 Checking State — `hidden`, `disabled`, `checked`](#3374-checking-state--hidden-disabled-checked)
+      - [33.7.5 Practice: Reading and Modifying Elements](#3375-practice-reading-and-modifying-elements)
+    - [33.8 DOM Manipulation — Creating, Inserting, and Deleting Elements](#338-dom-manipulation--creating-inserting-and-deleting-elements)
+      - [33.8.1 Creating Elements — `createElement()`](#3381-creating-elements--createelement)
+      - [33.8.2 Inserting Elements — `append`, `prepend`, `before`, `after`](#3382-inserting-elements--append-prepend-before-after)
+      - [33.8.3 Deleting Elements — `remove()`](#3383-deleting-elements--remove)
+      - [33.8.4 Changing Inline Styles — `node.style`](#3384-changing-inline-styles--nodestyle)
+    - [33.9 The Shadow DOM — Web Components](#339-the-shadow-dom--web-components)
+      - [33.9.1 Key Definitions](#3391-key-definitions)
+      - [33.9.2 Why Shadow DOM Exists](#3392-why-shadow-dom-exists)
+      - [33.9.3 Open vs Closed Shadow Roots](#3393-open-vs-closed-shadow-roots)
+      - [33.9.4 Accessing Shadow DOM with JavaScript](#3394-accessing-shadow-dom-with-javascript)
+      - [33.9.5 How Playwright Handles Shadow DOM](#3395-how-playwright-handles-shadow-dom)
+    - [33.10 DOM Quick Reference](#3310-dom-quick-reference)
 
 ---
 
@@ -18040,5 +18074,985 @@ console.log(secureConfig.api.env);         // "PROD" — only the clone changed
 ---
 
 > 💡 **SDET Takeaway:** OOP is the foundation of every modern test automation framework. Page Object Model uses **classes and inheritance**. Playwright fixtures use **composition**. Framework configs should be **frozen** with `Object.freeze()`. Test data should be **deep cloned** with `structuredClone()` to prevent cross-test contamination. Mastering these OOP concepts is what separates a script writer from a framework architect.
+
+---
+
+---
+
+# 33. DOM — Document Object Model
+
+> 💡 **What you will learn:** How the browser turns HTML into a tree of JavaScript objects, how to find/read/modify/create/delete elements on a page, and how the Shadow DOM works. These are the foundational skills every SDET needs before writing Playwright or Selenium scripts.
+
+---
+
+## 33.1 What is the DOM?
+
+**DOM** stands for **Document Object Model**.
+
+When a browser loads a web page, it reads the HTML source code and creates a **tree-like structure of JavaScript objects** in memory. Each HTML tag becomes a JavaScript object. This tree of objects is what we call the **DOM**.
+
+Once the DOM is built, you can use JavaScript to:
+
+- **Read** — check what text a button displays
+- **Change** — update the heading text dynamically
+- **Add** — insert a new row into a table
+- **Delete** — remove a notification banner
+
+All of this happens **without reloading the page** — this is what makes websites feel dynamic and interactive.
+
+```javascript
+// console.log() prints a human-readable version of whatever you pass to it
+console.log(document);
+
+// console.dir() prints the object with all its properties and methods
+// We prefer console.dir() when inspecting the document object
+// because it shows the full property list (like a directory listing)
+console.dir(document);
+```
+
+---
+
+## 33.2 `window` vs `document`
+
+Think of it like watching Netflix:
+
+- **The `window` is the Physical TV Set.** It represents the actual Google Chrome browser application running on your computer. It controls hardware-level things: screen size, opening new tabs, the URL address bar, scroll position, and browser history.
+
+- **The `document` is the Movie playing on the screen.** It represents the actual webpage loaded inside that specific Chrome tab. It contains all the visible content — buttons, text, images, and links.
+
+> 🔑 **Key Insight:** You cannot have a movie without a TV to play it on. The `document` actually lives **inside** the `window`. Technically, `window.document === document` is `true`.
+
+| Object | What it represents | Example |
+| :--- | :--- | :--- |
+| **`window`** | The entire browser tab (toolbars, scrollbars, history, localStorage) | `window.innerWidth` → browser viewport width |
+| **`document`** | The HTML page displayed inside the window | `document.title` → the page title |
+
+```javascript
+// window properties — things about the browser itself
+console.log(window.innerWidth);   // How wide the browser window is in pixels
+console.log(window.innerHeight);  // How tall the browser window is in pixels
+
+// document properties — things about the web page content
+console.log(document.title);      // The text in the browser tab (from <title> tag)
+
+// Proving that document lives inside window
+console.log(window.document === document); // true — they are the same object
+```
+
+> 💡 **SDET Rule:** When writing automation scripts (Playwright, Selenium), 95% of the time you interact with the `document` to find buttons and text. You only interact with `window` for browser-level operations like scrolling, getting the current URL, or resizing.
+
+---
+
+## 33.3 The DOM Tree — Parents, Children, Siblings
+
+Inside the `document`, the browser organizes every single piece of HTML into an upside-down **"Family Tree"**. Understanding this tree is essential because when Playwright searches for a button, it is literally climbing through this tree, branching from parent to child, until it finds what you want to click.
+
+### Example HTML
+
+```html
+<html>
+  <head>
+    <title>My Website</title>
+  </head>
+  <body>
+    <div id="login-box">
+      <button>Login</button>
+      <button>Cancel</button>
+    </div>
+  </body>
+</html>
+```
+
+### Tree View
+
+```text
+html                          ← The Root (Grandparent of everything)
+├── head                      ← Parent of <title>, Sibling of <body>
+│   └── title                 ← Child of <head>
+└── body                      ← Parent of <div>, Sibling of <head>
+    └── div#login-box         ← Child of <body>, Parent of both <button>s
+        ├── button (Login)    ← Child of <div>, Sibling of Cancel button
+        └── button (Cancel)   ← Child of <div>, Sibling of Login button
+```
+
+### Family Relationships Explained
+
+| Term | Meaning | Example from above |
+| :--- | :--- | :--- |
+| **Parent** | The element that directly wraps another element | `<body>` is the parent of `<div>` |
+| **Child** | An element directly inside another element | `<button>` is a child of `<div>` |
+| **Sibling** | Elements that share the same parent | The two `<button>` elements are siblings |
+| **Descendant** | Any element nested inside another (child, grandchild, etc.) | `<button>` is a descendant of `<body>` |
+| **Ancestor** | Any element above in the tree (parent, grandparent, etc.) | `<html>` is an ancestor of `<button>` |
+
+> 📝 **Note:** SDETs never test the `<head>` because it contains invisible behind-the-scenes data (metadata, stylesheets, scripts). We only test the `<body>` because that is what the user actually sees!
+
+```javascript
+// Navigating the tree with JavaScript
+const div = document.querySelector('#login-box'); // Find the div by its ID
+
+console.log(div.parentElement);      // <body> — the direct parent of the div
+console.log(div.children);           // HTMLCollection of both <button> elements
+console.log(div.firstElementChild);  // First <button> (Login)
+console.log(div.lastElementChild);   // Last <button> (Cancel)
+
+// Getting from the first button to the second button (sibling navigation)
+console.log(div.children[0].nextElementSibling); // The Cancel <button>
+```
+
+---
+
+## 33.4 Nodes vs Elements — The Hidden Difference
+
+This is a common interview question: **"What is the difference between a Node and an Element in the DOM?"**
+
+- **Node** = Literally **anything** inside the DOM tree. This includes HTML tags, raw text, invisible HTML comments (`<!-- -->`), and even the invisible line-breaks you typed in your code.
+- **Element** = A **specific type** of Node. An Element is strictly an HTML tag (like `<div>`, `<button>`, `<p>`).
+
+> 🔑 **The Golden Rule:** Every Element **is** a Node. But **not** every Node is an Element!
+
+| Property | Returns | Includes text/comment nodes? |
+| :--- | :--- | :--- |
+| `.children` | Only element nodes | ❌ No |
+| `.childNodes` | All nodes (elements + text + comments) | ✅ Yes |
+
+```javascript
+const div = document.querySelector('#main');
+
+// .children — returns ONLY HTML element children
+console.log(div.children.length);      // 2 (both <p> elements)
+
+// .childNodes — returns ALL nodes including invisible text nodes (line breaks)
+console.log(div.childNodes.length);    // Might be 5 (text nodes for line breaks + 2 <p>)
+```
+
+> ⚠️ **Why this matters for testing:** When writing automation, we only care about **Elements** (`.children`). If we use `.childNodes`, we might accidentally try to click an invisible line-break or text node!
+
+---
+
+## 33.5 Querying the DOM — Finding Elements
+
+A modern webpage (like Amazon) has thousands of HTML tags. If Playwright needs to click the "Add to Cart" button, it can't just guess. You have to write code that searches the DOM Tree and grabs that exact element. We call this **"Querying."**
+
+Think of the DOM as a massive office building, and HTML elements as employees inside:
+
+1. **By ID:** You call out a unique Employee ID Number → only **one** person stands up.
+2. **By Class:** You call for the "Sales Team" (a class) → a **group** of people stand up.
+3. **By Tag:** You call for all the "Managers" (a tag type) → another **group** stands up.
+
+---
+
+### 33.5.1 The Old School Methods
+
+Before 2013, JavaScript developers used these specific methods to search the DOM.
+
+| Method | Returns | Example |
+| :--- | :--- | :--- |
+| `getElementById(id)` | A single element (or `null` if not found) | `document.getElementById('main')` |
+| `getElementsByClassName(class)` | A **live** HTMLCollection (array-like list) | `document.getElementsByClassName('btn')[0]` |
+| `getElementsByTagName(tag)` | A **live** HTMLCollection | `document.getElementsByTagName('p')` |
+
+> 📝 **What is a "live" collection?** A live collection automatically updates itself if the DOM changes. If you add a new `<p>` tag after querying, it instantly appears in the collection. This can cause unexpected behavior during loops.
+
+```html
+<!-- Sample HTML for the examples below -->
+<div id="header">Hello</div>
+<div class="item">Item 1</div>
+<div class="item">Item 2</div>
+```
+
+```javascript
+// getElementById — finds ONE element by its unique id attribute
+// Returns the element directly, or null if no match found
+const header = document.getElementById('header');
+console.log(header.textContent); // "Hello"
+
+// getElementsByClassName — finds ALL elements with the given class name
+// Returns an HTMLCollection (array-like), even if there's only one match
+// ⚠️ Common trap: You CANNOT click the collection — you must access an item by index!
+const items = document.getElementsByClassName('item');
+console.log(items.length);        // 2 — two elements have class "item"
+console.log(items[0].textContent); // "Item 1" — access the first element with [0]
+
+// getElementsByTagName — finds ALL elements with the given HTML tag name
+// Also returns a live HTMLCollection
+const divs = document.getElementsByTagName('div');
+console.log(divs.length);         // 3 — all three <div> tags on the page
+```
+
+> ⚠️ **Important:** `getElementsByClassName` and `getElementsByTagName` return **live** collections that update automatically if the DOM changes. This can cause performance issues. Prefer `querySelectorAll` for **static** (snapshot) lists.
+
+> 📝 **About `null`:** When `getElementById` doesn't find a matching element, it returns `null` (not `undefined`). `null` means "intentionally empty" — the method looked for it but found nothing.
+
+---
+
+### 33.5.2 The Modern Way — `querySelector` and `querySelectorAll`
+
+Developers got tired of typing those long old-school method names. They also needed a way to combine searches (e.g., "Find a button with class 'primary' that is inside a div with id 'header'"). So JavaScript introduced `querySelector` — one method that accepts **any CSS selector**.
+
+| Method | Returns | Example |
+| :--- | :--- | :--- |
+| `querySelector(selector)` | The **first** matching element (or `null`) | `document.querySelector('.item')` |
+| `querySelectorAll(selector)` | A **static** NodeList of all matches (supports `forEach`) | `document.querySelectorAll('.item')` |
+
+> 📝 **What is a "static" NodeList?** Unlike live collections, a static NodeList is a snapshot — if the DOM changes after the query, the list does NOT update. This makes it safer for looping.
+
+```javascript
+// querySelector — returns the FIRST element matching the CSS selector
+// It sees the '.' and knows it's looking for a class
+const firstItem = document.querySelector('.item');
+console.log(firstItem.textContent); // "Item 1"
+
+// querySelectorAll — returns ALL elements matching the CSS selector
+// Returns a NodeList which supports forEach (unlike HTMLCollection)
+const allItems = document.querySelectorAll('.item');
+allItems.forEach((el, index) => {
+  console.log(index, el.textContent);
+});
+// Output:
+// 0 "Item 1"
+// 1 "Item 2"
+
+// --- Comparing Old Way vs Modern Way ---
+
+// Old Way: Super wordy, only searches by ID
+let oldWay = document.getElementById('login');
+
+// Modern Way: Clean, uses CSS syntax (# means ID)
+let newWay = document.querySelector('#login');
+
+// Modern Way: Complex search — find the button inside the header
+// This would need TWO old-school calls, but querySelector does it in one!
+let complexSearch = document.querySelector('#header .primary-button');
+```
+
+---
+
+### 33.5.3 What Goes Inside the Parentheses — The Rule
+
+When you look at an HTML tag like `<input id="username" class="input-field">`, there are two parts:
+
+- `id` and `class` are the **types** of attributes (like the *category* of a name tag).
+- `"username"` and `"input-field"` are the **values** (the actual words written on the name tag).
+
+| Method | What you pass | Example |
+| :--- | :--- | :--- |
+| `getElementById()` | Just the **value** (it already knows it's looking for an ID) | `getElementById('username')` ✅ |
+| `querySelector()` | The **CSS symbol + value** (`#` for ID, `.` for class) | `querySelector('#username')` ✅ |
+| `querySelectorAll()` | One single CSS selector string | `querySelectorAll('.input-field')` ✅ |
+
+```javascript
+// ❌ WRONG — passing the attribute type instead of the value
+// document.getElementById('id');         // Looks for id="id", not what you want
+// document.querySelector('id');          // Looks for a <id> tag, not what you want
+
+// ✅ RIGHT — passing the actual value
+document.getElementById('username');       // Finds element where id="username"
+document.querySelector('#username');       // Same result — # tells it to search by ID
+document.querySelector('.input-field');    // . tells it to search by class
+```
+
+**Reading values from elements in `console.log()`:**
+
+```javascript
+const usernameInput = document.querySelector('#username');
+
+// Prints the entire HTML element object
+console.log(usernameInput);
+
+// For <input> elements — use .value to get the text typed inside
+console.log(usernameInput.value);  // "shujauddin-sdet"
+
+// For buttons, paragraphs, divs — use .textContent or .innerText
+const heading = document.querySelector('h1');
+console.log(heading.textContent);  // The text inside the <h1>
+```
+
+---
+
+### 33.5.4 CSS Selectors vs XPath
+
+Playwright (and most test automation tools) support **two search languages**. Here's when to use which:
+
+| Feature | CSS Selectors | XPath |
+| :--- | :--- | :--- |
+| **Syntax** | `.class`, `#id`, `div > p` | `//div[@class='item']` |
+| **Find by text** | ❌ Not possible natively | ✅ `//button[contains(text(),'Submit')]` |
+| **Traverse up (to parent)** | ❌ CSS only goes down the tree | ✅ `//div[@id='main']/..` |
+| **Performance** | ⚡ Faster (natively supported by browsers) | 🐌 Slightly slower (evaluated by JavaScript) |
+| **Readability** | Clean, familiar to web developers | Verbose, looks like a file path |
+
+**CSS Selector Examples:**
+
+```text
+#menu          → finds element with id="menu"
+.active        → finds element with class="active"
+li             → finds all <li> elements
+ul > li        → finds <li> that are DIRECT children of <ul>
+```
+
+**XPath Examples:**
+
+```text
+//ul[@id='menu']                  → finds <ul id="menu">
+//li[contains(text(),'Home')]     → finds <li> that contains the text "Home"
+//li/..                           → finds the PARENT of an <li>
+```
+
+> 💡 **Recommendation:** Start with **CSS selectors** — they're simpler, faster, and sufficient for 90% of cases. Use **XPath** only when you need to find elements by text content or traverse upward to a parent.
+
+```javascript
+// Playwright examples:
+
+// CSS selector — clean and simple
+await page.locator('.submit-btn').click();
+
+// XPath — useful when you need to find by visible text
+await page.locator('//button[text()="Submit"]').click();
+```
+
+---
+
+### 33.5.5 Practice: Querying the DOM
+
+Given this HTML:
+
+```html
+<ul id="menu">
+  <li class="active">Home</li>
+  <li>About</li>
+  <li>Contact</li>
+</ul>
+```
+
+**Tasks:**
+1. Use `querySelector` to get the active menu item and log its text.
+2. Use `querySelectorAll` to get all `<li>` items and log how many there are.
+3. Use `getElementById` to get the `<ul>` element.
+
+**Solution:**
+
+```javascript
+// 1. Get the active menu item — querySelector finds the FIRST element matching ".active"
+let activeMenu = document.querySelector(".active");
+console.log(activeMenu.textContent); // "Home"
+
+// 2. Get all <li> items — querySelectorAll returns a static NodeList of ALL matches
+let allLi = document.querySelectorAll("li");
+console.log(allLi.length); // 3
+
+// 3. Get the <ul> by its id — getElementById returns a single element
+let ulElement = document.getElementById("menu");
+console.log(ulElement.id); // "menu"
+
+// Quick reference for reading common properties:
+// element.textContent  → the text inside an element
+// element.id           → the id attribute value
+// nodeList.length      → how many items are in a NodeList/HTMLCollection
+// element.getAttribute('class') → the value of any attribute
+```
+
+---
+
+## 33.6 Traversing the DOM — Navigating the Tree
+
+Now that you know how to **find** elements (`querySelector`), you often need to **move** to related elements — parent, children, or siblings. Think of it like a family tree:
+
+- **Moving up** → Go from a child to their parent
+- **Moving down** → Go from a parent to their children
+- **Moving sideways** → Go from one sibling to the next
+
+---
+
+### 33.6.1 Moving Up — `parentElement` and `closest()`
+
+| Property/Method | What it does | Example |
+| :--- | :--- | :--- |
+| `parentElement` | Returns the **direct** parent element (or `null` if at the root) | `child.parentElement` |
+| `closest(selector)` | Walks **up** the tree and returns the nearest ancestor matching the CSS selector (can also match the element itself) | `child.closest('.container')` |
+
+```html
+<!-- Sample HTML -->
+<div id="outer">
+  <div class="inner">
+    <button>Click</button>
+  </div>
+</div>
+```
+
+```javascript
+// Find the button first
+const button = document.querySelector('button');
+
+// parentElement — goes up ONE level
+console.log(button.parentElement);               // <div class="inner">
+
+// Chain parentElement to go up MULTIPLE levels
+console.log(button.parentElement.parentElement);  // <div id="outer">
+
+// closest() — jumps directly to the nearest ancestor matching a CSS selector
+// Much cleaner than chaining parentElement multiple times!
+console.log(button.closest('#outer'));            // <div id="outer">
+```
+
+---
+
+### 33.6.2 Moving Down — `children`, `firstElementChild`, `lastElementChild`
+
+| Property | What it returns |
+| :--- | :--- |
+| `children` | A live HTMLCollection of all **child elements** (not text nodes) |
+| `firstElementChild` | The first child element (or `null`) |
+| `lastElementChild` | The last child element (or `null`) |
+
+```html
+<!-- Sample HTML -->
+<ul id="menu">
+  <li>Home</li>
+  <li>About</li>
+  <li>Contact</li>
+</ul>
+```
+
+```javascript
+// Get the <ul> parent element
+const ul = document.getElementById('menu');
+
+// children — returns only HTML element children (ignores text nodes)
+console.log(ul.children.length);                // 3 — three <li> elements
+
+// firstElementChild — the first child element
+console.log(ul.firstElementChild.textContent);  // "Home"
+
+// lastElementChild — the last child element
+console.log(ul.lastElementChild.textContent);   // "Contact"
+
+// Loop through all children using for...of
+for (let child of ul.children) {
+  console.log(child.textContent);  // "Home", then "About", then "Contact"
+}
+```
+
+---
+
+### 33.6.3 Moving Sideways — `nextElementSibling` and `previousElementSibling`
+
+| Property | What it returns |
+| :--- | :--- |
+| `nextElementSibling` | The next sibling element (or `null` if it's the last one) |
+| `previousElementSibling` | The previous sibling element (or `null` if it's the first one) |
+
+```javascript
+// Start from the first <li>
+const firstLi = document.querySelector('li');
+
+// Move to the NEXT sibling
+const secondLi = firstLi.nextElementSibling;
+console.log(secondLi.textContent);             // "About"
+
+// Move to the next sibling again
+const thirdLi = secondLi.nextElementSibling;
+console.log(thirdLi.textContent);              // "Contact"
+
+// Move BACKWARDS to the previous sibling
+const backToSecond = thirdLi.previousElementSibling;
+console.log(backToSecond.textContent);         // "About"
+```
+
+---
+
+### 33.6.4 Practice: Traversing the DOM
+
+Given this HTML:
+
+```html
+<div class="parent">
+  <p>First paragraph</p>
+  <p id="target">Second paragraph</p>
+  <p>Third paragraph</p>
+</div>
+```
+
+**Tasks:**
+1. Select the element with `id="target"`.
+2. From it, get the parent element and log its class name.
+3. From the parent, get the first child and log its text content.
+4. From `#target`, get the next sibling and log its text content.
+
+**Solution:**
+
+```javascript
+// 1. Select the element with id="target"
+const target = document.querySelector('#target');
+
+// 2. Get the parent element and log its class name
+// .className returns the class attribute value as a string
+const parent = target.parentElement;
+console.log(parent.className);                // "parent"
+
+// 3. From the parent, get the first child element and log its text
+console.log(parent.firstElementChild.textContent);  // "First paragraph"
+
+// 4. From #target, get the next sibling and log its text
+console.log(target.nextElementSibling.textContent); // "Third paragraph"
+```
+
+---
+
+## 33.7 Reading and Modifying Elements — Assertions
+
+Once you locate an element in the DOM, you need to **read its content or state** to perform test assertions (verifying if the application is behaving correctly). Think of it like a whiteboard:
+
+- **Reading** → Look at the words written on it
+- **Modifying** → Erase a word and write a new one
+- **Attributes** → Extra info attached to the element (like the color of the marker, the size of the board)
+- **State** → Is the board covered? Is the marker dry? (hidden, disabled, checked)
+
+---
+
+### 33.7.1 Reading Text — `innerText` vs `textContent` vs `innerHTML` vs `value`
+
+When reading content from an HTML element, you must choose the correct property based on what you're trying to verify.
+
+| Property | What it Reads | Best Used For |
+| :--- | :--- | :--- |
+| **`.innerText`** | Only the **visible** text as it appears on screen. It respects CSS (hidden text is excluded). | **90% of SDET assertions.** Testing what the user actually sees. |
+| **`.textContent`** | **All** text inside the element, including text hidden by CSS. Ignores styling. | Finding hidden text or background data. |
+| **`.innerHTML`** | The text **PLUS** all the raw HTML tags inside that element. | Verifying HTML structures or formatting tags (`<b>`, `<i>`). |
+| **`.value`** | The text typed inside an `<input>` field. | **Form inputs.** `innerText` on an input box returns blank — you **must** use `.value`. |
+
+```html
+<!-- Sample HTML -->
+<div id="banner">
+  Welcome, <span style="display:none">Admin</span> <b>Shujauddin</b>
+</div>
+<input type="text" id="coupon" value="SAVE50" />
+```
+
+```javascript
+const banner = document.querySelector('#banner');
+const couponInput = document.querySelector('#coupon');
+
+// innerText — only visible text (hidden "Admin" is excluded, HTML tags stripped)
+console.log(banner.innerText);
+// Output: "Welcome, Shujauddin"
+
+// textContent — ALL text including hidden (HTML tags stripped)
+console.log(banner.textContent);
+// Output: "Welcome, Admin Shujauddin"
+
+// innerHTML — everything including HTML tags as raw strings
+console.log(banner.innerHTML);
+// Output: 'Welcome, <span style="display:none">Admin</span> <b>Shujauddin</b>'
+
+// value — reads what's typed inside an <input> field
+// ⚠️ For <input> boxes, .innerText returns blank! Always use .value
+console.log(couponInput.value);
+// Output: "SAVE50"
+```
+
+> 💡 **For test assertions:** Usually use `textContent` (reliable, includes hidden text). Only use `innerText` if you specifically care about what the user actually sees. **Avoid `innerHTML` for assertions** — it's brittle and breaks if the HTML structure changes even slightly.
+
+---
+
+### 33.7.2 Reading Attributes — `getAttribute()` and `hasAttribute()`
+
+Attributes are extra properties written on an HTML tag, like `id`, `class`, `src`, `href`, `data-*`.
+
+| Method | What it does | Example |
+| :--- | :--- | :--- |
+| `getAttribute(attrName)` | Returns the **value** of the attribute (or `null` if it doesn't exist) | `link.getAttribute('href')` |
+| `hasAttribute(attrName)` | Returns `true` if the attribute exists, `false` if not | `div.hasAttribute('id')` |
+
+```html
+<!-- Sample HTML -->
+<a id="link1" href="https://example.com" data-testid="home">Click</a>
+```
+
+```javascript
+const link = document.getElementById('link1');
+
+// getAttribute — reads the value of a specific attribute
+console.log(link.getAttribute('href'));         // "https://example.com"
+console.log(link.getAttribute('data-testid'));  // "home"
+
+// hasAttribute — checks if an attribute EXISTS (returns true/false)
+console.log(link.hasAttribute('data-testid'));  // true
+console.log(link.hasAttribute('target'));       // false — no target attribute
+```
+
+---
+
+### 33.7.3 Setting Attributes — `setAttribute()`
+
+You can also **set** (add or change) an attribute on an element.
+
+```javascript
+const link = document.getElementById('link1');
+
+// setAttribute — sets (or creates) an attribute with the given value
+// First argument: the attribute name
+// Second argument: the value to set
+link.setAttribute('target', '_blank');  // Opens link in a new tab
+link.setAttribute('href', 'https://new-url.com');  // Changes the URL
+```
+
+---
+
+### 33.7.4 Checking State — `hidden`, `disabled`, `checked`
+
+Some elements have **state properties** (not just attributes) that reflect their current interactive condition. These return boolean `true` / `false` values.
+
+```html
+<!-- Sample HTML -->
+<div id="card" hidden>Secret</div>
+<input type="checkbox" id="accept" />
+<button id="btn" disabled>Submit</button>
+```
+
+```javascript
+// --- Hidden ---
+const card = document.querySelector('#card');
+console.log(card.hidden);   // true — the element has the hidden attribute
+card.hidden = false;         // Removes hidden — element becomes visible
+
+// --- Disabled ---
+const btn = document.querySelector('#btn');
+console.log(btn.disabled);  // true — the button is greyed out and unclickable
+btn.disabled = false;        // Enables the button — now it's clickable
+console.log(btn.disabled);  // false
+
+// --- Checkbox Checked State ---
+const checkbox = document.querySelector('#accept');
+console.log(checkbox.checked); // false — checkbox is not ticked
+checkbox.checked = true;       // Programmatically checks the checkbox
+console.log(checkbox.checked); // true
+```
+
+> ⚠️ **Important difference:**
+> - `getAttribute('checked')` returns the **initial** state from the HTML source code.
+> - `.checked` property returns the **current** state (after user interaction or script changes).
+> - **Always use `.checked` for tests** — it reflects the real-time state.
+
+---
+
+### 33.7.5 Practice: Reading and Modifying Elements
+
+Given this HTML:
+
+```html
+<div class="profile-card">
+  <input type="text" id="username" value="shujauddin-sdet" />
+  <a href="/settings/billing" id="billing-link">Go to Billing</a>
+  <input type="checkbox" id="newsletter" checked />
+</div>
+```
+
+**Tasks:**
+1. Grab the `#username` input and log the text inside it.
+2. Grab the `#billing-link` and log its `href` attribute.
+3. Grab the `#newsletter` checkbox and log its checked state.
+
+**Solution:**
+
+```javascript
+// 1. Grab the username input and log its value
+// For <input> elements, always use .value (not .innerText!)
+const usernameInput = document.querySelector('#username');
+console.log(usernameInput.value);  // "shujauddin-sdet"
+
+// 2. Grab the billing link and log its href attribute
+// Use getAttribute() to read any attribute value from an HTML tag
+const billingLink = document.querySelector('#billing-link');
+console.log(billingLink.getAttribute('href')); // "/settings/billing"
+
+// 3. Grab the newsletter checkbox and log its checked state
+// .checked returns a boolean (true/false) for the current state
+const newsletterCheckbox = document.querySelector('#newsletter');
+console.log(newsletterCheckbox.checked); // true — it has the 'checked' attribute in HTML
+```
+
+---
+
+## 33.8 DOM Manipulation — Creating, Inserting, and Deleting Elements
+
+Beyond reading elements, JavaScript can also **create new elements**, **insert them** into the page, and **delete existing ones** — all without reloading. This is how dynamic websites build content on the fly.
+
+---
+
+### 33.8.1 Creating Elements — `createElement()`
+
+Before you can add a new element to the page, you must first **create** it in memory.
+
+```javascript
+// createElement() — creates a new HTML element in memory
+// The argument is the tag name as a string (e.g., "div", "p", "button")
+let newDiv = document.createElement("div");
+
+// The element exists in memory but is NOT on the page yet!
+// You need to insert it using one of the methods below.
+
+// You can set its content and attributes before inserting:
+newDiv.textContent = "I am a new div!";
+newDiv.id = "dynamic-box";
+newDiv.className = "highlight";
+```
+
+---
+
+### 33.8.2 Inserting Elements — `append`, `prepend`, `before`, `after`
+
+Once you've created an element, you need to tell the browser **where** to put it. There are four main methods:
+
+| Method | Where it inserts | Position |
+| :--- | :--- | :--- |
+| `node.append(el)` | At the **end** of node (inside, as last child) | Inside → Last |
+| `node.prepend(el)` | At the **start** of node (inside, as first child) | Inside → First |
+| `node.before(el)` | **Before** the node (outside, as previous sibling) | Outside → Before |
+| `node.after(el)` | **After** the node (outside, as next sibling) | Outside → After |
+
+```html
+<!-- Starting HTML -->
+<div id="container">
+  <p>Existing paragraph</p>
+</div>
+```
+
+```javascript
+const container = document.querySelector('#container');
+const existingP = document.querySelector('p');
+
+// --- append: adds INSIDE the container, at the END ---
+let newP1 = document.createElement('p');
+newP1.textContent = 'Appended (last child)';
+container.append(newP1);
+// Result: <div id="container">
+//           <p>Existing paragraph</p>
+//           <p>Appended (last child)</p>     ← added here
+//         </div>
+
+// --- prepend: adds INSIDE the container, at the START ---
+let newP2 = document.createElement('p');
+newP2.textContent = 'Prepended (first child)';
+container.prepend(newP2);
+// Result: <div id="container">
+//           <p>Prepended (first child)</p>   ← added here
+//           <p>Existing paragraph</p>
+//           <p>Appended (last child)</p>
+//         </div>
+
+// --- before: adds OUTSIDE the container, right BEFORE it ---
+let newDiv1 = document.createElement('div');
+newDiv1.textContent = 'Before container';
+container.before(newDiv1);
+// Result: <div>Before container</div>        ← added here
+//         <div id="container">...</div>
+
+// --- after: adds OUTSIDE the container, right AFTER it ---
+let newDiv2 = document.createElement('div');
+newDiv2.textContent = 'After container';
+container.after(newDiv2);
+// Result: <div id="container">...</div>
+//         <div>After container</div>          ← added here
+```
+
+---
+
+### 33.8.3 Deleting Elements — `remove()`
+
+To remove an element from the DOM, simply call `.remove()` on it.
+
+```javascript
+// Find the element you want to delete
+const oldElement = document.querySelector('#dynamic-box');
+
+// remove() — deletes the element from the DOM entirely
+oldElement.remove();
+// The element is now gone from the page
+```
+
+---
+
+### 33.8.4 Changing Inline Styles — `node.style`
+
+You can change the CSS styles of any element directly from JavaScript using the `.style` property.
+
+```javascript
+const heading = document.querySelector('h1');
+
+// node.style lets you set CSS properties directly
+// Note: CSS property names use camelCase in JavaScript
+// (e.g., background-color → backgroundColor, font-size → fontSize)
+heading.style.color = 'red';              // Changes text color
+heading.style.backgroundColor = '#222';   // Changes background
+heading.style.fontSize = '32px';          // Changes font size
+heading.style.padding = '10px 20px';      // Adds padding
+```
+
+> 📝 **Note:** Setting styles with `.style` applies **inline styles** (highest CSS specificity). For test automation, you rarely change styles — but knowing this helps when debugging visual issues or building dynamic UIs.
+
+---
+
+## 33.9 The Shadow DOM — Web Components
+
+The Shadow DOM is an advanced browser feature that creates a **hidden, separate DOM tree** attached to a regular HTML element. Understanding it is crucial for SDETs because many modern web applications use Web Components that hide their internals behind Shadow DOM boundaries.
+
+---
+
+### 33.9.1 Key Definitions
+
+| Term | What it means |
+| :--- | :--- |
+| **Shadow DOM** | A hidden, separate DOM tree attached to a regular HTML element. It's like a secret compartment inside a box. |
+| **Shadow Root** | The entry point (the "door") to the hidden Shadow DOM. |
+| **Host Element** | The regular HTML element that contains the Shadow DOM (e.g., `<my-widget>`). |
+| **Encapsulation** | Keeping things hidden inside a container so they don't affect (or get affected by) the outside. |
+| **Web Component** | A custom HTML tag (like `<my-button>`) that uses Shadow DOM to hide its internal structure. |
+| **Open Shadow Root** | A shadow root that you **can** access using JavaScript (`element.shadowRoot` works). |
+| **Closed Shadow Root** | A shadow root that JavaScript **cannot** access (`element.shadowRoot` returns `null`). |
+
+---
+
+### 33.9.2 Why Shadow DOM Exists
+
+Web developers use Shadow DOM to **encapsulate** (hide and protect) the internal structure of custom widgets. For example:
+
+- A `<video-player>` component might have buttons, sliders, and timers hidden inside.
+- Shadow DOM prevents the page's CSS from accidentally changing the video player's appearance.
+- It also prevents the video player's internal styles from leaking out and breaking the rest of the page.
+
+---
+
+### 33.9.3 Open vs Closed Shadow Roots
+
+When you inspect a web component in Chrome DevTools (F12 → Elements panel), you'll see something like:
+
+```html
+<video-player>
+  #shadow-root (open)
+    <div class="controls">
+      <button>Play</button>
+      <button>Pause</button>
+    </div>
+</video-player>
+```
+
+- `#shadow-root (open)` → The shadow root is **accessible** via JavaScript.
+- `#shadow-root (closed)` → The shadow root is **blocked** — `element.shadowRoot` returns `null`.
+- Regular `document.querySelector('button')` will **NOT** find those buttons because they are hidden inside the shadow boundary.
+
+---
+
+### 33.9.4 Accessing Shadow DOM with JavaScript
+
+For **open** shadow roots, you can access the hidden content manually:
+
+```javascript
+// Step 1: Find the host element (the "box" containing the shadow)
+const host = document.querySelector('video-player');
+
+// Step 2: Access the shadow root (the "secret door")
+// .shadowRoot returns the shadow root for OPEN shadows
+// .shadowRoot returns null for CLOSED shadows
+const shadowRoot = host.shadowRoot;
+
+// Step 3: Now search INSIDE the shadow root (not the main document)
+const playButton = shadowRoot.querySelector('button');
+
+// Step 4: Interact with the element
+playButton.click();
+```
+
+> ⚠️ If the shadow root is **closed** (`#shadow-root (closed)`), `host.shadowRoot` returns `null` and you **cannot** access it directly with plain JavaScript.
+
+---
+
+### 33.9.5 How Playwright Handles Shadow DOM
+
+Playwright's selectors **automatically pierce shadow boundaries**, even for closed shadow roots. You don't need to manually access the shadow root — just write a normal selector:
+
+```javascript
+// Playwright test code — the >> operator crosses shadow boundaries
+await page.locator('video-player >> button').click();
+```
+
+- The `>>` symbol means **"cross the shadow boundary and search inside."**
+- You don't need to worry about whether the shadow root is open or closed.
+- This is one of Playwright's biggest advantages over raw JavaScript DOM queries.
+
+> 💡 **SDET Takeaway:** When you encounter a web component in DevTools and see `#shadow-root`, don't panic. Playwright handles it automatically with the `>>` operator. For Selenium, you'd need `driver.executeScript()` to manually pierce the shadow — another reason Playwright is preferred for modern web testing.
+
+---
+
+## 33.10 DOM Quick Reference
+
+### Finding Elements
+
+| Method | Returns | Use Case |
+| :--- | :--- | :--- |
+| `getElementById('id')` | Single element or `null` | Find by unique ID |
+| `getElementsByClassName('cls')` | Live HTMLCollection | Find all with a class |
+| `getElementsByTagName('tag')` | Live HTMLCollection | Find all with a tag |
+| `querySelector('css')` | First match or `null` | ⭐ Modern — use CSS selector |
+| `querySelectorAll('css')` | Static NodeList | ⭐ Modern — all matches |
+
+### Reading Content
+
+| Property | Returns |
+| :--- | :--- |
+| `.innerText` | Visible text only |
+| `.textContent` | All text (including hidden) |
+| `.innerHTML` | Text + HTML tags |
+| `.value` | Text inside `<input>` fields |
+
+### Attributes
+
+| Method | Returns |
+| :--- | :--- |
+| `.getAttribute('attr')` | Attribute value or `null` |
+| `.setAttribute('attr', 'val')` | Sets/creates an attribute |
+| `.hasAttribute('attr')` | `true` / `false` |
+
+### Traversing
+
+| Property | Direction |
+| :--- | :--- |
+| `.parentElement` | ⬆️ Up one level |
+| `.closest('css')` | ⬆️ Up to nearest ancestor matching selector |
+| `.children` | ⬇️ All child elements |
+| `.firstElementChild` | ⬇️ First child |
+| `.lastElementChild` | ⬇️ Last child |
+| `.nextElementSibling` | ➡️ Next sibling |
+| `.previousElementSibling` | ⬅️ Previous sibling |
+
+### Creating & Inserting
+
+| Method | What it does |
+| :--- | :--- |
+| `document.createElement('tag')` | Creates a new element in memory |
+| `parent.append(el)` | Inserts as last child (inside) |
+| `parent.prepend(el)` | Inserts as first child (inside) |
+| `node.before(el)` | Inserts before the node (outside) |
+| `node.after(el)` | Inserts after the node (outside) |
+| `node.remove()` | Deletes the element |
+
+### Element State
+
+| Property | Returns |
+| :--- | :--- |
+| `.hidden` | `true` if element is hidden |
+| `.disabled` | `true` if element is disabled |
+| `.checked` | `true` if checkbox/radio is checked |
+
+### Styling
+
+| Property | Example |
+| :--- | :--- |
+| `node.style.color` | `'red'` |
+| `node.style.backgroundColor` | `'#222'` — use camelCase for CSS property names |
+
+---
+
+> 💡 **SDET Takeaway:** The DOM is the bridge between HTML and JavaScript. Every Playwright `locator()`, every Selenium `findElement()`, and every Cypress `cy.get()` is ultimately querying the DOM tree. Understanding `querySelector`, element properties (`.textContent`, `.value`, `.checked`), and traversal (`.parentElement`, `.closest()`) makes you faster at writing selectors and debugging test failures. The Shadow DOM is the one advanced concept you'll encounter in modern apps — Playwright handles it with `>>`, but knowing what's happening under the hood separates a senior SDET from a junior one.
 
 ---
