@@ -209,6 +209,36 @@
       - [33.9.4 Accessing Shadow DOM with JavaScript](#3394-accessing-shadow-dom-with-javascript)
       - [33.9.5 How Playwright Handles Shadow DOM](#3395-how-playwright-handles-shadow-dom)
     - [33.10 DOM Quick Reference](#3310-dom-quick-reference)
+34. [Events — Complete Guide](#34-events--complete-guide)
+    - [34.1 What are Events?](#341-what-are-events)
+    - [34.2 Common Event Types](#342-common-event-types)
+      - [34.2.1 Mouse Events](#3421-mouse-events)
+      - [34.2.2 Keyboard Events](#3422-keyboard-events)
+      - [34.2.3 Form Events](#3423-form-events)
+      - [34.2.4 Document / Window Events](#3424-document--window-events)
+      - [34.2.5 Drag & Drop Events](#3425-drag--drop-events)
+      - [34.2.6 Event Types — SDET Summary Table](#3426-event-types--sdet-summary-table)
+    - [34.3 Adding Event Listeners](#343-adding-event-listeners)
+      - [34.3.1 Inline HTML Attributes (Old Way)](#3431-inline-html-attributes-old-way)
+      - [34.3.2 DOM Property Assignment (One Handler Only)](#3432-dom-property-assignment-one-handler-only)
+      - [34.3.3 `addEventListener()` — Modern and Recommended](#3433-addeventlistener--modern-and-recommended)
+      - [34.3.4 `removeEventListener()`](#3434-removeeventlistener)
+      - [34.3.5 Options in `addEventListener`](#3435-options-in-addeventlistener)
+      - [34.3.6 Custom Events](#3436-custom-events)
+      - [34.3.7 Comparing All Three Methods — Code Example](#3437-comparing-all-three-methods--code-example)
+    - [34.4 The Event Object](#344-the-event-object)
+      - [34.4.1 Event Object Properties — Quick Reference](#3441-event-object-properties--quick-reference)
+      - [34.4.2 `target` vs `currentTarget`](#3442-target-vs-currenttarget)
+      - [34.4.3 `preventDefault()`](#3443-preventdefault)
+      - [34.4.4 `stopPropagation()`](#3444-stoppropagation)
+    - [34.5 Event Bubbling and Capturing](#345-event-bubbling-and-capturing)
+      - [34.5.1 What is Bubbling?](#3451-what-is-bubbling)
+      - [34.5.2 What is Capturing?](#3452-what-is-capturing)
+      - [34.5.3 Stopping Bubbling with `stopPropagation()`](#3453-stopping-bubbling-with-stoppropagation)
+    - [34.6 Event Delegation](#346-event-delegation)
+    - [34.7 Simulating Events (for Testing)](#347-simulating-events-for-testing)
+    - [34.8 Common Mistakes & Best Practices](#348-common-mistakes--best-practices)
+    - [34.9 Events in Playwright (SDET Focus)](#349-events-in-playwright-sdet-focus)
 
 ---
 
@@ -19054,5 +19084,1070 @@ await page.locator('video-player >> button').click();
 ---
 
 > 💡 **SDET Takeaway:** The DOM is the bridge between HTML and JavaScript. Every Playwright `locator()`, every Selenium `findElement()`, and every Cypress `cy.get()` is ultimately querying the DOM tree. Understanding `querySelector`, element properties (`.textContent`, `.value`, `.checked`), and traversal (`.parentElement`, `.closest()`) makes you faster at writing selectors and debugging test failures. The Shadow DOM is the one advanced concept you'll encounter in modern apps — Playwright handles it with `>>`, but knowing what's happening under the hood separates a senior SDET from a junior one.
+
+---
+
+## 34. Events 
+
+An **event** is a change in the state of an object, or an action recognized by the browser — such as a user clicking a button, typing in a text box, moving the mouse, or the page finishing loading. Events are fired to notify code of "interesting changes" that may affect code execution. JavaScript can **listen** for these events using event handlers or listeners (e.g., `addEventListener`) and execute code in response. Events are central to interactive web applications and are also critical for test automation (e.g., Playwright triggers and waits for events).
+
+> **Note on event handling priority:** If the same event handling is written both inline in HTML and in a JavaScript file, the JavaScript file takes priority. This is one of the reasons inline event handling is considered a bad practice.
+
+---
+
+### 34.1 What are Events?
+
+When something happens on a web page — clicking a button, typing in a box, moving the mouse, or even the page finishing loading — the browser creates an **event**. You can write JavaScript that listens for that event and then reacts (like showing a message, submitting a form, or changing colors).
+
+**Analogy:** Imagine you are playing with a toy piano. When you press a key (an action), the piano makes a sound (a reaction). In the same way, when a user performs an action on a web page, the browser fires an event, and your code can respond to it.
+
+**How events work:** Listen → React.
+
+```html
+<button id="myBtn">Click me</button>
+<script>
+  const button = document.getElementById('myBtn');
+  button.addEventListener('click', () => {
+    alert('Button was clicked!');
+  });
+</script>
+```
+
+When you click the button, the event (`click`) triggers the alert.
+
+> **Why `addEventListener` over inline/DOM-property methods:** With inline handling (`onclick="..."`) or DOM-property assignment (`element.onclick = fn`), you can only attach **one** handler per event per element. `addEventListener` allows **multiple** handlers, which is why it is the modern, recommended approach.
+
+---
+
+### 34.2 Common Event Types
+
+#### 34.2.1 Mouse Events
+
+When a user interacts with the page using a mouse (or touchpad/touchscreen), the browser fires mouse events.
+
+| Event | When It Happens |
+| :--- | :--- |
+| `click` | Mouse button pressed and released on the same element |
+| `dblclick` | Two clicks in quick succession |
+| `mouseenter` | Mouse cursor moves into an element (does not bubble) |
+| `mouseleave` | Mouse cursor moves out of an element |
+| `mousemove` | Mouse moves while over an element |
+| `contextmenu` | Right-click (opens context menu) |
+
+**Analogy:**
+- `click` = you step on a target once.
+- `dblclick` = you hop on it twice fast.
+- `mouseenter` = your foot first touches the target.
+- `mouseleave` = your foot leaves the target.
+- `contextmenu` = you tap the target with your heel (right-click).
+
+**SDET Relevance (Playwright):**
+
+| Playwright Action | Corresponding Event |
+| :--- | :--- |
+| `page.click(selector)` | `click` |
+| `page.dblclick(selector)` | `dblclick` |
+| `page.hover(selector)` | `mouseenter` (plus `mouseleave` when moving away) |
+| `page.click(selector, { button: 'right' })` | `contextmenu` |
+
+You don't need to manually dispatch mouse events; Playwright does it for you. But you must know which event your app listens to so you trigger the correct action.
+
+**Code Example — Mouse Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Mouse Events Demo</title></head>
+<body>
+  <button id="demoBtn">Hover or Click me</button>
+  <p id="output"></p>
+  <script>
+    const btn = document.getElementById('demoBtn');
+    const output = document.getElementById('output');
+
+    btn.addEventListener('click', () => output.textContent = 'click event fired');
+    btn.addEventListener('dblclick', () => output.textContent = 'dblclick event fired');
+    btn.addEventListener('mouseenter', () => output.textContent = 'mouseenter (cursor entered)');
+    btn.addEventListener('mouseleave', () => output.textContent = 'mouseleave (cursor left)');
+    btn.addEventListener('contextmenu', (e) => {
+      e.preventDefault();  // prevents browser right-click menu
+      output.textContent = 'contextmenu (right-click) fired';
+    });
+  </script>
+</body>
+</html>
+```
+
+Open the file, click, double-click, hover, and right-click the button. Watch the output line change each time.
+
+---
+
+#### 34.2.2 Keyboard Events
+
+| Event | When It Happens |
+| :--- | :--- |
+| `keydown` | A key is pressed down |
+| `keyup` | A key is released |
+| `keypress` | *(deprecated)* A character key is pressed |
+
+**Analogy:** Typing on a keyboard — `keydown` is your finger pushing the key down, `keyup` is your finger lifting off.
+
+**SDET Relevance:**
+- Use `page.keyboard.press('Enter')` to trigger `keydown`/`keyup`.
+- `page.fill()` triggers `input` and `change` events (form events), not low-level keyboard events.
+- Useful for shortcuts (`Ctrl+S`, `Cmd+C`) or hitting Enter to submit a form.
+
+**Code Example — Keyboard Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Keyboard Events Demo</title></head>
+<body>
+  <input type="text" id="myInput" placeholder="Type here">
+  <p id="output"></p>
+  <script>
+    const input = document.getElementById('myInput');
+    const output = document.getElementById('output');
+
+    input.addEventListener('keydown', (e) => {
+      output.textContent = `keydown: ${e.key} (code: ${e.code})`;
+    });
+    input.addEventListener('keyup', (e) => {
+      output.textContent = `keyup: ${e.key}`;
+    });
+  </script>
+</body>
+</html>
+```
+
+Type any key — you'll see both `keydown` and `keyup` messages.
+
+---
+
+#### 34.2.3 Form Events
+
+Form events are very important for SDET testing.
+
+| Event | When It Happens |
+| :--- | :--- |
+| `input` | Value of an `<input>`, `<textarea>` or `<select>` changes (fires on every keystroke/paste) |
+| `change` | Value changes AND the element loses focus (or for `<select>` when an option is chosen) |
+| `submit` | A form is submitted (button click or Enter key inside a form) |
+| `focus` | An element receives focus (clicked or tabbed into) |
+| `blur` | An element loses focus |
+
+**Analogy:**
+- `input` = you write a letter, then erase it, then write another — every small change.
+- `change` = you finish writing the whole word and move to the next box.
+- `submit` = you hand over the completed form.
+- `focus` = you look directly at the field.
+- `blur` = you look away.
+
+**SDET Relevance (Playwright):**
+- `page.fill(selector, text)` triggers `input`, `change`, and `blur` events.
+- To trigger `submit`, use `page.click('button[type="submit"]')` or `page.keyboard.press('Enter')` while inside a form field.
+- Always verify the expected outcome after these events (e.g., validation message appears, data saved).
+
+**Code Example — Form Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Form Events Demo</title></head>
+<body>
+  <form id="testForm">
+    <input type="text" id="username" placeholder="Username">
+    <select id="role">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="output"></p>
+  <script>
+    const username = document.getElementById('username');
+    const role = document.getElementById('role');
+    const form = document.getElementById('testForm');
+    const output = document.getElementById('output');
+
+    username.addEventListener('input', (e) => {
+      output.textContent = `input: ${e.target.value}`;
+    });
+    username.addEventListener('change', (e) => {
+      output.textContent = `change: ${e.target.value} (focus lost)`;
+    });
+    role.addEventListener('change', (e) => {
+      output.textContent = `select changed to ${e.target.value}`;
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // don't actually send the form
+      output.textContent = 'Form submitted!';
+    });
+    username.addEventListener('focus', () => output.textContent = 'focus: input focused');
+    username.addEventListener('blur', () => output.textContent = 'blur: input lost focus');
+  </script>
+</body>
+</html>
+```
+
+Type in the username field — you'll see `input` on every keystroke. Click outside — `change` fires. Focus and blur also fire when you click in and out of the field.
+
+---
+
+#### 34.2.4 Document / Window Events
+
+| Event | When It Happens |
+| :--- | :--- |
+| `DOMContentLoaded` | HTML is fully parsed and DOM is ready (images/styles may still load) |
+| `load` | All resources (images, styles, etc.) are fully loaded |
+| `resize` | Browser window is resized |
+| `scroll` | User scrolls the page or an element |
+
+**Analogy:**
+- `DOMContentLoaded` = you finish building the skeleton of a house (walls, roof).
+- `load` = you also put in furniture, paintings, and lights.
+- `resize` = you change the size of the door.
+- `scroll` = you move the house up/down on a conveyor belt.
+
+**SDET Relevance:**
+- Playwright automatically waits for the page to be in a stable state (e.g., `page.goto()` waits for `load` by default). You rarely need to wait manually.
+- For single-page applications (SPA), you might need to wait for network idle or specific elements, not just `load`.
+- `scroll` events are important for infinite scroll or lazy loading — use `page.mouse.wheel()` or `element.scrollIntoViewIfNeeded()`.
+
+**Code Example — Document/Window Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Document Events Demo</title></head>
+<body>
+  <div style="height: 2000px;">Scroll down</div>
+  <p id="output"></p>
+  <script>
+    const output = document.getElementById('output');
+    window.addEventListener('load', () => output.textContent = 'load: all resources loaded');
+    document.addEventListener('DOMContentLoaded', () => output.textContent = 'DOMContentLoaded: DOM ready');
+    window.addEventListener('resize', () => output.textContent = `resize: ${window.innerWidth}x${window.innerHeight}`);
+    window.addEventListener('scroll', () => output.textContent = `scroll: Y=${window.scrollY}`);
+  </script>
+</body>
+</html>
+```
+
+Reload — you'll see `DOMContentLoaded` then `load`. Resize the window or scroll — the output changes.
+
+---
+
+#### 34.2.5 Drag & Drop Events
+
+| Event | When It Happens |
+| :--- | :--- |
+| `dragstart` | User starts dragging an element |
+| `dragend` | User releases the dragged element |
+| `dragenter` | Dragged element enters a drop target |
+| `dragleave` | Dragged element leaves a drop target |
+| `dragover` | Dragged element is over a drop target (must call `preventDefault()` to allow drop) |
+| `drop` | Dragged element is released over a valid drop target |
+
+**SDET Relevance:**
+- Playwright has `page.dragAndDrop(source, target)` which fires these events automatically.
+- Alternatively, use `page.locator(source).dragTo(target)`.
+
+**Code Example — Drag & Drop Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Drag & Drop Demo</title>
+<style>
+  .draggable { width: 100px; height: 100px; background: lightblue; display: inline-block; }
+  .dropzone { width: 150px; height: 150px; background: lightgreen; display: inline-block; margin-left: 50px; }
+</style>
+</head>
+<body>
+  <div class="draggable" draggable="true" id="dragMe">Drag me</div>
+  <div class="dropzone" id="dropHere">Drop here</div>
+  <p id="output"></p>
+  <script>
+    const dragEl = document.getElementById('dragMe');
+    const dropEl = document.getElementById('dropHere');
+    const output = document.getElementById('output');
+
+    dragEl.addEventListener('dragstart', (e) => {
+      output.textContent = 'dragstart';
+      e.dataTransfer.setData('text/plain', 'dragged');
+    });
+    dragEl.addEventListener('dragend', () => output.textContent = 'dragend');
+    dropEl.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      output.textContent = 'dragenter';
+    });
+    dropEl.addEventListener('dragleave', () => output.textContent = 'dragleave');
+    dropEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      output.textContent = 'dragover';
+    });
+    dropEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      output.textContent = 'drop!';
+    });
+  </script>
+</body>
+</html>
+```
+
+Drag the blue box over the green area — see the sequence of events. Release — `drop` fires.
+
+---
+
+#### 34.2.6 Event Types — SDET Summary Table
+
+| Event Category | Common Events | Playwright Action(s) |
+| :--- | :--- | :--- |
+| Mouse | `click`, `dblclick`, `mouseenter`, `mouseleave`, `contextmenu` | `.click()`, `.dblclick()`, `.hover()`, `.click({ button: 'right' })` |
+| Keyboard | `keydown`, `keyup` | `.keyboard.press()` |
+| Form | `input`, `change`, `submit`, `focus`, `blur` | `.fill()`, `.press('Enter')`, `.focus()`, `.blur()` |
+| Document/Window | `DOMContentLoaded`, `load`, `resize`, `scroll` | Playwright waits automatically; `.mouse.wheel()` |
+| Drag & Drop | `dragstart`, `dragend`, `dragenter`, `dragleave`, `dragover`, `drop` | `.dragTo()` or `.dragAndDrop()` |
+
+---
+
+### 34.3 Adding Event Listeners
+
+An event listener in JavaScript is a built-in method that waits for a specific action to occur on a webpage — such as a user clicking a button, scrolling, or pressing a key — and then executes a function in response.
+
+There are three ways to attach event handlers in JavaScript:
+
+1. **Inline HTML attributes** (e.g., `onclick="..."`) — old way
+2. **DOM element properties** (e.g., `element.onclick = fn`) — one listener only
+3. **`addEventListener()`** — modern, multiple listeners, more control
+
+`addEventListener` is preferred because it allows multiple listeners for the same event, provides more control (capturing, once, passive), and supports removal with `removeEventListener`. The inline and property methods are legacy and limited to one handler per event per element.
+
+**Analogy:** Imagine you have a doorbell.
+- **Inline HTML** = you write "when pressed, ring bell" directly on the doorbell itself (old houses).
+- **DOM property** = you attach one bell to the doorbell, but if you attach another, it replaces the first.
+- **`addEventListener`** = you can attach multiple bells, chimes, and lights — all react when the doorbell rings. You can also remove them later.
+
+The `addEventListener` method expects two main arguments:
+- **type** — a string that tells the browser which event to listen for (e.g., `'click'`, `'keydown'`, `'mouseover'`). These are predefined by the browser.
+- **listener** — the function to run when that event occurs.
+
+---
+
+#### 34.3.1 Inline HTML Attributes (Old Way)
+
+```html
+<button onclick="alert('Clicked!')">Click me</button>
+```
+
+- Works but mixes HTML and JavaScript.
+- Only one handler per event.
+- **Not recommended** for SDET or production code.
+
+---
+
+#### 34.3.2 DOM Property Assignment (One Handler Only)
+
+```javascript
+const btn = document.getElementById('myBtn');
+btn.onclick = () => console.log('First handler');
+btn.onclick = () => console.log('Second handler'); // overwrites first!
+```
+
+Only the **last** assigned handler runs. Useful only for very simple cases.
+
+---
+
+#### 34.3.3 `addEventListener()` — Modern and Recommended
+
+```javascript
+const btn = document.getElementById('myBtn');
+btn.addEventListener('click', () => console.log('Handler 1'));
+btn.addEventListener('click', () => console.log('Handler 2'));
+// Both handlers run when the button is clicked.
+```
+
+Both handlers run. You can add many, remove specific ones, and control the phase (capture/bubble).
+
+---
+
+#### 34.3.4 `removeEventListener()`
+
+```javascript
+function handleClick() { console.log('clicked'); }
+btn.addEventListener('click', handleClick);
+
+// Later, remove the listener:
+btn.removeEventListener('click', handleClick);
+```
+
+> **Important:** The function must be the **same reference**. Anonymous functions (arrow functions defined inline) cannot be removed.
+
+**Key Takeaway for SDET:**
+- Anonymous arrow functions (`() => {}`) attached with `addEventListener` **cannot be removed** later.
+- Always use **named functions** if you need to detach a listener (e.g., to clean up between tests).
+- In Playwright tests, you rarely add/remove listeners; instead you rely on page reloads to reset state.
+
+---
+
+#### 34.3.5 Options in `addEventListener`
+
+```javascript
+btn.addEventListener('click', handler, { once: true });    // runs only once, then auto-removes
+btn.addEventListener('click', handler, { capture: true }); // catch during capturing phase
+btn.addEventListener('click', handler, { passive: true }); // improve scroll performance
+```
+
+---
+
+#### 34.3.6 Custom Events
+
+You can create your own event names, but you must dispatch them manually:
+
+```javascript
+// Listen for a custom event named 'myCustomClick'
+button.addEventListener('myCustomClick', function(event) {
+    console.log('Custom event triggered');
+});
+
+// Later, manually trigger that custom event
+const customEvent = new Event('myCustomClick');
+button.dispatchEvent(customEvent);
+```
+
+For normal user interactions (click, type, etc.), you must use the standard event names: `'click'`, `'input'`, `'submit'`, etc.
+
+---
+
+#### 34.3.7 Comparing All Three Methods — Code Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Event Listeners Demo</title></head>
+<body>
+  <button id="btn1">Inline (old)</button>
+  <button id="btn2">Property</button>
+  <button id="btn3">addEventListener</button>
+  <p id="output"></p>
+  <script>
+    // Inline: onclick="document.getElementById('output').innerText='Inline clicked'"
+    // That would be in the HTML attribute (not shown here for clean separation).
+
+    // Property:
+    const btn2 = document.getElementById('btn2');
+    btn2.onclick = () => document.getElementById('output').innerText = 'Property (only one)';
+    btn2.onclick = () => document.getElementById('output').innerText = 'Property overwritten';
+
+    // addEventListener:
+    const btn3 = document.getElementById('btn3');
+    btn3.addEventListener('click', () => document.getElementById('output').innerText = 'Listener 1');
+    btn3.addEventListener('click', () => document.getElementById('output').innerText += ' + Listener 2');
+  </script>
+</body>
+</html>
+```
+
+- Click **Property** — only the last message appears (first was overwritten).
+- Click **addEventListener** — both messages appear (concatenated).
+
+**Practice — Adding and Removing Listeners:**
+
+```html
+<button id="testBtn">Click me</button>
+<script>
+  const btn = document.getElementById('testBtn');
+
+  function handlerA() { console.log('A'); }
+  function handlerB() { console.log('B'); }
+
+  // Add both handlers
+  btn.addEventListener('click', handlerA);
+  btn.addEventListener('click', handlerB);
+
+  // Remove handlerA — only handlerB remains
+  btn.removeEventListener('click', handlerA);
+</script>
+```
+
+After removing `handlerA`, clicking the button only logs `"B"`.
+
+**SDET Relevance (Playwright):**
+
+You rarely add event listeners in tests. Instead, you verify that the application's listeners react correctly. Use Playwright to trigger events (`click`, `fill`, etc.) and assert outcomes.
+
+If you need to spy on an event (e.g., check that a custom event fired), you can evaluate JavaScript in the browser context:
+
+```javascript
+await page.evaluate(() => {
+  window.myEventFired = false;
+  document.addEventListener('myEvent', () => window.myEventFired = true);
+});
+// trigger action
+await page.click('#triggerBtn');
+const fired = await page.evaluate(() => window.myEventFired);
+expect(fired).toBe(true);
+```
+
+For removing listeners in tests (cleanup), Playwright reloads the page between tests, so memory leaks are less of an issue.
+
+---
+
+### 34.4 The Event Object
+
+When something happens on a webpage (click, key press, etc.), the browser creates a small "report" about that action. That report is the **event object**. It tells you:
+
+- Which element was clicked (or typed in)
+- What type of event (`click`, `keydown`, etc.)
+- Where the mouse was
+- Which key was pressed
+- And it gives you methods to stop the normal browser behavior (`preventDefault`) or stop the event from going to parent elements (`stopPropagation`)
+
+**Analogy:** You are at school. The teacher announces: "Anyone who has a question, raise your hand." The **event** is "hand raised." The **event object** is a small card the teacher gives you when you raise your hand. On the card it says: who raised the hand (`target` — you), who collected the card (`currentTarget` — the teacher), what type of event (`type` — "hand raise"), a button to cancel the school bell (`preventDefault()` — stop the normal action), and a button to stop the information from going to the principal (`stopPropagation()` — stop bubbling).
+
+---
+
+#### 34.4.1 Event Object Properties — Quick Reference
+
+| Property | Meaning |
+| :--- | :--- |
+| Event object | An automatic package of information that JavaScript creates when an event happens. It contains details like which element was clicked, where the mouse was, etc. |
+| `target` | The actual element that the user interacted with (e.g., the exact button clicked). |
+| `currentTarget` | The element that the event listener is attached to (the element that "listens" for the event). Sometimes different from `target`. |
+| `type` | The name of the event, like `"click"` or `"keydown"`. |
+| `preventDefault()` | A method that stops the browser's normal behavior for that event (e.g., stopping a link from navigating). |
+| `stopPropagation()` | A method that prevents the event from moving up to parent elements (stops bubbling). |
+| `key` | *(Keyboard event)* The value of the key pressed, e.g., `"Enter"`, `"a"`. |
+| `clientX` / `clientY` | *(Mouse event)* The horizontal and vertical position of the mouse on the screen. |
+
+---
+
+#### 34.4.2 `target` vs `currentTarget`
+
+- **`target`** is the element you physically clicked (the deepest one).
+- **`currentTarget`** is the element that has the event listener (could be the parent if the event bubbled up).
+
+**Code Example — `target` vs `currentTarget` with `preventDefault` and `stopPropagation`:**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="grandparent">
+    Grandparent
+    <div id="parent">
+      Parent
+      <button id="child">Click me</button>
+    </div>
+  </div>
+  <a id="myLink" href="https://example.com">Go to Example (prevented)</a>
+  <p id="output"></p>
+
+  <script>
+    const output = document.getElementById('output');
+
+    // ---------- target vs currentTarget ----------
+    document.getElementById('grandparent').addEventListener('click', (e) => {
+      output.innerHTML += `<br>Grandparent listener: target = ${e.target.tagName}, currentTarget = ${e.currentTarget.tagName}`;
+    });
+    document.getElementById('parent').addEventListener('click', (e) => {
+      output.innerHTML += `<br>Parent listener: target = ${e.target.tagName}, currentTarget = ${e.currentTarget.tagName}`;
+    });
+    document.getElementById('child').addEventListener('click', (e) => {
+      output.innerHTML += `<br>Child listener: target = ${e.target.tagName}, currentTarget = ${e.currentTarget.tagName}`;
+    });
+
+    // ---------- preventDefault() ----------
+    const link = document.getElementById('myLink');
+    link.addEventListener('click', (e) => {
+      e.preventDefault();   // stops browser from going to example.com
+      output.innerHTML += `<br>Link clicked but navigation prevented.`;
+    });
+  </script>
+</body>
+</html>
+```
+
+When you click the button, all three listeners fire (because of bubbling). In each listener, `target` is always `BUTTON` (what was actually clicked), but `currentTarget` changes to match whichever element owns that listener.
+
+---
+
+#### 34.4.3 `preventDefault()`
+
+`preventDefault()` stops the **default action** — like following a link, submitting a form, or opening the right-click menu.
+
+---
+
+#### 34.4.4 `stopPropagation()`
+
+`stopPropagation()` stops the event from going to **parent elements**. This is useful when you want a child button to behave independently from its parent's listener.
+
+**Code Example — Using Event Object Properties:**
+
+```javascript
+// Separate JS file (app.js) linked to an HTML page with a <button id="demoButton"> and <p id="output">
+
+const button = document.getElementById('demoButton');
+const output = document.getElementById('output');
+
+button.addEventListener('click', function(event) {
+    // 'event' is the event object automatically created by the browser
+    const message = `
+        <strong>Event object details:</strong><br>
+        - event.type: ${event.type}<br>
+        - event.target: ${event.target.tagName} (the exact element clicked)<br>
+        - event.currentTarget: ${event.currentTarget.tagName} (the element that has the listener)<br>
+        - Mouse coordinates: (${event.clientX}, ${event.clientY})
+    `;
+    output.innerHTML = message;
+
+    // Also log the full event object to the browser console (press F12 to see)
+    console.log('Full event object:', event);
+});
+```
+
+**SDET Relevance (Playwright):**
+- You don't need to read the event object often in tests. But when an app uses `preventDefault()`, your Playwright test will not see a page navigation after clicking a link or submitting a form — that's expected behavior.
+- If a test clicks a child element and nothing happens because the parent's listener is supposed to handle it, check if `stopPropagation()` is being called on the child. You might need to click a different element or use `force: true`.
+- You can simulate events with custom data (e.g., mouse coordinates) using `page.dispatchEvent` if needed.
+
+---
+
+### 34.5 Event Bubbling and Capturing
+
+**Bubbling** = When an event happens on an element, it also fires on its parent, then its parent's parent, all the way up to the top. Like a bubble rising to the surface of water.
+
+**Capturing** = The opposite: the event travels from the topmost parent **down** to the target before bubbling. But bubbling is the default behavior, and most of the time we deal with bubbling.
+
+**Why does it matter?**
+- If you attach a click listener to a parent container, it will fire when any child inside is clicked.
+- To stop the event from going further up, you can use `event.stopPropagation()`.
+
+---
+
+#### 34.5.1 What is Bubbling?
+
+When you click an element (like a button inside a div), the browser does not just fire an event on that button. The event **bubbles up** — it first fires on the button, then on the button's parent, then on the parent's parent, all the way up to the top of the page.
+
+**Code Example — Bubbling in Action:**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="outer">
+    OUTER
+    <div id="inner">
+      INNER
+      <button id="btn">CLICK ME</button>
+    </div>
+  </div>
+  <p id="log"></p>
+
+  <script>
+    const outer = document.getElementById('outer');
+    const inner = document.getElementById('inner');
+    const btn = document.getElementById('btn');
+    const log = document.getElementById('log');
+
+    outer.addEventListener('click', () => log.innerHTML += 'OUTER clicked<br>');
+    inner.addEventListener('click', () => log.innerHTML += 'INNER clicked<br>');
+    btn.addEventListener('click', () => log.innerHTML += 'BUTTON clicked<br>');
+  </script>
+</body>
+</html>
+```
+
+**What happens when you click the button?** The output will be:
+
+```
+BUTTON clicked
+INNER clicked
+OUTER clicked
+```
+
+That's bubbling — the event goes from the clicked button → its parent (`#inner`) → its grandparent (`#outer`).
+
+**What if you click the INNER box (not the button)?** The output will be:
+
+```
+INNER clicked
+OUTER clicked
+```
+
+The button's listener does not run because you didn't click the button.
+
+---
+
+#### 34.5.2 What is Capturing?
+
+Capturing is the opposite direction: the event travels **down** from the topmost parent to the target **before** bubbling starts. You enable capturing by passing `{ capture: true }` as the third argument to `addEventListener`. In practice, capturing is rarely used.
+
+---
+
+#### 34.5.3 Stopping Bubbling with `stopPropagation()`
+
+Add `event.stopPropagation()` to the button listener to prevent the event from reaching parent elements:
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="outer">
+    OUTER
+    <div id="inner">
+      INNER
+      <button id="btn">CLICK ME</button>
+    </div>
+  </div>
+  <p id="log"></p>
+
+  <script>
+    const outer = document.getElementById('outer');
+    const inner = document.getElementById('inner');
+    const btn = document.getElementById('btn');
+    const log = document.getElementById('log');
+
+    outer.addEventListener('click', () => log.innerHTML += 'OUTER clicked<br>');
+    inner.addEventListener('click', () => log.innerHTML += 'INNER clicked<br>');
+    btn.addEventListener('click', (event) => {
+      log.innerHTML += 'BUTTON clicked<br>';
+      event.stopPropagation();   // stops bubbling from button
+    });
+  </script>
+</body>
+</html>
+```
+
+Now when you click the button, only `"BUTTON clicked"` appears — the event does not reach `INNER` or `OUTER`.
+
+**Key points:**
+- `event.stopPropagation()` **must be inside** an event listener function.
+- It stops the event from reaching **parent** elements.
+- It only affects the element where you call it — not children.
+
+**SDET Relevance:**
+- By default, events bubble up. In Playwright, when you click a button, the same bubbling happens in the real browser.
+- If your test clicks a child element and a parent listener is supposed to do something, it will work because of bubbling.
+- If you see a parent listener **not** running, check if the app's code calls `stopPropagation()` on the child.
+
+---
+
+### 34.6 Event Delegation
+
+**What is Event Delegation?**
+Instead of attaching an event listener to **each** child element (especially if there are many or they are added dynamically), you attach **one** listener to the parent. That listener then handles events from any child that matches a selector.
+
+**Why is it useful?**
+- **Performance:** One listener instead of many.
+- **Dynamic content:** Works for elements added later (e.g., after an API call).
+- **Cleaner code:** Centralized logic.
+
+**How it works:**
+When you click a child, the event bubbles up to the parent. The parent checks `event.target` to see which child was clicked, then acts accordingly.
+
+**Code Example — Event Delegation with Dynamic Elements:**
+
+**File: `delegation.html`**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="todoList">
+    <p>My Tasks</p>
+    <ul id="taskList">
+      <li>Buy milk</li>
+      <li>Write code</li>
+      <li>Learn JS</li>
+    </ul>
+    <button id="addTask">Add Task</button>
+  </div>
+  <p id="log"></p>
+  <script src="delegation.js"></script>
+</body>
+</html>
+```
+
+**File: `delegation.js`**
+
+```javascript
+// Get the <ul> element where tasks are listed (the parent)
+const taskList = document.getElementById('taskList');
+
+// Get the "Add Task" button
+const addBtn = document.getElementById('addTask');
+
+// Get the paragraph where we show messages
+const log = document.getElementById('log');
+
+// EVENT DELEGATION: attach one click listener to the parent <ul>
+taskList.addEventListener('click', (event) => {
+    // event.target is the element that was actually clicked
+    // Check if the clicked element is an <li> (list item)
+    if (event.target.tagName === 'LI') {
+        // Show the text of the clicked task
+        log.innerHTML = `You clicked: ${event.target.textContent}`;
+    }
+    // If the click happens elsewhere (like the <ul> background), nothing happens
+});
+
+// DYNAMIC ADD: this shows delegation works for future elements
+let taskCount = 3; // start count after the initial three tasks
+addBtn.addEventListener('click', () => {
+    taskCount++;
+    // Create a new <li> element
+    const newLi = document.createElement('li');
+    // Set its text (e.g., "New task 4")
+    newLi.textContent = `New task ${taskCount}`;
+    // Add it to the <ul> (appends at the end)
+    taskList.appendChild(newLi);
+    // Show a message in the log
+    log.innerHTML = `Added: new task ${taskCount}`;
+});
+```
+
+**What happens:**
+- Click any existing `<li>` → message shows which one.
+- Click "Add Task" → a new `<li>` appears.
+- Click the **new** `<li>` → the delegation still works, even though you never attached a listener to it directly. **That is event delegation.**
+
+**SDET Relevance (Playwright):**
+- When testing dynamic lists, you often don't need to know about delegation — Playwright can always find elements by selector.
+- However, if you see that a click on a child does not trigger a parent's handler, check if the parent is using delegation correctly (i.e., it checks `event.target`).
+- In Playwright, you can test delegation by clicking new elements and verifying the expected outcome (e.g., a message appears).
+
+---
+
+### 34.7 Simulating Events (for Testing)
+
+Sometimes you need to **programmatically trigger** an event — like a click, input, or keypress — without the user actually doing it. This is common in unit tests or when you need to force a certain behavior.
+
+**Code Example — Simulating Click and Input Events:**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <button id="myButton">Click me (real)</button>
+    <input id="myInput" placeholder="Type here">
+    <p id="log"></p>
+
+    <button id="simulateClickBtn">Simulate click on button</button>
+    <button id="simulateKeyBtn">Simulate 'hello' in input</button>
+
+    <script>
+        // Get elements from the page
+        const button = document.getElementById('myButton');
+        const input = document.getElementById('myInput');
+        const log = document.getElementById('log');
+        const simClickBtn = document.getElementById('simulateClickBtn');
+        const simKeyBtn = document.getElementById('simulateKeyBtn');
+
+        // ---- Real event listeners ----
+        button.addEventListener('click', () => {
+            log.innerHTML += 'Real click happened<br>';
+        });
+
+        input.addEventListener('input', (e) => {
+            log.innerHTML += `Real input: value is now "${e.target.value}"<br>`;
+        });
+
+        // ---- Simulate click using .click() ----
+        // .click() is a built-in method that acts exactly like a real mouse click
+        simClickBtn.addEventListener('click', () => {
+            button.click();  // this line makes the button think it was clicked
+            log.innerHTML += 'SIMULATED click via .click()<br>';
+        });
+
+        // ---- Simulate typing using dispatchEvent ----
+        simKeyBtn.addEventListener('click', () => {
+            // Step 1: Change the input's value manually
+            input.value = 'hello';
+            
+            // Step 2: Create a fake "input" event
+            // An "input" event is normally fired by the browser when you type
+            // We create one manually using `new Event('input')`
+            const fakeInputEvent = new Event('input', { bubbles: true });
+            
+            // Step 3: Tell the input to "dispatch" (fire) that fake event
+            input.dispatchEvent(fakeInputEvent);
+            
+            log.innerHTML += 'SIMULATED input event with value "hello"<br>';
+        });
+    </script>
+</body>
+</html>
+```
+
+**What happens when you run this:**
+- **Real click** — Click the first button with your mouse → logs "Real click happened".
+- **Simulate click** — Click the "Simulate click on button" button → it calls `button.click()` → logs both "Real click happened" and "SIMULATED click".
+- **Real typing** — Type anything into the input field → logs "Real input: value is now ..."
+- **Simulate typing** — Click "Simulate 'hello' in input" → it sets the input value to "hello", then fires a fake "input" event → logs "SIMULATED input event".
+
+**Key takeaways:**
+- `button.click()` is the easiest way to simulate a click. It triggers all the same things as a real click.
+- `new Event('input')` creates a fake event object. Then `dispatchEvent()` sends it to the element, making it behave as if a real event happened.
+- You only need to simulate events when you are testing code that listens to events. In Playwright, you almost never do this — Playwright's `click()` and `fill()` already trigger real events.
+
+---
+
+### 34.8 Common Mistakes & Best Practices
+
+#### Common Mistakes (What to Avoid)
+
+1. **Using inline event handlers** like `<button onclick="...">` — mixes HTML and JS, hard to maintain.
+2. **Attaching many listeners to many elements** — hurts performance; use event delegation instead.
+3. **Not removing event listeners** — can cause memory leaks (especially in single-page apps).
+4. **Forgetting that events bubble** — handling a click on a child may also trigger parent listeners unintentionally.
+5. **Assuming `event.target` is always the element you attached listener to** — it's the actual clicked element; use `event.currentTarget` if you need the listener's element.
+6. **Calling `stopPropagation()` unnecessarily** — can break other parts of the page that expect bubbling.
+7. **Not preventing default when needed** — e.g., a form submit button that should not actually submit.
+
+#### Best Practices (What to Do)
+
+1. **Use `addEventListener`** — never inline attributes.
+2. **Use event delegation** for lists or dynamic content.
+3. **Remove listeners** when you no longer need them — especially in long-living apps.
+4. **Understand `target` vs `currentTarget`** — debug with `console.log` if unsure.
+5. **Prefer `once: true`** option for one-time events (`addEventListener(..., { once: true })`).
+6. **Use `preventDefault()`** when you are handling the action yourself (e.g., custom form submit).
+7. **Name your event handler functions** (not anonymous) if you need to remove them later.
+
+**Code Example — Bad vs Good Practice (Event Delegation):**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <ul id="list">
+        <li>Item 1</li>
+        <li>Item 2</li>
+    </ul>
+    <button id="addBtn">Add item</button>
+    <p id="log"></p>
+
+    <script>
+        const list = document.getElementById('list');
+        const addBtn = document.getElementById('addBtn');
+        const log = document.getElementById('log');
+
+        // ❌ BAD: attaching listener to each li (not scalable)
+        // document.querySelectorAll('li').forEach(li => {
+        //     li.addEventListener('click', () => log.innerHTML += li.textContent);
+        // });
+
+        // ✅ GOOD: event delegation (one listener on parent)
+        list.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                log.innerHTML += `Clicked: ${e.target.textContent}<br>`;
+            }
+        });
+
+        // ✅ GOOD: adding new items works automatically with delegation
+        let count = 2;
+        addBtn.addEventListener('click', () => {
+            count++;
+            const newLi = document.createElement('li');
+            newLi.textContent = `Item ${count}`;
+            list.appendChild(newLi);
+        });
+
+        // ✅ GOOD: use e.preventDefault() when handling submit yourself
+    </script>
+</body>
+</html>
+```
+
+**Why is event delegation better than attaching listeners to each `<li>`?** Because it works for future items and uses less memory.
+
+---
+
+### 34.9 Events in Playwright (SDET Focus)
+
+Playwright is a tool that lets you automate a real browser. You write code that tells the browser: "Go to this page, click this button, type this text, etc." Playwright performs those actions just like a real user would.
+
+**Why do events matter in Playwright?**
+When you use Playwright to `click()` a button or `fill()` an input, the browser fires the **same events** as if a real user clicked or typed. Your application's event listeners (e.g., `addEventListener('click', ...)`) will run exactly as they would with a real user.
+
+Understanding events helps you:
+- Know which Playwright action to use (`click`, `fill`, `press`, etc.).
+- Debug why something didn't happen after an action (e.g., the app listens for `keypress` but you triggered `click`).
+- Assert that the event caused the expected change (e.g., a new item appears in a list).
+
+#### Real User vs Playwright — Comparison
+
+| Real User Action | Browser Event(s) Fired | Playwright Method |
+| :--- | :--- | :--- |
+| Clicks a button | `click`, `mouseup`, `mousedown` | `page.click(selector)` |
+| Types "hello" into an input | `keydown`, `keypress`, `input`, `change`, `keyup` | `page.fill(selector, 'hello')` |
+| Presses the Enter key | `keydown`, `keypress`, `keyup` | `page.keyboard.press('Enter')` |
+| Checks a checkbox | `click`, `change` | `page.check(selector)` |
+
+Playwright's methods already fire the correct events. You don't need to manually fire events — Playwright does it for you.
+
+#### Minimal Working Example — Playwright Test for Events
+
+**File: `index.html` (the web page)**
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <button id="alertBtn">Click me</button>
+    <p id="message"></p>
+    <script src="app.js"></script>
+</body>
+</html>
+```
+
+**File: `app.js` (event handling)**
+
+```javascript
+// This code runs in the browser
+const button = document.getElementById('alertBtn');
+const messagePara = document.getElementById('message');
+
+button.addEventListener('click', () => {
+    messagePara.textContent = 'Button was clicked!';
+});
+```
+
+**File: `test.spec.js` (Playwright test)**
+
+```javascript
+// This code runs in Node.js (Playwright)
+const { test, expect } = require('@playwright/test');
+
+test('clicking the button shows a message', async ({ page }) => {
+    // Go to the page (adjust path to where your index.html is)
+    await page.goto('file:///path/to/index.html');
+
+    // Click the button using Playwright
+    await page.click('#alertBtn');
+
+    // Assert that the message paragraph now contains the expected text
+    const message = page.locator('#message');
+    await expect(message).toHaveText('Button was clicked!');
+});
+```
+
+**How it works:**
+1. Playwright opens the browser and loads `index.html`.
+2. `page.click('#alertBtn')` tells the browser to simulate a click on the button.
+3. The browser runs the click event listener written in `app.js`, which changes the `<p>` text.
+4. Playwright then checks that the `<p>` now says "Button was clicked!".
+
+Playwright triggered the event, and you verified the outcome.
+
+**Key takeaway for SDET:**
+- You do **not** need to manually create `new MouseEvent` or `dispatchEvent` in Playwright tests.
+- You **do** need to know which Playwright action corresponds to the event your app listens to.
+- You **do** need to assert the result after the event (e.g., a message appears, an element changes).
+
+> 💡 **SDET Takeaway:** Events are the bridge between user actions and application behavior. Every `page.click()`, `page.fill()`, and `page.keyboard.press()` in Playwright fires real browser events under the hood. Understanding which events your application listens for — and the order they fire in (bubbling, capturing) — is essential for writing reliable automation tests and debugging why a test action doesn't produce the expected result. Master `addEventListener`, `event.target`, `preventDefault()`, and `stopPropagation()` — these four concepts cover 90% of what you'll encounter in real-world event-driven testing.
 
 ---
