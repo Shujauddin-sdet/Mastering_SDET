@@ -1,9 +1,11 @@
+// Parent class representing a generic web page
 class BasePage {
     verify() {
         console.log("Verifying base page");
     }
 }
 
+// Child classes for specific pages, each overriding the verify() method with its own checks
 class LoginPage extends BasePage {
     verify() {
         console.log("Verify: username field exists");
@@ -26,9 +28,12 @@ class CartPage extends BasePage {
     }
 }
 
+// Create an array of different page objects
 let pages = [new LoginPage(), new DashboardPage(), new CartPage()];
 
+// Loop through the pages and verify each one
 pages.forEach(function (page) {
+    // The correct verify() method is automatically called based on the object type
     page.verify();
-    console.log("---");
+    console.log("---"); // Separator for readability
 });
