@@ -1,6 +1,7 @@
 # Topics
 
 * [1. What is Software Testing?](#1-what-is-software-testing)
+  * [1.1 Why do we need Software Testing?](#11-why-do-we-need-software-testing)
 * [2. Types of Software Testing](#2-types-of-software-testing)
 * [3. Types of Manual Testing](#3-types-of-manual-testing)
   * [3.1 Testing Methodologies (Techniques)](#31-testing-methodologies-techniques)
@@ -38,6 +39,15 @@
 * Testing of an application to find the defects.
 * Testing of an application to meet the requirements.
 
+### 1.1 Why do we need Software Testing?
+
+* **Quality Assurance**: Ensures the final product is reliable, functions correctly, and meets user expectations.
+* **Cost Effectiveness**: Finding bugs early in the development phase is much cheaper than fixing them after the software goes live.
+* **Security**: Identifies vulnerabilities and protects sensitive user data from hackers and malicious attacks.
+* **User Satisfaction**: A bug-free and smooth application provides a great user experience, building trust with customers.
+* **Business Reputation**: Launching a faulty product can damage a company's reputation and result in loss of business.
+* **Performance Check**: Ensures the software can handle expected user loads and doesn't crash under pressure.
+
 ---
 
 ## 2. Types of Software Testing
@@ -51,7 +61,7 @@
 
 ## 3. Types of Manual Testing
 
-![Manual Testing](../Self_Learnings/Images/TypesofManual_Testing.png)
+![Manual Testing](../Images/TypesofManual_Testing.png)
 
 Manual Testing can be broadly classified into three main approaches:
 
@@ -63,7 +73,7 @@ Manual Testing can be broadly classified into three main approaches:
 
 ### 3.2 Levels of Testing
 
-![Levels of Testing](../Self_Learnings/Images/Levels_of_Testing.png)
+![Levels of Testing](../Images/Levels_of_Testing.png)
 
 * **Unit Testing:** Testing individual components or modules in isolation.
 * **Integration Testing:** Testing how different modules work together.
@@ -74,7 +84,7 @@ Manual Testing can be broadly classified into three main approaches:
 
 ### 3.3 Testing Types (Functional vs. Non-Functional)
 
-![Functional vs Non-Functional testing](../Self_Learnings/Images/Functional_vs_NonFunctional.png)
+![Functional vs Non-Functional testing](../Images/Functional_vs_NonFunctional.png)
 
 **Functional Testing:** Verifying **what** the software does.
 
@@ -156,7 +166,7 @@ Verifying if the app works across different:
 * **Log:** Report defects and track them to resolution.
 * **Close:** Verify fixes and provide a final summary report.
 
-![Manual Testing Steps](../Self_Learnings/Images/Perform_Manual_Testing.png)
+![Manual Testing Steps](../Images/Perform_Manual_Testing.png)
 
 1. **Understand the requirements**: Analyze the business and system needs before starting the testing process.
 
@@ -179,7 +189,7 @@ Verifying if the app works across different:
 Any project development has to follow the below phases:
 
 1. **Planning**: Gathering requirements and defining the project scope.
-![Planning](../Self_Learnings/Images/Planning.png)
+![Planning](../Images/Planning.png)
 2. **Analysis**: Evaluating requirements for feasibility and technical details.
     * **Key documents used:**
         * **BRD (Business Requirement Document):** High-level goals of what the business needs.
@@ -196,14 +206,14 @@ Any project development has to follow the below phases:
 
 ### 5.3 SDLC Models
 
-![SDLC Models](../Self_Learnings/Images/Model_SDLC.png)
+![SDLC Models](../Images/Model_SDLC.png)
 
 #### 5.3.1 Waterfall Model / Linear Sequential Model
 
-![Waterfall Model Phases](../Self_Learnings/Images/Waterfall_Phases.png)
-![When to choose waterfall model](../Self_Learnings/Images/Choose_Waterfall_Model.png)
-![Advantages of Waterfall](../Self_Learnings/Images/Advantage_waterfall_model.png)
-![Disadvantages of Waterfall](../Self_Learnings/Images/Disadvantage_waterfall.png)
+![Waterfall Model Phases](../Images/Waterfall_Phases.png)
+![When to choose waterfall model](../Images/Choose_Waterfall_Model.png)
+![Advantages of Waterfall](../Images/Advantage_waterfall_model.png)
+![Disadvantages of Waterfall](../Images/Disadvantage_waterfall.png)
 
 * **Meaning**: The oldest and simplest model where development flows steadily downwards through several phases.
 * **Easy to Remember**: Like a **Waterfall**, the flow is only **downward**. Once you cross a stage, you cannot go back easily.
@@ -214,7 +224,7 @@ Any project development has to follow the below phases:
 
 #### 5.3.2 Iterative Model
 
-![Iterative Model Phases](../Self_Learnings/Images/Iterative_Phases.png)
+![Iterative Model Phases](../Images/Iterative_Phases.png)
 
 * **Meaning**: Instead of starting with full requirements, you build a small part, then repeatedly enhance it in "iterations."
 * **Easy to Remember**: **"Repeat and Improve."** Think of it like a **Draft**—you write one, then improve it again and again.
@@ -235,7 +245,7 @@ Any project development has to follow the below phases:
 
 #### 5.3.3 Spiral Model
 
-![Spiral Model Phases](../Self_Learnings/Images/Spiral_Phases.png)
+![Spiral Model Phases](../Images/Spiral_Phases.png)
 
 * **Meaning**: A mix of Waterfall and Iterative models with a heavy focus on **Risk Analysis**.
 * **Easy to Remember**: It **spirals** through four quadrants: Planning, Risk Analysis, Engineering, and Evaluation.
@@ -245,7 +255,7 @@ Any project development has to follow the below phases:
 
 #### 5.3.4 V-Model (Verification & Validation Model)
 
-![V-Model Phases](../Self_Learnings/Images/V_Model_Phases.png)
+![V-Model Phases](../Images/V_Model_Phases.png)
 
 * **Meaning**: An extension of Waterfall where every development phase has a corresponding testing phase happening side-by-side.
 * **Easy to Remember**: Look at it as a **"V" shape**. For every **Dev** step on the left, there is a **Test** step on the right.
@@ -255,7 +265,7 @@ Any project development has to follow the below phases:
 
 #### 5.3.5 Agile Development Model
 
-![Agile Development Phases](../Self_Learnings/Images/Agile_Phases.png)
+![Agile Development Phases](../Images/Agile_Phases.png)
 
 * **Meaning**: Focuses on iterative development, customer feedback, and small, rapid releases called **Sprints**.
 * **Easy to Remember**: **"Fast & Flexible."** It's like a **Marathon of Sprints**—fast cycles with constant communication.
@@ -287,7 +297,7 @@ Any project development has to follow the below phases:
 
 #### 5.3.9 DevOps Model (Modern)
 
-![DevOps Model Phases](../Self_Learnings/Images/DevOps_Phases.png)
+![DevOps Model Phases](../Images/DevOps_Phases.png)
 
 * **Meaning**: A combination of **Development (Dev)** and **Operations (Ops)** to automate and speed up the software delivery.
 * **Easy to Remember**: **"Continuous Loop."** An infinite sign (∞) showing constant coding, testing, and deployment.
