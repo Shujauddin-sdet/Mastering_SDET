@@ -49,6 +49,7 @@
 * [11. Project vs. Product](#11-project-vs-product)
 * [12. Product-Based vs. Service-Based Companies](#12-product-based-vs-service-based-companies)
 * [13. Risk in Software Projects](#13-risk-in-software-projects)
+* [14. Software Testing Life Cycle (STLC)](#14-software-testing-life-cycle-stlc)
 
 ---
 
@@ -776,3 +777,203 @@ Provide **services** or build software for **other clients** (they work on proje
 | **Resource Risk** | Unavailability of skilled personnel or tools. |
 | **Management Risk** | Poor decision-making, lack of leadership, scope creep. |
 | **External Risk** | Regulatory changes, vendor issues, market shifts. |
+
+---
+
+## 14. Software Testing Life Cycle (STLC)
+
+### 14.1 🔍 Simple Analogy
+Planning a large wedding. You don't just wake up on the day and start cooking. You:
+
+1. **First figure out the menu** (what to test).
+2. **Decide who will cook what and when** (planning).
+3. **Write detailed recipes** (test cases).
+4. **Set up the kitchen** (environment).
+5. **Cook and taste every dish** (execute and report issues).
+6. **Finally, serve the guests and close the kitchen** (closure).
+
+> That entire sequence is the STLC — a structured, phase‑by‑phase process that ensures nothing is left to chance.
+
+---
+
+### 14.2 💼 Professional Context
+The Software Testing Life Cycle is a systematic process that describes every activity a QA team performs, from the moment a testing need is identified until the test cycle is formally closed. It runs parallel to the Software Development Life Cycle (SDLC) but focuses entirely on testing.
+
+The STLC consists of 6 phases. In many standard models, Defect Reporting is embedded within the Test Execution phase. However, in practice, because defect management is so critical, many teams treat it as a distinct, continuous activity. This version uses your preferred structure, which separates it out for clarity.
+
+---
+
+### 14.3 📊 STLC Phases at a Glance
+
+| # | Phase | Primary Objective | Key Deliverables / Outputs | Responsible |
+|---|---|---|---|---|
+| **1** | **Requirement Analysis** | Understand what to test, identify gaps, and map requirements to tests. | Requirements Traceability Matrix (RTM), Automation feasibility notes, Clarification list. | Tester / QA |
+| **2** | **Test Planning** | Define how testing will be done: scope, resources, schedule, tools, risks. | Test Plan document, Test Strategy document. | Test Lead / Senior QA |
+| **3** | **Test Case Development** | Create detailed test cases, test scripts, and test data. Baseline the test cases. | Baselined Test Cases, Test Scripts, Test Data. | Tester |
+| **4** | **Test Environment Setup** | Prepare and verify the hardware, software, and data where tests will execute. | Ready test environment, Smoke test results. | Tester / DevOps |
+| **5** | **Test Execution & Defect Reporting** | Run tests, log defects, retest fixes, and track bugs to closure. | Executed test cases (Pass/Fail), Defect reports, Updated RTM. | Tester |
+| **6** | **Test Cycle Closure** | Evaluate testing completion, release readiness, and archive test assets. | Test Closure Report, Signed‑off release recommendation, Lessons learned. | Test Lead / QA team |
+
+Now, a deeper look at each phase, including the specific responsibilities and key concepts you added.
+
+---
+
+### 14.4 Phase 1: Requirement Analysis
+**Tester’s Responsibility:**
+* **Study the requirement documents** – user stories, functional specifications, wireframes.
+* **Identify the types of testing needed** – functional, UI, security, performance, etc.
+* **Prepare the Requirements Traceability Matrix (RTM)** – a table that links every requirement to its corresponding test scenarios and later test cases. This ensures 100% coverage.
+* **Perform Automation Feasibility Analysis** – decide which tests can and should be automated, and with what tool (e.g., Playwright for UI, Postman/Playwright for API).
+* **Ask clarifying questions** – find ambiguities, missing edge cases, and missing error handling. This prevents defects from entering development.
+
+#### Key Concept: Requirements Traceability Matrix (RTM)
+
+**What it means:**
+The RTM is simply a checklist that connects the features the client asked for (Requirements) to the tests you wrote (Test Cases). 
+
+Think of it like a shopping list. If your partner asks you to buy "Milk, Eggs, and Bread" (Requirements), your receipt showing you bought them is the proof (Test Cases). The RTM is the document that puts the shopping list and the receipt side-by-side so you can prove you didn't forget anything. 
+
+**Real-world Example:**
+Imagine you are testing an E-commerce website. The business gives you two requirements:
+1. Users must be able to add an item to the cart.
+2. Users must be able to remove an item from the cart.
+
+You write multiple test cases for these to make sure they work in different scenarios. The RTM looks like this:
+
+| Req ID | Business Requirement | Test Case ID(s) | What the Test Does | Status |
+|---|---|---|---|---|
+| **REQ-01** | Add item to cart | TC-101 <br> TC-102 | Add 1 item to empty cart <br> Add 99 items to cart (Max limit) | ✅ Pass <br> ❌ Fail |
+| **REQ-02** | Remove item from cart | TC-103 <br> TC-104 | Remove the only item in cart <br> Remove item when cart is already empty | ✅ Pass <br> ✅ Pass |
+
+**Why it's important:** If the product manager asks, "Did we test the 'Remove item' feature?", you just look at the RTM and say "Yes, we ran TC-103 and TC-104, and they both passed." It guarantees **100% test coverage** so no requirement is missed.
+
+---
+
+### 14.5 Phase 2: Test Planning
+**Test Lead / Senior QA Responsibility:**
+* **Understand the project scope** – what are we testing and, equally important, what are we not testing.
+* **Define scope of testing** – in‑scope and out‑of‑scope items.
+* **Identify resources** – who will test, which tools, which environments.
+* **Create schedules** – start and end dates for test design, execution, and closure.
+* **List deliverables** – Test Plan, Test Cases, Defect Reports, Test Summary Report.
+* **Decide the testing approach/strategy** – manual vs automated, testing levels (unit, integration, system, UAT), risk‑based testing priorities.
+* **Effort estimation** – how many person‑days are required.
+
+**Outcomes of Test Planning:**
+* **Test Plan Document**: A project‑specific document that answers who, what, when, where, and how for testing. It includes scope, schedule, resources, risk, and entry/exit criteria.
+* **Test Strategy Document**: A higher‑level, organization‑wide document that defines the general testing principles, standards, and test levels used across projects. 
+
+---
+
+### 14.6 Phase 3: Test Case Development
+**Tester’s Responsibility:**
+* **Design / script detailed test cases** – step‑by‑step with preconditions, test steps, test data, and expected results.
+* **Review test cases** – peer review or lead review to catch gaps, improve clarity.
+* **Update test cases** based on review feedback.
+* **Baseline the test cases** – finalize and freeze the approved version. A baseline is the agreed‑upon reference version that will be executed. Any later changes require a formal update.
+* **Create test data** – valid data (to check happy paths) and invalid data (to check error handling and boundary values).
+
+#### Key Concept: Baseline Test Case
+> The final, reviewed, and approved version of a test case, ready for execution. It is the version everyone on the team agrees to test against, ensuring consistency.
+
+---
+
+### 14.7 Phase 4: Test Environment Setup
+**Tester / DevOps Responsibility:**
+* **Set up the test environment** – configure servers, databases, browsers, mobile devices, and network.
+* **Deploy the correct build** – the version of the software to be tested.
+* **Execute a quick smoke test** – a shallow run of critical paths to confirm the environment is stable and the build is testable.
+* **Document the test environment configuration** – so it can be recreated or debugged later.
+
+#### Key Concept: Smoke Test
+> A minimal set of tests that checks the core functionality is working (e.g., app launches, login works). If smoke tests fail, the build is rejected for further testing.
+
+---
+
+### 14.8 Phase 5: Test Execution & Defect Reporting
+**Tester’s Responsibility:**
+* **Execute test cases** as per the plan, following the baselined steps.
+* **Compare actual results** with expected results.
+* **Log defects** when a mismatch occurs, with clear and complete information.
+* **Retest fixed defects** once the developer resolves them.
+* **Perform regression testing** – re‑run critical test cases to ensure the fixes didn’t break anything else.
+* **Update the RTM** with execution status (Pass/Fail/Blocked) and defect IDs.
+
+#### Defect Reporting & Tracking (The Heart of This Phase)
+A well‑written defect report includes:
+* **Defect ID** – unique number (auto‑generated by tool).
+* **Summary** – short, precise description of the bug.
+* **Steps to Reproduce** – numbered, exact steps.
+* **Expected Result vs Actual Result**.
+* **Severity** – impact on the system (Critical, Major, Minor, Cosmetic).
+* **Priority** – urgency to fix (High, Medium, Low).
+* **Environment** – OS, browser, build version.
+* **Attachments** – screenshots, logs, screen recordings.
+
+*Tracking is done using tools like JIRA, Azure DevOps, Bugzilla, where each defect moves through a lifecycle: New → Assigned → Open → Fixed → Retest → Closed / Reopened.*
+
+---
+
+### 14.9 Phase 6: Test Cycle Closure
+**Test Lead / QA Team Responsibility:**
+* **Check exit criteria** – are all planned test cases executed? Are all critical/blocker defects closed? Is test coverage sufficient?
+* **Prepare the Test Closure Report** – summary of what was tested, defects found, test coverage percentage, and any open risks.
+* **Archive test artifacts** – test cases, test data, scripts, and reports for future maintenance and reuse.
+* **Conduct lessons learned** – what went well, what should be improved. This feeds into future test planning.
+
+---
+
+### 14.10 🧪 Real‑World Walkthrough: “Forgot Password” Feature
+
+#### 1. Requirement Analysis
+* Read the user story: “User can reset password via email.”
+* Ask: “What if email not registered?” “Should link expire?”
+* Identify tests: valid email, invalid email, expired link, multiple requests.
+* Create RTM with these scenarios mapped to the requirement.
+* Automation analysis: the API part (send reset request) can be automated with Playwright request fixture; the UI flow can be automated later.
+
+#### 2. Test Planning
+* **Scope**: Forgot Password flow only.
+* **Testing types**: Functional, Security (token expiry, enumeration), UI.
+* **Resources**: 1 QA, Chrome & Firefox, Postman.
+* **Schedule**: 2 days design, 3 days execution.
+* **Risks**: Email delivery delay may block tests.
+
+#### 3. Test Case Development
+* **Write cases**:
+  * **TC01**: Registered email → verify reset email received.
+  * **TC02**: Unregistered email → verify generic message, no email.
+  * **TC03**: Expired reset link → verify “Link expired” error.
+* Review with peer. Baseline.
+* **Test data**: `testuser@example.com` (valid), `fake@example.com` (invalid).
+
+#### 4. Test Environment Setup
+* Deploy build to staging. Configure MailHog to capture emails.
+* **Smoke test**: open login page, click “Forgot Password” → page loads.
+
+#### 5. Test Execution & Defect Reporting
+* Run **TC01** → ✅ Pass.
+* Run **TC02** → ❌ Fail. Actual: “Email not found”. This is a security risk (user enumeration). Log Defect #101 with severity High, priority High.
+* Developer fixes it. Retest **TC02** → now ✅ Pass.
+* Run **TC03** → ✅ Pass.
+* **Regression**: login with new password, normal login, all pass.
+
+#### 6. Test Cycle Closure
+* **Exit criteria**: 100% test cases executed, 0 critical defects open.
+* **Test Closure Report**: 48 test cases, 95% pass, 2 low‑priority defects deferred.
+* Archive RTM, test cases, defect reports.
+* **Lesson learned**: involve security review earlier in the design phase.
+
+---
+
+### 14.11 ❓ Why This Matters for a QA/SDET
+**STLC is your daily job structure.** Every task – from asking a question about a user story to logging a defect to signing off a release – fits into this model.
+
+* In **Agile**, the phases still exist but are compressed into each sprint. You will do analysis, planning, design, and execution in days, not weeks.
+* As an **SDET**, involvement spans the entire STLC, with particular focus on automation feasibility, framework development, automated execution, CI/CD integration, and test infrastructure.
+* But you also contribute to test design (what to automate) and environment setup (CI/CD configuration). A complete understanding of STLC is what makes you a professional tester, not just a script runner.
+
+---
+
+### 14.12 📝 How to explain STLC in one clear statement
+> “The Software Testing Life Cycle is a structured six‑phase process that guides QA from the initial analysis of requirements through test planning, test case development, environment setup, execution and defect reporting, to final test closure. It ensures that testing is thorough, traceable, and repeatable. Even in Agile, these activities are performed continuously within each sprint.”
