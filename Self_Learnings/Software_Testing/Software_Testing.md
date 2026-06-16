@@ -50,6 +50,16 @@
 * [12. Product-Based vs. Service-Based Companies](#12-product-based-vs-service-based-companies)
 * [13. Risk in Software Projects](#13-risk-in-software-projects)
 * [14. Software Testing Life Cycle (STLC)](#14-software-testing-life-cycle-stlc)
+* [15. Test Plan vs Test Strategy](#15-test-plan-vs-test-strategy)
+  * [15.1 Simple Analogy](#151-simple-analogy)
+  * [15.2 Professional Comparison](#152-professional-comparison)
+  * [15.3 Deep Dive: Test Strategy](#153-deep-dive-test-strategy-the-master-rulebook)
+  * [15.4 Deep Dive: Test Plan](#154-deep-dive-test-plan-the-project-specific-battle-plan)
+  * [15.5 Why This Distinction Matters for a QA/SDET](#155-why-this-distinction-matters-for-a-qasdet)
+* [16. Test Design Techniques: EP and BVA](#16-test-design-techniques-ep-and-bva)
+  * [16.1 Equivalence Partitioning (EP)](#161-equivalence-partitioning-ep)
+  * [16.2 Boundary Value Analysis (BVA)](#162-boundary-value-analysis-bva)
+  * [16.3 Real‑World Example](#163-realworld-example-forgot-password--email-field)
 
 ---
 
@@ -977,3 +987,166 @@ A well‑written defect report includes:
 
 ### 14.12 📝 How to explain STLC in one clear statement
 > “The Software Testing Life Cycle is a structured six‑phase process that guides QA from the initial analysis of requirements through test planning, test case development, environment setup, execution and defect reporting, to final test closure. It ensures that testing is thorough, traceable, and repeatable. Even in Agile, these activities are performed continuously within each sprint.”
+
+---
+
+## 15. Test Plan vs Test Strategy
+
+### 15.1 Simple Analogy
+
+**Test Strategy** is like a company‑wide cooking rulebook that applies to all kitchens:
+> "Every dish must be tasted before serving. We use only stainless steel utensils. All chefs must wash hands every 30 minutes."
+
+This is a permanent, high‑level document that doesn't change for a specific wedding menu. It applies to all projects.
+
+**Test Plan** is like the menu and schedule for a specific wedding:
+> "For the Mehta wedding on 15th July, we need to cook 200 plates of biryani and 500 naan. The tasting will be done by Chef Ramesh on the 13th. Ingredients will arrive by the 10th."
+
+This is a project‑specific, temporary document that changes for every new wedding.
+
+**In short:**
+- Strategy = what and how across **all** projects.
+- Plan = who, when, where, and how much for **one** project.
+
+---
+
+### 15.2 Professional Comparison
+
+| Parameter | Test Strategy | Test Plan |
+| :--- | :--- | :--- |
+| **What it is** | A high‑level, organization‑wide document that defines general testing principles, standards, and test levels. | A detailed, project‑specific document that describes how testing will be executed for a particular project. |
+| **Scope** | Covers the entire organization or multiple projects. | Covers one specific project or release. |
+| **Created by** | Senior QA Manager, QA Architects, or a central QA team. | Test Lead or Test Manager for that specific project. |
+| **Frequency of change** | Static – changes rarely, only when organization‑level processes change. | Dynamic – created fresh for each new project or major release. |
+| **Contents** | Testing objectives, Testing levels (unit, integration, system, UAT), Test design techniques (EP, BVA, etc.), Tools to be used (Playwright, Postman, JIRA), Defect management process, Risk management approach, Environment strategy. | Project scope (in‑scope / out‑of‑scope), Resources (who will test, which tools, which environments), Schedule (dates, milestones), Test deliverables (test cases, defect reports, closure report), Entry and exit criteria, Risks and mitigation specific to this project, Test data requirements. |
+| **Answers the question** | "How do we test as a company?" | "How will we test this specific product?" |
+| **Example** | "Our company uses a risk‑based testing approach. We test on Chrome, Firefox, and Safari. Regression tests are automated using Playwright. All defects go through JIRA." | "For the 'Forgot Password' feature, we will test on Chrome and Firefox only, using 2 testers over 5 days. Testing will start on 20th July. Entry criteria: all unit tests passed. Exit criteria: 100% critical test cases executed, zero Severity‑1 bugs open." |
+
+---
+
+### 15.3 Deep Dive: Test Strategy (The Master Rulebook)
+
+This is the first document created when a QA organization matures. It is not project‑specific. It sets the standards that every project team will follow.
+
+Typical sections of a Test Strategy:
+
+* **Scope and Objectives** – overall quality goals.
+* **Testing levels** – which levels will be applied (unit, integration, system, UAT).
+* **Test design techniques** – which techniques are preferred (Equivalence Partitioning, Boundary Value Analysis, etc.).
+* **Automation strategy** – which tools (Playwright, Selenium), what to automate, coding standards.
+* **Defect management** – how bugs are logged, tracked, and closed.
+* **Risk management** – how risks are identified, assessed, and mitigated.
+* **Reporting** – how test results are communicated (daily status, test summary reports).
+* **Environment strategy** – how test environments are provisioned and maintained.
+
+> When you join a new company, you'll be handed (or expected to learn) the Test Strategy first. It tells you the rules of the house.
+
+---
+
+### 15.4 Deep Dive: Test Plan (The Project‑Specific Battle Plan)
+
+A Test Plan is a project‑specific, living document that guides the entire testing effort for a particular release, feature, or sprint. It's owned by the Test Lead. It must answer:
+
+- **Why** are we testing? (Objective)
+- **What** exactly are we testing? (Scope)
+- **Who** will test? (Resources)
+- **When** will testing happen? (Schedule)
+- **What** will be tested and how? (Approach)
+
+In Agile, the Test Plan might be a lightweight, living document (e.g., a Confluence page), but the thinking behind each section remains identical.
+
+#### Mandatory Sections of a Test Plan
+
+| # | Section | Description | Example (Forgot Password feature) |
+| :--- | :--- | :--- | :--- |
+| 1 | **Introduction** | Brief overview of the project/feature being tested and why this Test Plan exists. | "This Test Plan outlines the testing approach for the Forgot Password feature of the XYZ Banking App. Its purpose is to ensure a secure and reliable password reset experience." |
+| 2 | **Objective of Testing** | The specific quality goals. What are we trying to achieve? | "Verify that registered users can reset their password via email securely. Ensure no user enumeration. Validate token expiry works correctly." |
+| 3 | **Scope of Testing** | In‑Scope: features and user journeys to test. Out‑of‑Scope: what will NOT be tested and why. | In‑Scope: Forgot Password UI, API, email delivery, token expiry, error messages. Out‑of‑Scope: Third‑party email server reliability (covered by separate SLA). |
+| 4 | **Items to be Tested** | Concrete list of testable items, often referencing requirements or user stories. | REQ‑01: Forgot Password link on login page. REQ‑02: Reset email delivery. REQ‑03: Token validation and expiry. REQ‑04: Error handling for invalid emails. |
+| 5 | **Resources & Responsibilities** | Names or roles of team members and what they are responsible for. | Test Lead: Priya (planning, closure). Tester 1: Ramesh (UI tests, defect logging). SDET: Anjali (API automation, CI integration). |
+| 6 | **Schedule & Milestones** | Start/end dates for each test phase, milestones, and deadlines. | Test Design: 20‑22 July. Environment Setup: 23 July. Test Execution: 24‑28 July. Closure: 29 July. |
+| 7 | **Testing Approach** | How testing will be performed: testing levels, test design techniques, automation vs manual, risk‑based priorities. | Functional testing on Chrome, Firefox. API testing via Playwright. Test design using Equivalence Partitioning and BVA. Automation for critical paths. |
+| 8 | **Entry Criteria** | Conditions that must be met before testing begins. | Build deployed to staging. All unit tests passed. Test data created. RTM ready. |
+| 9 | **Exit Criteria** | Conditions that must be met to declare testing complete. | 100% of critical test cases executed. Zero Severity‑1 defects open. Test coverage ≥ 95%. All automation scripts passing in CI. |
+| 10 | **Test Deliverables** | Documents and artifacts to be produced. | RTM, Test Cases, Defect Reports, Test Execution Report, Test Closure Report. |
+| 11 | **Test Environment** | Specific hardware, software, browsers, devices, and test data needed. | Staging server (URL: staging.xyz.com), Chrome v120, Firefox v118, MailHog for email capture. |
+| 12 | **Risks and Mitigation** | Specific project risks and how to handle them. | Risk: Email delivery delay may block tests → Mitigation: Use MailHog to intercept locally. Risk: Third‑party token API unstable → Mitigation: Mock API in lower environments. |
+| 13 | **Communication Plan** | How and when status is reported. | Daily status update in Scrum stand‑up. Weekly Test Summary Report emailed to stakeholders. |
+
+---
+
+### 15.5 Why This Distinction Matters for a QA/SDET
+
+In an interview or conversation, mixing up these two documents shows a lack of fundamental knowledge.
+
+As an SDET, you'll mostly interact with the Test Plan of your specific project (your sprint, your feature). But the Test Strategy defines which automation framework you'll use (Playwright), coding conventions you must follow, and how defects are logged.
+
+- The **Test Strategy** empowers you to make decisions.
+- The **Test Plan** tells you what to do tomorrow.
+
+In small companies or startups, there might be no formal Test Strategy document, but the senior QA will still have a mental strategy. In large enterprises, both documents are mandatory and audited.
+
+> **Key Takeaway:** "A Test Strategy is a high‑level, organization‑wide document that defines the general testing principles, tools, and standards. It's like a company rulebook for quality and changes rarely. A Test Plan is a project‑specific document that details the exact scope, schedule, resources, and entry/exit criteria for testing a particular product. The strategy answers 'How do we test as a company?' and the plan answers 'How will we test this project?' Both work together: the strategy sets the guidelines, and the plan applies them to a real situation."
+
+---
+
+## 16. Test Design Techniques: EP and BVA
+
+These are **test design techniques** — systematic ways to decide which test data to use so you can find bugs efficiently. They are mentioned in both the Test Strategy (as the company's preferred techniques) and the Test Plan (as the techniques chosen for this project). They are executed during Test Case Development (Phase 3 of STLC).
+
+---
+
+### 16.1 Equivalence Partitioning (EP)
+
+> **Simple Analogy:** Imagine a roller coaster that only allows people between 120 cm and 200 cm tall. Testing every single height (1 cm, 2 cm, 3 cm…) would take forever. Instead, you split the heights into groups that behave the same:
+> - **Too short (invalid):** below 120 cm → all rejected.
+> - **Valid:** 120 cm to 200 cm → all allowed.
+> - **Too tall (invalid):** above 200 cm → all rejected.
+>
+> You test one value from each group instead of testing 300 values. That's EP.
+
+**Definition:** Divide input data into equivalence classes — groups expected to be treated the same way by the system — and test one representative from each class.
+
+---
+
+### 16.2 Boundary Value Analysis (BVA)
+
+> **Simple Analogy:** Developers often make mistakes at the **edges** of those groups (like `>=120` instead of `>120`). So you test right at the boundaries:
+> - 119 cm (just below valid)
+> - 120 cm (exactly the minimum)
+> - 200 cm (exactly the maximum)
+> - 201 cm (just above valid)
+
+**Definition:** Test at the extreme edges of the equivalence partitions. Bugs love boundaries — especially off‑by‑one errors.
+
+#### Professional Comparison
+
+| Technique | What it is | How to apply | Example (Age field, valid 18–60) |
+| :--- | :--- | :--- | :--- |
+| **Equivalence Partitioning (EP)** | Divide input data into valid and invalid partitions. Each partition is treated identically by the system. Test at least one value per partition. | Identify all possible inputs. Group into valid and invalid classes. Pick one representative from each. | Valid: 18–60 → test with 30. Invalid <18 → test with 10. Invalid >60 → test with 70. |
+| **Boundary Value Analysis (BVA)** | Test at the exact boundaries and just inside/outside them. Defects often lurk at boundaries (off‑by‑one errors). | For each boundary, test: boundary‑1, boundary, boundary+1. | Lower boundary 18: test 17, 18, 19. Upper boundary 60: test 59, 60, 61. |
+
+**Why these matter for a QA/SDET:**
+
+* They reduce the number of test cases dramatically (from infinite to a handful) while finding the most critical bugs.
+* They are the most frequently asked test design techniques in interviews.
+* In automation, you parameterise test data using EP/BVA values — e.g., a Playwright test that runs the same login flow with a CSV of boundary values.
+* They apply not just to numbers but also to strings (min/max length), dates, file sizes, etc.
+
+---
+
+### 16.3 Real‑World Example: Forgot Password – Email Field
+
+**Requirement:** Email must be 6–50 characters long, contain "@", and have a valid domain.
+
+**EP classes:**
+- **Valid:** email with 6–50 chars, contains "@", valid domain (e.g., `test@example.com`)
+- **Invalid:** less than 6 chars (`a@b`), more than 50 chars, no "@", invalid domain, empty field.
+
+**BVA for length:**
+- 5 chars (just below min), 6 chars (min), 7 chars (just above min)
+- 49 chars (just below max), 50 chars (max), 51 chars (just above max)
+
+You would combine EP and BVA to build a lean but powerful test data set.
+
+> **Key Takeaway:** "Equivalence Partitioning divides input data into groups that the system treats the same, so we test one value per group instead of all. Boundary Value Analysis focuses on the edges of those groups — just inside and outside the limits — because that's where off‑by‑one errors hide. Together, they let us design the minimum number of test cases with maximum bug‑finding power."
