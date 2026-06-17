@@ -73,6 +73,7 @@
   * [17.10 Why Test Cases Matter (and Risks of Omitting Them)](#1710-why-test-cases-matter-and-risks-of-omitting-them)
   * [17.11 Comprehensive Test Case Example: Facebook Login](#1711-comprehensive-test-case-example-facebook-login)
   * [17.12 Comprehensive Test Case Example: Google Account Login](#1712-comprehensive-test-case-example-google-account-login)
+  * [17.13 Test Scenario vs Test Case](#1713-test-scenario-vs-test-case)
 
 ---
 
@@ -1392,3 +1393,101 @@ Skipping the creation of documented test cases is a common pitfall in software d
 | **TC_Goog_Login_007** | SSO Auth | Verify system handles SQL Injection attempts in the email field. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter SQL injection payload in the email field.<br>2. Click "Next". | **Email:** `admin' OR '1'='1` | System should safely sanitize the input and display the standard "Couldn't find your Google Account" error without exposing DB details. | DB remains secure. | | Not Executed | |
 | **TC_Goog_Login_008** | SSO Auth | Verify system handles Cross-Site Scripting (XSS) attempts. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter XSS payload in the email field.<br>2. Click "Next". | **Email:** `<script>alert('XSS')</script>` | System should sanitize/encode the input, reject the attempt, and prevent script execution. | System remains secure. | | Not Executed | |
 | **TC_Goog_Login_009** | SSO Auth | Verify login using the "Enter" key for navigation. | Positive | Medium | Minor | REQ-SSO-04 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and press "Enter".<br>2. Enter valid password and press "Enter". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | Flow should proceed to the next step identically to clicking the "Next" buttons, resulting in successful authentication. | User session is created and active. | | Not Executed | |
+
+### 17.13 Test Scenario vs Test Case
+
+#### Simple Analogy
+Test Scenario is like a chapter title in a book.
+*Example:* “Chapter 3: User Login.”
+It tells you what area the chapter covers, but doesn't give you the lines of dialogue or action.
+
+Test Case is like a single scene script inside that chapter.
+*Example:* “Scene 1: Hero enters the room, presses the red button, and the lights turn on.”
+It gives step‑by‑step instructions and tells you exactly what should happen.
+
+So:
+*   **Test Scenario** = broad area / goal of testing.
+*   **Test Case** = detailed steps, data, and expected outcome.
+
+One scenario can contain many test cases.
+
+#### Professional Definition
+
+| Feature | Test Scenario | Test Case |
+| :--- | :--- | :--- |
+| **What it is** | A high‑level statement describing a feature or user journey to be tested. | A detailed document with exact steps, data, preconditions, and expected results. |
+| **Answers the question** | “What are we testing?” | “How do we test it, step by step?” |
+| **Number of items** | Few (one scenario covers many test cases). | Many (each scenario produces multiple test cases). |
+| **Detail level** | Low. One‑line summary. | High. All steps, data, expected outcomes. |
+| **Created by** | Test Lead, QA, or Business Analyst during early planning. | QA / Tester during Test Case Development (STLC Phase 3). |
+| **Example (login)** | “Verify that registered users can log in.” | “1. Open login page. 2. Enter valid email. 3. Enter valid password. 4. Click Login. Expected: Dashboard appears.” |
+
+> **Key point:** You cannot “execute” a test scenario. It’s just a statement. You execute test cases, one by one.
+
+#### Real Examples – Login Feature
+Let’s take the exact login feature we’ve been working with and show scenarios vs cases.
+
+**Test Scenario 1**
+Title: Verify successful login of registered users.
+*This scenario groups all positive login tests. Under it, you write test cases:*
+*   TC‑LOGIN‑001 – Login with valid email and password.
+*   TC‑LOGIN‑002 – Login with “Remember Me” checked.
+*   TC‑LOGIN‑003 – Login using the “Enter” key instead of clicking the button.
+
+**Test Scenario 2**
+Title: Verify error handling for invalid login attempts.
+*This scenario groups all negative login tests. Under it, you write:*
+*   TC‑LOGIN‑004 – Wrong password.
+*   TC‑LOGIN‑005 – Unregistered email.
+*   TC‑LOGIN‑006 – Empty email and password.
+*   TC‑LOGIN‑007 – Invalid email format.
+*   TC‑LOGIN‑008 – SQL injection attempt.
+*   TC‑LOGIN‑009 – Account lockout after 5 failed attempts.
+
+**Test Scenario 3**
+Title: Verify login page UI and responsiveness.
+*   TC‑LOGIN‑010 – Verify “Login” button color and size on Chrome.
+*   TC‑LOGIN‑011 – Verify error messages appear in red below the field.
+*   TC‑LOGIN‑012 – Verify page renders correctly on a mobile screen (responsive).
+
+#### How This Looks in a Test Management Sheet
+Option A: Use a “Test Scenario” column (recommended for traceability).
+
+| TC‑ID | Test Scenario | Test Case Title | Type | Preconditions | Steps | Expected Result |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| TC‑LOGIN‑001 | Verify successful login of registered users | Login with valid credentials | Positive | ... | ... | ... |
+| TC‑LOGIN‑002 | Verify successful login of registered users | Login with “Remember Me” | Positive | ... | ... | ... |
+| TC‑LOGIN‑004 | Verify error handling for invalid login attempts | Wrong password | Negative | ... | ... | ... |
+| TC‑LOGIN‑005 | Verify error handling for invalid login attempts | Unregistered email | Negative | ... | ... | ... |
+
+#### Common Beginner Confusion
+
+| Confusion | Clarification |
+| :--- | :--- |
+| **“Is a Test Scenario the same as a Test Case Title?”** | No. The scenario title is broad. The test case title is specific and says exactly what that one test checks. |
+| **“Can one test case cover multiple scenarios?”** | No. Each test case belongs to exactly one scenario. If a test covers two things, split it into two test cases. |
+| **“Do I execute a Test Scenario?”** | No. You only execute test cases. The scenario is a heading that groups them. |
+| **“In Agile, do we still write scenarios?”** | Yes, but they may be called “Testable User Stories” or “Epics”. The mindset is identical. |
+
+#### How Scenarios Connect to Other STLC Artifacts
+**Requirements → Scenarios**
+During Requirement Analysis (STLC Phase 1), you read a requirement and list the test scenarios that cover it.
+
+**Scenarios → Test Cases**
+During Test Case Development (STLC Phase 3), each scenario is broken into detailed test cases with steps and data.
+
+**Scenarios in RTM**
+Your Requirements Traceability Matrix maps Requirement → Test Scenario → Test Cases, giving you full coverage visibility.
+
+> **Summary:** A Test Scenario is a high‑level description of what to test — a feature or a user path. It doesn’t contain steps or data. A Test Case is a detailed, step‑by‑step instruction with exact inputs, expected results, and preconditions. One scenario produces many test cases. Scenarios help plan coverage; test cases are the execution units.
+
+#### Example Exercise
+Two Test Scenarios (just the titles). For each scenario, write two Test Cases (just the titles, not the full steps).
+
+**Scenario 1: Verify successful password reset via email.**
+*   TC‑FP‑001: Reset with valid registered email.
+*   TC‑FP‑002: Reset with valid email and verify the new password works for login.
+
+**Scenario 2: Verify error handling for invalid reset attempts.**
+*   TC‑FP‑003: Reset with unregistered email.
+*   TC‑FP‑004: Reset with expired token.
