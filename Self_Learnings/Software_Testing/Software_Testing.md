@@ -87,7 +87,7 @@
   * [18.4 🔁 Bug vs Defect – Are They the Same?](#184-bug-vs-defect--are-they-the-same)
   * [18.5 📊 Summary Table](#185-summary-table)
   * [18.6 ❓ Why This Matters for a QA/SDET](#186-why-this-matters-for-a-qasdet)
-  * [18.7 📝 How to explain it clearly (use this in any discussion)](#187-how-to-explain-it-clearly-use-this-in-any-discussion)
+  * [18.7 📝 Explanation](#187-explanation)
 * [19. Requirements Traceability Matrix (RTM)](#19-requirements-traceability-matrix-rtm)
   * [19.1 🔍 Simple Analogy](#191-simple-analogy)
   * [19.2 💼 Professional Definition](#192-professional-definition)
@@ -111,7 +111,7 @@
   * [22.2 🧪 Part B – Sanity Testing](#222--part-b--sanity-testing)
   * [22.3 ⚖️ Smoke vs Sanity – Side‑by‑Side](#223-️-smoke-vs-sanity--sidebyside)
   * [22.4 🧠 Why This Matters for an SDET](#224--why-this-matters-for-an-sdet)
-  * [22.5 📝 How to explain it clearly](#225--how-to-explain-it-clearly)
+  * [22.5 📝 Explanation](#225--explanation)
   * [22.6 🛠️ Smoke Tests for Login – Example Selection](#226-️-smoke-tests-for-login--example-selection)
   * [22.7 🔧 Sanity Test – After a Bug Fix](#227--sanity-test--after-a-bug-fix)
 * [23. Functional vs. Non-Functional Testing Deep Dive](#23-functional-vs-non-functional-testing-deep-dive)
@@ -119,20 +119,36 @@
   * [23.2 💼 Professional Definition](#232-professional-definition)
   * [23.3 📊 Side‑by‑Side Comparison](#233-sidebyside-comparison)
   * [23.4 🧠 Why This Matters for an SDET](#234-why-this-matters-for-an-sdet)
-  * [23.5 📝 How to explain it simply](#235-how-to-explain-it-simply)
+  * [23.5 📝 Explanation](#235--explanation)
 * [24. Retesting vs. Regression Testing Deep Dive](#24-retesting-vs-regression-testing-deep-dive)
   * [24.1 🔍 Simple Analogy](#241-simple-analogy)
   * [24.2 💼 Professional Definition](#242-professional-definition)
   * [24.3 🧪 Real‑World Example – Login Feature](#243-realworld-example--login-feature)
   * [24.4 🔁 How They Fit Together (The Cycle)](#244-how-they-fit-together-the-cycle)
   * [24.5 ❓ Why This Matters for an SDET](#245-why-this-matters-for-an-sdet)
-  * [24.6 📝 How to explain it clearly](#246-how-to-explain-it-clearly)
+  * [24.6 📝 Explanation](#246--explanation)
 * [25. Exploratory vs. Ad-hoc Testing Deep Dive](#25-exploratory-vs-ad-hoc-testing-deep-dive)
   * [25.1 🔍 Simple Analogy](#251-simple-analogy)
   * [25.2 💼 Professional Definition](#252-professional-definition)
   * [25.3 📊 Ad‑hoc vs Exploratory – Side‑by‑Side](#253-ad-hoc-vs-exploratory--side-by-side)
   * [25.4 🧠 Why This Matters for an SDET](#254-why-this-matters-for-an-sdet)
-  * [25.5 📝 How to explain it clearly](#255-how-to-explain-it-clearly)
+  * [25.5 📝 Explanation](#255--explanation)
+* [26. Monkey vs. Gorilla Testing Deep Dive](#26-monkey-vs-gorilla-testing-deep-dive)
+  * [26.1 🔍 Simple Analogy](#261-simple-analogy)
+  * [26.2 💼 Professional Definition](#262-professional-definition)
+  * [26.3 📊 Monkey vs Gorilla – Side‑by‑Side](#263-monkey-vs-gorilla--side-by-side)
+  * [26.4 🧠 Why This Matters for an SDET](#264-why-this-matters-for-an-sdet)
+  * [26.5 📝 Explanation](#265--explanation)
+* [27. The Defect Lifecycle Deep Dive](#27-the-defect-lifecycle-deep-dive)
+  * [27.1 🔍 Simple Analogy](#271-simple-analogy)
+  * [27.2 💼 Professional Definition](#272-professional-definition)
+  * [27.3 🧾 Standard Defect Lifecycle States](#273-standard-defect-lifecycle-states)
+  * [27.4 🔁 The Ideal Flow (happy path)](#274-the-ideal-flow-happy-path)
+  * [27.5 🧪 Real‑World Example – Login Defect](#275-real-world-example--login-defect)
+  * [27.6 ❓ Why This Matters for a QA/SDET](#276-why-this-matters-for-a-qasdet)
+  * [27.7 📝 Explanation](#277--explanation)
+  * [27.8 📍 Where exactly is each thing recorded?](#278--where-exactly-is-each-thing-recorded)
+  * [27.9 🧩 How they connect in practice](#279--how-they-connect-in-practice)
 
 ---
 
@@ -330,6 +346,8 @@ Testing on software **already in production**.
 
 ### 3.10 Experience-Based Testing
 
+*(See [Section 26](#26-monkey-vs-gorilla-testing-deep-dive) for a detailed breakdown of Monkey and Gorilla testing)*
+
 Relies on the tester's intuition and past knowledge.
 
 | Technique | Description |
@@ -463,9 +481,9 @@ Using a practical example — a team building a **"Forgot Password"** feature:
 > **Conceptual Overview:** Think of the autopilot on a commercial airplane. The autopilot (automation) can fly the plane perfectly 99% of the time while the pilot drinks coffee. But if a massive storm suddenly appears, the autopilot pauses and alerts the human pilot to grab the steering wheel and make a judgment call.
 >
 > Automation is blind. Sometimes, an automation script can't tell if a picture looks weird or if a layout is ugly—it only checks the code. HITL is a testing system where the automated robot does all the boring, repetitive work, but pauses to ask the human QA engineer, "Hey, does this look right to you?" before moving on.
-
-* Automation is **deterministic** — it cannot evaluate whether a layout "looks right" or a UX flow "feels intuitive."
-* HITL designs the automated pipeline to **escalate** visual changes, subjective UX workflows, or ambiguous outputs to a human QA engineer for review.
+>
+> Automation is **deterministic** — it cannot evaluate whether a layout "looks right" or a UX flow "feels intuitive."
+> HITL designs the automated pipeline to **escalate** visual changes, subjective UX workflows, or ambiguous outputs to a human QA engineer for review.
 
 > **Key Takeaway:** "I design Human-in-the-Loop test strategies where Playwright handles repetitive data validation, but the pipeline alerts me to manually review complex visual changes or highly subjective UX workflows."
 
@@ -480,8 +498,8 @@ Using a practical example — a team building a **"Forgot Password"** feature:
 > The new way (Shift Left): you call the inspector before you even pour the concrete. They check the soil, the steel rods, the blueprint. You fix issues when they're still tiny and cheap.
 >
 > Shift Left means moving testing activities to the left on the project timeline — earlier in the development process. The earlier you test, the earlier you find problems, and the less they cost to fix.
-
-**Shift Left** means moving testing activities **earlier** in the SDLC timeline.
+>
+> **Shift Left** means moving testing activities **earlier** in the SDLC timeline.
 
 | Stage | Traditional QA (Testing Late) | Shift-Left QA (Testing Early) |
 | :--- | :--- | :--- |
@@ -585,8 +603,8 @@ The SDLC is a structured sequence of stages used to develop software — from th
 ![Spiral Model Phases](../Images/Spiral_Phases.png)
 
 > **Conceptual Overview:** Imagine you're going on a treasure hunt in a dark forest. You don't just run straight in — that's risky. Instead, you take a small step forward, stop, look around for danger (like snakes or holes), plan your next step, then move again. You keep doing this: step, check for risk, plan, move. Each time you go a little deeper into the forest, but you're always watching out for problems. The Spiral model works just like that: build a bit, check for risks, plan the next bit, repeat. It's all about managing risk at every turn.
-
-Introduced by **Barry Boehm (1986)**, the Spiral model combines iterative development with rigorous risk analysis. Each loop has four activities:
+>
+> Introduced by **Barry Boehm (1986)**, the Spiral model combines iterative development with rigorous risk analysis. Each loop has four activities:
 
 | Activity | Description |
 | :--- | :--- |
@@ -633,8 +651,8 @@ Introduced by **Barry Boehm (1986)**, the Spiral model combines iterative develo
 > First, you build a basic frame with two wheels and a seat—a rideable scooter. You show it to the customer. They say, "I need handlebars higher and a softer seat." Next, you add those changes and also attach pedals. You show it again. Customer tries it: "Great! But the chain slips sometimes." You fix the chain in the next delivery.
 >
 > You deliver working pieces early and often, and you adapt based on real feedback after each tiny release. That's Agile: building software in small, working slices, getting feedback, and constantly improving.
-
-Based on the **Agile Manifesto (2001):**
+>
+> Based on the **Agile Manifesto (2001):**
 
 | Value | Agile Prioritises |
 | :--- | :--- |
@@ -1094,7 +1112,7 @@ A well‑written defect report includes:
 
 ---
 
-### 14.12 📝 How to explain STLC in one clear statement
+### 14.12 📝 Explanation
 > “The Software Testing Life Cycle is a structured six‑phase process that guides QA from the initial analysis of requirements through test planning, test case development, environment setup, execution and defect reporting, to final test closure. It ensures that testing is thorough, traceable, and repeatable. Even in Agile, these activities are performed continuously within each sprint.”
 
 ---
@@ -1742,7 +1760,7 @@ For interviews and day‑to‑day work, it's safe to say:
 
 ---
 
-### 18.7 📝 How to explain it clearly (use this in any discussion)
+### 18.7 📝 Explanation
 > “An error is a human mistake that introduces a defect into the product. A defect (or bug) is the actual flaw in the code or documentation. A failure is what we observe when the defective part is executed — the software does something it shouldn't. As a QA, I identify failures and report defects, while working with the team to reduce future errors.”
 
 ---
@@ -2263,7 +2281,7 @@ As an SDET, you must know which test type you’re writing. When a product owner
 
 ---
 
-### 23.5 📝 How to explain it simply
+### 23.5 📝 Explanation
 > “Functional testing verifies that the software’s features work exactly as specified – it answers ‘Does it do what it should?’. Non‑functional testing checks how well the system operates – covering performance, security, usability, and reliability. Both are critical: a functionally perfect app that’s slow or insecure will fail users. As an SDET, I automate mostly functional checks, but I also include non‑functional validations like visual snapshots, accessibility, and performance assertions where possible.”
 
 ---
@@ -2335,7 +2353,7 @@ In continuous integration, the regression suite is your safety net. It must be f
 
 ---
 
-### 24.6 📝 How to explain it clearly
+### 24.6 📝 Explanation
 > “Retesting is verifying that a specific defect has been fixed by re‑executing the exact test case that failed. Regression testing is running a broader set of tests to ensure that the fix or any new code has not broken existing functionality. Retesting is narrow and focused; regression is wide and preventive. In my automation work, I ensure a strong regression suite that runs on every build, while retesting is often done manually to close the defect loop.”
 
 ---
@@ -2413,5 +2431,175 @@ When you present bugs found during exploratory testing, you describe them as *�
 
 ---
 
-### 25.5 📝 How to explain it clearly
+### 25.5 📝 Explanation
 > “Exploratory testing is a disciplined, unscripted testing approach where I simultaneously learn the system, design tests, and execute them, usually guided by a charter and time‑boxed. It’s excellent for finding edge cases that scripted tests miss. Ad‑hoc testing, in contrast, is completely random and undocumented, useful only for a very quick sanity look. I regularly use exploratory testing in sprints to uncover hidden risks, and I convert the most important scenarios into automated scripts for regression.”
+
+---
+
+## 26. Monkey vs. Gorilla Testing Deep Dive
+
+### 26.1 🔍 Simple Analogy
+* **Monkey Testing** – Imagine releasing a real monkey into a room full of buttons, levers, and screens. The monkey jumps randomly, presses anything, pulls wires, and you just watch to see if the machine breaks. You don’t tell the monkey what to press. It’s pure chaos.
+* **Gorilla Testing** – Now imagine a huge gorilla that walks straight to one specific machine, say the “login” panel, and pounds on it repeatedly – hundreds of times, with heavy force. It’s not random; it’s focused, intense, and repetitive on just that one part.
+
+In software, both are unscripted testing, but one is random everywhere, the other is intensely focused on one area.
+
+---
+
+### 26.2 💼 Professional Definition
+
+#### 🐒 Monkey Testing
+Monkey testing is a type of testing where random inputs, actions, or events are thrown at the application with no specific test cases, no plan, and often no knowledge of the system. The goal is to see if the system crashes, hangs, or misbehaves under chaotic usage.
+
+**There are two common types:**
+| Type | Description | Example (Login page) |
+| :--- | :--- | :--- |
+| **Dumb Monkey** | The tester/script clicks, types, and navigates totally randomly. It doesn't understand the application at all. It might try to click a button that doesn't exist or enter letters where numbers are expected. | Click everywhere on the screen, enter emojis in the password field, press random keyboard keys, navigate to random URLs. |
+| **Smart Monkey** | The tester/script has some basic knowledge of valid inputs or the application’s data. It can fill fields with plausible data but still acts in unexpected sequences. | Fill email with a valid format (like monkey@test.com) and password with random characters, but try to submit without clicking Login (press Enter, then quickly click Logout). |
+
+* **Who uses it:** Usually developers or SDETs who write monkey scripts that generate random UI events, or testers doing stress/robustness testing.
+* **Why it matters:** It catches hard‑to‑predict crashes, memory leaks, and unexpected system states that formal test cases would never test.
+
+#### 🦍 Gorilla Testing
+Gorilla testing is a focused, repetitive testing technique where a single module or small feature is tested exhaustively, over and over, with intense load or random data, almost to the point of abuse. The idea is to see if that component can survive extreme usage.
+
+**Key characteristics:**
+* **Extremely narrow scope:** Only one module at a time (e.g., the login form, the file upload button, the search box).
+* **High repetition:** The same test steps or variations are applied dozens or hundreds of times.
+* **Often combined with load:** For example, 50 users resetting their passwords simultaneously.
+* **Manual or automated:** A tester can manually keep resetting a password for 30 minutes, or an SDET can write a script that loops a login action 1000 times.
+
+* **Why it matters:** It exposes memory corruption, session handling bugs, database deadlocks, and stability issues that appear only after repeated use of one feature.
+
+---
+
+### 26.3 📊 Monkey vs Gorilla – Side‑by‑Side
+
+| Feature | Monkey Testing | Gorilla Testing |
+| :--- | :--- | :--- |
+| **Scope** | Entire application, random areas. | One module or one specific feature. |
+| **Nature** | Random, chaotic, unpredictable. | Focused, repetitive, abusive. |
+| **Goal** | Find unexpected crashes, exceptions, or odd system behaviour. | Test the robustness and stability of one component under heavy repeated load. |
+| **Execution** | Often automated via random input generators. | Can be manual (a tester keeps testing the same flow) or automated (loop a test script many times). |
+| **Knowledge of system** | Dumb monkey: none. Smart monkey: some. | Moderate to high – you know what you are attacking. |
+| **Result** | System crash, unexpected error pages, memory leaks. | Component failure, performance degradation, session errors. |
+
+---
+
+### 26.4 🧠 Why This Matters for an SDET
+As an SDET, you can write monkey scripts using Playwright or tools like Gremlin to randomly navigate pages and click buttons. This is called **fuzz testing** or random testing. It helps uncover broken links, JavaScript errors, and missing error handling.
+
+For gorilla testing, you can write a single test and run it in a loop (e.g., `for (let i = 0; i < 1000; i++) { ... }`) to hammer a specific API or a critical checkout flow. This helps find race conditions and database contention issues.
+
+These tests are usually not part of the main regression suite (they take time and are messy) but are run occasionally or as part of stability cycles.
+
+---
+
+### 26.5 📝 Explanation
+> “Monkey testing is a random, chaotic approach where we throw unpredictable inputs at the entire application to see if it crashes or behaves unexpectedly. It mimics a user who has no idea what they’re doing. Gorilla testing, on the other hand, is intensely focused on one module, repeating tests over and over to check its stability under extreme conditions. I can automate both: monkey testing with random UI event generators to find hidden crashes, and gorilla testing by looping a critical test to verify a component won’t break under repeated use.”
+
+---
+
+## 27. The Defect Lifecycle Deep Dive
+
+### 27.1 🔍 Simple Analogy
+Imagine a complaint in a hotel.
+* **New** – A guest tells the front desk: “The bathroom tap is leaking.” The complaint is recorded.
+* **Assigned** – The manager assigns the job to the plumber.
+* **Open / In Progress** – The plumber starts working on the tap.
+* **Fixed** – The plumber says, “I’ve fixed it.”
+* **Retest** – The front desk staff goes to the room, turns on the tap, and checks that it no longer leaks.
+* **Closed** – The tap is dry. The complaint is marked as resolved.
+* **Reopened** – But if the tap drips again a day later, the complaint is reopened and the cycle repeats.
+
+The Defect Lifecycle is exactly this journey – from the moment a bug is reported to the moment it’s permanently resolved.
+
+---
+
+### 27.2 💼 Professional Definition
+The Defect Lifecycle (also called the Bug Life Cycle) is the sequence of states a defect goes through, from discovery to closure. It provides a clear process for handling bugs and ensures every defect is tracked, assigned, fixed, and verified.
+
+---
+
+### 27.3 🧾 Standard Defect Lifecycle States
+
+| State | Meaning | Who changes it |
+| :--- | :--- | :--- |
+| **New** | The defect is logged for the first time by the tester. It has not been reviewed yet. | Tester / QA |
+| **Assigned** | The defect has been reviewed by the Test Lead or manager and assigned to a developer. | Test Lead / Manager |
+| **Open** | The developer has accepted the defect and started working on the fix. | Developer |
+| **Fixed** | The developer has made a code change and believes the defect is resolved. The defect is now ready for retesting. | Developer |
+| **Retest** | QA is re‑testing the fix using the original test case that found the defect. | Tester / QA |
+| **Closed** | Retesting passed – the defect is resolved. No further action is needed. | Tester / QA (or automatically) |
+| **Reopened** | Retesting failed – the defect still exists or the fix created a new issue. It goes back to the developer. | Tester / QA |
+| **Deferred / Postponed** | The defect is valid but not critical for the current release. It will be fixed in a future version. | Test Lead / Product Owner |
+| **Duplicate** | The defect already exists. The current report is closed and linked to the original defect ID. | Tester / Developer |
+| **Not a Bug / Rejected** | The developer determines the behavior is correct or the requirement was misinterpreted. | Developer |
+
+---
+
+### 27.4 🔁 The Ideal Flow (happy path)
+`New → Assigned → Open → Fixed → Retest → Closed`
+
+But real life has branches:
+* `New → Assigned → Open → Fixed → Retest → Reopened → Assigned → Open → Fixed → Retest → Closed`
+* `New → Assigned → Rejected (Not a Bug)`
+* `New → Assigned → Duplicate → Closed`
+* `New → Assigned → Deferred → (later) Open → ...`
+
+---
+
+### 27.5 🧪 Real‑World Example – Login Defect
+* **New:** You test login with wrong password. The error message is missing. You log Defect #101 with the details. Status: New.
+* **Assigned:** The Test Lead reviews it, confirms it’s valid, and assigns it to Developer Ravi. Status: Assigned.
+* **Open:** Ravi accepts it and starts debugging. Status: Open.
+* **Fixed:** Ravi changes the password validation code and marks the defect as Fixed. He adds a comment: “Error message now displays correctly.”
+* **Retest:** You re‑run test case TC‑LOGIN‑004. The error message now appears. Status: Retest.
+* **Closed:** Because retesting passed, you close the defect. Status: Closed.
+
+Alternatively, if the error message still didn’t appear:
+* Status changes from Retest to **Reopened**, and the defect goes back to Ravi.
+
+---
+
+### 27.6 ❓ Why This Matters for a QA/SDET
+As a QA, you move the defect from New → Retest → Closed (or Reopened). You are responsible for the quality gate.
+
+As an SDET, your automated test that found the defect may also verify the fix. If the test fails again during retesting, the automation report can automatically trigger a Reopened status in JIRA (via API integration).
+
+In CI/CD, if a critical defect is reopened, the release pipeline may be blocked.
+
+Knowing the lifecycle ensures you communicate clearly with developers and leads. You don’t say “the bug is done” – you say “defect #101 is closed after successful retest.”
+
+---
+
+### 27.7 📝 Explanation
+> “The defect lifecycle tracks a bug from discovery to closure. It starts as New, gets Assigned to a developer, moves to Open while being worked on, then Fixed when a resolution is applied. QA then Retests the fix. If it passes, the defect is Closed; if it fails, it is Reopened. Other states like Rejected, Duplicate, or Deferred help manage edge cases. As a QA, I own the final verification step and ensure only truly fixed defects are closed.”
+
+---
+
+### 27.8 📍 Where exactly is each thing recorded?
+The defect lifecycle states are not written inside a test case. They live in a separate place – either a defect tracking tool (like JIRA, Bugzilla, Azure DevOps) or, during manual practice, in a separate sheet in your Google Sheets workbook.
+
+| Artifact | Where it lives |
+| :--- | :--- |
+| **Test Case** | Your "TestCases" sheet – it has columns like TC‑ID, Steps, Expected Result, Status (Pass/Fail). If a test case fails, you note the failure there, but not the whole defect lifecycle. |
+| **Defect Report** | A separate defect log (in JIRA or a "Defects" sheet). It contains Defect ID, Description, Steps to Reproduce, Severity, Priority, and the lifecycle state (New, Assigned, Open, Fixed, Retest, Closed, Reopened). |
+| **RTM** | Your "RTM" sheet – it links Requirements to Test Cases, and may optionally reference a Defect ID if a requirement is failing due to a specific bug. But the RTM doesn't track the defect's progress. |
+
+---
+
+### 27.9 🧩 How they connect in practice
+1. You execute **TC‑LOGIN‑004** (Wrong password error). It fails because the error message is missing.
+2. In your "TestCases" sheet, you mark its Status as "Fail" and in the Comments column write: *"Defect #101 raised."*
+3. You open your "Defects" sheet (or JIRA) and log a new defect with all required details. You set its state to **New**.
+4. As the defect progresses (Assigned, Fixed, Retested, Closed), you update the state **only** in the "Defects" sheet / JIRA, not in the test case.
+5. After the fix is verified, you return to the "TestCases" sheet, update the status of **TC‑LOGIN‑004** from Fail to Pass, and close the defect in the defect log.
+
+So the defect lifecycle states are tracked in the defect log, not inside the test case. The test case just records whether that particular test passed or failed.
+
+> **💡 For your Google Sheets practice:**
+> You can create a new sheet called "Defects" with columns like:
+> `Defect ID | Title | Linked TC-ID | Severity | Priority | Status (Lifecycle) | Assigned To | Comments`
+>
+> That's where you'll manually move the status through New → Assigned → Fixed → Retest → Closed.
