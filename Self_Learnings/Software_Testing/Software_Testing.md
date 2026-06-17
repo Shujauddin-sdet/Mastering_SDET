@@ -21,6 +21,9 @@
   * [3.11 Globalization (i18n) vs. Localization (l10n)](#311-globalization-i18n-vs-localization-l10n)
   * [3.12 Accessibility Testing (A11y)](#312-accessibility-testing-a11y)
   * [3.13 Compatibility Testing](#313-compatibility-testing)
+  * [3.14 API vs. Interface Testing](#314-api-vs-interface-testing)
+  * [3.15 Performance Testing Deep Dive (Load vs. Stress)](#315-performance-testing-deep-dive-load-vs-stress)
+  * [3.16 Gray Box Testing](#316-gray-box-testing)
 * [4. Verification vs. Validation](#4-verification-vs-validation)
 * [5. QA vs. QC](#5-qa-vs-qc)
   * [5.1 QA Activities Before Development Begins](#51-qa-activities-before-development-begins)
@@ -77,6 +80,59 @@
   * [17.11 Comprehensive Test Case Example: Facebook Login](#1711-comprehensive-test-case-example-facebook-login)
   * [17.12 Comprehensive Test Case Example: Google Account Login](#1712-comprehensive-test-case-example-google-account-login)
   * [17.13 Test Scenario vs Test Case](#1713-test-scenario-vs-test-case)
+* [18. Testing Types & Defect Management (Topic 27: Error, Bug, Defect, Failure – Definitions)](#18-testing-types--defect-management-topic-27-error-bug-defect-failure--definitions)
+  * [18.1 🔍 Simple Analogy](#181-simple-analogy)
+  * [18.2 💼 Professional Definitions](#182-professional-definitions)
+  * [18.3 🧪 Real‑World Example – Login Feature](#183-real-world-example--login-feature)
+  * [18.4 🔁 Bug vs Defect – Are They the Same?](#184-bug-vs-defect--are-they-the-same)
+  * [18.5 📊 Summary Table](#185-summary-table)
+  * [18.6 ❓ Why This Matters for a QA/SDET](#186-why-this-matters-for-a-qasdet)
+  * [18.7 📝 How to explain it clearly (use this in any discussion)](#187-how-to-explain-it-clearly-use-this-in-any-discussion)
+* [19. Requirements Traceability Matrix (RTM)](#19-requirements-traceability-matrix-rtm)
+  * [19.1 🔍 Simple Analogy](#191-simple-analogy)
+  * [19.2 💼 Professional Definition](#192-professional-definition)
+  * [19.3 📊 Typical RTM Structure (Columns)](#193-typical-rtm-structure-columns)
+  * [19.4 📝 Creating an RTM in Google Sheets – Step‑by‑Step Guide](#194-creating-an-rtm-in-google-sheets--stepbystep-guide)
+  * [19.5 🏢 Real‑World Example – Login & Forgot Password RTM](#195-realworld-example--login--forgot-password-rtm)
+  * [19.6 🔗 How RTM Links to Other STLC Phases](#196-how-rtm-links-to-other-stlc-phases)
+  * [19.7 ❓ Why This Matters for a QA/SDET](#197-why-this-matters-for-a-qasdet)
+  * [19.8 🗣️ Explanation](#198-explanation)
+  * [19.9 ⚠️ Important Summary Flow](#199-important-summary-flow)
+* [20. Test Execution & Test Closure Activities](#20-test-execution--test-closure-activities)
+  * [20.1 🧪 Part 1 – Test Execution (STLC Phase 5)](#201--part-1--test-execution-stlc-phase-5)
+  * [20.2 🧾 Part 2 – Test Cycle Closure (STLC Phase 6)](#202--part-2--test-cycle-closure-stlc-phase-6)
+  * [20.3 🗣️ Explanation](#203-explanation)
+* [21. GUI Testing & Error Guessing](#21-gui-testing--error-guessing)
+  * [21.1 🖥️ Part A – GUI Testing (Graphical User Interface)](#211-️-part-a--gui-testing-graphical-user-interface)
+  * [21.2 🎯 Part B – Error Guessing (as a Testing Type)](#212--part-b--error-guessing-as-a-testing-type)
+  * [21.3 🗣️ Explanation & Malfunctions](#213-explanation--malfunctions)
+* [22. Smoke vs. Sanity Testing](#22-smoke-vs-sanity-testing)
+  * [22.1 🧪 Part A – Smoke Testing](#221--part-a--smoke-testing)
+  * [22.2 🧪 Part B – Sanity Testing](#222--part-b--sanity-testing)
+  * [22.3 ⚖️ Smoke vs Sanity – Side‑by‑Side](#223-️-smoke-vs-sanity--sidebyside)
+  * [22.4 🧠 Why This Matters for an SDET](#224--why-this-matters-for-an-sdet)
+  * [22.5 📝 How to explain it clearly](#225--how-to-explain-it-clearly)
+  * [22.6 🛠️ Smoke Tests for Login – Example Selection](#226-️-smoke-tests-for-login--example-selection)
+  * [22.7 🔧 Sanity Test – After a Bug Fix](#227--sanity-test--after-a-bug-fix)
+* [23. Functional vs. Non-Functional Testing Deep Dive](#23-functional-vs-non-functional-testing-deep-dive)
+  * [23.1 🔍 Simple Analogy](#231-simple-analogy)
+  * [23.2 💼 Professional Definition](#232-professional-definition)
+  * [23.3 📊 Side‑by‑Side Comparison](#233-sidebyside-comparison)
+  * [23.4 🧠 Why This Matters for an SDET](#234-why-this-matters-for-an-sdet)
+  * [23.5 📝 How to explain it simply](#235-how-to-explain-it-simply)
+* [24. Retesting vs. Regression Testing Deep Dive](#24-retesting-vs-regression-testing-deep-dive)
+  * [24.1 🔍 Simple Analogy](#241-simple-analogy)
+  * [24.2 💼 Professional Definition](#242-professional-definition)
+  * [24.3 🧪 Real‑World Example – Login Feature](#243-realworld-example--login-feature)
+  * [24.4 🔁 How They Fit Together (The Cycle)](#244-how-they-fit-together-the-cycle)
+  * [24.5 ❓ Why This Matters for an SDET](#245-why-this-matters-for-an-sdet)
+  * [24.6 📝 How to explain it clearly](#246-how-to-explain-it-clearly)
+* [25. Exploratory vs. Ad-hoc Testing Deep Dive](#25-exploratory-vs-ad-hoc-testing-deep-dive)
+  * [25.1 🔍 Simple Analogy](#251-simple-analogy)
+  * [25.2 💼 Professional Definition](#252-professional-definition)
+  * [25.3 📊 Ad‑hoc vs Exploratory – Side‑by‑Side](#253-ad-hoc-vs-exploratory--side-by-side)
+  * [25.4 🧠 Why This Matters for an SDET](#254-why-this-matters-for-an-sdet)
+  * [25.5 📝 How to explain it clearly](#255-how-to-explain-it-clearly)
 
 ---
 
@@ -187,14 +243,16 @@ Manual Testing can be broadly classified into several categories:
 
 ### 3.3 Testing Types (Functional vs. Non-Functional)
 
+*(See [Section 23](#23-functional-vs-non-functional-testing-deep-dive) for a detailed breakdown, analogies, and side-by-side comparisons)*
+
 ![Functional vs Non-Functional Testing](../Images/Functional_vs_NonFunctional.png)
 
 **Functional Testing** — Verifying **what** the software does:
 
 | Type | Description |
 | :--- | :--- |
-| **Smoke Testing** | High-level check to confirm the build is stable enough for further testing. |
-| **Sanity Testing** | Quick, focused check of specific functionality after a bug fix or minor change. |
+| **Smoke Testing** | High-level check to confirm the build is stable enough for further testing. *(See [Section 22](#22-smoke-vs-sanity-testing) for deep dive)* |
+| **Sanity Testing** | Quick, focused check of specific functionality after a bug fix or minor change. *(See [Section 22](#22-smoke-vs-sanity-testing) for deep dive)* |
 | **Regression Testing** | Ensuring new changes haven't broken existing, previously working functionalities. |
 
 **Non-Functional Testing** — Verifying **how** the software performs:
@@ -223,6 +281,8 @@ Manual Testing can be broadly classified into several categories:
 
 ### 3.6 Re-testing vs. Regression Testing
 
+*(See [Section 24](#24-retesting-vs-regression-testing-deep-dive) for a detailed breakdown, real-world examples, and analogies)*
+
 | Feature | Re-testing | Regression Testing |
 | :--- | :--- | :--- |
 | **Purpose** | Verify a specific bug fix. | Ensure existing features still work after changes. |
@@ -231,6 +291,8 @@ Manual Testing can be broadly classified into several categories:
 | **Automation** | Difficult to automate (one-time fix). | Highly recommended for automation. |
 
 ### 3.7 Ad-hoc and Exploratory Testing
+
+*(See [Section 25](#25-exploratory-vs-ad-hoc-testing-deep-dive) for a detailed breakdown, side-by-side comparisons, and SDET application)*
 
 **Ad-hoc Testing:**
 
@@ -293,6 +355,34 @@ Verifying the app works across different:
 * **Browsers:** Chrome, Safari, Firefox.
 * **Operating Systems:** Windows, macOS, Linux.
 * **Mobile Devices:** iOS, Android.
+
+> **Key Takeaway:** "If it works perfectly on a Mac with Chrome, but crashes on a Windows PC with Edge, it's not a complete product. Compatibility testing ensures no user is left behind."
+
+### 3.14 API vs. Interface Testing
+Both deal with how different parts of a system talk to each other, but they have distinct focuses.
+
+| Feature | API Testing | Interface Testing |
+| :--- | :--- | :--- |
+| **Focus** | Verifies the business logic, data formatting (JSON/XML), security, and status codes of the API endpoints directly. | Verifies the flow of data across the entire communication pipeline (e.g., UI → Web Server → Database). |
+| **GUI Dependency** | **No.** Tested via headless tools like Postman, REST Assured, or Playwright `request`. | **Yes.** Usually tests if the UI correctly displays the data fetched from the server/API. |
+| **Analogy** | Checking if the kitchen can successfully cook the exact dish you asked for on the ticket. | Checking if the waiter correctly takes your order, gives it to the kitchen, and safely brings the food back to your table. |
+
+### 3.15 Performance Testing Deep Dive (Load vs. Stress)
+Performance testing is the overarching term for measuring how the system handles different volumes of users and data. 
+
+| Type | Definition | The Goal | Analogy |
+| :--- | :--- | :--- | :--- |
+| **Load Testing** | Testing the system under **expected, normal, and peak** workloads. | "Can our e-commerce site handle the normal 5,000 shoppers during Black Friday without slowing down?" | Packing exactly the maximum allowed weight into a backpack to make sure the straps don't snap. |
+| **Stress Testing** | Testing the system **beyond** its expected capacity until it breaks. | "How many users does it take before our server crashes? Does it recover gracefully when it does?" | Filling the backpack with rocks until the seams rip open, just to see which part breaks first. |
+
+### 3.16 Gray Box Testing
+Gray Box (or Grey Box) Testing is the hybrid approach that sits between Black Box and White Box testing.
+
+* **Black Box:** You only see the UI (Inputs and Outputs).
+* **White Box:** You see and understand every line of source code.
+* **Gray Box:** You use the UI to test, but you have *partial knowledge* of the internal architecture, such as database structures or API behavior.
+
+> **Conceptual Overview:** Imagine you are testing a login form. In Black Box, you enter credentials and see if it logs you in. In Gray Box, you enter credentials on the UI, but you also check the backend database directly using a SQL query to verify that a session token was securely generated in the `sessions` table.
 
 ---
 
@@ -873,6 +963,8 @@ You write multiple test cases for these to make sure they work in different scen
 | **REQ-02** | Remove item from cart | TC-103 <br> TC-104 | Remove the only item in cart <br> Remove item when cart is already empty | ✅ Pass <br> ✅ Pass |
 
 **Why it's important:** If the product manager asks, "Did we test the 'Remove item' feature?", you just look at the RTM and say "Yes, we ran TC-103 and TC-104, and they both passed." It guarantees **100% test coverage** so no requirement is missed.
+
+> **Note:** For a detailed step-by-step guide on creating an RTM in Google Sheets, see **[Section 19. Requirements Traceability Matrix (RTM)](#19-requirements-traceability-matrix-rtm)**.
 
 ---
 
@@ -1572,3 +1664,754 @@ Two Test Scenarios (just the titles). For each scenario, write two Test Cases (j
 **Scenario 2: Verify error handling for invalid reset attempts.**
 *   TC‑FP‑003: Reset with unregistered email.
 *   TC‑FP‑004: Reset with expired token.
+
+---
+
+## 18. Testing Types & Defect Management (Topic 27: Error, Bug, Defect, Failure – Definitions)
+
+### 18.1 🔍 Simple Analogy
+Imagine a restaurant order:
+
+* **Error** → The waiter writes down “steak well‑done” but the customer actually said “steak medium‑rare”. The mistake happened in the waiter’s mind or action.
+* **Bug / Defect** → The chef cooks the steak exactly as written (well‑done), but the customer receives a dish that doesn’t match what they wanted. The flaw is now in the dish.
+* **Failure** → The customer cuts into the steak, finds it over‑cooked, and refuses to eat it. The system (the meal) has failed to meet the customer’s expectation.
+
+**In software:**
+* **Error** = human mistake (developer, analyst).
+* **Bug / Defect** = flaw in the code or document caused by the error.
+* **Failure** = the product misbehaves when used, visible to the end user.
+
+---
+
+### 18.2 💼 Professional Definitions
+
+| Term | Definition | Who / What | When it occurs |
+| :--- | :--- | :--- | :--- |
+| **Error** | A human action that produces an incorrect result. A mistake in thinking, typing, or understanding. | Developer, Tester, Business Analyst. | During coding, design, or requirement writing. |
+| **Bug / Defect** | A flaw in a product or its component that may cause it to fail to perform a required function. The concrete manifestation of an error in the code or document. | The code, specification, or test case. | After an error has been made; it exists even before testing. |
+| **Failure** | The inability of a system or component to perform its required function within specified limits. It's the observable incorrect behavior during execution. | The running software. | During test execution or production use. |
+
+**Key relationship:**
+An error can lead to a defect in the code. When that defective code is executed, a failure may occur. Not every defect causes a failure (it might never be executed, or conditions not met). But every failure originates from a defect (except environment issues).
+
+---
+
+### 18.3 🧪 Real‑World Example – Login Feature
+
+#### Error
+A developer misreads the requirement: “Password must be at least 8 characters.” They write code:
+`if (password.length >= 6) (thinking 6 is enough).`
+This is a human mistake (an error in understanding).
+
+#### Defect / Bug
+The code now contains a flaw: it accepts a 6‑character password when it shouldn't. The defect is in the software, even before testing. A bug report would describe this flaw.
+
+#### Failure
+During testing, a QA executes TC‑LOGIN‑010: enters a 6‑character password, clicks Register, and the system accepts it. The expected result was an error message “Password too short”. The system failed. The failure is visible to the tester.
+
+Another scenario: The developer also forgets to trim spaces (error), creating a defect. If the tester enters a password with trailing spaces and it's accepted, that's a failure.
+
+---
+
+### 18.4 🔁 Bug vs Defect – Are They the Same?
+In most companies, Bug and Defect are used interchangeably. However, formally:
+
+* Bug is a colloquial term often used by developers and testers for a coding mistake.
+* Defect is a more formal term used in documentation, test reports, and audits. A defect can exist in requirements, design, or code, not just in code.
+
+For interviews and day‑to‑day work, it's safe to say:
+> “A bug is a defect found during testing; a defect is a flaw in any work product. I use them synonymously unless the context requires the distinction.”
+
+---
+
+### 18.5 📊 Summary Table
+
+| Term | Analogy | Who makes it? | Where found? | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **Error** | Waiter's misheard order | Human | In the mind/action | Developer writes >=6 instead of >=8 |
+| **Bug/Defect** | Over‑cooked steak | Code / Document | In the product | Password validation allows 6 chars |
+| **Failure** | Customer rejects meal | Running system | During execution | Tester logs in with 6‑char password and succeeds |
+
+---
+
+### 18.6 ❓ Why This Matters for a QA/SDET
+* As a QA, you find failures and report defects. You don't report an “error” — you report the bug that resulted from it.
+* In defect triage, understanding the root cause often traces back to an error in requirements, design, or coding. This helps improve the process (shift‑left!).
+* As an SDET, your automated tests detect failures. Your automation scripts check expected vs. actual behavior. When a test fails, you log a defect.
+* The precise vocabulary separates a junior tester from a professional. Saying “I found an error in the code” when you mean a “defect” is technically incorrect.
+
+---
+
+### 18.7 📝 How to explain it clearly (use this in any discussion)
+> “An error is a human mistake that introduces a defect into the product. A defect (or bug) is the actual flaw in the code or documentation. A failure is what we observe when the defective part is executed — the software does something it shouldn't. As a QA, I identify failures and report defects, while working with the team to reduce future errors.”
+
+---
+
+## 19. Requirements Traceability Matrix (RTM)
+
+### 19.1 🔍 Simple Analogy
+Think of a wedding planner’s master checklist. On the left side, you have the list of everything the couple asked for:
+* “Floral arch at the entrance”
+* “Photo booth for 100 guests”
+* “Vegan dinner option”
+
+On the right side, you list who is handling each item and how you’ll confirm it’s done. You draw lines connecting each request to a verification task. No request is left without an owner and a check. That’s an RTM: a table that proves every requirement has been tested and nothing falls through the cracks.
+
+---
+
+### 19.2 💼 Professional Definition
+The Requirements Traceability Matrix (RTM) is a document (usually a spreadsheet) that maps each business requirement or user story to one or more test scenarios or test cases. It’s created during **STLC Phase 1: Requirement Analysis** and is updated continuously throughout the testing lifecycle.
+
+**Purpose:**
+* Guarantees 100% test coverage of requirements.
+* Makes it easy to see if any requirement lacks a test case.
+* Shows the impact when a requirement changes — you instantly know which test cases to update.
+* Provides an audit trail for regulated industries (banking, healthcare).
+* Helps in test planning by showing how many test cases each requirement needs.
+
+---
+
+### 19.3 📊 Typical RTM Structure (Columns)
+You create this in a Google Sheets tab named “RTM” inside your test suite workbook.
+
+| Requirement ID | Requirement Description | Test Scenario(s) | Test Case ID(s) | Status | Comments |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| REQ‑AUTH‑01 | User must be able to log in with a valid email and password. | Verify successful login | TC‑LOGIN‑001, TC‑LOGIN‑002, TC‑LOGIN‑003 | 🟢 Pass | |
+| REQ‑AUTH‑01 | *(same)* | Verify error handling for invalid login | TC‑LOGIN‑004, TC‑LOGIN‑005, TC‑LOGIN‑006, TC‑LOGIN‑007, TC‑LOGIN‑008, TC‑LOGIN‑009 | 🔵 In Progress | TC‑LOGIN‑009 blocked by account lockout issue |
+| REQ‑AUTH‑02 | User can reset password via email. | Forgot Password – valid email | TC‑FP‑001, TC‑FP‑002 | ⚪ Not Started | |
+| REQ‑AUTH‑02 | *(same)* | Forgot Password – invalid attempts | TC‑FP‑003, TC‑FP‑004 | ⚪ Not Started | |
+
+**Column explanations:**
+* **Requirement ID:** From the BRD/SRD or user story (e.g., US‑42).
+* **Requirement Description:** One-line summary of what the requirement says.
+* **Test Scenario(s):** High‑level scenario titles that cover this requirement.
+* **Test Case ID(s):** Exact IDs of the detailed test cases that will verify the requirement.
+* **Status:** Reflects the current state of testing for that requirement (Not Started, In Progress, Pass, Fail, Blocked). You update this after execution.
+* **Comments:** Any notes, like why a test is blocked or if a defect was raised.
+
+---
+
+### 19.4 📝 Creating an RTM in Google Sheets – Step‑by‑Step Guide
+I’ll use the exact login & forgot password requirements we’ve been working with. You’ll build this in your own workbook.
+
+**Step 1: Open your Google Sheets workbook**
+Use the same file that contains your “TestCases” sheet.
+
+**Step 2: Create a new sheet**
+* Click the “+” icon at the bottom left to add a new sheet.
+* Double‑click the new sheet tab and rename it to **“RTM”**.
+
+**Step 3: Freeze the top row**
+* Click the row number “1” on the left to select the entire row.
+* Go to `View → Freeze → 1 row`.
+
+**Step 4: Enter column headers**
+In row 1, type the following headers:
+
+|  | A | B | C | D | E | F |
+| :---: | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **Requirement ID** | **Requirement Description** | **Test Scenario** | **Test Case ID(s)** | **Status** | **Comments** |
+
+*You can bold the headers (Ctrl+B).*
+
+**Step 5: List all requirements**
+Fill the requirements from your BRD/SRD/User Stories. For our example:
+
+|  | A | B |
+| :---: | :--- | :--- |
+| **1** | **Requirement ID** | **Requirement Description** |
+| **2** | REQ‑AUTH‑01 | User must be able to log in with valid email and password. |
+| **3** | REQ‑AUTH‑02 | User can reset password via email. |
+| **4** | REQ‑AUTH‑03 | System must not reveal whether an email is registered. |
+
+*(You can add more rows as needed. Use consistent IDs.)*
+
+**Step 6: Add Test Scenarios and Test Case IDs**
+For each requirement, add one row per test scenario and list the corresponding test case IDs. Example:
+
+|  | A | B | C | D | E | F |
+| :---: | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **Requirement ID** | **Requirement Description** | **Test Scenario** | **Test Case ID(s)** | **Status** | **Comments** |
+| **2** | REQ‑AUTH‑01 | User can log in with valid credentials | Verify successful login | TC‑LOGIN‑001, TC‑LOGIN‑002, TC‑LOGIN‑003 | | |
+| **3** | REQ‑AUTH‑01 | *(same)* | Verify error handling for invalid login | TC‑LOGIN‑004, TC‑LOGIN‑005, TC‑LOGIN‑006, TC‑LOGIN‑007, TC‑LOGIN‑008, TC‑LOGIN‑009 | | |
+| **4** | REQ‑AUTH‑02 | User can reset password via email | Forgot Password – valid flow | TC‑FP‑001, TC‑FP‑002 | | |
+| **5** | REQ‑AUTH‑02 | *(same)* | Forgot Password – negative cases | TC‑FP‑003, TC‑FP‑004 | | |
+| **6** | REQ‑AUTH‑03 | System must not reveal email registration | Verify generic error for unregistered email | TC‑LOGIN‑005, TC‑FP‑003 | | |
+
+**Step 7: Apply conditional formatting to the “Status” column**
+Let’s make Pass green, Fail red, Blocked yellow.
+1. Select column E by clicking the column letter.
+2. Go to `Format → Conditional formatting`.
+3. Under *Format cells if…*, choose **Text is exactly**.
+4. First rule: enter `Pass` → set the fill color to green (or light green). Click **Done**.
+5. Click **Add another rule**: Text is exactly → `Fail` → fill color red (or light red).
+6. Add another rule: Text is exactly → `Blocked` → fill color yellow.
+*(Now whenever you type Pass/Fail/Blocked in column E, the cell will automatically color.)*
+
+**Step 8: Add a coverage summary (using COUNTIF)**
+At the bottom or in a new summary area, you can count the statuses. For example, in a cell below your data (say E10), type:
+```text
+=COUNTIF(E2:E9,"Pass") & " Passed"
+```
+*Similarly for Fail and Blocked. You could also compute percentage.*
+
+**Step 9: Update regularly**
+During test execution, update the Status column based on the overall result of the test cases for that requirement (if any test case fails, the requirement status could be “Fail”). Add comments when something is blocked or a defect is raised.
+
+> **That’s your complete RTM in Google Sheets! You now have traceability from requirements to test cases, and a live status view.**
+
+---
+
+### 19.5 🏢 Real‑World Example – Login & Forgot Password RTM
+We’ll connect the requirements we’ve been using all along.
+
+**Requirements:**
+* **REQ‑AUTH‑01:** User can log in with valid credentials.
+* **REQ‑AUTH‑02:** User can reset password via email.
+
+**RTM Table (in Google Sheets):**
+
+|  | A | B | C | D | E |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| **1** | **Requirement ID** | **Requirement Description** | **Test Scenario** | **Test Case ID(s)** | **Status** |
+| **2** | REQ‑AUTH‑01 | User can log in with valid email and password | Verify successful login | TC‑LOGIN‑001, TC‑LOGIN‑002, TC‑LOGIN‑003 | 🟢 Pass |
+| **3** | REQ‑AUTH‑01 | *(same)* | Verify error handling for invalid login | TC‑LOGIN‑004, TC‑LOGIN‑005, TC‑LOGIN‑006, TC‑LOGIN‑007, TC‑LOGIN‑008, TC‑LOGIN‑009 | TC‑LOGIN‑004 Pass, TC‑LOGIN‑005 Fail, rest Not Run |
+| **4** | REQ‑AUTH‑02 | User can reset password via email | Forgot Password – valid flow | TC‑FP‑001, TC‑FP‑002 | ⚪ Not Started |
+| **5** | REQ‑AUTH‑02 | *(same)* | Forgot Password – negative cases | TC‑FP‑003, TC‑FP‑004 | ⚪ Not Started |
+
+*If you want to make it even more compact, you can add multiple test scenarios in one row if they belong to the same requirement, using line breaks or commas. Just ensure it’s readable.*
+
+---
+
+### 19.6 🔗 How RTM Links to Other STLC Phases
+* **Phase 1 (Requirement Analysis):** You start building the RTM as soon as you understand the requirements. You may initially only have “Test Scenario” column filled, with empty Test Case IDs.
+* **Phase 3 (Test Case Development):** You populate the Test Case IDs after you’ve written and baselined the test cases.
+* **Phase 5 (Test Execution):** You update the Status column as you execute tests, giving real‑time coverage tracking.
+* **Phase 6 (Test Closure):** The RTM is part of the test closure artifacts, demonstrating that all requirements were tested.
+
+---
+
+### 19.7 ❓ Why This Matters for a QA/SDET
+* Interviewers will ask: “How do you ensure you’ve tested all requirements?” The RTM is your answer.
+* As an SDET, you might generate the RTM automatically by linking test scripts to requirement IDs (e.g., in Playwright, you can tag tests with `@REQ-AUTH-01` and produce a coverage report).
+* When a requirement changes (which happens constantly in Agile), you quickly identify impacted test cases and update them or your automation scripts accordingly. No guessing.
+
+---
+
+### 19.8 🗣️ Explanation
+> “The Requirements Traceability Matrix is a spreadsheet that maps each functional requirement to its corresponding test scenarios and test cases. It ensures that every requirement has at least one test case covering it, giving us 100% traceability. I create it during requirement analysis and keep it updated throughout the testing lifecycle. It’s also my go‑to document when a requirement changes, because it shows exactly which test cases need to be updated.”
+
+---
+
+### 19.9 ⚠️ Important Summary Flow
+You first have Requirements (from BRD/SRD). You put them in the RTM.
+
+Then you design Test Cases in your “TestCases” sheet, each with its own unique ID (e.g., TC‑LOGIN‑001). You assign a requirement reference in the test case itself (the Requirement Reference column).
+
+Then you go back to the RTM and fill in the Test Case ID(s) column with the IDs of the test cases that cover each requirement.
+
+So the RTM is a central mapping that references the test case IDs you’ve already defined in your test case sheet. You don’t copy IDs from the RTM to the test case; you copy from the test case sheet to the RTM.
+
+**Summary flow:**
+`BRD/SRD → RTM (requirements listed) → Test Cases designed (with IDs) → RTM updated with those IDs.`
+
+---
+
+## 20. Test Execution & Test Closure Activities
+
+### 20.1 🧪 Part 1 – Test Execution (STLC Phase 5)
+
+#### 🔍 Simple Analogy
+You’ve written the recipes (test cases), set up the kitchen (test environment), and now it’s the big day. You start cooking each dish exactly as the recipe says. For every dish you taste, you tick “perfect” or write a complaint note if it’s too salty. If a dish was sent back and the chef fixes it, you re‑taste it. And because the chef might have accidentally broken something else while fixing that dish, you also quickly re‑taste the other dishes nearby. That’s test execution: running the tests, finding failures, logging defects, retesting fixes, and checking nothing else broke.
+
+#### 💼 Professional Definition
+Test Execution is the phase where you actually run the prepared test cases, compare actual results with expected results, log any mismatches as defects, and re‑validate fixes. It begins as soon as the test environment is ready and a stable build is deployed.
+
+#### 🧾 Key Activities During Test Execution
+* **Execute test cases as per plan:**
+  * Start from the highest‑priority test cases (smoke tests first, then functional, etc.).
+  * Record actual results immediately; don’t trust memory.
+* **Compare actual vs. expected results:**
+  * If they match → mark the test case as Pass.
+  * If they don’t match → mark it Fail and log a defect.
+* **Log defects (defect reporting):**
+  * Write a clear defect report with exact steps, screenshots, environment details, severity, and priority.
+  * Link the defect ID back to the test case and the RTM.
+* **Retest fixed defects:**
+  * Once a developer marks a defect as “Fixed”, the same tester reruns the failed test case to confirm the fix works.
+  * Only if the test case now passes is the defect closed.
+* **Perform regression testing:**
+  * Whenever code changes, re‑run a selected set of existing test cases that cover the critical business areas to ensure nothing else broke.
+  * In automation, regression tests are often the entire automated suite.
+* **Update RTM and status reports:**
+  * Keep the RTM “Status” column current (Pass, Fail, Blocked).
+  * Send daily/weekly test execution reports: how many tests run, how many passed/failed, defects found, and overall health.
+
+#### 📊 Example: Login Feature Execution
+Suppose you have these test cases to execute:
+
+| TC‑ID | Title | Result | Action |
+| :--- | :--- | :--- | :--- |
+| **TC‑LOGIN‑001** | Login with valid credentials | 🟢 Pass | Mark Pass in sheet. |
+| **TC‑LOGIN‑004** | Wrong password | 🔴 Fail – Error message missing “Invalid email or password” shown incorrectly. | Log Defect #101, mark Fail. |
+| **TC‑LOGIN‑005** | Unregistered email | 🟡 Blocked – Test email server not responding. | Mark Blocked, escalate. |
+| **TC‑LOGIN‑006** | Empty fields | 🟢 Pass | Mark Pass. |
+
+**Later:**
+* Developer fixes #101.
+* You retest TC‑LOGIN‑004 → now Pass. Close defect #101.
+* You run a quick regression: retest TC‑LOGIN‑001, TC‑LOGIN‑003, TC‑LOGIN‑007 (random sample) → all pass.
+
+#### ❓ How This Fits into Automation
+As an SDET, you don’t execute all test cases manually each time. You write automated scripts (e.g., in Playwright) that perform these steps for you and produce a report. But you still oversee results, investigate failures, log defects manually when needed, and run exploratory tests that aren’t scripted.
+
+---
+
+### 20.2 🧾 Part 2 – Test Cycle Closure (STLC Phase 6)
+
+#### 🔍 Simple Analogy
+After the wedding feast is over, the head chef doesn’t just walk away. They check:
+* “Did we serve every dish on the menu?”
+* “Were any complaints unresolved?”
+* “What did we learn? Should we order extra dessert next time?”
+
+Then they sign off the kitchen, pack up the leftover recipes, and write a note for the next event. That’s Test Closure – evaluating completion, making sure nothing is left open, and archiving the assets.
+
+#### 💼 Professional Definition
+Test Cycle Closure is the final phase where the testing team checks whether the predefined exit criteria are met, prepares a Test Closure Report, and archives all test artifacts. It’s the formal sign‑off that testing is complete (or, in Agile, that the sprint’s testing is done).
+
+#### 🧾 Key Activities During Test Closure
+* **Verify Exit Criteria:**
+  * Exit criteria are defined during Test Planning. Examples:
+    * All critical test cases executed.
+    * All high‑severity defects closed or deferred with documented reasons.
+    * Test coverage ≥ 95%.
+    * Regression tests passed.
+  * If any criterion is not met, testing is not closed; the release is delayed or a risk is accepted.
+* **Prepare the Test Closure Report (Test Summary Report):**
+  * A document summarizing the testing effort. Typical contents:
+
+| Section | Description |
+| :--- | :--- |
+| **Project / Sprint Info** | What was tested (feature, release). |
+| **Scope & Out‑of‑Scope** | What was planned vs. actually tested. |
+| **Test Execution Summary** | Number of test cases planned, executed, passed, failed, blocked. |
+| **Defect Summary** | Total defects found, by severity/priority, open vs. closed, defect density. |
+| **Test Coverage** | Requirements covered (RTM status). |
+| **Risks & Issues** | Any lingering risks, known issues going into production. |
+| **Conclusion** | Recommendation: “Ready for release” or “Release at risk due to open critical defects”. |
+
+* **Archive Test Artifacts:**
+  * Store test cases, test data, automation scripts, RTM, logs, and reports in a shared repository (e.g., Google Drive, SharePoint, Confluence, GitHub).
+  * This ensures future maintenance or regression suites can be picked up without reinventing the wheel.
+* **Conduct Lessons Learned (Retrospective):**
+  * Team discusses: What went well? What went wrong? What should we start/stop/continue?
+  * QA may suggest improvements in test design, environment setup, or automation coverage.
+  * This feeds back into the next test planning phase (Shift‑Left!).
+
+#### 🧪 Real‑World Example – Test Closure for Login Feature
+**Exit Criteria Check:**
+* All 9 login test cases executed → 8 Pass, 1 Fail (TC‑LOGIN‑005 failed – cosmetic defect, agreed to defer).
+* Zero Severity‑1 defects open.
+* Regression tests passed.
+* RTM shows 100% requirements coverage.
+
+**Test Closure Report snippet (Google Sheets or Doc):**
+* **Project:** Banking App v1.0 – Login Module
+* **Test Period:** 24–28 July 2026
+* **Test Cases:** 9 planned, 9 executed, 8 Pass, 1 Fail (deferred)
+* **Defects:** 1 minor defect (ID #101 – deferred), 0 open
+* **Conclusion:** Feature is ready for release. Deferred defect accepted by Product Owner.
+* **Archive:** Upload test cases, RTM, and defect report to TeamDrive/QA/Releases/v1.0/.
+* **Lesson learned:** “Security test cases (SQL injection) should be written earlier with security team input.”
+
+---
+
+### 20.3 🗣️ Explanation
+> “Test Execution is when we actually run the test cases, compare actual outcomes with expected, log defects, and retest fixes along with regression testing. It’s the hands‑on phase where we find most of the bugs. Test Cycle Closure is the wrap‑up phase where we verify that all exit criteria are met, prepare a Test Closure Report, archive test artifacts, and capture lessons learned. Together, they ensure that testing is not only performed but also formally concluded with a clear go/no‑go recommendation.”
+
+---
+
+## 21. GUI Testing & Error Guessing
+These are two separate things I'll cover together.
+
+### 21.1 🖥️ Part A – GUI Testing (Graphical User Interface)
+
+#### 🔍 Simple Analogy
+You're buying a car. Before you even start the engine, you look at the paintwork, check that the doors align, see if the seat fabric is torn, and make sure the speedometer numbers are readable. That's GUI testing – you're checking the look and feel, the visual elements, not the engine.
+
+#### 💼 Professional Definition
+GUI Testing verifies the visual elements that users interact with – buttons, text fields, colors, fonts, alignment, images, error messages, and the overall layout. It's a subset of UI Testing. The goal is to ensure the application is aesthetically consistent and easy to use.
+
+#### 🧾 What you check (examples from a login page):
+* Are all labels visible (Email, Password)?
+* Is the Login button the correct color and size?
+* Do error messages appear in red under the correct field?
+* Does the page layout break on different screen sizes?
+* Are mandatory field indicators (*) shown?
+* Are fonts consistent with the design mockup?
+* Is the cursor position correct when tabbing between fields?
+
+#### 🤖 GUI Testing and SDET:
+* Fully automated GUI checks are possible (e.g., Playwright can verify visibility, color, position), but many teams still perform final visual validation manually because a human instantly spots a pixel misalignment.
+* As an SDET, you may write visual regression tests using Playwright's `toHaveScreenshot()` to catch unintended layout changes automatically. But broad "does it look right?" still often needs a human eye.
+
+#### 🧪 Example Test Case (GUI):
+* **Title:** Verify error message color on login
+* **Steps:** Leave fields empty, click Login.
+* **Expected:** Error message "Email is required" appears in red (#FF0000) under the email field.
+
+---
+
+### 21.2 🎯 Part B – Error Guessing (as a Testing Type)
+You saw this earlier as a test design technique; here we treat it as a testing type when you're executing tests.
+
+#### 🔍 Simple Analogy
+An experienced plumber walks into a new house and immediately checks under the sink, the toilet seal, and the water heater – because experience tells them those are the spots that always leak. No manual says that; it's intuition built over years. That's error guessing in testing.
+
+#### 💼 Professional Definition
+Error Guessing is an experience‑based testing technique where the tester uses intuition and past defect patterns to guess where bugs are likely hiding, then writes and executes test cases targeting those areas. It has no formal rules, only a checklist in the tester's mind.
+
+#### 🧾 Common error‑guessing scenarios for a login page:
+* Submitting with empty fields (obvious but often missed in early builds).
+* Entering a very long password (maybe buffer overflow).
+* Using special characters like `", \, or emojis`.
+* Rapidly double‑clicking the Login button (submitting twice).
+* Copy‑pasting spaces into the email field.
+* Switching browser tabs while logging in, then coming back.
+* Pressing the browser Back button right after login.
+
+#### 🤖 Why SDETs use it:
+* While automating, you add "chaos" test cases based on your own error guesses (e.g., a Playwright script that enters an extremely long string or two concurrent logins).
+* Error guessing supplements formal techniques like Equivalence Partitioning – it fills gaps those techniques miss.
+
+---
+
+### 21.3 🗣️ Explanation & Malfunctions
+> **Explanation:** “GUI testing focuses on the visual elements – layout, colors, fonts, and alignment – to ensure the user interface is clear and matches the design. Error guessing is an experience‑driven technique where testers use their knowledge of common failure points to design tests that target hidden defects. Both are critical: GUI testing keeps the product visually correct, and error guessing finds bugs that systematic techniques may overlook.”
+
+> **Note on Malfunctions:** A malfunction simply means something isn't working the way it should. In software, when we say the system malfunctions, we mean it’s doing something wrong—like showing the wrong message, crashing, or not responding. That’s the failure the user experiences.
+
+---
+
+## 22. Smoke vs. Sanity Testing
+These are two small, focused types of testing that are often mixed up. I’ll define each, then compare them directly.
+
+### 22.1 🧪 Part A – Smoke Testing
+
+#### 🔍 Simple Analogy
+You buy a new car. Before taking it on a long road trip, you do a quick check:
+* Do the doors lock?
+* Does the engine start?
+* Do the headlights turn on?
+
+You’re not testing the air conditioning, the sunroof, or the stereo. You’re just confirming the car is fundamentally drivable. That’s smoke testing – a fast, shallow check of the most critical features to see if the build is stable enough for further testing.
+
+#### 💼 Professional Definition
+Smoke Testing (also called “Build Verification Test” or “Confidence Test”) is a small set of tests that verifies the core functionality of an application after a new build is deployed. Its purpose is to decide if the build is stable enough to proceed with full testing. If smoke tests fail, the build is rejected immediately.
+
+#### 🧾 Typical smoke test scenarios for a banking app:
+* App launches without crashing.
+* Login with valid credentials works.
+* Dashboard loads.
+* Logout works.
+
+If any of these fail, testers don’t waste time on detailed testing. The build goes back to the developers.
+
+* **Who does it:** Usually QA, sometimes an automated smoke suite runs immediately after deployment in CI/CD.
+* **Duration:** Minutes, not hours.
+
+---
+
+### 22.2 🧪 Part B – Sanity Testing
+
+#### 🔍 Simple Analogy
+The car went through a major repair (the engine was rebuilt). You don’t need to check the entire car again. You just want to verify that the engine repair worked and the car still starts and drives. You’re not checking the air conditioning. That’s sanity testing – a narrow, focused check after a specific change or bug fix.
+
+#### 💼 Professional Definition
+Sanity Testing is a quick, focused test performed after a bug fix or a small code change to confirm that the specific issue is resolved and that the immediately related functionality is not broken. It’s a subset of regression testing and is usually unscripted or partially scripted.
+
+#### 🧾 Typical sanity test scenario:
+* **A bug was fixed:** “Reset password link expired after 30 minutes wasn’t showing the expiry error.”
+* **After the fix**, the tester runs a sanity check: manually test the expiry flow only.
+* You don’t retest the entire login or registration module.
+
+* **Who does it:** QA, often the tester who raised the bug.
+* **Duration:** Very short – a few minutes to confirm the fix works.
+
+---
+
+### 22.3 ⚖️ Smoke vs Sanity – Side‑by‑Side
+
+| Feature | Smoke Testing | Sanity Testing |
+| :--- | :--- | :--- |
+| **What it checks** | Core, critical functionality of the whole build. | Specific functionality after a fix or change. |
+| **Scope** | Wide but shallow – touches many critical areas lightly. | Narrow but deep – focuses on one fix and its immediate impact. |
+| **Performed when** | Every time a new build is deployed. | After a bug fix or code change is deployed. |
+| **Purpose** | To decide if the build is stable enough for further testing. | To decide if the specific fix works and further planned testing can continue. |
+| **Automation** | Often automated as part of CI/CD pipeline (smoke test suite). | Usually manual, sometimes an automated subset of regression. |
+| **Reject Build?** | Yes – if smoke fails, the build is rejected outright. | If sanity fails, the build is sent back for that particular fix. |
+| **Example** | Login, Dashboard, Logout work. | Password reset expiry now shows correct error. |
+
+---
+
+### 22.4 🧠 Why This Matters for an SDET
+As an SDET, you’ll create and maintain a smoke test suite in Playwright that runs automatically on every build in CI/CD. If it fails, the pipeline stops and notifies the team.
+
+For sanity tests, you might write a quick targeted automation script for a critical fix, or rely on a subset of existing regression tests to cover the changed area.
+
+Understanding these two shows you can optimize test effort: you don’t run all 500 tests every time; you run smoke first, then full testing only if smoke passes, and sanity when a focused fix arrives.
+
+---
+
+### 22.5 📝 How to explain it clearly
+> “Smoke testing is a quick, high‑level run of the most critical features to confirm the build is stable enough for detailed testing. Sanity testing is a narrow, focused check after a bug fix to verify the fix works and no immediate side effects appear. Smoke is broad and shallow; sanity is narrow and deep. In automation, I implement a smoke suite that runs on every CI/CD pipeline trigger, while sanity tests are often manual or a targeted subset of regression.”
+
+---
+
+### 22.6 🛠️ Smoke Tests for Login – Example Selection
+We need broad, shallow, critical path only. These test cases check if the application is fundamentally alive and usable after a new build.
+
+From your login test suite, these three qualify as smoke tests:
+
+| TC‑ID | Title | Why it's a smoke test |
+| :--- | :--- | :--- |
+| **TC‑LOGIN‑001** | Verify successful login with valid credentials | Core functionality. If a user can't log in, nothing else matters. |
+| **TC‑LOGIN‑003** | Verify login using "Enter" key instead of button click | Many users press Enter; it's a critical usability path. |
+| **TC‑LOGIN‑006** | Verify validation for empty email and password | Basic input validation – ensures the page loads and client‑side checks work. This is the shallow "does the page even respond" check. |
+
+*(We exclude error messages like wrong password because they test deeper logic; smoke only cares that the most essential happy path works and the page doesn't crash on simple interaction.)*
+
+---
+
+### 22.7 🔧 Sanity Test – After a Bug Fix
+**Bug fix:** “The ‘Forgot Password’ link was not visible on mobile.”
+
+**A one‑line sanity test:**
+> On a mobile viewport (375px width), verify the ‘Forgot Password?’ link is visible below the password field and is clickable, leading to the reset page.
+
+You're not retesting the entire Forgot Password flow. You're only confirming that the specific fix (visibility on mobile) works, and that the link still functions.
+
+---
+
+## 23. Functional vs. Non-Functional Testing Deep Dive
+
+### 23.1 🔍 Simple Analogy
+Imagine you’re buying a smartphone.
+* **Functional testing** checks what the phone does: Can you make a call? Does the camera take a photo? Does the fingerprint scanner unlock the screen? These are the actions the phone is supposed to perform.
+* **Non‑functional testing** checks how well the phone does those things: How fast does the camera open? How long does the battery last? Is the screen readable in direct sunlight? Can 100 people use the network without calls dropping? These are the qualities of the phone’s behaviour.
+
+Both are essential. A phone that takes beautiful photos but shuts down after 20 minutes is useless. A phone with a 3‑day battery that can’t make calls is also useless.
+
+---
+
+### 23.2 💼 Professional Definition
+In software testing, every test case falls into one of these two large buckets.
+
+#### ✅ Functional Testing
+* **What it is:** Testing that verifies the software does exactly what the requirements say it should do – feature by feature, function by function.
+* **Focus:** The application’s behaviour against functional specifications.
+* **Examples (from our login feature):**
+  * Can a registered user log in with a valid email and password?
+  * Does an invalid password show the correct error message?
+  * Does the “Forgot Password” link navigate to the reset page?
+  * Does the “Remember Me” checkbox keep the user logged in?
+* **Sub‑types (some you already know):**
+  * Unit testing
+  * Integration testing
+  * System testing
+  * Smoke / Sanity testing
+  * Regression testing (checking that existing functionality still works)
+
+#### 🔧 Non‑Functional Testing
+* **What it is:** Testing that verifies how the system behaves – its performance, security, usability, reliability, and other quality attributes. It’s not about a specific feature working, but about the overall experience and stability under different conditions.
+* **Focus:** The system’s attributes, often called “quality attributes” or “‑ilities”.
+* **Examples (from the same login feature):**
+  * Does the login page load within 2 seconds on a slow 3G connection? *(Performance)*
+  * Can 5,000 users log in at the same time without the server crashing? *(Load / Stress)*
+  * Is the login page usable on a mobile screen without horizontal scrolling? *(Usability)*
+  * Does the login page work in Chrome, Firefox, Safari, and Edge? *(Compatibility)*
+  * Is the password transmitted over HTTPS and not stored in plain text? *(Security)*
+  * If the server restarts during login, does the system recover without corruption? *(Reliability / Recovery)*
+
+---
+
+### 23.3 📊 Side‑by‑Side Comparison
+
+| Feature | Functional Testing | Non‑Functional Testing |
+| :--- | :--- | :--- |
+| **Question it answers** | “Does the system do what it’s supposed to?” | “How well does the system perform under various conditions?” |
+| **Based on** | Requirements / User Stories (functional spec). | Quality attributes, service‑level agreements (SLAs), industry standards. |
+| **Test cases** | Clear pass/fail against expected behaviour. | Often have thresholds (e.g., “page load ≤ 3 seconds”) rather than a single exact expected result. |
+| **When to perform** | Throughout the SDLC – every sprint. | Often after functional stability is reached, but ideally also early (shift‑left for performance, security). |
+| **Automation** | Heavily automated (Playwright for UI, API tests). | Some can be automated (performance scripts with k6/JMeter, accessibility checks, Lighthouse for performance). Others (usability) are manual. |
+| **Examples** | Login works, password reset email sent, error message appears. | Login page loads in < 2 sec, 10,000 concurrent logins, secure token storage. |
+
+---
+
+### 23.4 🧠 Why This Matters for an SDET
+Your automation scripts are primarily functional. You write Playwright tests to verify that a user can log in, search, and check out.
+
+However, you can also integrate non‑functional checks into your automation suite:
+* **Performance:** Add `page.waitForLoadState('networkidle')` and measure navigation timing.
+* **Accessibility:** Use `@axe-core/playwright` to run automated accessibility checks.
+* **Visual regression:** Use `toHaveScreenshot()` to catch unexpected layout shifts (a non‑functional regression).
+
+In CI/CD, functional tests run first. If they pass, non‑functional tests (like a short performance or security scan) may run in parallel or in a later stage.
+
+As an SDET, you must know which test type you’re writing. When a product owner asks, “Did you test performance?”, you need to understand they’re talking about non‑functional, not just “did the button click work?”
+
+---
+
+### 23.5 📝 How to explain it simply
+> “Functional testing verifies that the software’s features work exactly as specified – it answers ‘Does it do what it should?’. Non‑functional testing checks how well the system operates – covering performance, security, usability, and reliability. Both are critical: a functionally perfect app that’s slow or insecure will fail users. As an SDET, I automate mostly functional checks, but I also include non‑functional validations like visual snapshots, accessibility, and performance assertions where possible.”
+
+---
+
+## 24. Retesting vs. Regression Testing Deep Dive
+
+### 24.1 🔍 Simple Analogy
+Think of a car repair shop.
+* **Retesting** – The mechanic replaces a broken brake pad. You take the car out and test only the brakes to make sure they now work. You’re checking the exact fix.
+* **Regression Testing** – After the brake job, you also test the steering, the engine, and the lights to make sure the mechanic didn’t accidentally disconnect something else while fixing the brakes. You’re checking that nothing else broke.
+
+So:
+* **Retesting** = verifying a specific fix.
+* **Regression Testing** = verifying that the rest of the system is still stable after the fix.
+
+---
+
+### 24.2 💼 Professional Definition
+
+| Feature | Retesting | Regression Testing |
+| :--- | :--- | :--- |
+| **What it is** | Running the same test case(s) that previously failed to confirm a defect is fixed. | Running a set of previously passed test cases to ensure recent changes haven’t broken anything. |
+| **Trigger** | A specific defect is marked “Fixed” by the developer. | Any code change, new feature, bug fix, or environment update. |
+| **Scope** | Very narrow – limited to the failed test case(s) linked to the defect. | Wide – covers the impacted module and often the critical paths of the whole application. |
+| **Test cases used** | The exact test cases that exposed the defect. | A pre‑selected regression suite, often including smoke tests and high‑priority functional tests. |
+| **Goal** | Confirm the bug is truly gone. | Confirm no new bugs were introduced. |
+| **Automation** | Can be automated, but often done manually once to quickly close the defect. | Highly automated; regression suites run in CI/CD on every build. |
+| **Outcome if it fails** | The defect is reopened and sent back to the developer. | The new code is considered unstable; the team investigates which change caused the break. |
+
+---
+
+### 24.3 🧪 Real‑World Example – Login Feature
+**Scenario:** A defect was logged:
+> *Defect #101: After entering a wrong password, the error message “Invalid email or password” is not displayed (the screen stays blank).*
+
+Developer fixes it and marks the defect as “Fixed”.
+
+**Retesting (what you do now):**
+* Run the exact test case that failed: **TC‑LOGIN‑004** (Verify error for wrong password).
+* You enter a valid email and wrong password, click Login.
+* You see the error message. The test case now passes → defect closed.
+
+**Regression Testing (what you do after retesting):**
+* Because the developer changed the password validation code, you now worry: “Did this change accidentally break the normal login, or the empty‑field validation, or the account lockout?”
+* You run a regression suite (a set of test cases related to login):
+  * **TC‑LOGIN‑001** – Valid login *(Pass)*
+  * **TC‑LOGIN‑006** – Empty fields validation *(Pass)*
+  * **TC‑LOGIN‑009** – Account lockout after 5 failed attempts *(Pass)*
+
+All pass → the code change is safe. If any fail, you log a new defect.
+
+---
+
+### 24.4 🔁 How They Fit Together (The Cycle)
+1. Tester finds a bug → logs defect → test case fails.
+2. Developer fixes the defect.
+3. Tester retests the fix (same test case).
+4. If retesting passes, tester performs regression testing around the changed area.
+5. If regression passes, the defect is closed.
+
+---
+
+### 24.5 ❓ Why This Matters for an SDET
+As an SDET, you will often automate the regression suite so that it runs on every commit. The retest, however, may still be done manually once before closing the defect (or you run just that one test script locally).
+
+A common interview question is: “What is the difference between retesting and regression?” This table is your answer.
+
+In continuous integration, the regression suite is your safety net. It must be fast, reliable, and cover critical paths.
+
+---
+
+### 24.6 📝 How to explain it clearly
+> “Retesting is verifying that a specific defect has been fixed by re‑executing the exact test case that failed. Regression testing is running a broader set of tests to ensure that the fix or any new code has not broken existing functionality. Retesting is narrow and focused; regression is wide and preventive. In my automation work, I ensure a strong regression suite that runs on every build, while retesting is often done manually to close the defect loop.”
+
+---
+
+## 25. Exploratory vs. Ad-hoc Testing Deep Dive
+
+### 25.1 🔍 Simple Analogy
+* **Ad‑hoc Testing** is like walking into a dark room and randomly flipping switches to see what happens. No plan, no map, just curiosity.
+* **Exploratory Testing** is like being a detective in that same room. You have a mission (“find where the fuse box is”), you test switches in a logical area, you observe what happens, and you adjust your next move based on what you discover. You’re still thinking on your feet, but you have a goal and you take notes.
+
+Both are unscripted, but one is aimless and the other is guided by skill.
+
+---
+
+### 25.2 💼 Professional Definition
+
+#### 🕵️‍♂️ Exploratory Testing
+Exploratory testing is a structured, unscripted approach where the tester simultaneously learns about the application, designs tests, and executes them. It’s not random clicking; it’s a disciplined, thoughtful process that relies on the tester’s experience, curiosity, and critical thinking.
+
+**Key characteristics:**
+* **Simultaneous learning and execution:** You explore the feature, learn its behavior, and immediately test based on that learning.
+* **Charter‑based:** Often guided by a test charter – a short mission statement that defines what to explore, what resources to use, and what risks to focus on.
+* **Time‑boxed:** Usually performed in dedicated sessions (e.g., 60–90 minutes) called Session‑Based Test Management (SBTM).
+* **Debrief notes:** After the session, you document what you tested, what bugs you found, and what areas still need deeper testing.
+
+**Example Charter:**
+> “Explore the ‘Forgot Password’ flow for 60 minutes. Focus on security concerns around token expiry and error message consistency. Use Chrome and Firefox. Note any unexpected behavior.”
+
+**During that session, you may try:**
+* Resetting password, then trying the old password.
+* Using the back button after resetting.
+* Opening the reset link on two different browsers.
+* Requesting multiple resets and using the last link first.
+
+*(These are not pre‑written test cases, but they come from real‑time thinking.)*
+
+#### 🎲 Ad‑hoc Testing
+Ad‑hoc testing is completely unplanned, unstructured, and undocumented testing. There’s no charter, no time‑box, no mission. You just open the application and click around, often trying to “break” it without any systematic approach.
+
+**Key characteristics:**
+* **No preparation:** No test cases, no test data prepared in advance.
+* **No documentation:** Usually no notes are taken unless a bug is found.
+* **Relies purely on intuition:** Often done when time is short or as a quick smoke‑type check.
+* **Random:** The path followed is not guided by risk or functionality; it’s whatever the tester feels like doing.
+
+**Example:**
+> You have 10 minutes free. You open the login page and try clicking “Login” without entering anything, then refresh the page, then paste a long URL into the email field. That’s ad‑hoc.
+
+---
+
+### 25.3 📊 Ad‑hoc vs Exploratory – Side‑by‑Side
+
+| Feature | Ad‑hoc Testing | Exploratory Testing |
+| :--- | :--- | :--- |
+| **Preparation** | None – completely unprepared. | Minimal – a charter or mission is defined. |
+| **Structure** | Random, directionless. | Structured freedom – goal‑oriented but unscripted. |
+| **Documentation** | Usually no notes, only defects reported. | Session notes, test ideas, and defects recorded. |
+| **Learning** | Very little – you don’t reflect on what you learned. | High – you continuously learn and adapt. |
+| **Repeatability** | Not repeatable – next time you might click differently. | Partially repeatable – the charter can be used again, but the exact steps may vary. |
+| **Value** | Good for a quick sanity check or when time is extremely limited. | High value – finds deep, complex bugs that scripted tests miss. |
+| **When to use** | Rarely used as a primary method. More of a “quick look”. | Regularly used in sprints, especially before release, or on complex features. |
+
+> **Professional Note:** Many people wrongly use the terms interchangeably. In an interview, you should clearly distinguish them. Exploratory testing is a respected, formal technique. Ad‑hoc is a casual activity.
+
+---
+
+### 25.4 🧠 Why This Matters for an SDET
+**Exploratory Testing informs automation:** During exploratory sessions, you discover edge cases, messy workflows, and surprising bugs. You then convert these findings into automated regression tests so they’re never missed again.
+
+**Ad‑hoc testing** is rarely automated because it’s random. But the same quick‑check mentality can be applied to “chaos” automation scripts that send random inputs.
+
+In an Agile SDET role, you might spend 80% of your time writing automated scripts and 20% doing exploratory testing to find gaps in automation coverage. This hybrid approach is highly valued.
+
+When you present bugs found during exploratory testing, you describe them as *“found during structured exploratory session on the payment flow”* – which sounds far more professional than *“I was just clicking around”*.
+
+---
+
+### 25.5 📝 How to explain it clearly
+> “Exploratory testing is a disciplined, unscripted testing approach where I simultaneously learn the system, design tests, and execute them, usually guided by a charter and time‑boxed. It’s excellent for finding edge cases that scripted tests miss. Ad‑hoc testing, in contrast, is completely random and undocumented, useful only for a very quick sanity look. I regularly use exploratory testing in sprints to uncover hidden risks, and I convert the most important scenarios into automated scripts for regression.”
