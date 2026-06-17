@@ -1284,18 +1284,19 @@ To ensure test cases are effective and maintainable, keep these guidelines in mi
 #### Core Fields
 *   **Test Case ID:** A unique identifier for each test case. Following a naming convention (e.g., `TC_Project_Module_001`) helps in tracking and organization.
     *   *Example:* `TC_Yahoo_Inbox_001`
+*   **Type:** The nature of the test case, typically `Positive` (valid inputs/happy path) or `Negative` (invalid/unexpected inputs).
+*   **Priority:** The importance of the test case, which serves as a parameter to decide the execution order and how fast associated defects should be fixed.
 *   **Test Scenario:** Any functionality that can be tested. It represents a collective set of test cases which helps the testing team determine the positive and negative characteristics of the project. Test scenarios are derived from test documents such as:
     *   **BRS (Business Requirement Specification):** A high-level document describing the business needs and what the final product should achieve from a client/business perspective.
     *   **SRS (Software Requirement Specification):** A detailed technical document that translates BRS into specific functional and non-functional requirements for the development team.
-*   **Test Case:** A set of actions executed to verify a particular feature or functionality of your application. Test cases focus on what to test and how to test, and are derived from test scenarios.
-*   **Precondition:** Prerequisites or conditions that must be met before executing the test case.
-*   **Priority:** The importance of the test case, which serves as a parameter to decide the execution order and how fast associated defects should be fixed.
+*   **Pre-conditions:** Prerequisites or conditions that must be met before executing the test case.
 *   **Test Steps:** Numbered actions required to execute the test. Each step is marked pass or fail based on the comparison between expected and actual outcomes.
 *   **Test Data:** The specific inputs, accounts, or configurations created or selected to satisfy the execution preconditions and execute the test steps.
 *   **Expected Result:** The correct, expected outcome of the system after executing the test steps, as per the customer requirements. This is usually defined in the **SRS** or **FRS (Functional Requirement Specification)**.
-*   **Post Condition:** Conditions that need to be achieved once the test case is successfully executed.
+*   **Post-condition:** Conditions that need to be achieved once the test case is successfully executed.
 *   **Actual Result:** The observed system behavior after executing the test case. Based on the comparison between this and the expected result, the status is set.
 *   **Status:** The final outcome (`Pass`, `Fail`, `Blocked`, `Not Executed`). If the actual and expected results match, the status is Passed. If they differ, it is Failed, and the defect goes through the bug life cycle.
+*   **Comments:** Additional context, screenshots, or defect IDs that help the team.
 
 #### Metadata & Tracking Fields
 *   **Project Name:** Name of the project the test cases belong to.
@@ -1307,7 +1308,6 @@ To ensure test cases are effective and maintainable, keep these guidelines in mi
 *   **Date of Review:** When the test cases were reviewed.
 *   **Executed By:** Name of the tester who executed the test case.
 *   **Date of Execution:** When the test case was executed.
-*   **Comments:** Additional context, screenshots, or defect IDs that help the team.
 
 ### 17.10 Why Test Cases Matter (and the Risks of Omitting Them)
 
