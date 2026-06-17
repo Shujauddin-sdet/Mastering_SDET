@@ -60,6 +60,19 @@
   * [16.1 Equivalence Partitioning (EP)](#161-equivalence-partitioning-ep)
   * [16.2 Boundary Value Analysis (BVA)](#162-boundary-value-analysis-bva)
   * [16.3 Real‑World Example](#163-realworld-example-forgot-password--email-field)
+* [17. Writing Effective Test Cases (Positive & Negative)](#17-writing-effective-test-cases-positive--negative)
+  * [17.1 Simple Analogy](#171-simple-analogy)
+  * [17.2 Professional Context](#172-professional-context)
+  * [17.3 Positive Test Cases](#173-positive-test-cases)
+  * [17.4 Negative Test Cases](#174-negative-test-cases)
+  * [17.5 How to Write Effective Test Cases – 7 Golden Rules](#175-how-to-write-effective-test-cases--7-golden-rules)
+  * [17.6 How to Explain It Simply (Interview Tip)](#176-how-to-explain-it-simply-interview-tip)
+  * [17.7 Test Case Design Workflow](#177-test-case-design-workflow)
+  * [17.8 Best Practices for Creating Good Test Cases](#178-best-practices-for-creating-good-test-cases)
+  * [17.9 Detailed Breakdown of Test Case Fields](#179-detailed-breakdown-of-test-case-fields)
+  * [17.10 Why Test Cases Matter (and Risks of Omitting Them)](#1710-why-test-cases-matter-and-risks-of-omitting-them)
+  * [17.11 Comprehensive Test Case Example: Facebook Login](#1711-comprehensive-test-case-example-facebook-login)
+  * [17.12 Comprehensive Test Case Example: Google Account Login](#1712-comprehensive-test-case-example-google-account-login)
 
 ---
 
@@ -1150,3 +1163,205 @@ These are **test design techniques** — systematic ways to decide which test da
 You would combine EP and BVA to build a lean but powerful test data set.
 
 > **Key Takeaway:** "Equivalence Partitioning divides input data into groups that the system treats the same, so we test one value per group instead of all. Boundary Value Analysis focuses on the edges of those groups — just inside and outside the limits — because that's where off‑by‑one errors hide. Together, they let us design the minimum number of test cases with maximum bug‑finding power."
+
+---
+
+## 17. Writing Effective Test Cases (Positive & Negative)
+
+### 17.1 Simple Analogy
+Think of a driving test. The examiner has a checklist:
+
+- **Positive test:** "Drive straight, stop at the red light, signal, park correctly." These check that a normal, good driver can pass.
+- **Negative test:** "What happens if you don't wear a seatbelt? What if you turn without signalling? What if you accelerate through a red light?" These check that the system (the car, the law) correctly catches and handles wrong behavior.
+
+In software, positive test cases check that the system works with valid, expected inputs. Negative test cases check that the system gracefully rejects invalid, unexpected, or malicious inputs. Both are essential — one proves the system does its job; the other proves it doesn't break when things go wrong.
+
+### 17.2 Professional Context
+A test case is a single, detailed instruction that describes what to test, how to test it, and what the result should be. Writing effective test cases is the core manual testing skill — clear, repeatable, and unambiguous.
+
+A standard test case template (fields you fill):
+
+| Field | Description |
+| --- | --- |
+| **Test Case ID** | Unique identifier (e.g., TC‑LOGIN‑01) |
+| **Requirement Reference** | Which user story or requirement it covers |
+| **Title / Summary** | Short description (e.g., "Verify login with valid credentials") |
+| **Preconditions** | What must be true before you start (e.g., "User is registered. Login page is loaded.") |
+| **Test Steps** | Numbered actions you take |
+| **Test Data** | Specific inputs used (e.g., "Email: test@example.com, Password: Pass@123") |
+| **Expected Result** | What the system should do after each step |
+| **Actual Result** | Filled after execution (Pass/Fail, or what actually happened) |
+| **Severity / Priority** | (Sometimes included) How critical this test is |
+| **Status** | Pass, Fail, Blocked, Not Executed |
+| **Comments** | Any notes, screenshots, or defect IDs |
+
+### 17.3 Positive Test Cases
+**Definition:** A test case that uses valid, correct inputs and expects the system to perform its intended function — the "happy path".
+
+**Purpose:**
+- Confirms that the main functionality works.
+- Builds confidence that the feature delivers business value.
+
+**Example: Login feature**
+
+| Field | Value |
+| --- | --- |
+| **Test Case ID** | TC‑LOGIN‑01 |
+| **Title** | Verify successful login with valid credentials |
+| **Preconditions** | User is registered with email "user@test.com" and password "Strong@123". Login page is open. |
+| **Steps** | 1. Enter "user@test.com" in the email field.<br>2. Enter "Strong@123" in the password field.<br>3. Click "Login". |
+| **Test Data** | Email: user@test.com, Password: Strong@123 |
+| **Expected Result** | User is redirected to the dashboard. A welcome message with the user's name appears. No error messages shown. |
+
+**Other positive examples for the same login:**
+- Login with "Remember Me" checked — session persists after browser close.
+- Login using "Enter" key instead of clicking button.
+- Login with an email containing special characters (if allowed, like "user+alias@domain.com").
+
+### 17.4 Negative Test Cases
+**Definition:** A test case that uses invalid, unexpected, or empty inputs and expects the system to reject them gracefully — no crashes, clear error messages, no security leaks.
+
+**Purpose:**
+- Prevents application crashes and ugly error pages.
+- Ensures data integrity (wrong data shouldn't be accepted).
+- Improves security and user experience under misuse.
+
+**Example: Login feature – invalid password**
+
+| Field | Value |
+| --- | --- |
+| **Test Case ID** | TC‑LOGIN‑02 |
+| **Title** | Verify error message on wrong password |
+| **Preconditions** | User is registered. Login page is open. |
+| **Steps** | 1. Enter valid email "user@test.com".<br>2. Enter wrong password "WrongPass".<br>3. Click Login. |
+| **Test Data** | Email: user@test.com, Password: WrongPass |
+| **Expected Result** | Error message displayed: "Invalid email or password." User remains on login page. Password field is cleared. No account lockout after one attempt (if policy allows). |
+
+**Other negative examples for login:**
+- Empty email and empty password → "Email is required."
+- Invalid email format (missing @) → "Please enter a valid email."
+- SQL injection attempt (' OR '1'='1) → system rejects, no database error exposed.
+- XSS attempt (`<script>alert(1)</script>`) → script not executed.
+- Very long email (5000 characters) → system rejects with length error.
+- Disabled account login → "Your account has been disabled."
+
+### 17.5 How to Write Effective Test Cases – 7 Golden Rules
+1. **One test case, one objective.** Don't test multiple things in a single case. If you test "login" and "forgot password" in one case, you'll get confusing results.
+2. **Clear, step‑by‑step instructions.** Imagine someone else executing it who has never seen the feature.
+3. **Exact test data.** Never write "valid email" — write user@example.com. Exact values make tests repeatable.
+4. **Unique and independent.** Each test case should be runnable on its own, without depending on other test cases.
+5. **Self‑contained preconditions.** List everything needed before starting (user created, browser open, DB state).
+6. **Measurable expected result.** "Should work" is useless. Write exactly what you expect to see: "Dashboard page loads. URL contains /dashboard. Greeting 'Hello, John' appears in top right."
+7. **Both positive and negative.** Always complement happy path with at least two error scenarios.
+
+### 17.6 How to Explain It Simply (Interview Tip)
+> “A test case is a documented set of steps, data, and expected results designed to verify a specific feature. Positive test cases use valid inputs and expect success; they prove the system does what it's supposed to. Negative test cases use invalid or unexpected inputs and expect the system to reject them safely with clear messages; they prove the system doesn't break under misuse. Effective test cases are independent, have exact data, clear preconditions, and a measurable expected result. They are the foundation of both manual and automated testing.”
+
+### 17.7 Test Case Design Workflow
+
+To design effective test cases, a tester should follow these sequential steps:
+1. **Understand the Requirements:** Thoroughly analyze the Software Requirement Specification (SRS) or Product Requirements Document (PRD).
+2. **Identify Test Scenarios:** Determine high-level scenarios and user flows that need validation.
+3. **Design the Test Cases:** Draft individual test cases detailing preconditions, steps, test data, and expected results.
+4. **Review the Test Cases:** Conduct peer reviews or lead reviews to ensure accuracy, coverage, and clarity.
+5. **Update Test Cases:** Refine and optimize the test cases based on feedback received during the review.
+
+### 17.8 Best Practices for Creating Good Test Cases
+
+To ensure test cases are effective and maintainable, keep these guidelines in mind:
+
+*   **Simplicity and Transparency:** Test cases should be simple, transparent, and easy for any team member to understand and execute.
+*   **Traceability:** Every test case should be traceable and linked to a specific Requirement ID via the **Requirements Traceability Matrix (RTM)**.
+*   **Conciseness:** Keep test cases brief and focused, containing only necessary and valid steps.
+*   **Balanced Coverage:** Implement a combination of both **positive** and **negative** testing techniques.
+*   **Maintainability:** Design test cases so they are easy to update when application requirements change.
+*   **Usability Focus:** Incorporate usability aspects to ensure the application is user-friendly.
+*   **Performance Considerations:** Cover basic performance testing, such as multi-user concurrency and capacity limits.
+*   **Security Checkpoints:** Address critical security aspects including user permissions, session management, and access logs.
+
+### 17.9 Detailed Breakdown of Test Case Fields
+
+#### Core Fields
+*   **Test Case ID:** A unique identifier for each test case. Following a naming convention (e.g., `TC_Project_Module_001`) helps in tracking and organization.
+    *   *Example:* `TC_Yahoo_Inbox_001`
+*   **Test Scenario:** Any functionality that can be tested. It represents a collective set of test cases which helps the testing team determine the positive and negative characteristics of the project. Test scenarios are derived from test documents such as BRS and SRS.
+*   **Test Case:** A set of actions executed to verify a particular feature or functionality of your application. Test cases focus on what to test and how to test, and are derived from test scenarios.
+*   **Precondition:** Prerequisites or conditions that must be met before executing the test case.
+*   **Priority:** The importance of the test case, which serves as a parameter to decide the execution order and how fast associated defects should be fixed.
+*   **Test Steps:** Numbered actions required to execute the test. Each step is marked pass or fail based on the comparison between expected and actual outcomes.
+*   **Test Data:** The specific inputs, accounts, or configurations created or selected to satisfy the execution preconditions and execute the test steps.
+*   **Expected Result:** The correct, expected outcome of the system after executing the test steps, as per the customer requirements (SRS/FRS).
+*   **Post Condition:** Conditions that need to be achieved once the test case is successfully executed.
+*   **Actual Result:** The observed system behavior after executing the test case. Based on the comparison between this and the expected result, the status is set.
+*   **Status:** The final outcome (`Pass`, `Fail`, `Blocked`, `Not Executed`). If the actual and expected results match, the status is Passed. If they differ, it is Failed, and the defect goes through the bug life cycle.
+
+#### Metadata & Tracking Fields
+*   **Project Name:** Name of the project the test cases belong to.
+*   **Module Name:** Name of the specific module or feature area under test.
+*   **Reference Document:** Path or links to the reference documents (such as Requirement Document, Test Plan, Test Scenarios).
+*   **Author (Created By):** Name of the tester who created the test cases.
+*   **Date of Creation:** When the test cases were created.
+*   **Reviewed By:** Name of the peer/lead who reviewed the test cases.
+*   **Date of Review:** When the test cases were reviewed.
+*   **Executed By:** Name of the tester who executed the test case.
+*   **Date of Execution:** When the test case was executed.
+*   **Comments:** Additional context, screenshots, or defect IDs that help the team.
+
+### 17.10 Why Test Cases Matter (and the Risks of Omitting Them)
+
+Skipping the creation of documented test cases is a common pitfall in software development. Here is why documenting them is critical and what happens when they are ignored:
+
+#### Risks of Not Writing Test Cases
+1.  **Inconsistent and Non-Repeatable Testing:** Without a step-by-step guide, testers will test differently every time, leading to missed bugs and inconsistent quality.
+2.  **Poor Regression Coverage:** When code is updated, it is easy to forget to re-verify older features. Without a test suite, regression bugs will inevitably slip into production.
+3.  **Knowledge Silos ("Key Person Dependency"):** If only one person knows how to test a feature, the team is blocked if that person leaves or is unavailable.
+4.  **No Clear Definition of "Done":** Without structured test cases linked to requirements, there is no objective way to measure test coverage or know when a release is ready.
+5.  **Difficulty in Automation:** Manual test cases serve as the blueprint for automation scripts. Without them, writing automation is chaotic and prone to design flaws.
+
+#### Key Benefits of Writing Test Cases
+*   **Ensures Full Coverage:** Maps tests directly to requirements (via the Requirements Traceability Matrix), ensuring every feature is fully validated.
+*   **Improves Defect Tracking:** Provides a clear baseline to document exactly what failed, making it much easier for developers to reproduce and fix issues.
+*   **Facilitates Team Collaboration:** Allows new team members, developers, or external stakeholders to execute tests with minimal training.
+*   **Saves Time in the Long Run:** Clear preconditions and exact test data prevent confusion and execution delays during crunch times.
+
+### 17.11 Comprehensive Test Case Example: Facebook Login
+
+**Project Name:** Facebook  
+**Module Name:** Login & Authentication  
+**Reference Document:** FB_Auth_BRS_v1.2  
+**Author:** Senior QA  
+**Date of Creation:** 2026-06-17  
+**Date of Review:** 2026-06-17  
+
+| Test Case ID | Type | Priority | Test Scenario | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC_Fb_Login_001** | Positive | High | Verify successful login with a valid email address and password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
+| **TC_Fb_Login_002** | Positive | High | Verify successful login with a valid phone number and password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid phone number in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
+| **TC_Fb_Login_003** | Negative | High | Verify login failure with valid email but incorrect password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter incorrect password.<br>3. Click "Log In". | **Username:** testuser@email.com<br>**Password:** WrongPass! | System should reject the login attempt and display an error message: "The password you've entered is incorrect." Password field should be cleared. | User session is not created. User remains on login page. | | Not Executed | |
+| **TC_Fb_Login_004** | Negative | High | Verify login failure with unregistered email/phone number. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter unregistered email/phone.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** unknown@email.com<br>**Password:** AnyPass123 | System should reject login and display: "The email address or mobile number you entered isn't connected to an account." | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_005** | Negative | Medium | Verify login behavior when both fields are left empty. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Leave email field empty.<br>2. Leave password field empty.<br>3. Click "Log In". | *None* | System should highlight the fields in red and display a validation error asking the user to enter their credentials. | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_006** | Negative | Medium | Verify login failure with invalid email format. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter email in invalid format.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** testuser.email.com (missing @)<br>**Password:** AnyPass | System should display a validation message: "Please enter a valid email address or mobile number." | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_007** | Negative | Critical | Verify system handles SQL Injection attempts in the email field. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter SQL injection payload in the email field.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** `admin' OR '1'='1`<br>**Password:** AnyPass | System should safely sanitize the input and reject the login attempt with a standard invalid account error. No database errors should be exposed. | User session is not created. DB remains secure. | | Not Executed | |
+| **TC_Fb_Login_008** | Negative | Critical | Verify system handles Cross-Site Scripting (XSS) attempts in input fields. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter XSS payload in email or password field.<br>2. Click "Log In". | **Username:** `<script>alert('XSS')</script>`<br>**Password:** AnyPass | System should safely sanitize/encode the input and reject the login without executing the script. | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_009** | Positive | Medium | Verify login using the "Enter" key instead of clicking the Log In button. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter valid password.<br>3. Press the "Enter" key on the keyboard. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage. | User session is created and active. | | Not Executed | |
+
+### 17.12 Comprehensive Test Case Example: Google Account Login
+
+**Project Name:** Google  
+**Module Name:** Authentication (Single Sign-On)  
+**Reference Document:** GOOG_Auth_BRS_v2.0  
+**Author:** Senior QA  
+**Date of Creation:** 2026-06-17  
+**Date of Review:** 2026-06-17  
+
+| Test Case ID | Type | Priority | Test Scenario | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC_Goog_Login_001** | Positive | High | Verify successful login with a valid Gmail address and password. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email in the "Email or phone" field.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Google Account dashboard or requested service (e.g., Gmail). | User session is created and active across Google services. | | Not Executed | |
+| **TC_Goog_Login_002** | Positive | High | Verify successful login with a registered phone number. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid registered phone number.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their destination. | User session is created and active. | | Not Executed | |
+| **TC_Goog_Login_003** | Negative | High | Verify system behavior with an unregistered email address. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter an unregistered email address.<br>2. Click "Next". | **Email:** unknownuser99@gmail.com | System should halt the flow and display: "Couldn't find your Google Account." Password field should not be shown. | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_004** | Negative | High | Verify login failure with valid email but incorrect password. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and click "Next".<br>2. Enter incorrect password.<br>3. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** WrongPass! | System should reject the attempt and display: "Wrong password. Try again or click Forgot password to reset it." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_005** | Negative | Medium | Verify system behavior when the email field is left empty. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Leave "Email or phone" field empty.<br>2. Click "Next". | *None* | System should highlight the field and display a validation error: "Enter an email or phone number." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_006** | Negative | Medium | Verify login failure with invalid email format. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter email with invalid syntax (e.g., missing '@').<br>2. Click "Next". | **Email:** testusergmail.com | System should display a validation message: "Enter a valid email or phone number." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_007** | Negative | Critical | Verify system handles SQL Injection attempts in the email field. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter SQL injection payload in the email field.<br>2. Click "Next". | **Email:** `admin' OR '1'='1` | System should safely sanitize the input and display the standard "Couldn't find your Google Account" error without exposing DB details. | DB remains secure. | | Not Executed | |
+| **TC_Goog_Login_008** | Negative | Critical | Verify system handles Cross-Site Scripting (XSS) attempts. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter XSS payload in the email field.<br>2. Click "Next". | **Email:** `<script>alert('XSS')</script>` | System should sanitize/encode the input, reject the attempt, and prevent script execution. | System remains secure. | | Not Executed | |
+| **TC_Goog_Login_009** | Positive | Medium | Verify login using the "Enter" key for navigation. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and press "Enter".<br>2. Enter valid password and press "Enter". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | Flow should proceed to the next step identically to clicking the "Next" buttons, resulting in successful authentication. | User session is created and active. | | Not Executed | |
