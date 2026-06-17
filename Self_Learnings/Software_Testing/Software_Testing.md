@@ -56,10 +56,13 @@
   * [15.3 Deep Dive: Test Strategy](#153-deep-dive-test-strategy-the-master-rulebook)
   * [15.4 Deep Dive: Test Plan](#154-deep-dive-test-plan-the-project-specific-battle-plan)
   * [15.5 Why This Distinction Matters for a QA/SDET](#155-why-this-distinction-matters-for-a-qasdet)
-* [16. Test Design Techniques: EP and BVA](#16-test-design-techniques-ep-and-bva)
+* [16. Test Design Techniques](#16-test-design-techniques)
   * [16.1 Equivalence Partitioning (EP)](#161-equivalence-partitioning-ep)
   * [16.2 Boundary Value Analysis (BVA)](#162-boundary-value-analysis-bva)
-  * [16.3 Real‑World Example](#163-realworld-example-forgot-password--email-field)
+  * [16.3 Real‑World Example: Forgot Password](#163-realworld-example-forgot-password--email-field)
+  * [16.4 Decision Table Testing](#164-decision-table-testing)
+  * [16.5 Error Guessing](#165-error-guessing)
+  * [16.6 Summary of Techniques](#166-summary-of-techniques)
 * [17. Writing Effective Test Cases (Positive & Negative)](#17-writing-effective-test-cases-positive--negative)
   * [17.1 Simple Analogy](#171-simple-analogy)
   * [17.2 Professional Context](#172-professional-context)
@@ -1104,7 +1107,7 @@ In small companies or startups, there might be no formal Test Strategy document,
 
 ---
 
-## 16. Test Design Techniques: EP and BVA
+## 16. Test Design Techniques
 
 These are **test design techniques** — systematic ways to decide which test data to use so you can find bugs efficiently. They are mentioned in both the Test Strategy (as the company's preferred techniques) and the Test Plan (as the techniques chosen for this project). They are executed during Test Case Development (Phase 3 of STLC).
 
@@ -1164,6 +1167,84 @@ These are **test design techniques** — systematic ways to decide which test da
 You would combine EP and BVA to build a lean but powerful test data set.
 
 > **Key Takeaway:** "Equivalence Partitioning divides input data into groups that the system treats the same, so we test one value per group instead of all. Boundary Value Analysis focuses on the edges of those groups — just inside and outside the limits — because that's where off‑by‑one errors hide. Together, they let us design the minimum number of test cases with maximum bug‑finding power."
+
+---
+
+### 16.4 Decision Table Testing
+
+#### Simple Analogy
+Imagine a restaurant's discount policy:
+*   If a customer orders more than ₹1000 AND is a premium member → 20% discount.
+*   If a customer orders more than ₹1000 BUT is not a premium member → 10% discount.
+*   If a customer orders ≤₹1000 AND is a premium member → 5% discount.
+*   If a customer orders ≤₹1000 AND is not a premium member → no discount.
+
+Testing each condition separately might miss combinations. A Decision Table maps all possible combinations of conditions and their expected outcomes so you don't miss any scenario.
+
+#### Professional Context
+A Decision Table is a systematic way to represent complex business rules with multiple conditions. It ensures full combination coverage.
+
+**Structure:**
+*   **Conditions (inputs):** the factors that matter.
+*   **Actions (outputs):** what the system should do for each combination.
+
+**Example: Loan Eligibility**
+
+| Rule # | Condition 1: Salary > ₹30,000? | Condition 2: Existing loan? | Action: Loan Approved? |
+| :--- | :--- | :--- | :--- |
+| 1 | Yes | No | Yes |
+| 2 | Yes | Yes | Maybe (needs review) |
+| 3 | No | No | No |
+| 4 | No | Yes | No |
+
+You create test cases for each column (each rule). Number of columns = 2 conditions → 2² = 4 combinations. Every combination is tested.
+
+**Why it matters for QA/SDET:**
+*   Catches logic bugs that happen only in specific combinations.
+*   Used for authorization, pricing, feature flag toggles, complex business rules.
+*   As an SDET, you can parameterise these combinations in Playwright test data arrays (e.g., run the same test with multiple input sets from the decision table).
+
+---
+
+### 16.5 Error Guessing
+
+#### Simple Analogy
+Imagine you're a car mechanic who's seen thousands of cars. You've never seen the official test manual for this new car model, but you already know to check the brakes, the battery, and the spark plugs – because your experience tells you those are the weak spots.
+
+That's Error Guessing: using experience and intuition to guess where bugs are likely hiding, and designing test cases specifically for those areas.
+
+#### Professional Context
+Error Guessing is an informal, experience‑based test design technique. It has no fixed rules. You list scenarios based on:
+*   Past defects in similar applications.
+*   Common developer mistakes (off‑by‑one errors, missing null checks, case‑sensitivity issues).
+*   Tricky situations (leaving fields blank, pressing back button mid‑flow, refreshing during a transaction).
+
+**Example list of error guesses for a Login page:**
+*   Submitting the form by pressing Enter with an empty field.
+*   Copy‑pasting password with extra spaces.
+*   Rapidly double‑clicking the Login button (two requests).
+*   Using a very long email address (500 characters).
+*   Unicode characters in the email.
+*   Switching tabs and coming back after session timeout.
+*   Submitting after the browser’s auto‑fill inserted wrong data.
+
+**How QA/SDET uses it:**
+*   In manual testing, error guessing is used during exploratory sessions.
+*   In automation, experienced SDETs add "chaos" test cases based on their error guesses – e.g., a Playwright script that sends two parallel login requests.
+*   It complements systematic techniques (EP, BVA) with real‑world cunning. It's not a replacement; it's a power‑up.
+
+---
+
+### 16.6 Summary of Techniques
+
+| Technique | When to use | What it does |
+| :--- | :--- | :--- |
+| **Equivalence Partitioning** | When inputs can be grouped. | Reduces test count by picking one value per group. |
+| **Boundary Value Analysis** | Together with EP. | Focuses on the edges of partitions. |
+| **Decision Table** | When there are multiple conditions/combinations. | Ensures all combos are tested. |
+| **Error Guessing** | Always, as a supplement. | Uses experience to target likely bugs. |
+
+> **Explanation:** Test design techniques are systematic methods to select test data and scenarios. Equivalence Partitioning and Boundary Value Analysis are great for input validation. Decision Table Testing handles complex business rules with multiple conditions. Error Guessing uses tester experience to find defects that systematic methods might miss. In practice, we combine them: use EP/BVA for field validations, decision tables for business logic, and error guessing for exploratory edge cases.
 
 ---
 
