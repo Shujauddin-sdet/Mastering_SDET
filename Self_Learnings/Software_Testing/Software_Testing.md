@@ -1184,14 +1184,18 @@ A standard test case template (fields you fill):
 | Field | Description |
 | --- | --- |
 | **Test Case ID** | Unique identifier (e.g., TC‑LOGIN‑01) |
-| **Requirement Reference** | Which user story or requirement it covers |
-| **Title / Summary** | Short description (e.g., "Verify login with valid credentials") |
-| **Preconditions** | What must be true before you start (e.g., "User is registered. Login page is loaded.") |
+| **Test Scenario** | The high-level group or functionality (e.g., "Login" or "Authentication") |
+| **Test Case Title** | The specific test objective (e.g., "Verify successful login with valid credentials") |
+| **Type** | Positive (valid inputs) or Negative (invalid/unexpected inputs) |
+| **Priority** | Execution order priority (High / Medium / Low) |
+| **Severity** | Impact of a defect in this area (Critical / Major / Minor) |
+| **Requirement Reference** | Which user story or requirement it covers (e.g., REQ-101) |
+| **Pre-conditions** | What must be true before you start (e.g., "User is registered. Login page is loaded.") |
 | **Test Steps** | Numbered actions you take |
 | **Test Data** | Specific inputs used (e.g., "Email: test@example.com, Password: Pass@123") |
 | **Expected Result** | What the system should do after each step |
-| **Actual Result** | Filled after execution (Pass/Fail, or what actually happened) |
-| **Severity / Priority** | (Sometimes included) How critical this test is |
+| **Post-condition** | System state after execution |
+| **Actual Result** | Filled after execution (what actually happened) |
 | **Status** | Pass, Fail, Blocked, Not Executed |
 | **Comments** | Any notes, screenshots, or defect IDs |
 
@@ -1207,11 +1211,20 @@ A standard test case template (fields you fill):
 | Field | Value |
 | --- | --- |
 | **Test Case ID** | TC‑LOGIN‑01 |
-| **Title** | Verify successful login with valid credentials |
-| **Preconditions** | User is registered with email "user@test.com" and password "Strong@123". Login page is open. |
-| **Steps** | 1. Enter "user@test.com" in the email field.<br>2. Enter "Strong@123" in the password field.<br>3. Click "Login". |
+| **Test Scenario** | Login & Authentication |
+| **Test Case Title** | Verify successful login with valid credentials |
+| **Type** | Positive |
+| **Priority** | High |
+| **Severity** | Critical |
+| **Requirement Reference** | REQ-AUTH-01 |
+| **Pre-conditions** | User is registered with email "user@test.com" and password "Strong@123". Login page is open. |
+| **Test Steps** | 1. Enter "user@test.com" in the email field.<br>2. Enter "Strong@123" in the password field.<br>3. Click "Login". |
 | **Test Data** | Email: user@test.com, Password: Strong@123 |
 | **Expected Result** | User is redirected to the dashboard. A welcome message with the user's name appears. No error messages shown. |
+| **Post-condition** | User session is created and active. |
+| **Actual Result** | |
+| **Status** | Not Executed |
+| **Comments** | |
 
 **Other positive examples for the same login:**
 - Login with "Remember Me" checked — session persists after browser close.
@@ -1231,11 +1244,20 @@ A standard test case template (fields you fill):
 | Field | Value |
 | --- | --- |
 | **Test Case ID** | TC‑LOGIN‑02 |
-| **Title** | Verify error message on wrong password |
-| **Preconditions** | User is registered. Login page is open. |
-| **Steps** | 1. Enter valid email "user@test.com".<br>2. Enter wrong password "WrongPass".<br>3. Click Login. |
+| **Test Scenario** | Login & Authentication |
+| **Test Case Title** | Verify error message on wrong password |
+| **Type** | Negative |
+| **Priority** | High |
+| **Severity** | Major |
+| **Requirement Reference** | REQ-AUTH-02 |
+| **Pre-conditions** | User is registered. Login page is open. |
+| **Test Steps** | 1. Enter valid email "user@test.com".<br>2. Enter wrong password "WrongPass".<br>3. Click Login. |
 | **Test Data** | Email: user@test.com, Password: WrongPass |
 | **Expected Result** | Error message displayed: "Invalid email or password." User remains on login page. Password field is cleared. No account lockout after one attempt (if policy allows). |
+| **Post-condition** | User session is not created. |
+| **Actual Result** | |
+| **Status** | Not Executed |
+| **Comments** | |
 
 **Other negative examples for login:**
 - Empty email and empty password → "Email is required."
@@ -1284,11 +1306,14 @@ To ensure test cases are effective and maintainable, keep these guidelines in mi
 #### Core Fields
 *   **Test Case ID:** A unique identifier for each test case. Following a naming convention (e.g., `TC_Project_Module_001`) helps in tracking and organization.
     *   *Example:* `TC_Yahoo_Inbox_001`
-*   **Type:** The nature of the test case, typically `Positive` (valid inputs/happy path) or `Negative` (invalid/unexpected inputs).
-*   **Priority:** The importance of the test case, which serves as a parameter to decide the execution order and how fast associated defects should be fixed.
-*   **Test Scenario:** Any functionality that can be tested. It represents a collective set of test cases which helps the testing team determine the positive and negative characteristics of the project. Test scenarios are derived from test documents such as:
+*   **Test Scenario:** Any high-level functionality that can be tested (e.g., "Login" or "Authentication"). It represents a collective set of test cases which helps the testing team determine the positive and negative characteristics of the project. Test scenarios are derived from test documents such as:
     *   **BRS (Business Requirement Specification):** A high-level document describing the business needs and what the final product should achieve from a client/business perspective.
     *   **SRS (Software Requirement Specification):** A detailed technical document that translates BRS into specific functional and non-functional requirements for the development team.
+*   **Test Case Title:** A concise description of the specific objective this test case aims to verify (e.g., "Verify successful login with valid credentials").
+*   **Type:** The nature of the test case, typically `Positive` (valid inputs/happy path) or `Negative` (invalid/unexpected inputs).
+*   **Priority:** The importance of the test case, which serves as a parameter to decide the execution order and how fast associated defects should be fixed.
+*   **Severity:** The potential business or technical impact a defect in this area would have on the system (e.g., Critical, Major, Minor).
+*   **Requirement Reference:** The specific requirement this test case covers. This is often a **BRD** (Business Requirements Document - high-level business needs), **SRD** (Software Requirements Document - detailed functional requirements), or in Agile, a User Story ID (e.g., US-101) or Requirement ID (e.g., REQ-AUTH-01).
 *   **Pre-conditions:** Prerequisites or conditions that must be met before executing the test case.
 *   **Test Steps:** Numbered actions required to execute the test. Each step is marked pass or fail based on the comparison between expected and actual outcomes.
 *   **Test Data:** The specific inputs, accounts, or configurations created or selected to satisfy the execution preconditions and execute the test steps.
@@ -1335,17 +1360,17 @@ Skipping the creation of documented test cases is a common pitfall in software d
 **Date of Creation:** 2026-06-17  
 **Date of Review:** 2026-06-17  
 
-| Test Case ID | Type | Priority | Test Scenario | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TC_Fb_Login_001** | Positive | High | Verify successful login with a valid email address and password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
-| **TC_Fb_Login_002** | Positive | High | Verify successful login with a valid phone number and password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid phone number in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
-| **TC_Fb_Login_003** | Negative | High | Verify login failure with valid email but incorrect password. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter incorrect password.<br>3. Click "Log In". | **Username:** testuser@email.com<br>**Password:** WrongPass! | System should reject the login attempt and display an error message: "The password you've entered is incorrect." Password field should be cleared. | User session is not created. User remains on login page. | | Not Executed | |
-| **TC_Fb_Login_004** | Negative | High | Verify login failure with unregistered email/phone number. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter unregistered email/phone.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** unknown@email.com<br>**Password:** AnyPass123 | System should reject login and display: "The email address or mobile number you entered isn't connected to an account." | User session is not created. | | Not Executed | |
-| **TC_Fb_Login_005** | Negative | Medium | Verify login behavior when both fields are left empty. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Leave email field empty.<br>2. Leave password field empty.<br>3. Click "Log In". | *None* | System should highlight the fields in red and display a validation error asking the user to enter their credentials. | User session is not created. | | Not Executed | |
-| **TC_Fb_Login_006** | Negative | Medium | Verify login failure with invalid email format. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter email in invalid format.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** testuser.email.com (missing @)<br>**Password:** AnyPass | System should display a validation message: "Please enter a valid email address or mobile number." | User session is not created. | | Not Executed | |
-| **TC_Fb_Login_007** | Negative | Critical | Verify system handles SQL Injection attempts in the email field. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter SQL injection payload in the email field.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** `admin' OR '1'='1`<br>**Password:** AnyPass | System should safely sanitize the input and reject the login attempt with a standard invalid account error. No database errors should be exposed. | User session is not created. DB remains secure. | | Not Executed | |
-| **TC_Fb_Login_008** | Negative | Critical | Verify system handles Cross-Site Scripting (XSS) attempts in input fields. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter XSS payload in email or password field.<br>2. Click "Log In". | **Username:** `<script>alert('XSS')</script>`<br>**Password:** AnyPass | System should safely sanitize/encode the input and reject the login without executing the script. | User session is not created. | | Not Executed | |
-| **TC_Fb_Login_009** | Positive | Medium | Verify login using the "Enter" key instead of clicking the Log In button. | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter valid password.<br>3. Press the "Enter" key on the keyboard. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage. | User session is created and active. | | Not Executed | |
+| Test Case ID | Test Scenario | Test Case Title | Type | Priority | Severity | Requirement Reference | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC_Fb_Login_001** | Login & Auth | Verify successful login with a valid email address and password. | Positive | High | Critical | REQ-AUTH-01 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
+| **TC_Fb_Login_002** | Login & Auth | Verify successful login with a valid phone number and password. | Positive | High | Critical | REQ-AUTH-01 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid phone number in the "Email or phone number" field.<br>2. Enter valid password in the "Password" field.<br>3. Click on the "Log In" button. | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage/newsfeed. | User session is created and active. | | Not Executed | |
+| **TC_Fb_Login_003** | Login & Auth | Verify login failure with valid email but incorrect password. | Negative | High | Major | REQ-AUTH-02 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter incorrect password.<br>3. Click "Log In". | **Username:** testuser@email.com<br>**Password:** WrongPass! | System should reject the login attempt and display an error message: "The password you've entered is incorrect." Password field should be cleared. | User session is not created. User remains on login page. | | Not Executed | |
+| **TC_Fb_Login_004** | Login & Auth | Verify login failure with unregistered email/phone number. | Negative | High | Major | REQ-AUTH-02 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter unregistered email/phone.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** unknown@email.com<br>**Password:** AnyPass123 | System should reject login and display: "The email address or mobile number you entered isn't connected to an account." | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_005** | Login & Auth | Verify login behavior when both fields are left empty. | Negative | Medium | Minor | REQ-AUTH-03 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Leave email field empty.<br>2. Leave password field empty.<br>3. Click "Log In". | *None* | System should highlight the fields in red and display a validation error asking the user to enter their credentials. | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_006** | Login & Auth | Verify login failure with invalid email format. | Negative | Medium | Minor | REQ-AUTH-03 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter email in invalid format.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** testuser.email.com (missing @)<br>**Password:** AnyPass | System should display a validation message: "Please enter a valid email address or mobile number." | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_007** | Login & Auth | Verify system handles SQL Injection attempts in the email field. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter SQL injection payload in the email field.<br>2. Enter any password.<br>3. Click "Log In". | **Username:** `admin' OR '1'='1`<br>**Password:** AnyPass | System should safely sanitize the input and reject the login attempt with a standard invalid account error. No database errors should be exposed. | User session is not created. DB remains secure. | | Not Executed | |
+| **TC_Fb_Login_008** | Login & Auth | Verify system handles Cross-Site Scripting (XSS) attempts in input fields. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter XSS payload in email or password field.<br>2. Click "Log In". | **Username:** `<script>alert('XSS')</script>`<br>**Password:** AnyPass | System should safely sanitize/encode the input and reject the login without executing the script. | User session is not created. | | Not Executed | |
+| **TC_Fb_Login_009** | Login & Auth | Verify login using the "Enter" key instead of clicking the Log In button. | Positive | Medium | Minor | REQ-AUTH-04 | 1. Device has active internet connection.<br>2. User is on the Facebook login page. | 1. Enter valid email.<br>2. Enter valid password.<br>3. Press the "Enter" key on the keyboard. | **Username:** testuser@email.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Facebook homepage. | User session is created and active. | | Not Executed | |
 
 ### 17.12 Comprehensive Test Case Example: Google Account Login
 
@@ -1356,14 +1381,14 @@ Skipping the creation of documented test cases is a common pitfall in software d
 **Date of Creation:** 2026-06-17  
 **Date of Review:** 2026-06-17  
 
-| Test Case ID | Type | Priority | Test Scenario | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TC_Goog_Login_001** | Positive | High | Verify successful login with a valid Gmail address and password. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email in the "Email or phone" field.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Google Account dashboard or requested service (e.g., Gmail). | User session is created and active across Google services. | | Not Executed | |
-| **TC_Goog_Login_002** | Positive | High | Verify successful login with a registered phone number. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid registered phone number.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their destination. | User session is created and active. | | Not Executed | |
-| **TC_Goog_Login_003** | Negative | High | Verify system behavior with an unregistered email address. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter an unregistered email address.<br>2. Click "Next". | **Email:** unknownuser99@gmail.com | System should halt the flow and display: "Couldn't find your Google Account." Password field should not be shown. | User session is not created. | | Not Executed | |
-| **TC_Goog_Login_004** | Negative | High | Verify login failure with valid email but incorrect password. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and click "Next".<br>2. Enter incorrect password.<br>3. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** WrongPass! | System should reject the attempt and display: "Wrong password. Try again or click Forgot password to reset it." | User session is not created. | | Not Executed | |
-| **TC_Goog_Login_005** | Negative | Medium | Verify system behavior when the email field is left empty. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Leave "Email or phone" field empty.<br>2. Click "Next". | *None* | System should highlight the field and display a validation error: "Enter an email or phone number." | User session is not created. | | Not Executed | |
-| **TC_Goog_Login_006** | Negative | Medium | Verify login failure with invalid email format. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter email with invalid syntax (e.g., missing '@').<br>2. Click "Next". | **Email:** testusergmail.com | System should display a validation message: "Enter a valid email or phone number." | User session is not created. | | Not Executed | |
-| **TC_Goog_Login_007** | Negative | Critical | Verify system handles SQL Injection attempts in the email field. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter SQL injection payload in the email field.<br>2. Click "Next". | **Email:** `admin' OR '1'='1` | System should safely sanitize the input and display the standard "Couldn't find your Google Account" error without exposing DB details. | DB remains secure. | | Not Executed | |
-| **TC_Goog_Login_008** | Negative | Critical | Verify system handles Cross-Site Scripting (XSS) attempts. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter XSS payload in the email field.<br>2. Click "Next". | **Email:** `<script>alert('XSS')</script>` | System should sanitize/encode the input, reject the attempt, and prevent script execution. | System remains secure. | | Not Executed | |
-| **TC_Goog_Login_009** | Positive | Medium | Verify login using the "Enter" key for navigation. | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and press "Enter".<br>2. Enter valid password and press "Enter". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | Flow should proceed to the next step identically to clicking the "Next" buttons, resulting in successful authentication. | User session is created and active. | | Not Executed | |
+| Test Case ID | Test Scenario | Test Case Title | Type | Priority | Severity | Requirement Reference | Pre-conditions | Test Steps | Test Data | Expected Result | Post-condition | Actual Result | Status | Comments |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC_Goog_Login_001** | SSO Auth | Verify successful login with a valid Gmail address and password. | Positive | High | Critical | REQ-SSO-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email in the "Email or phone" field.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their Google Account dashboard or requested service (e.g., Gmail). | User session is created and active across Google services. | | Not Executed | |
+| **TC_Goog_Login_002** | SSO Auth | Verify successful login with a registered phone number. | Positive | High | Critical | REQ-SSO-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid registered phone number.<br>2. Click "Next".<br>3. Enter valid password.<br>4. Click "Next". | **Phone:** +1234567890<br>**Password:** ValidPass123! | User should be successfully authenticated and redirected to their destination. | User session is created and active. | | Not Executed | |
+| **TC_Goog_Login_003** | SSO Auth | Verify system behavior with an unregistered email address. | Negative | High | Major | REQ-SSO-02 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter an unregistered email address.<br>2. Click "Next". | **Email:** unknownuser99@gmail.com | System should halt the flow and display: "Couldn't find your Google Account." Password field should not be shown. | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_004** | SSO Auth | Verify login failure with valid email but incorrect password. | Negative | High | Major | REQ-SSO-02 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and click "Next".<br>2. Enter incorrect password.<br>3. Click "Next". | **Email:** testuser@gmail.com<br>**Password:** WrongPass! | System should reject the attempt and display: "Wrong password. Try again or click Forgot password to reset it." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_005** | SSO Auth | Verify system behavior when the email field is left empty. | Negative | Medium | Minor | REQ-SSO-03 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Leave "Email or phone" field empty.<br>2. Click "Next". | *None* | System should highlight the field and display a validation error: "Enter an email or phone number." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_006** | SSO Auth | Verify login failure with invalid email format. | Negative | Medium | Minor | REQ-SSO-03 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter email with invalid syntax (e.g., missing '@').<br>2. Click "Next". | **Email:** testusergmail.com | System should display a validation message: "Enter a valid email or phone number." | User session is not created. | | Not Executed | |
+| **TC_Goog_Login_007** | SSO Auth | Verify system handles SQL Injection attempts in the email field. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter SQL injection payload in the email field.<br>2. Click "Next". | **Email:** `admin' OR '1'='1` | System should safely sanitize the input and display the standard "Couldn't find your Google Account" error without exposing DB details. | DB remains secure. | | Not Executed | |
+| **TC_Goog_Login_008** | SSO Auth | Verify system handles Cross-Site Scripting (XSS) attempts. | Negative | High | Critical | REQ-SEC-01 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter XSS payload in the email field.<br>2. Click "Next". | **Email:** `<script>alert('XSS')</script>` | System should sanitize/encode the input, reject the attempt, and prevent script execution. | System remains secure. | | Not Executed | |
+| **TC_Goog_Login_009** | SSO Auth | Verify login using the "Enter" key for navigation. | Positive | Medium | Minor | REQ-SSO-04 | 1. Device has active internet connection.<br>2. User is on the Google Sign-in page. | 1. Enter valid email and press "Enter".<br>2. Enter valid password and press "Enter". | **Email:** testuser@gmail.com<br>**Password:** ValidPass123! | Flow should proceed to the next step identically to clicking the "Next" buttons, resulting in successful authentication. | User session is created and active. | | Not Executed | |
