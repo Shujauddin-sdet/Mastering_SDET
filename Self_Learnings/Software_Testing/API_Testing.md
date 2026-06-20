@@ -13,6 +13,13 @@
    - [2.2 API Architectures (SOAP, REST, GraphQL, gRPC, WebSocket, Webhooks)](#22-api-architectures)
 3. [Types of APIs by Accessibility Scope](#3-types-of-apis-by-accessibility-scope)
 4. [Understanding API Documentation (OpenAPI/Swagger)](#4-understanding-api-documentation-openapiswagger)
+5. [The Anatomy of an HTTP Request & Response](#5-the-anatomy-of-an-http-request--response)
+   - [5.1 HTTP vs HTTPS, SSL/TLS Basics](#51-http-vs-https-ssltls-basics)
+   - [5.2 HTTP Methods (GET, POST, PUT, PATCH, DELETE)](#52-http-methods-get-post-put-patch-delete)
+   - [5.3 URL Structure: Endpoints, Path Variables vs. Query Parameters](#53-url-structure-endpoints-path-variables-vs-query-parameters)
+   - [5.4 HTTP Headers (Content-Type, Accept, Authorization)](#54-http-headers-content-type-accept-authorization)
+   - [5.5 JSON Payloads & Parsing (Request Body)](#55-json-payloads--parsing-request-body)
+   - [5.6 HTTP Status Codes (2xx, 3xx, 4xx, 5xx)](#56-http-status-codes-2xx-3xx-4xx-5xx)
 
 ---
 
@@ -805,3 +812,716 @@ All these test cases came purely from reading the API documentation. **No guessw
 - It enables early testing — documentation can be reviewed for completeness and correctness before any code is written.
 - Tools like Swagger UI allow interactive testing of endpoints and verification of actual responses against documented schemas.
 - Good API documentation turns testing from guesswork into a precise, systematic process.
+
+---
+
+## 5. The Anatomy of an HTTP Request & Response
+
+> **Section Summary:** An HTTP transaction consists of a request from the client and a response from the server. Understanding the anatomy of these messages — protocol versions (HTTP vs HTTPS), methods (GET, POST, etc.), URLs, headers, payloads (JSON), and status codes — is essential for designing accurate and robust API tests.
+
+---
+
+### 5.1 HTTP vs HTTPS, SSL/TLS Basics
+
+#### 🔍 Simple Analogy
+
+HTTP is like sending a postcard. You write a message on the back, and it travels through the postal system completely open. Anyone who handles the postcard—the mail carrier, the sorting office clerk, a nosy neighbour—can read it. There’s no privacy at all.
+
+HTTPS is like putting that same message inside a locked, tamper‑proof steel briefcase. Only the sender and the intended receiver have the key to open it. Even if someone intercepts the briefcase, they can’t read what’s inside or change the message without breaking the lock, which would be immediately obvious.
+
+So, HTTPS is simply HTTP wrapped in a secure, encrypted layer. The “S” stands for Secure, and that security is provided by SSL/TLS.
+
+#### 💼 Professional Details
+
+**HTTP (HyperText Transfer Protocol)**
+- Transmits data in plain text across the network.
+- Anyone who intercepts the network traffic (e.g., on a public Wi‑Fi network) can read everything: usernames, passwords, credit card numbers, personal messages.
+- Offers no built‑in encryption, no integrity protection, and no server authentication. You can’t be certain you’re talking to the real server.
+
+**HTTPS (HTTP Secure)**
+- Uses TLS (Transport Layer Security) — the modern successor to SSL (Secure Sockets Layer) — to encrypt the entire communication between client and server.
+- Provides three essential things:
+  - **Encryption** – The data is scrambled so that only the server with the correct private key can read it.
+  - **Integrity** – The data cannot be modified or corrupted in transit without being detected.
+  - **Authentication** – The client verifies the server’s identity through a digital certificate issued by a trusted Certificate Authority (CA). This prevents an attacker from impersonating the server.
+
+**How the secure connection is established (the TLS handshake, simplified):**
+1. Client (browser or Postman) connects to the server and says, “I want to talk securely.”
+2. Server sends its SSL/TLS certificate to prove its identity. The certificate contains the server’s public key and is signed by a trusted CA.
+3. Client verifies the certificate (checks that it’s valid, not expired, and issued for the correct domain).
+4. Client and server agree on an encryption method and generate a unique session key that will be used to encrypt data during this session.
+5. From that point, all data is encrypted end‑to‑end.
+
+**Indicators in the browser / tools:**
+- A padlock icon in the address bar.
+- The URL starts with `https://` instead of `http://`.
+- In Postman, you simply type `https://` as part of the request URL; Postman handles the encryption transparently.
+
+#### 🧪 Real‑World Example – Login API
+
+Unsafe (HTTP):
+
+```text
+POST http://api.bank.com/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "Secret123"
+}
+```
+
+If you send this on a public Wi‑Fi, a hacker can capture the packet and read the email and password in plain text. That’s a catastrophic security breach.
+
+Safe (HTTPS):
+
+```text
+POST https://api.bank.com/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@test.com",
+  "password": "Secret123"
+}
+```
+
+Now the entire request is encrypted. The hacker only sees scrambled bytes. Even if they capture it, they cannot read it. The server’s certificate also assures the client that it is really `api.bank.com`, not a fake site.
+
+#### ❓ Why This Matters for a QA/SDET
+
+- **Security Testing:** One of the most basic API security checks is verifying that all sensitive endpoints enforce HTTPS. You design test cases that send requests over `http://` and expect them to be rejected or redirected to `https://`.
+- **Certificate Validation:** You can test with expired, self‑signed, or mismatched certificates to see if the client handles them correctly (should reject the connection with a clear error).
+- **Data Exposure:** You verify that no sensitive data (passwords, tokens, credit card numbers) ever appears in the URL (even over HTTPS, URLs can be logged in browser history or server logs) or in response bodies when it shouldn’t.
+- **Automation:** In Playwright, you can ignore HTTPS errors during testing for convenience, but you must ensure that the production test suite validates proper HTTPS behaviour.
+- **Interview Ready:** The question “What is the difference between HTTP and HTTPS?” is extremely common. Your answer must mention encryption, integrity, authentication, and the TLS handshake.
+
+**Explanation:**
+- HTTP transmits data in plain text, making it vulnerable to eavesdropping and tampering.
+- HTTPS adds a layer of security through TLS/SSL, which encrypts the entire communication, ensures data integrity, and authenticates the server’s identity using digital certificates.
+- The padlock icon in the browser indicates an active HTTPS connection.
+- As a QA/SDET, I verify that all sensitive API endpoints are only accessible over HTTPS, that the server certificates are valid, and that no sensitive data is leaked.
+- This is a fundamental security check before any API release.
+
+---
+
+### 5.2 HTTP Methods (GET, POST, PUT, PATCH, DELETE)
+
+#### 🔍 Simple Analogy
+
+Imagine you're a librarian in a huge library. You have five basic things you can do with any book or record:
+
+- **GET** – A visitor asks, "Can I see the book The Alchemist?" You find it, hand it to them. Nothing changes; the book stays on the shelf. You're just reading the current state.
+- **POST** – A visitor says, "I'd like to donate a new book." You take their new book, give it a unique ID, and add it to the shelf. You don't know the ID in advance; the library assigns it.
+- **PUT** – A visitor says, "This entire book The Alchemist has errors. Here is a completely new, corrected copy. Replace the old one." You take the new copy and put it exactly where the old one was. If the book didn't exist, you might even create it at that exact spot.
+- **PATCH** – A visitor says, "The title page of The Alchemist has a typo. Here is just the corrected title page. Replace only that page." You remove the old page and insert the new one, leaving the rest of the book untouched.
+- **DELETE** – A visitor says, "Please remove The Alchemist from the library." You take the book off the shelf and discard it (or archive it). It's gone.
+
+These five actions are exactly the HTTP methods used in REST APIs. Every API call you make is one of these five, applied to a resource.
+
+#### 💼 Professional Definitions
+
+HTTP methods (also called verbs) tell the server what action the client wants to perform on a resource.
+
+- **GET**
+  - **Purpose:** Retrieve a representation of a resource.
+  - **Safe?** Yes – it does not modify any data. Calling GET multiple times shouldn’t change anything on the server.
+  - **Idempotent?** Yes – making the same GET request 1 time or 100 times produces the same result (same data, no side effects).
+  - **Request body?** No – GET requests do not have a body. Data is sent via URL query parameters if needed.
+  - **Caching?** GET responses can be cached by browsers and proxies.
+  - **Example:** `GET /users/42` → Returns user with ID 42.
+
+- **POST**
+  - **Purpose:** Create a new resource. The server decides the new resource's ID.
+  - **Safe?** No – it changes server state (creates something new).
+  - **Idempotent?** No – sending the same POST request twice usually creates two separate resources (e.g., two identical orders).
+  - **Request body?** Yes – contains the data for the new resource in JSON (or other format).
+  - **Example:** `POST /users` with body `{ "name": "John", "email": "john@example.com" }` → Creates a new user. Returns `201 Created` with the new user's ID and data.
+
+- **PUT**
+  - **Purpose:** Replace an entire resource. If the resource exists, it's completely overwritten. If it doesn't exist, it may be created (depends on API design).
+  - **Safe?** No – it modifies data.
+  - **Idempotent?** Yes – sending the same PUT request multiple times results in the same final state (the resource always ends up exactly as specified).
+  - **Request body?** Yes – contains the complete new representation of the resource.
+  - **Example:** `PUT /users/42` with body `{ "name": "John Updated", "email": "john2@example.com" }` → Replaces the entire user 42. If a field is missing, it might be set to null.
+
+- **PATCH**
+  - **Purpose:** Partially update a resource. Only the fields included in the request body are changed; the rest stay the same.
+  - **Safe?** No – it modifies data.
+  - **Idempotent?** It can be, but not always. A simple field update is idempotent, but more complex operations (like "add $10 to account balance") are not.
+  - **Request body?** Yes – contains only the fields to update.
+  - **Example:** `PATCH /users/42` with body `{ "email": "newemail@example.com" }` → Changes only the email of user 42; name and other fields remain unchanged.
+
+- **DELETE**
+  - **Purpose:** Remove a resource.
+  - **Safe?** No – it destroys data.
+  - **Idempotent?** Yes – deleting the same resource twice has the same effect: the resource is gone. The second call may return `404 Not Found`.
+  - **Request body?** Usually no body, though some APIs allow it (rare).
+  - **Example:** `DELETE /users/42` → Deletes user 42. Returns `200 OK` or `204 No Content`.
+
+#### 🧪 Real‑World Example – A Pet Store API
+
+Let’s see all methods in action on a pet resource.
+
+| Method | Endpoint | Request Body / Params | Expected Response |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/pets/10` | None (or query params like `?include=owner`) | `200 OK` with `{ "id": 10, "name": "Rex", "status": "available" }` |
+| `POST` | `/pets` | `{ "name": "Bella", "status": "available" }` | `201 Created` with the new pet’s ID and data. |
+| `PUT` | `/pets/10` | `{ "id": 10, "name": "Rex", "status": "sold" }` | `200 OK` with the fully updated pet. |
+| `PATCH` | `/pets/10` | `{ "status": "pending" }` | `200 OK` with the pet showing status "pending", name still "Rex". |
+| `DELETE` | `/pets/10` | None | `200 OK` or `204 No Content` (pet removed). |
+
+#### 📊 Quick Reference Table
+
+| Method | Purpose | Safe? | Idempotent? | Body |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | Read a resource | Yes | Yes | No |
+| `POST` | Create a new resource | No | No | Yes |
+| `PUT` | Replace a resource entirely | No | Yes | Yes |
+| `PATCH` | Update part of a resource | No | Maybe | Yes |
+| `DELETE` | Remove a resource | No | Yes | Rarely |
+
+#### ❓ Why This Matters for a QA/SDET
+
+- You must know which method to use when constructing requests. Using GET instead of POST to create data is a common mistake – and GET requests shouldn't change state.
+- **Testing idempotency:** For PUT and DELETE, you write test cases that send the same request multiple times and verify the system doesn’t break or create duplicates.
+- **Testing safety:** For GET requests, you verify that the state of the system is unchanged after many reads (no side effects).
+- **Negative testing:** You send a POST request with a body that's missing required fields and expect `400 Bad Request`. You send a DELETE request for a non‑existent ID and expect `404 Not Found`. You send a PATCH request with an invalid field and expect validation errors.
+- When automating in Playwright or Postman, you’ll use the correct method for each test case. Using the wrong method can produce a `405 Method Not Allowed` error, which is itself a valid test case (testing that an endpoint rejects wrong methods).
+
+**Explanation:**
+- HTTP methods define the action the client wants to perform on a resource.
+- GET retrieves data without side effects.
+- POST creates new resources.
+- PUT replaces an entire resource and is idempotent.
+- PATCH updates part of a resource.
+- DELETE removes a resource.
+- As a QA, I test each method for its safety, idempotency, and correct behavior with valid and invalid inputs.
+- I verify that endpoints respond correctly to wrong methods (like sending a GET to a creation endpoint) and that data integrity is maintained across multiple identical requests.
+
+---
+
+### 5.3 URL Structure: Endpoints, Path Variables vs. Query Parameters
+
+#### 🔍 Simple Analogy
+
+Think of the address on a house.
+
+The endpoint is the full address: "123 Main Street, London, SW1 1AA". It uniquely identifies one house among millions.
+
+The path variable is like the flat number inside that building: "Flat 3, 123 Main Street". It picks out one specific unit inside the resource.
+
+The query parameter is like a note you add after the address: "Please leave the parcel at the back door". It doesn't change which house it is, but it gives extra instructions.
+
+In a URL, these parts look like this:
+`https://api.example.com/houses/123?delivery=back`
+
+#### 💼 Professional Breakdown of a URL
+
+A typical API URL is composed of several parts:
+
+`https://api.example.com/v1/users/42?active=true&limit=10`
+
+| Part | Name | Purpose | Example |
+| :--- | :--- | :--- | :--- |
+| `https://` | Protocol | How to communicate. http or https. | `https://` |
+| `api.example.com` | Host (domain) | The server's address. | `api.example.com` |
+| `/v1` | Base path (optional) | The API version. | `/v1` or `/v2` |
+| `/users` | Resource (endpoint) | The type of thing we're working with. | `/users`, `/orders`, `/pets` |
+| `/42` | Path variable | An identifier for one specific resource. | `42` (a user ID) |
+| `?active=true&limit=10` | Query parameters (query string) | Extra options: filtering, sorting, pagination, search. | `active=true`, `limit=10` |
+
+##### 1. Endpoints
+An endpoint is simply the URL where the API can be accessed by a client. Each endpoint corresponds to a resource or a collection of resources.
+- **Collection endpoint:** `/users` (all users)
+- **Single resource endpoint:** `/users/42` (one specific user)
+- RESTful APIs use nouns for endpoints, not verbs. Bad: `/getUser`. Good: `/users/42` with method GET.
+
+##### 2. Path Variables (Path Parameters)
+A path variable is part of the URL itself. It’s a placeholder that is replaced by a concrete value to identify a specific resource.
+- **Syntax:** `/users/{userId}`
+- **Example:** `/users/42` (The `42` replaces `{userId}` and uniquely identifies the user).
+- **Real-world examples:**
+  - `GET /posts/15` → Get blog post with ID 15.
+  - `DELETE /orders/1002` → Cancel order 1002.
+  - `PUT /books/978-3-16-148410-0` → Replace book with that ISBN.
+- **Why testing matters:** Path variables are mandatory. If you skip the ID (e.g., `GET /users/`), the server should return a `404 Not Found` or `400 Bad Request`. You also test with invalid IDs: letters where numbers are expected, negative numbers, zero, extremely large numbers.
+
+##### 3. Query Parameters (Query String)
+Query parameters come after a question mark `?` in the URL. They are optional key‑value pairs used to filter, sort, search, or paginate the results.
+- **Syntax:** `?key1=value1&key2=value2`
+- **Example:** `GET /users?active=true&role=admin&limit=10&page=2`
+- **Common query parameter uses:**
+  - **Filtering:** `?status=available` (only pets that are available)
+  - **Search:** `?q=Harry+Potter` (full‑text search)
+  - **Pagination:** `?limit=50&offset=100` (get 50 results starting from the 101st)
+  - **Sorting:** `?sort=price&order=desc`
+  - **Field selection:** `?fields=id,name,email` (return only these fields – sparse fieldsets)
+- **Why testing matters:** Query parameters are flexible, and many bugs live here:
+  - Missing optional parameter → should still work, returning all results.
+  - Invalid values (e.g., `limit=banana`) → `400 Bad Request`.
+  - Negative or zero limits → `400 Bad Request`.
+  - Extremely large limits (e.g., `limit=99999999`) → should be capped or error.
+  - SQL injection in query string → should be sanitised.
+  - Encoding: spaces become `%20`, special characters `%3D`. Testing ensures they are correctly decoded by the server.
+
+#### 🧪 Real‑World Example – E‑Commerce API
+
+##### 🔍 Simple Analogy – Library vs. Bookstore
+
+**Path Variable** = you walk into a library and ask: "I want the book with ISBN 978-0-123-45678-9." The librarian goes straight to that exact, single book. The ISBN uniquely identifies one book.
+
+**Query Parameter** = you walk into a bookstore and say: "Show me all books by J.K. Rowling, sorted by price, in pages of 20." The bookseller brings you a filtered list of many books.
+
+In APIs, the same logic applies:
+- If you want one specific product, you use a path variable (like a product ID or SKU).
+- If you want a list of products that match some criteria, you use query parameters (filters, sorting, pagination).
+
+##### 💼 E-Commerce Example Broken Down
+
+Base URL: `https://api.store.com/v1`
+
+###### 1. Path Variable – Get a single product
+`GET /products/BZ-882`
+- `/products` = the resource (all products).
+- `/BZ-882` = a path variable. `BZ-882` is the unique SKU (stock keeping unit) of one specific product, like a "Samsung Galaxy S24 Ultra, Black, 256GB".
+- The API understands: "Give me the product whose SKU is BZ-882."
+- There is only one product with that SKU. The response is a single product object, like:
+
+```json
+{
+  "sku": "BZ-882",
+  "name": "Samsung Galaxy S24 Ultra",
+  "category": "electronics",
+  "brand": "Samsung",
+  "price": 1299.99,
+  "inStock": true
+}
+```
+
+So, path variable = exact, single item.
+
+###### 2. Query Parameters – Filter a list
+`GET /products?category=electronics&brand=Samsung&sort=price&order=asc&limit=20&page=1`
+- `/products` = the resource (all products).
+- After `?` are query parameters (key=value pairs separated by `&`):
+  - `category=electronics` → only products in the "electronics" category.
+  - `brand=Samsung` → only Samsung brand.
+  - `sort=price` → sort results by price.
+  - `order=asc` → ascending order (cheapest first).
+  - `limit=20` → show 20 products per page.
+  - `page=1` → show the first page of results.
+- The API understands: "Give me all products that are electronics, Samsung brand, sorted by price from lowest to highest, 20 items per page, and show me page 1."
+- The response is an array (list) of many products, not just one, like:
+
+```json
+{
+  "data": [
+    { "sku": "EL-101", "name": "Samsung Charger", "price": 19.99 },
+    { "sku": "EL-205", "name": "Samsung Galaxy Buds", "price": 99.99 },
+    { "sku": "BZ-882", "name": "Samsung Galaxy S24 Ultra", "price": 1299.99 }
+  ],
+  "page": 1,
+  "totalPages": 3,
+  "totalItems": 58
+}
+```
+
+So, query parameters = filter, sort, paginate a list.
+
+##### 🔁 Why the SKU "BZ-882" appears in both examples
+In the query parameter example, `BZ-882` is just one of many products in the filtered list. In the path variable example, it's the only item returned. Both are perfectly valid ways to use the same product ID, depending on whether you want to fetch it directly or find it among a filtered set.
+
+#### ❓ Why This Matters for a QA/SDET
+
+- You must construct valid URLs for every test case. A wrong URL is a wasted test.
+- You design positive and negative tests around both path variables and query parameters.
+- In automation, you'll write functions that build URLs dynamically, swapping out IDs and appending different query strings based on test data.
+- Understanding URL structure helps you detect poorly designed endpoints (e.g., putting an action verb in the URL like `/getUser`, which violates RESTful design, or exposing database IDs without validation).
+- You'll also test edge cases like double slashes (`//`), trailing slashes (`/users/` vs `/users`), and URL encoding.
+
+**Explanation:**
+- An API URL consists of the protocol, host, optional base path, an endpoint that represents a resource, optional path variables that identify a specific resource, and optional query parameters that provide filtering, sorting, and pagination.
+- Path variables are part of the URL path and are required; query parameters come after the `?` and are flexible.
+- As a QA, I systematically test both: for path variables, I validate correct, missing, and malformed IDs; for query parameters, I test missing, invalid, boundary, and combination values.
+- This ensures the API is robust, predictable, and correctly handles a wide range of client inputs.
+
+---
+
+### 5.4 HTTP Headers (Content-Type, Accept, Authorization)
+
+#### 🔍 Simple Analogy
+
+Imagine you’re sending a parcel through a courier service.
+
+**Content‑Type** is the label on the parcel that tells the receiver what’s inside: “Glass – Handle with Care” or “Food – Perishable”. If you label it wrongly, the receiver won’t know how to open it or might damage what’s inside.
+
+**Accept** is you telling the courier: “I only want packages that are wrapped in blue paper; don’t even ring my doorbell if it’s not blue.” You’re telling the server what format of reply you’re willing to accept.
+
+**Authorization** is your ID badge. The courier won’t hand over the parcel unless you show proof that you are allowed to receive it. It proves you have permission.
+
+Headers are not part of the actual “message” – they’re extra instructions that tell the server how to handle your request or what to send back.
+
+#### 💼 Professional Details
+
+HTTP headers are key‑value pairs sent at the beginning of an HTTP request or response. They carry metadata: what type of data is being sent, what kind of response is expected, who is making the request, and much more.
+
+##### 1. Content‑Type (Request Header)
+- **Purpose:** Tells the server what format the request body is in.
+- **When to send:** Anytime you send a request body (POST, PUT, PATCH).
+- **Common values:**
+  - `Content-Type: application/json` – Most modern APIs expect this. The body is JSON.
+  - `Content-Type: application/xml` – Used for SOAP or legacy APIs.
+  - `Content-Type: application/x-www-form-urlencoded` – Used by HTML forms. Data is sent as `key=value&key2=value2`.
+  - `Content-Type: multipart/form-data` – Used when uploading files along with form fields.
+- **If you forget Content‑Type:** The server doesn’t know how to read your body. It often responds with `415 Unsupported Media Type`. You, as a QA, must test this: what happens if the Content‑Type is missing, or set to `text/plain` when the endpoint expects JSON?
+
+##### 2. Accept (Request Header)
+- **Purpose:** Tells the server what format the client wants the response body in.
+- **When to send:** Almost always. It’s the client saying, “I can understand JSON; please give me JSON.”
+- **Common values:**
+  - `Accept: application/json` – Give me JSON.
+  - `Accept: application/xml` – Give me XML.
+  - `Accept: */*` – Give me anything (default).
+- **Testing scenarios:**
+  - Send `Accept: application/xml` to an endpoint that only returns JSON. It may return `406 Not Acceptable` or fall back to JSON.
+  - Send `Accept: */*` and verify the default format is correct.
+  - Test that the response’s `Content-Type` header matches what you asked for.
+
+##### 3. Authorization (Request Header)
+- **Purpose:** Carries credentials to prove the client’s identity or permissions.
+- **When to send:** On almost every request to a protected API (except public endpoints like login).
+- **Common schemes:**
+  - `Authorization: Basic base64(username:password)` – Simple, sent over HTTPS.
+  - `Authorization: Bearer eyJhbGciOiJIUzI1NiIs...` – A JWT token, very common in modern APIs.
+  - `Authorization: ApiKey abc123xyz` – A pre‑shared secret key.
+  - `Authorization: Digest ...` – A more secure challenge‑response method (rare today).
+- **Without proper Authorization:** Server returns `401 Unauthorized` or `403 Forbidden`. As a QA, you test:
+  - No `Authorization` header → `401`.
+  - Expired token → `401`.
+  - Token with wrong permissions (e.g., a user trying to delete another user’s data) → `403`.
+  - API key in the wrong location (query string vs. header).
+
+#### 🧪 Real‑World Example – Creating a User
+
+Request:
+
+```text
+POST /users HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+
+{
+  "name": "Jane",
+  "email": "jane@example.com"
+}
+```
+
+- `Content-Type` tells the server: “I’m sending you JSON; parse this body accordingly.”
+- `Accept` tells the server: “I want the response (including the newly created user) in JSON.”
+- `Authorization` proves that this client has permission to create a new user.
+
+Response (200 OK):
+
+```text
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "id": 89,
+  "name": "Jane",
+  "email": "jane@example.com"
+}
+```
+
+Here, the response `Content-Type` is `application/json`, matching the `Accept` header.
+
+#### ❓ Why This Matters for a QA/SDET
+
+- Headers are a rich source of test cases. You test missing, invalid, and unexpected headers.
+- You ensure correct `Content-Type` is enforced: sending JSON as `text/plain` must fail.
+- You verify that `Accept` negotiation works and the server sends the right format.
+- You exhaustively test authentication: expired tokens, missing `Authorization`, invalid keys, and privilege escalation.
+- In automation (Postman scripts, Playwright), you’ll set headers manually for each request. A single forgotten header can cause a `401` or `415`, breaking your suite.
+
+**Explanation:**
+- HTTP headers are metadata that accompany requests and responses.
+- The Content-Type header tells the server the format of the request body; without it, the server can’t parse the payload.
+- The Accept header tells the server what response format the client can process.
+- The Authorization header carries credentials that grant or deny access.
+- As a QA/SDET, I test these headers thoroughly: I verify that the correct Content-Type is enforced, that Accept negotiation returns the expected format, and that missing or invalid Authorization headers result in proper 401/403 responses.
+- These checks are fundamental to API security and robustness.
+
+---
+
+### 5.5 JSON Payloads & Parsing (Request Body)
+
+#### 🔍 Simple Analogy
+
+Imagine you’re filling out a passport application form.
+
+The form has labelled boxes: First Name, Last Name, Date of Birth, Place of Birth, Nationality.
+
+You fill each box with exactly the right kind of information: a date in the date box, a country name in the nationality box.
+
+If you leave the “Last Name” box empty, the clerk will reject the form. If you scribble nonsense in the “Date of Birth” box, the clerk will reject the form because it’s not a real date.
+
+That’s exactly what a JSON payload is: a structured, labelled form that the client fills out and sends to the server. The server reads it, checks that the data is correct, and then processes it.
+
+JSON is the language the form is written in. Parsing is the clerk reading the form and interpreting what you wrote.
+
+#### 💼 Professional Definition
+
+**JSON (JavaScript Object Notation)** is a lightweight, text‑based format for representing structured data. It’s human‑readable, machine‑readable, and language‑independent. Almost every modern REST API uses JSON for request and response bodies.
+
+A **JSON payload** (the request body) is the actual data you send to the server in a POST, PUT, or PATCH request. It’s a string of text formatted according to JSON rules, placed in the body of the HTTP request.
+
+**Parsing** is the process of converting that text string into a data structure (like an object or an array) that the server can work with programmatically.
+
+#### 🧱 JSON Structure Basics
+
+JSON is built from only a few data types:
+
+| JSON Type | Example | Notes |
+| :--- | :--- | :--- |
+| String | `"John"` | Must be in double quotes. |
+| Number | `42`, `3.14`, `-10` | No quotes around numbers. |
+| Boolean | `true`, `false` | Lowercase, no quotes. |
+| Null | `null` | Represents “no value”. |
+| Object | `{ "key": "value" }` | Unordered collection of key‑value pairs, wrapped in curly braces. Keys must be strings. |
+| Array | `["apple", "banana"]` | Ordered list of values, wrapped in square brackets. Values can be any type, including other objects/arrays. |
+
+#### 🧪 Real‑World Example – Creating a User
+
+Request:
+`POST /users`
+`Content-Type: application/json`
+
+JSON Payload (Request Body):
+
+```json
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@example.com",
+  "age": 28,
+  "isActive": true,
+  "address": {
+    "street": "15 Main St",
+    "city": "London",
+    "postcode": "SW1 1AA"
+  },
+  "roles": ["customer", "subscriber"]
+}
+```
+
+Breakdown:
+- The whole thing is a JSON object.
+- `firstName`, `lastName`, `email` are strings.
+- `age` is a number.
+- `isActive` is a boolean.
+- `address` is a nested object.
+- `roles` is an array of strings.
+
+Successful Response (201 Created):
+
+```json
+{
+  "id": 1001,
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane@example.com",
+  "age": 28,
+  "isActive": true,
+  "address": {
+    "street": "15 Main St",
+    "city": "London",
+    "postcode": "SW1 1AA"
+  },
+  "roles": ["customer", "subscriber"]
+}
+```
+
+The response confirms what you created.
+
+#### 📝 How QA Tests JSON Payloads
+
+Every field in the JSON is a potential test scenario. You must think: “What if this field is missing, wrong type, empty, duplicated, or contains special characters?”
+
+##### 1. Positive tests (valid data)
+- All required fields present, correct types, valid values.
+- Nested objects correctly structured.
+- Arrays contain valid items.
+
+##### 2. Negative tests (invalid data)
+- **Missing required fields:** e.g., omit email. Expect `400 Bad Request` with an error message indicating the missing field.
+- **Wrong data types:** e.g., send `"age": "twenty eight"` (string instead of number). Expect `400`.
+- **Empty strings:** e.g., `"firstName": ""`. Usually `400`, unless the API allows it.
+- **Null values:** `"email": null`. Some APIs reject explicit nulls, others treat them as missing.
+- **Extra fields:** `"middleName": "Ann"` when the API doesn’t expect it. Should the server ignore it or reject it? (Usually ignored, but worth testing.)
+- **Malformed JSON:** Missing a closing brace `}`, a stray comma, single quotes instead of double quotes. Expect `400 Bad Request` with a generic “Invalid JSON” message.
+- **Extremely large values:** `"firstName"` with 10,000 characters. Expect `400` (field too long) or successful truncation if documented.
+- **Special characters and Unicode:** emoji in names, null as a string, SQL injection in fields, script tags.
+
+##### 3. Boundary value tests (applying EP & BVA to JSON fields)
+- `age`: test minimum allowed (e.g., 0, 1), maximum allowed (e.g., 120, 150), just below (‑1), just above (151).
+- `roles` array: empty array `[]`, single element, maximum allowed number of elements.
+
+#### 🔧 Parsing in Practice
+
+The server parses the JSON string into an object to access properties like `body.firstName`.
+
+If the JSON is malformed (e.g., missing a quote), parsing fails, and the server responds with `400 Bad Request` or `422 Unprocessable Entity`.
+
+As a tester, when you write scripts in Postman, you parse the response JSON to assert values:
+```javascript
+const jsonData = pm.response.json();
+pm.expect(jsonData.firstName).to.eql("Jane");
+```
+
+In Playwright (automation), you’ll similarly parse the response body:
+```javascript
+const user = await response.json();
+expect(user.firstName).toBe("Jane");
+```
+
+#### ❓ Why This Matters for a QA/SDET
+
+- You must be able to read and write JSON fluently; it’s the primary language of APIs.
+- Every field is a test point. You systematically apply your manual test design skills (positive/negative, EP, BVA) to JSON payloads.
+- Understanding parsing helps you debug failures: if your script can’t parse the response, you know the response body might be empty, HTML instead of JSON, or malformed.
+- When automating, you’ll construct request bodies dynamically using JavaScript objects and `JSON.stringify()` to send them.
+- You’ll validate not just status codes but also the structure and values of the response JSON. That’s the heart of API testing.
+
+**Explanation:**
+- JSON is the standard data format for modern API request and response bodies. It uses key-value pairs, arrays, and nested objects to represent structured data.
+- The Content-Type header tells the server to expect JSON.
+- As a QA, I design test cases around every field in the JSON payload: testing correct types, missing required fields, invalid values, boundary conditions, and malformed JSON.
+- I also verify that the response JSON matches the expected schema and values.
+- Parsing JSON responses in Postman and Playwright allows me to assert on specific data and build robust API test automation.
+
+---
+
+### 5.6 HTTP Status Codes (2xx, 3xx, 4xx, 5xx)
+
+#### 🔍 Simple Analogy
+
+When you order a pizza and the delivery arrives, the delivery person gives you a brief summary of what happened.
+
+- **2xx (Success):** “Here’s your pizza. Everything is perfect.”
+- **3xx (Redirection):** “We moved to a new shop. Go to this other address to collect your pizza.”
+- **4xx (Client Error):** “You didn’t pay, so no pizza. Or you asked for a pizza that doesn’t exist on the menu.”
+- **5xx (Server Error):** “The kitchen is on fire. We can’t make any pizza right now.”
+
+HTTP status codes are that single‑line summary from the server. Every API response includes a three‑digit code that tells the client exactly what happened.
+
+#### 💼 Professional Details
+
+HTTP status codes are divided into five classes. The first digit tells you the category.
+
+| Range | Class | Meaning |
+| :--- | :--- | :--- |
+| 1xx | Informational | Request received, continuing. Rarely seen in APIs. |
+| 2xx | Success | The request was received, understood, and accepted. |
+| 3xx | Redirection | Further action is needed to complete the request. |
+| 4xx | Client Error | The request contains bad syntax or cannot be fulfilled. |
+| 5xx | Server Error | The server failed to fulfill a valid request. |
+
+#### 📋 Complete List of Common Status Codes
+
+##### ✅ 2xx – Success (Everything worked)
+
+| Code | Name | Meaning | Example |
+| :--- | :--- | :--- | :--- |
+| `200 OK` | OK | The request succeeded. Response body contains the requested data or confirmation. | `GET /users/5` returns user data. |
+| `201 Created` | Created | A new resource was created successfully. Often returns the created object. | `POST /users` returns the new user with an ID. |
+| `204 No Content` | No Content | The request succeeded, but there is no response body. Used for successful DELETEs or updates. | `DELETE /users/5` returns no body. |
+
+##### 🔁 3xx – Redirection (Go somewhere else)
+
+| Code | Name | Meaning | Example |
+| :--- | :--- | :--- | :--- |
+| `301 Moved Permanently` | Moved Permanently | The resource has been moved to a new URL. Clients should update their bookmarks. | Old URL `/old‑login` now permanently at `/login`. |
+| `302 Found` | Found | Temporary redirect. The resource is at another URL for now. | After login, temporarily redirect to `/dashboard`. |
+| `304 Not Modified` | Not Modified | The resource hasn’t changed since the last request. Used for caching. | `GET /users/5` with `If-None-Match` header returns `304` instead of re‑sending the full data. |
+
+##### ❌ 4xx – Client Error (You made a mistake)
+
+| Code | Name | Meaning | Example |
+| :--- | :--- | :--- | :--- |
+| `400 Bad Request` | Bad Request | The server cannot understand the request due to malformed syntax, missing required fields, or invalid data. | Sending JSON with a missing required `email` field. |
+| `401 Unauthorized` | Unauthorized | Authentication is required and has failed or not been provided. | Calling a protected endpoint without an `Authorization` header. |
+| `403 Forbidden` | Forbidden | The server understands the request but refuses to authorize it. You don’t have permission. | A regular user trying to delete an admin resource. |
+| `404 Not Found` | Not Found | The requested resource does not exist on the server. | `GET /users/99999` when no user with that ID exists. |
+| `405 Method Not Allowed` | Method Not Allowed | The HTTP method is not supported for the resource. | `POST /users/5` when only GET, PUT, and DELETE are allowed on a single resource. |
+| `409 Conflict` | Conflict | Request conflicts with the current state of the server. Often used for duplicate entries. | Creating a user with an email that already exists. |
+| `422 Unprocessable Entity` | Unprocessable Entity | The request is well‑formed but contains semantic errors (e.g., invalid field value). | `"age": -5` – the JSON is valid, but the value is not acceptable. |
+| `429 Too Many Requests` | Too Many Requests | Rate limiting has been applied. The client has sent too many requests in a given time. | Making 100 login attempts per second triggers a block. |
+
+##### 💥 5xx – Server Error (The server messed up)
+
+| Code | Name | Meaning | Example |
+| :--- | :--- | :--- | :--- |
+| `500 Internal Server Error` | Internal Server Error | A generic server error. Something went wrong on the server’s side. | An unhandled exception in the code (e.g., null pointer, database crash). |
+| `502 Bad Gateway` | Bad Gateway | The server, while acting as a gateway or proxy, received an invalid response from the upstream server. | API gateway calls a backend microservice that is down. |
+| `503 Service Unavailable` | Service Unavailable | The server is currently unavailable (overloaded or down for maintenance). Usually temporary. | A maintenance page or server overload. |
+| `504 Gateway Timeout` | Gateway Timeout | The server, acting as a gateway, did not receive a timely response from the upstream server. | A backend service takes too long to respond. |
+
+#### 🔍 How to Check Status Codes
+
+You check HTTP status codes in three ways, depending on your context:
+
+##### 1. Manual testing – Postman
+After sending a request, Postman displays the status code prominently at the top of the response area (e.g., `200 OK` in green, `404 Not Found` in orange, `500 Internal Server Error` in red). You can also write test scripts in Postman to assert the status code:
+
+```javascript
+pm.test("Status code is 200", function () {
+  pm.response.to.have.status(200);
+});
+```
+
+##### 2. Automation – Playwright (TypeScript)
+Playwright’s `APIRequestContext` returns a response object. You check the status code directly:
+
+```typescript
+const response = await request.post('https://api.example.com/users', {
+  data: { name: 'Jane' }
+});
+expect(response.status()).toBe(201); // checks exactly 201
+```
+
+For UI tests with Playwright, you can also check network responses via `page.waitForResponse()` and then assert the status.
+
+##### 3. Browser DevTools – Network tab
+Open DevTools (F12) → Network tab. Perform an action in the web app. Click on any API call and see the status code under the “Status” column. This is how you quickly verify what the UI actually receives from the backend.
+
+#### 🧪 Real‑World Testing – Status Code Test Cases
+
+Using a user management API as an example, a QA would design tests like:
+
+| Action | Expected Code | Negative Scenario | Expected Code |
+| :--- | :--- | :--- | :--- |
+| Create a new user with valid data | `201 Created` | Missing required field `email` | `400 Bad Request` or `422 Unprocessable Entity` |
+| Get an existing user | `200 OK` | Get user ID `99999` | `404 Not Found` |
+| Delete a user | `204 No Content` | Delete without auth header | `401 Unauthorized` |
+| Update a user with a normal role | `200 OK` | Try to update an admin resource as a regular user | `403 Forbidden` |
+| Call a POST endpoint with GET | `405 Method Not Allowed` | — | — |
+| Send a request with an expired token | — | Expired JWT token | `401 Unauthorized` |
+| Force a server crash (e.g., by sending a huge payload) | — | — | `500 Internal Server Error` (if the server doesn’t handle it) |
+
+#### ❓ Why This Matters for a QA/SDET
+
+- Every API test you write starts with checking the status code; it’s the first signal of success or failure.
+- Status codes alone are not enough: a `200 OK` might still return incorrect data. You must also validate the response body. But a wrong status code is an immediate defect.
+- You must test that the API uses the most appropriate code for each scenario – for example, a missing field should be `400` or `422`, not `500`. A poorly designed API might return `200 OK` with an error message in the body, which is a design flaw.
+- In automation, you use status code assertions to categorise test results. If a `5xx` appears, your CI/CD pipeline can mark the build as unstable immediately.
+
+**Explanation:**
+- HTTP status codes are three‑digit numbers returned by the server to summarise the outcome of a request.
+- 2xx codes indicate success (`200 OK`, `201 Created`, `204 No Content`).
+- 3xx codes indicate redirection (`301`, `302`, `304`).
+- 4xx codes signal client errors (`400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `405 Method Not Allowed`, `409 Conflict`, `422 Unprocessable Entity`, `429 Too Many Requests`).
+- 5xx codes signify server errors (`500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`).
+- I check status codes manually in Postman and DevTools, and programmatically with assertions in Playwright.
+- Verifying the correct status code for each positive and negative scenario is the first step in any API test.
