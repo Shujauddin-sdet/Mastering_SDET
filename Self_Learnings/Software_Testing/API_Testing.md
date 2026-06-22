@@ -10,9 +10,18 @@
    - [1.3 Deep Dive: REST API vs Plain HTTP](#13-deep-dive-rest-api-vs-plain-http)
 2. [Types of APIs by Architectural Design & Protocol](#2-types-of-apis-by-architectural-design--protocol)
    - [2.1 Data Formats (XML, JSON, Protobuf)](#21-data-formats-xml-json-protobuf)
-   - [2.2 API Architectures (SOAP, REST, GraphQL, gRPC, WebSocket, Webhooks)](#22-api-architectures)
+   - [2.2 API Architectures](#22-api-architectures)
 3. [Types of APIs by Accessibility Scope](#3-types-of-apis-by-accessibility-scope)
+   - [3.1 Internal API](#31-internal-api)
+   - [3.2 Partner API](#32-partner-api)
+   - [3.3 Public API](#33-public-api)
+   - [3.4 Composite API](#34-composite-api)
 4. [Understanding API Documentation (OpenAPI/Swagger)](#4-understanding-api-documentation-openapiswagger)
+   - [4.1 What is OpenAPI/Swagger?](#41-what-is-openapiswagger)
+   - [4.2 What a Typical OpenAPI Document Contains](#42-what-a-typical-openapi-document-contains)
+   - [4.3 What Swagger UI Looks Like (and why QA loves it)](#43-what-swagger-ui-looks-like-and-why-qa-loves-it)
+   - [4.4 How QA Uses API Documentation to Design Tests](#44-how-qa-uses-api-documentation-to-design-tests)
+   - [4.5 Why This Matters for a QA/SDET](#45-why-this-matters-for-a-qasdet)
 5. [The Anatomy of an HTTP Request & Response](#5-the-anatomy-of-an-http-request--response)
    - [5.1 HTTP vs HTTPS, SSL/TLS Basics](#51-http-vs-https-ssltls-basics)
    - [5.2 HTTP Methods (GET, POST, PUT, PATCH, DELETE)](#52-http-methods-get-post-put-patch-delete)
@@ -20,6 +29,14 @@
    - [5.4 HTTP Headers (Content-Type, Accept, Authorization)](#54-http-headers-content-type-accept-authorization)
    - [5.5 JSON Payloads & Parsing (Request Body)](#55-json-payloads--parsing-request-body)
    - [5.6 HTTP Status Codes (2xx, 3xx, 4xx, 5xx)](#56-http-status-codes-2xx-3xx-4xx-5xx)
+6. [API Security & Authentication](#6-api-security--authentication)
+   - [6.1 Authentication vs. Authorization](#61-authentication-vs-authorization)
+   - [6.2 Common Auth Methods (Basic Auth, API Keys, Bearer/JWT Tokens)](#62-common-auth-methods-basic-auth-api-keys-bearerjwt-tokens)
+   - [6.3 API Security Testing Basics](#63-api-security-testing-basics)
+7. [API Test Design & Edge Cases (The QA Mindset)](#7-api-test-design--edge-cases-the-qa-mindset)
+   - [7.1 Positive vs. Negative API Testing](#71-positive-vs-negative-api-testing)
+   - [7.2 Applying EP & BVA to JSON Payloads](#72-applying-ep--bva-to-json-payloads)
+   - [7.3 Testing Edge Cases (Nulls, Empty Strings, Missing Fields, Data Type Mismatches)](#73-testing-edge-cases-nulls-empty-strings-missing-fields-data-type-mismatches)
 
 ---
 
@@ -613,7 +630,7 @@ Think of a bank building:
 
 ---
 
-### 1. Internal API
+### 3.1 Internal API
 
 #### 🔍 Analogy
 The plumbing inside a hotel. Guests never see it, but it connects the boiler, the kitchen sinks, and every bathroom. Without it, the hotel stops working.
@@ -626,7 +643,7 @@ The plumbing inside a hotel. Guests never see it, but it connects the boiler, th
 
 ---
 
-### 2. Partner API
+### 3.2 Partner API
 
 #### 🔍 Analogy
 A hotel giving a trusted tour operator a special keycard that opens only the luggage storage room and the business lounge. The tour operator can't go into guest rooms or the accounting department.
@@ -639,7 +656,7 @@ A hotel giving a trusted tour operator a special keycard that opens only the lug
 
 ---
 
-### 3. Public API
+### 3.3 Public API
 
 #### 🔍 Analogy
 A hotel's front desk, lobby, and restaurant — open to everyone. Anyone can walk in, but there are rules: no shoes, no running, and the swimming pool is for guests only.
@@ -653,7 +670,7 @@ A hotel's front desk, lobby, and restaurant — open to everyone. Anyone can wal
 
 ---
 
-### 4. Composite API
+### 3.4 Composite API
 
 #### 🔍 Analogy
 A hotel concierge who, after you ask *"Plan me a romantic evening,"* books a dinner reservation, orders flowers, and reserves a spa appointment — all in one go, handing you a single confirmation ticket.
@@ -1525,3 +1542,533 @@ Using a user management API as an example, a QA would design tests like:
 - 5xx codes signify server errors (`500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`).
 - I check status codes manually in Postman and DevTools, and programmatically with assertions in Playwright.
 - Verifying the correct status code for each positive and negative scenario is the first step in any API test.
+
+---
+
+## 6. API Security & Authentication
+
+### 6.1 Authentication vs. Authorization
+
+#### 🔍 Simple Analogy
+
+You arrive at the entrance of a highly secure office building.
+
+**Authentication** is the security guard at the front door asking: “Who are you? Show me your ID card.” You hand over your company ID. The guard checks that the photo matches your face and that the card is valid. Now the guard knows you are John Smith, employee #8842. This is about proving your identity.
+
+**Authorization** is what happens after you’re inside. You walk up to the server room door, swipe your ID, and the door stays locked. You try to enter the finance director’s office – locked again. Your ID card works, but it only allows you into the engineering floor and the cafeteria. The system knows who you are, but it also knows what you are allowed to do. That’s authorization: proving you have permission.
+
+- **Authentication** = Who are you?
+- **Authorization** = Are you allowed to do this?
+
+#### 💼 Professional Definitions
+
+| Feature | Authentication | Authorization |
+| :--- | :--- | :--- |
+| **Question it answers** | “Who are you?” | “What are you allowed to do?” |
+| **When it happens** | First – you must be identified before permissions can be checked. | Second – after identity is verified, the system checks your rights. |
+| **How it works** | Credentials are provided: username/password, API key, JWT token, certificate. The server validates them. | The server checks the authenticated user’s role or permissions against the requested resource and action. |
+| **Failure response** | `401 Unauthorized` – “I don’t know who you are; your credentials are missing or wrong.” | `403 Forbidden` – “I know who you are, but you don’t have permission to do this.” |
+| **Real‑world example** | Swiping your ID card at the building entrance. | Trying to open the server room door with the same ID card; it stays locked. |
+
+> **Key point:** The names are confusing because a `401 Unauthorized` actually means “unauthenticated.” Despite its name, it’s about failed authentication, not authorization.
+
+#### 🧪 Real‑World API Example – Bank Account API
+
+Scenario: You want to view the account details of user ID 500.
+
+**1. Authentication fails**
+- **Request:** `GET /accounts/500` (Without an `Authorization` header)
+- **Response:** `401 Unauthorized`
+- The server says: “I don’t know who you are. No valid token provided.”
+
+**2. Authentication succeeds, but Authorization fails**
+- **Request:** `GET /accounts/500`
+- **Header:** `Authorization: Bearer token_for_user_300`
+- The server decodes the token and knows you are User 300.
+- The server checks: “Is User 300 allowed to view account 500?” → No.
+- **Response:** `403 Forbidden`
+- The server says: “I know who you are (User 300), but you don’t have permission to access account 500. That account belongs to another user, and you are not an admin.”
+
+**3. Both Authentication and Authorization succeed**
+- **Request:** `GET /accounts/500`
+- **Header:** `Authorization: Bearer token_for_user_500` (Or a token with an admin role that can view any account).
+- Server authenticates User 500, authorizes the request (it’s their own account).
+- **Response:** `200 OK` with account details.
+
+#### ❓ Why This Matters for a QA/SDET
+
+You must design test cases that clearly separate authentication failures from authorization failures. If the server returns `401` when it should return `403` (or vice versa), that’s a security defect.
+
+**Authentication tests:**
+- No token → `401 Unauthorized`.
+- Expired token → `401 Unauthorized`.
+- Malformed token (e.g., `Bearer abc123`, but the token format is wrong) → `401 Unauthorized`.
+- Token for a deleted user → `401 Unauthorized`.
+
+**Authorization tests:**
+- Regular user tries to access admin endpoint → `403 Forbidden`.
+- User A tries to modify User B’s data → `403 Forbidden`.
+- A valid token that lacks the required scope or role → `403 Forbidden`.
+
+In automation (Postman, Playwright), you’ll write distinct test suites for authentication and authorization. A common SDET task is creating a token with different roles and verifying that permissions are correctly enforced.
+
+**Explanation:**
+- Authentication is the process of verifying who a user or client is, typically through credentials like passwords, API keys, or tokens.
+- Authorization determines what that authenticated entity is allowed to do, based on roles or permissions.
+- Authentication must happen first; if it fails, the server returns `401 Unauthorized`.
+- If authentication succeeds but the user lacks the required permission, the server returns `403 Forbidden`.
+- As a QA/SDET, I write test cases that validate both layers independently: ensuring that unauthenticated requests are rejected, and that authenticated users can only access resources they are explicitly permitted to.
+
+---
+
+### 6.2 Common Auth Methods (Basic Auth, API Keys, Bearer/JWT Tokens)
+
+#### 🔍 Simple Analogy
+
+Imagine you need to pick up a parcel from a secure locker.
+
+- **Basic Auth** is like writing your username and password on a sticky note and sticking it to the locker every time you want to open it. It’s quick and simple, but anyone who sees the note can read your secrets, so you must be in a very safe place (like over HTTPS).
+- **API Key** is like having a long, random membership number. You show the number; the locker opens. The locker doesn’t know who you are—only that the number is valid. It’s easy to share but also easy to steal.
+- **Bearer Token (JWT)** is like a smart, time‑limited visitor badge. You first show your ID at the reception (login) and get a badge that says “John, valid for 1 hour, can access floors 1‑3.” Each time you go to a door, you just flash the badge. The badge is signed by the building, so the doors know it’s real without calling reception every time.
+
+#### 💼 Professional Details
+
+**1. Basic Authentication (Basic Auth)**
+- **What it is:** The simplest authentication method. The client sends a string `username:password` encoded in Base64 in the `Authorization` header.
+- **Header format:** `Authorization: Basic base64(username:password)`
+- **Example:** Username: `admin`, Password: `secret123`
+  - Base64 encoded: `admin:secret123` → `YWRtaW46c2VjcmV0MTIz`
+  - Header: `Authorization: Basic YWRtaW46c2VjcmV0MTIz`
+- **Important:** Base64 is not encryption; it’s just a reversible encoding. That’s why Basic Auth must always be used over HTTPS. Otherwise, credentials can be easily stolen.
+- **Used in:** Legacy systems, internal APIs behind strict firewalls, quick testing.
+- **Testing Basic Auth:**
+  - Valid credentials → `200 OK` or the expected success.
+  - Wrong password or username → `401 Unauthorized`.
+  - Missing Authorization header → `401 Unauthorized`.
+  - Using `http://` instead of `https://` → ensure the request is rejected or credentials are not sent in plain text.
+
+**2. API Key**
+- **What it is:** A long, unique, randomly generated string that the client includes in every request. The server checks if the key is valid and grants access. It doesn’t identify a user; it identifies an application or a project.
+- **Where it goes:** Usually in a header or a query parameter.
+  - Header: `X-API-Key: abc123def456ghi789`
+  - Query parameter: `GET /users?api_key=abc123def456ghi789`
+- **Used in:** Public APIs (e.g., Google Maps, OpenWeather), machine‑to‑machine communication.
+- **Testing API Keys:**
+  - Valid key → `200 OK`.
+  - Invalid or malformed key → `401 Unauthorized` or `403 Forbidden`.
+  - Missing key → `401 Unauthorized`.
+  - Key with insufficient permissions (e.g., read‑only key used for a write operation) → `403 Forbidden`.
+  - Key passed in URL: check that the key is not logged in browser history or server logs (should be in header).
+
+**3. Bearer Token / JWT (JSON Web Token)**
+- **What it is:** A token, often a JWT, that is obtained after a successful login (or by other authentication flows). The client then sends the token in the `Authorization` header as a “Bearer” token. The server validates the token’s signature and extracts the user identity and permissions without needing to store a session.
+- **Header format:** `Authorization: Bearer eyJhbGciOiJIUzI1NiIs...`
+- **JWT structure:** A JWT looks like three Base64‑encoded strings separated by dots: `header.payload.signature`. The payload contains claims like `userId`, `exp` (expiry time), and `scope/roles`. The signature ensures the token hasn’t been tampered with.
+- **Benefits:** Stateless, self‑contained, can carry user info and permissions, scalable.
+- **Used in:** Almost all modern single‑page applications (SPAs), mobile apps, and REST APIs.
+- **Testing Bearer Tokens:**
+  - Valid token → `200 OK`.
+  - Expired token → `401 Unauthorized` with a message like “Token expired”.
+  - Token signed with wrong secret → `401 Unauthorized` (invalid signature).
+  - Token missing the Bearer prefix (e.g., `Authorization: eyJhbG...` without Bearer) → `401 Unauthorized` or `400 Bad Request`.
+  - Token with wrong audience (`aud` claim) → `401 Unauthorized`.
+  - Token with insufficient scope/role for the endpoint → `403 Forbidden`.
+  - Refresh token flow (if applicable): ensure a new token can be obtained using a refresh token before expiry.
+
+#### 🧪 Real‑World Example – Login and Access a Protected Resource
+
+**Step 1: Login to get a JWT**
+
+```text
+POST /auth/login
+Content-Type: application/json
+
+{
+  "username": "john",
+  "password": "secret"
+}
+```
+
+Response:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQyLCJyb2xlIjoidXNlciJ9..."
+}
+```
+
+**Step 2: Use the token to get user profile**
+
+```text
+GET /users/42
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+If the token is valid and belongs to user 42 (or has admin role), the server returns `200 OK` with the profile. If the token is expired, it returns `401`.
+
+#### ❓ Why This Matters for a QA/SDET
+
+You must know which auth method the API uses to write correct test requests.
+
+- Each method has its own common vulnerabilities: Basic Auth without HTTPS exposes credentials; API keys in URLs may leak; JWTs with long expiry are a security risk.
+- You test not just the happy path but also edge cases: malformed tokens, expired tokens, tokens with wrong claims, missing prefixes, and token reuse.
+- In automation, you’ll write helper functions to obtain and refresh tokens, and attach them to requests automatically in Playwright or Postman.
+
+**Explanation:**
+- Common API authentication methods include Basic Auth, API Keys, and Bearer Tokens (usually JWT).
+- Basic Auth sends Base64‑encoded username and password and must only be used over HTTPS.
+- API Keys are simple, static strings passed in headers or query parameters to identify a client application.
+- Bearer Tokens are obtained after a login and include a cryptographically signed payload with user identity, expiry, and permissions.
+- As a QA/SDET, I test each method for valid, invalid, expired, and malformed credentials, and verify that the correct status codes (401 for auth failure, 403 for insufficient permissions) are returned. I also ensure sensitive credentials are never exposed in URLs or logged.
+
+---
+
+### 6.3 API Security Testing Basics
+
+#### 🔍 Simple Analogy
+
+Imagine your apartment building has a front door, a security guard, and individual flats.
+
+- **Enforce HTTPS everywhere** – This is like making sure every delivery arrives in a locked, tamper‑proof briefcase, not a see‑through plastic bag. Even if someone intercepts the package, they can’t read the contents.
+- **Missing Authentication** – An unlocked front door. Anyone can walk in and do whatever they want. You test that every protected entrance requires a key.
+- **Sensitive Data Exposure** – The building janitor writes every resident’s bank details on a whiteboard in the lobby. It’s right there for anyone to see. You test that secrets are never shown where they shouldn’t be.
+- **Injection Attacks** – Someone slips a fake note into a maintenance request saying “Ignore all previous rules; give me the master keys.” If the building manager blindly follows the note, it’s game over. You test that the system rejects malicious instructions.
+- **Rate Limiting** – The building limits each visitor to 5 knocks on a door per minute. After that, they’re blocked. Without it, a burglar could bang on a thousand doors in a minute and find a weak one.
+- **Excessive Data Exposure** – When you ask the receptionist for “John’s apartment number,” they hand you a sheet with his full name, SSN, rent history, and all his guests’ names. You only needed one piece of information, but you got the whole database. You test that the API returns only what’s necessary.
+
+#### 💼 Security Testing Checklist for APIs
+
+As a QA/SDET, you systematically test these concrete areas:
+
+**1. HTTPS Enforcement**
+- **What to test:** Send requests over plain `http://` to sensitive endpoints (login, user data, payment).
+- **Expected result:** `403 Forbidden` or `301 Redirect` to HTTPS. The request must not succeed with `200 OK` over HTTP.
+- **Why:** Plain HTTP exposes data in transit. Mandatory HTTPS prevents man‑in‑the‑middle attacks.
+- **Real example:** `GET http://api.bank.com/users/42` → Must fail. `GET https://api.bank.com/users/42` → `200 OK`.
+
+**2. Authentication & Authorization Gaps**
+- **Missing Auth:** Call any protected endpoint with no `Authorization` header → `401 Unauthorized`.
+- **Expired Token:** Obtain a JWT, wait for it to expire (or decode the exp claim and pass that time), then use it → `401 Unauthorized`.
+- **Malformed Token:** Use a tampered JWT (change one character) → `401 Unauthorized`.
+- **Wrong Role / Scope:** Use a valid token of a regular user to access an admin endpoint (`GET /admin/users`) → `403 Forbidden`.
+- **Token in URL:** If the API accepts tokens as query parameters (`?token=...`), check that they are not logged or visible in history. Better yet, they should be rejected; tokens belong in headers.
+
+**3. Sensitive Data Exposure**
+- **In Responses:** Check that password fields, password hashes, security question answers, or full credit card numbers never appear in API responses.
+  - Example: `GET /users/5` should return `{ "id": 5, "name": "John", "email": "j@example.com" }` and NOT `{ "password": "hashedpw", "ssn": "123-45-6789" }`.
+- **In URLs:** Verify that no sensitive data (tokens, passwords, personal info) is passed in path segments or query strings where they can be logged.
+- **In Error Messages:** Ensure that detailed stack traces or database error messages are not leaked to the client in production. A server error should return a generic message like `500 Internal Server Error` with no DB details.
+
+**4. Injection Attacks**
+- **SQL Injection:** Insert SQL syntax into input fields or query parameters.
+  - Example: `GET /users?name=' OR '1'='1` – should not return all users. The API must return `400 Bad Request` or an empty result set, not execute the injected SQL.
+- **In JSON body:** `{ "email": "test@example.com'; DROP TABLE users;--" }` – must not execute any commands.
+- **NoSQL Injection (MongoDB):** For REST APIs using NoSQL, try `{ "$gt": "" }` or similar operators in JSON fields.
+- **Command Injection:** If an endpoint takes a filename or command parameter, try `; ls -la` or `&& whoami`. The API must sanitise input.
+- **XML Injection:** Attempt to insert entity definitions or recursive payloads (Billion Laughs attack) in SOAP/XML endpoints.
+- **Expected result:** The API must reject the payload with a `400 Bad Request` or treat it as a literal string, never execute it.
+
+**5. Rate Limiting / Throttling**
+- **What to test:** Send a high volume of requests in a short time from the same IP or API key.
+  - Example: `POST /login` 50 times in 1 second.
+- **Expected result:** After a threshold, the API must return `429 Too Many Requests` and block further attempts for a period.
+- **Also test:** Whether the rate limit counters reset correctly after the time window expires.
+- **Why:** Prevents brute‑force attacks on passwords, denial‑of‑service, and resource abuse.
+
+**6. Excessive Data Exposure / Mass Assignment**
+- **What to test:** When creating or updating a resource, send extra fields that should not be modifiable by the client.
+  - Example: `POST /users` body: `{ "name": "Jane", "email": "jane@test.com", "role": "admin" }`. If only admins can assign roles, a normal user’s request with `"role": "admin"` must either be ignored or rejected.
+- **Expected result:** The server must not allow the user to elevate their own privileges. Either strip the extra field or return `403 Forbidden`.
+- **Also test:** When fetching a resource, check that the response doesn’t expose unnecessary relational data (e.g., an order shouldn’t contain the seller’s entire payment history).
+
+**7. Cross‑Origin Resource Sharing (CORS) Misconfiguration**
+- **What to test:** Send requests from a browser (or simulate via Postman with an `Origin` header) from an untrusted domain.
+- **Expected result:** The API should only allow specific origins if configured correctly. An overly permissive `Access-Control-Allow-Origin: *` on sensitive endpoints is a security risk.
+
+**8. Secure Headers (API Version)**
+- Check that headers like `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, or `Content-Security-Policy` are present in the response (more for web UIs, but good for APIs returning HTML).
+- Ensure cookies set by APIs have `Secure` and `HttpOnly` flags.
+
+#### 🧪 Real‑World Security Test Case – Login Endpoint
+
+Endpoint: `POST /auth/login`
+
+Security checks:
+
+| Test Scenario | Request | Expected Result |
+| :--- | :--- | :--- |
+| HTTPS enforcement | `http://api.example.com/auth/login` | `403 Forbidden` or `301 Redirect` to https. |
+| SQL Injection | `{ "email": "'; DROP TABLE users;--", "password": "x" }` | `400 Bad Request` or generic error, no DB damage. |
+| Missing Auth | `GET /users/me` with no `Authorization` header | `401 Unauthorized`. |
+| Rate Limiting | 100 login attempts in 10 seconds | After threshold, `429 Too Many Requests`. |
+| Sensitive Data in Response | Send valid login request | Response must not contain password hash. |
+
+#### ❓ Why This Matters for a QA/SDET
+
+You are the last line of defence before code hits production. A single missed security check can expose millions of users’ data.
+
+- In CI/CD, you can automate many of these checks (Playwright scripts for HTTPS redirects, schema validation for over‑exposure, header assertions). They become part of the regression suite.
+- Security testing isn’t just a specialist’s job; every SDET must know the basic API vulnerabilities. Interviewers will ask how you test API security.
+
+**Explanation:**
+- API security testing involves a set of concrete checks that verify the API protects data and resources.
+- I verify that all sensitive endpoints enforce HTTPS, that missing, expired, or wrong‑role authentication tokens are correctly rejected with `401` or `403`.
+- I ensure that responses never expose passwords or internal data, and that input fields are safe against injection attacks (SQL, NoSQL, command).
+- Rate limiting must prevent brute‑force and denial‑of‑service.
+- I also test for excessive data exposure by ensuring the API returns only necessary fields.
+- These tests are a core part of my QA automation suite and are run continuously in CI/CD.
+
+---
+
+## 7. API Test Design & Edge Cases (The QA Mindset)
+
+### 7.1 Positive vs. Negative API Testing
+
+#### 🔍 Simple Analogy
+
+Imagine you're testing a vending machine.
+
+**Positive Testing** is checking that the machine works perfectly when a customer does everything right:
+You insert exact change, press the button for a chocolate bar, and the machine drops it. The machine behaves exactly as designed.
+
+**Negative Testing** is checking that the machine doesn't break, crash, or do something dangerous when a customer does something wrong or unexpected:
+You insert fake money, press five buttons at once, kick the machine, or try to reach inside. The machine should reject the fake money, ignore the random button presses, stay standing after a kick, and sound an alarm if tampered with.
+
+In APIs, positive testing verifies that the API returns the correct response when given valid inputs. Negative testing verifies that the API gracefully handles invalid, missing, or malicious inputs without crashing or leaking information.
+
+#### 💼 Professional Definitions
+
+| Feature | Positive Testing | Negative Testing |
+| :--- | :--- | :--- |
+| **Goal** | Confirm the system works as expected under normal, valid conditions. | Confirm the system is robust, secure, and stable under invalid, unexpected, or harmful conditions. |
+| **Input** | Valid, correct data that follows all rules. | Invalid, missing, malformed, out‑of‑bounds, or malicious data. |
+| **Expected result** | A success response (`2xx` status code) and the correct data. | An error response (`4xx` or `5xx` status code) with a clear, non‑leaking message. No crash, no data corruption. |
+| **Mindset** | "Prove the feature works." | "Try to break the feature." |
+
+Both are essential. A system with 100% positive test cases passing but zero negative testing will still fail in production when real users make mistakes or attackers probe its weaknesses.
+
+#### 🧪 Real‑World Example – Create User API
+
+**Endpoint:** `POST /users`
+**Required fields:** `name` (string, 1–100 chars), `email` (valid email format), `age` (integer, 18–120).
+**Optional field:** `phone` (string, 10–15 digits).
+
+**Positive Test Cases**
+
+| TC‑ID | Scenario | Request Body | Expected Status | Expected Response |
+| :--- | :--- | :--- | :--- | :--- |
+| **POS‑01** | Create user with all valid fields | `{ "name": "Jane", "email": "jane@test.com", "age": 30, "phone": "1234567890" }` | `201 Created` | Response body contains the created user with a new `id`. |
+| **POS‑02** | Create user without optional phone field | `{ "name": "John", "email": "john@test.com", "age": 25 }` | `201 Created` | User created; phone is null or absent. |
+| **POS‑03** | Name exactly at boundary – 1 character | `{ "name": "A", "email": "a@test.com", "age": 18 }` | `201 Created` | User created with name "A". |
+| **POS‑04** | Age exactly at lower boundary – 18 | `{ "name": "Valid", "email": "v@test.com", "age": 18 }` | `201 Created` | User created. |
+| **POS‑05** | Age exactly at upper boundary – 120 | `{ "name": "Valid", "email": "v2@test.com", "age": 120 }` | `201 Created` | User created. |
+
+**Negative Test Cases**
+
+| TC‑ID | Scenario | Request Body | Expected Status | Expected Behaviour |
+| :--- | :--- | :--- | :--- | :--- |
+| **NEG‑01** | Missing required field `name` | `{ "email": "j@test.com", "age": 30 }` | `400` or `422` | Error message indicating name is required. |
+| **NEG‑02** | Missing required field `email` | `{ "name": "Jane", "age": 30 }` | `400` or `422` | Error message indicating email is required. |
+| **NEG‑03** | Invalid email format | `{ "name": "Jane", "email": "not-an-email", "age": 30 }` | `400` or `422` | Error message indicating invalid email format. |
+| **NEG‑04** | Age below minimum (17) | `{ "name": "Jane", "email": "j@test.com", "age": 17 }` | `400` or `422` | Error message indicating age must be at least 18. |
+| **NEG‑05** | Age above maximum (121) | `{ "name": "Jane", "email": "j@test.com", "age": 121 }` | `400` or `422` | Error message indicating age maximum. |
+| **NEG‑06** | Name exceeds 100 chars | `{ "name": "AAA…(101 chars)", "email": "j@test.com", "age": 30 }` | `400` or `422` | Error message indicating name too long. |
+| **NEG‑07** | Name is empty string | `{ "name": "", "email": "j@test.com", "age": 30 }` | `400` or `422` | Error – name is required and cannot be empty. |
+| **NEG‑08** | Wrong data type for age (string) | `{ "name": "Jane", "email": "j@test.com", "age": "thirty" }` | `400` or `422` | Error – age must be a number. |
+| **NEG‑09** | Malformed JSON (missing brace) | `{ "name": "Jane", "email": "j@test.com", "age": 30` | `400 Bad Request` | Generic “Invalid JSON” error. |
+| **NEG‑10** | SQL Injection in name | `{ "name": "Jane'; DROP TABLE users;--", "email": "j@test.com", "age": 30 }` | `400` or `201` | The system must not execute the injected SQL. If accepted, the name is stored literally. |
+| **NEG‑11** | Duplicate email | Repeat POS‑01 with same email | `409 Conflict` | Error: “Email already exists”. |
+| **NEG‑12** | Mass assignment (extra field) | `{ "name": "Jane", "email": "j@test.com", "age": 30, "role": "admin" }` | `400` or silently strip | The user must not be created with admin role. |
+
+#### ❓ Why This Matters for a QA/SDET
+
+Positive tests confirm that the API delivers business value – the feature works for legitimate users. Negative tests protect the system from crashing, leaking data, or creating security holes. They often uncover the most dangerous defects.
+
+- In automation, you’ll group positive and negative test cases into the same suite, but sometimes run negative tests more frequently because they’re faster (e.g., a validation failure returns immediately without database writes).
+- When designing test cases from an OpenAPI spec, you can derive negative tests from every field’s constraints (`minLength`, `maxLength`, `pattern`, `required`, `type`). Every constraint is a negative test opportunity.
+- **The balance:** You shouldn’t write 100 negative tests for every positive one. Focus negative tests on security, boundary values, input validation, and error handling. Prioritise those that could cause the most damage.
+
+**Explanation:**
+- Positive API testing verifies that the API behaves correctly with valid, expected inputs, returning success codes and the right data.
+- Negative API testing verifies that the API handles invalid, missing, or malicious inputs without crashing, leaking information, or accepting unauthorised data.
+- Both are necessary: positive tests prove the system works; negative tests prove it’s robust.
+- As a QA, I design positive tests from the happy paths in the API documentation, and negative tests from every field constraint, boundary condition, and security requirement.
+- I automate both to provide fast, continuous feedback.
+
+---
+
+### 7.2 Applying EP & BVA to JSON Payloads
+
+#### 🔍 Simple Analogy
+
+Remember the roller coaster that only allows people between 120 cm and 200 cm tall. We used **Equivalence Partitioning (EP)** to group heights into “too short”, “valid”, and “too tall” groups, testing only one height from each. We used **Boundary Value Analysis (BVA)** to test exactly at the edges: 119 cm, 120 cm, 200 cm, 201 cm.
+
+Now imagine the roller coaster also has a rule: you must be between 10 and 60 years old. We apply the same logic to the age field.
+
+In an API, every field in the JSON payload (the request body) has rules just like height and age. We can apply EP and BVA to each numeric, string, or array field to design the minimum number of powerful test cases. This turns an infinite set of possible inputs into a handful of targeted tests.
+
+#### 💼 Professional Context
+
+When testing an API that accepts a JSON body, you don’t test every possible value for a field. You use EP and BVA to choose the values most likely to find bugs.
+
+**How to apply EP to a JSON field:**
+1. Identify the valid range or set of valid values.
+2. Identify invalid ranges or values outside those rules.
+3. Group all possible values into partitions that the API should treat the same.
+4. Pick one representative value from each partition.
+
+**How to apply BVA to a JSON field (if it’s numeric or has a length limit):**
+1. For a range, test the exact boundary values.
+2. Test just inside each boundary (boundary − 1 or boundary + 1).
+3. Test just outside each boundary (boundary − 1 or boundary + 1 in the invalid direction).
+
+**Applicable field types:**
+- **Numbers:** age, price, quantity, page, limit.
+- **Strings with length limits:** name (1–100 chars), password (8–50 chars).
+- **Strings with pattern constraints:** email, phone, date.
+- **Arrays:** roles (min 1 item, max 5 items).
+
+#### 🧪 Real‑World Example – Create User API
+
+**Endpoint:** `POST /users`
+**Payload fields:**
+- `name`: string, required, 1–100 characters.
+- `email`: string, required, valid email format.
+- `age`: integer, required, 18–120.
+- `password`: string, required, 8–20 characters.
+- `roles`: array of strings, optional, 0–3 items.
+
+We’ll apply EP and BVA to these fields.
+
+**Field: age (integer, 18–120)**
+- **EP partitions:**
+  - Invalid low: values < 18 (e.g., 10)
+  - Valid: values 18 to 120 (e.g., 30)
+  - Invalid high: values > 120 (e.g., 150)
+- **BVA for lower boundary (18):**
+  - 17 (just below, invalid)
+  - 18 (exact boundary, valid)
+  - 19 (just above, valid)
+- **BVA for upper boundary (120):**
+  - 119 (just below, valid)
+  - 120 (exact boundary, valid)
+  - 121 (just above, invalid)
+- **Test data selection:** Instead of 120+ possible ones, we test 7 values (17, 18, 19, 119, 120, 121, 150) covering all boundaries and partitions.
+
+**Field: name (string, 1–100 characters)**
+- **BVA for boundaries (1 and 100):**
+  - `""` (0 chars, empty) → `400 Bad Request`
+  - `"A"` (1 char) → `201 Created`
+  - `"AB"` (2 chars) → `201 Created`
+  - string of 99 chars → `201 Created`
+  - string of 100 chars → `201 Created`
+  - string of 101 chars → `400 Bad Request`
+
+**Field: roles (array, 0–3 items)**
+- **BVA at upper boundary (3):**
+  - Empty array `[]` → `201 Created` (optional)
+  - Array with 2 items → `201 Created`
+  - Array with 3 items → `201 Created`
+  - Array with 4 items → `400 Bad Request`
+
+**Field: email (valid email format)**
+Emails don’t have a simple numeric range, but we partition by format:
+- Valid format: `user@example.com`
+- Invalid format (missing `@`): `userexample.com`
+- Invalid format (no domain): `user@`
+- Invalid format (empty): `""`
+
+#### 🔗 Combining All Fields Into Test Cases
+
+In practice, you don’t test each field’s boundaries in isolation forever; you create test data sets that combine valid values with one invalid field at a time, plus at least one “all valid” case and one “all fields boundary” case. 
+
+| TC‑ID | name | email | age | password | roles | Expected Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **BVA‑01** | `"A"` | `"a@b.com"` | 18 | `"12345678"` | `[]` | `201` |
+| **BVA‑02** | (100 chars) | `"max@b.com"` | 120 | (20 chars) | `["a","b","c"]` | `201` |
+| **BVA‑03** | `""` | `"a@b.com"` | 30 | `"12345678"` | `[]` | `400` |
+| **BVA‑04** | `"Jane"` | `"noat"` | 30 | `"12345678"` | `[]` | `400` |
+| **BVA‑05** | `"Jane"` | `"j@b.com"` | 17 | `"12345678"` | `[]` | `400` |
+| **BVA‑06** | `"Jane"` | `"j@b.com"` | 121 | `"12345678"` | `[]` | `400` |
+| **BVA‑07** | `"Jane"` | `"j@b.com"` | 30 | `"1234567"` (7 chars) | `[]` | `400` |
+| **BVA‑08** | `"Jane"` | `"j@b.com"` | 30 | `"12345678"` | `["r1","r2","r3","r4"]` | `400` |
+
+This covers positive boundaries (BVA‑01, BVA‑02) and negative boundaries (BVA‑03 to BVA‑08) in a single compact test suite.
+
+#### ❓ Why This Matters for a QA/SDET
+
+EP and BVA slash the number of test data combinations needed, making API testing efficient while hitting the most defect‑prone values.
+
+- In **Postman**, you can set up data‑driven tests (CSV/JSON) with these exact values and run them in the Collection Runner.
+- In **Playwright**, you can loop over an array of test data objects and run the same API call with different payloads, asserting the expected status code each time. This is called parameterised testing.
+- These techniques directly connect your manual test design skills to API testing. You’re not just clicking around – you’re applying systematic, professional QA methods to JSON structures.
+
+**Explanation:**
+- Equivalence Partitioning and Boundary Value Analysis are powerful techniques for selecting API test data efficiently.
+- EP divides input values into valid and invalid partitions; BVA targets the exact edges of those partitions where off‑by‑one errors hide.
+- When applied to JSON payloads, I test numeric fields at boundaries, string length limits, and array size limits.
+- Combined with positive/negative scenarios, EP and BVA form the backbone of my API test data strategy, whether I’m testing manually in Postman or writing parameterised automation in Playwright.
+
+---
+
+### 7.3 Testing Edge Cases (Nulls, Empty Strings, Missing Fields, Data Type Mismatches)
+
+#### 🔍 Simple Analogy
+
+Imagine you’re filling out a paper form to open a bank account.
+
+- **Missing field** – You leave the “Date of Birth” box completely blank. The clerk says, “You must fill this in.”
+- **Empty string** – You write nothing in the “Middle Name” box, but you still draw a line through it or hand in the form with that box visibly empty. The clerk might accept it (middle name is optional) or reject it if a value is required.
+- **Null** – You literally cut the “Phone Number” section out of the paper form with scissors. That field doesn’t exist at all in what you submitted. It’s not blank; it’s completely absent.
+- **Data type mismatch** – You write “next Tuesday” in the box that asks for your birth year. The clerk expected a number, not a phrase. The form is rejected.
+
+In an API JSON payload, these four situations are different, and each can reveal a specific type of bug. A good API must handle all of them gracefully.
+
+#### 💼 Professional Definitions
+
+| Edge Case | Meaning in JSON | Example (field age) |
+| :--- | :--- | :--- |
+| **Missing field** | The key is completely absent from the JSON object. | `{ "name": "John" }` (no age key at all) |
+| **Null value** | The key is present, but its value is `null`. | `{ "name": "John", "age": null }` |
+| **Empty string** | The key is present, but its value is `""` (for string fields). | `{ "name": "", "age": 25 }` |
+| **Data type mismatch** | The value is of the wrong JSON type (e.g., string instead of number, or boolean instead of string). | `{ "name": "John", "age": "twenty" }` |
+
+**Why they are different (and why they must be tested separately):**
+- A missing field and a null field are not the same. A well‑designed API may treat a missing optional field as “use default value”, but an explicit null might mean “clear this value”.
+- An empty string is a string with zero length. It might pass a “required” check if the code only checks for the key’s presence, leading to a user with a blank name.
+- Data type mismatches test the server’s input validation. A weak server might convert types silently (“5” → 5) or crash entirely. A robust server rejects them.
+
+#### 🧪 Real‑World Example – Create User API
+
+**Endpoint:** `POST /users`
+**Required fields:** `name` (string, 1–100 chars), `email` (valid email), `age` (integer, 18–120).
+**Optional field:** `phone` (string, 10–15 digits).
+
+**Test Cases for Edge Cases**
+
+| TC‑ID | Scenario | Request Body | Expected Status | Expected Behaviour |
+| :--- | :--- | :--- | :--- | :--- |
+| **EDGE‑01** | Missing required field `name` | `{ "email": "j@test.com", "age": 30 }` | `400` or `422` | Error message: “name is required”. |
+| **EDGE‑02** | Null value for required field `name` | `{ "name": null, "email": "j@test.com", "age": 30 }` | `400 Bad Request` | Error message: “name must not be null” or similar. |
+| **EDGE‑03** | Empty string for `name` | `{ "name": "", "email": "j@test.com", "age": 30 }` | `400 Bad Request` | Error message: “name must not be empty”. |
+| **EDGE‑04** | Data type mismatch – `age` is string | `{ "name": "Jane", "email": "j@test.com", "age": "thirty" }` | `400 Bad Request` | Error message: “age must be a number”. |
+| **EDGE‑05** | Data type mismatch – `age` is boolean | `{ "name": "Jane", "email": "j@test.com", "age": true }` | `400 Bad Request` | Error message: “age must be a number”. |
+| **EDGE‑06** | Missing optional field `phone` | `{ "name": "Jane", "email": "j@test.com", "age": 30 }` | `201 Created` | User created; phone is absent or null in response. |
+| **EDGE‑07** | Null for optional field `phone` | `{ "name": "Jane", "email": "j@test.com", "age": 30, "phone": null }` | `201` or `400` | Depends on API design. If optional, null may be fine; if API rejects explicit nulls, expect `400`. |
+| **EDGE‑08** | Empty string for optional `phone` | `{ "name": "Jane", "email": "j@test.com", "age": 30, "phone": "" }` | `201` or `400` | Some APIs treat empty string as “not provided” and accept; others reject as invalid. |
+| **EDGE‑09** | Missing all fields | `{ }` | `400 Bad Request` | Multiple error messages for all missing required fields, or one general message. |
+| **EDGE‑10** | Array instead of object | `[ { "name": "Jane" } ]` | `400 Bad Request` | Error: “Expected object, received array”. |
+
+#### ❓ Why This Matters for a QA/SDET
+
+Developers often write code that checks `if (body.name)` but that check behaves differently for `undefined` (missing), `null`, and `""`. You must test all three.
+
+- Ignoring these edge cases leads to “null pointer exception” crashes (`500 Internal Server Error`) or users being created with blank names.
+- In automation (Postman/Playwright), you can parameterize these payloads and run them as data‑driven tests, ensuring every edge case is verified on every release.
+- This is directly connected to what you learned in manual testing: positive, negative, and boundary value analysis. Now you’re applying it to API payloads.
+
+**Explanation:**
+- When testing API JSON payloads, I don’t just test correct values. I actively test edge cases: missing required fields, explicit null values, empty strings, and data type mismatches.
+- These are distinct conditions that can each trigger different bugs—crashes, silent failures, or incorrect data.
+- I design test cases to verify that the API returns clear 400/422 errors for invalid inputs and handles optional fields correctly.
+- These edge case checks are standard in every test suite I build, whether manual in Postman or automated in Playwright.
