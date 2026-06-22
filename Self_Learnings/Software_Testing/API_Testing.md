@@ -37,6 +37,12 @@
    - [7.1 Positive vs. Negative API Testing](#71-positive-vs-negative-api-testing)
    - [7.2 Applying EP & BVA to JSON Payloads](#72-applying-ep--bva-to-json-payloads)
    - [7.3 Testing Edge Cases (Nulls, Empty Strings, Missing Fields, Data Type Mismatches)](#73-testing-edge-cases-nulls-empty-strings-missing-fields-data-type-mismatches)
+8. [Manual API Testing with Postman](#8-manual-api-testing-with-postman)
+   - [8.1 Setting up Postman Collections](#81-setting-up-postman-collections)
+   - [8.2 Using Environment and Global Variables](#82-using-environment-and-global-variables)
+   - [8.3 Testing a Public REST API](#83-testing-a-public-rest-api)
+   - [8.4 cURL & DevTools: Importing Requests from the Browser](#84-curl--devtools-importing-requests-from-the-browser)
+   - [8.5 Using DevTools for API Testing (Filtering, Inspecting, and Importing)](#85-using-devtools-for-api-testing-filtering-inspecting-and-importing)
 
 ---
 
