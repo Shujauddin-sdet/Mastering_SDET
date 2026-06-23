@@ -43,6 +43,9 @@
    - [8.3 Testing a Public REST API](#83-testing-a-public-rest-api)
    - [8.4 cURL & DevTools: Importing Requests from the Browser](#84-curl--devtools-importing-requests-from-the-browser)
    - [8.5 Using DevTools for API Testing (Filtering, Inspecting, and Importing)](#85-using-devtools-for-api-testing-filtering-inspecting-and-importing)
+   - [8.6 Writing Test Scripts in Postman (Chai Assertions)](#86-writing-test-scripts-in-postman-chai-assertions)
+   - [8.7 API Chaining: Passing Data Between Requests](#87-api-chaining-passing-data-between-requests)
+   - [8.8 Data-Driven Testing: CSV/JSON with Collection Runner](#88-data-driven-testing-csvjson-with-collection-runner)
 
 ---
 
@@ -2078,3 +2081,463 @@ Developers often write code that checks `if (body.name)` but that check behaves 
 - These are distinct conditions that can each trigger different bugs—crashes, silent failures, or incorrect data.
 - I design test cases to verify that the API returns clear 400/422 errors for invalid inputs and handles optional fields correctly.
 - These edge case checks are standard in every test suite I build, whether manual in Postman or automated in Playwright.
+
+---
+
+## 8. Manual API Testing with Postman
+
+> **Section Summary:** This section covers manual API testing using Postman, including collection setup, environment variables, importing requests, and writing automated test scripts to chain requests and run data-driven tests.
+
+---
+
+### 8.1 Setting up Postman Collections
+*(Content to be added)*
+
+---
+
+### 8.2 Using Environment and Global Variables
+*(Content to be added)*
+
+---
+
+### 8.3 Testing a Public REST API
+*(Content to be added)*
+
+---
+
+### 8.4 cURL & DevTools: Importing Requests from the Browser
+*(Content to be added)*
+
+---
+
+### 8.5 Using DevTools for API Testing (Filtering, Inspecting, and Importing)
+*(Content to be added)*
+
+---
+
+### 8.6 Writing Test Scripts in Postman (Chai Assertions)
+
+#### 🔍 Simple Analogy
+Up until now, you’ve been cooking a dish (sending a request) and then looking at the plate (the response) with your own eyes to see if it looks right. That’s manual inspection.
+
+Now, imagine you build a tiny robot judge that sits beside you. You hand the robot a checklist:
+- “Check that the plate is not cracked (status code is 200).”
+- “Check that the steak is medium-rare (the response body contains the correct data).”
+- “Check that the meal arrived in under 3 seconds (response time is acceptable).”
+
+Every time you cook, the robot instantly checks everything and raises a flag if something is wrong. In Postman, that robot judge is called a **test script**, and the checklist is written using a language called **Chai (Assertions)**.
+
+#### 💼 Professional Context
+Until now, every time you clicked Send in Postman, you had to read the response yourself to decide if it passed or failed. That’s manual testing.
+But Postman has a built‑in JavaScript sandbox where you can write a few lines of code that run automatically after the response arrives. These are called test scripts.
+
+Postman uses a popular JavaScript library called **Chai** for assertions. An assertion is simply a statement that checks if something is true. If the assertion is true, the test passes. If it’s false, the test fails and Postman shows a red cross with the reason.
+
+What you can check with test scripts:
+- **Status code:** Is it 200, 201, 404?
+- **Response body:** Does it contain a specific field, type, or value?
+- **Response headers:** Is the `Content-Type` exactly `application/json`?
+- **Response time:** Is it under 500 milliseconds?
+- **Custom logic:** You can write any JavaScript logic to validate responses.
+
+The result is that your Postman collection turns from a manual request sender into an automated test suite. You can later run the entire suite with the Collection Runner and get a full pass/fail report without looking at a single response body.
+
+#### 🧱 The Basic Structure of a Postman Test
+Open any request in Postman and click the **Scripts** tab (next to Params, Auth, Headers, etc.). Then choose **Post-response**.
+You write your tests inside a `pm.test()` function:
+
+```javascript
+pm.test("A short description of what you are checking", function () {
+    // Your Chai assertion goes here
+});
+```
+
+Example checking status code 200:
+```javascript
+pm.test("Status code is 200 OK", function () {
+    pm.response.to.have.status(200);
+});
+```
+
+Breakdown:
+- `pm.test()`: Creates a test case.
+- `"Status code is 200 OK"`: The name of the test (displayed in the test results tab).
+- `pm.response.to.have.status(200);`: The actual assertion. This is a Chai method that Postman provides for the response.
+
+#### 🧪 Common Assertions You Will Use Every Day
+The following table highlights the most common assertions used in API validation:
+
+| What you want to check | Code snippet |
+| :--- | :--- |
+| Status code is exactly 200 | `pm.response.to.have.status(200);` |
+| Status code is not 500 | `pm.response.to.not.have.status(500);` |
+| Response body contains a field called id | `pm.expect(pm.response.json()).to.have.property('id');` |
+| Response body has title equal to "My Test" | `pm.expect(pm.response.json().title).to.eql("My Test");` |
+| Response is returned within 500ms | `pm.expect(pm.response.responseTime).to.be.below(500);` |
+| Header Content-Type is application/json | `pm.response.to.have.header("Content-Type", "application/json; charset=utf-8");` |
+| Response body is valid, parsable JSON | `pm.expect(function(){ JSON.parse(responseBody); }).to.not.throw();` |
+
+> [!NOTE]
+> `pm.expect` is a more flexible Chai assertion style. Both `pm.response.to.have...` and `pm.expect(...)` are correct; you’ll use whichever fits best.
+
+#### 🛠️ Step‑by‑Step: Create a New Request and Write Test Scripts
+We’ll use the JSONPlaceholder API and the environment you already have (JSONPlaceholder Dev with `baseUrl`).
+
+1. **Create a new request:**
+   - In Postman, open your “JSONPlaceholder Tests” collection.
+   - Click the “…” next to the collection name $\rightarrow$ **Add Request**.
+   - Name the request: `Get a single post (with tests)`.
+   - Set the HTTP method to **GET**.
+   - Set the URL to: `{{baseUrl}}/posts/1`
+   - Click **Save**.
+   - Send the request once without any scripts to see the raw response (`200 OK` and a JSON object representing post #1).
+
+2. **Open the Test Script area:**
+   - In the request pane, click the **Scripts** tab (next to Params, Auth, Headers, Body).
+   - Under **Post-response** is where we’ll write our tests (runs after the response arrives).
+
+3. **Write your first test (Status Code):**
+   - Clear everything in the Post-response editor, then paste:
+     ```javascript
+     pm.test("Status code is 200 OK", function () {
+         pm.response.to.have.status(200);
+     });
+     ```
+   - Click **Send** again.
+   - Look at the bottom in the **Test Results** tab. You should see:
+     ```text
+     PASS  Status code is 200 OK
+     ```
+
+4. **Add a test for valid JSON structure:**
+   - Add this line after the first test:
+     ```javascript
+     pm.test("Response body is valid JSON", function () {
+         pm.expect(function () {
+             JSON.parse(responseBody);
+         }).to.not.throw();
+     });
+     ```
+   - *Explanation:* `responseBody` is a global variable containing raw response text. `JSON.parse` attempts to convert it to an object; if it fails, it throws an error. `to.not.throw()` verifies it doesn't crash.
+
+5. **Add a test for field presence (`id`):**
+   - Add the following test:
+     ```javascript
+     pm.test("Response has an 'id' property", function () {
+         const jsonData = pm.response.json();
+         pm.expect(jsonData).to.have.property('id');
+     });
+     ```
+   - *Explanation:* `pm.response.json()` converts the response body into an object. We then check if the key `id` exists, regardless of its value.
+
+6. **Add a test for specific field value (`userId`):**
+   - Add the following test:
+     ```javascript
+     pm.test("The post belongs to userId 1", function () {
+         const jsonData = pm.response.json();
+         pm.expect(jsonData.userId).to.eql(1);
+     });
+     ```
+   - *Explanation:* We access the `userId` field and use `.to.eql(1)` to check for deep equality (works for numbers, strings, arrays, etc.).
+
+7. **Add a test for response time:**
+   - Add the following test:
+     ```javascript
+     pm.test("Response time is less than 1000ms", function () {
+         pm.expect(pm.response.responseTime).to.be.below(1000);
+     });
+     ```
+   - *Explanation:* `pm.response.responseTime` returns latency in milliseconds. `.to.be.below(1000)` checks that it is under 1 second.
+
+8. **Add a test for the Content-Type header:**
+   - Add the following test:
+     ```javascript
+     pm.test("Content-Type header is application/json", function () {
+         pm.response.to.have.header("Content-Type", "application/json; charset=utf-8");
+     });
+     ```
+
+9. **Deliberately break a test to see a failure:**
+   - Temporarily change the `userId` expected value to `5` instead of `1`.
+   - Click **Send**. The test “The post belongs to userId 1” will fail.
+   - You will see a red cross and the failure explanation:
+     ```text
+     FAIL  The post belongs to userId 1 | AssertionError: expected 1 to deeply equal 5
+     ```
+   - Revert the expected value back to `1` so the tests pass.
+
+10. **Your final complete script:**
+    ```javascript
+    pm.test("Status code is 200 OK", function () {
+        pm.response.to.have.status(200);
+    });
+
+    pm.test("Response body is valid JSON", function () {
+        pm.expect(function () {
+            JSON.parse(responseBody);
+        }).to.not.throw();
+    });
+
+    pm.test("Response has an 'id' property", function () {
+        const jsonData = pm.response.json();
+        pm.expect(jsonData).to.have.property('id');
+    });
+
+    pm.test("The post belongs to userId 1", function () {
+        const jsonData = pm.response.json();
+        pm.expect(jsonData.userId).to.eql(1);
+    });
+
+    pm.test("Response time is less than 1000ms", function () {
+        pm.expect(pm.response.responseTime).to.be.below(1000);
+    });
+
+    pm.test("Content-Type header is application/json", function () {
+        pm.response.to.have.header("Content-Type", "application/json; charset=utf-8");
+    });
+    ```
+
+#### ❓ Why This Matters for a QA/SDET
+- **Immediate feedback:** You no longer need to visually inspect responses; the assertions do it instantly and reliably.
+- **Regression testing:** When you run these collections later, you instantly know if a change broke the endpoint.
+- **Automation readiness:** These same assertion principles and libraries form the backbone of Playwright and CI/CD testing frameworks.
+
+#### ✅ Quick Practice (5 minutes)
+1. Open your “Get all posts” request.
+2. Write a test script under Scripts $\rightarrow$ Post-response that:
+   - Asserts status `200 OK`.
+   - Asserts that the response body is an array.
+   - Asserts that the array length is exactly 100.
+3. Run the request and verify all tests pass.
+4. Temporarily change the URL to `/posts/99999999` and verify that the tests fail as expected.
+
+**Explanation:**
+- **Automated Verification:** Writing post-response scripts in Postman automates API testing by executing assertions in a JavaScript sandbox immediately after a response is received.
+- **Chai Assertion Library:** Postman provides the Chai library (`pm.expect` or `pm.response.to.have`) to validate response attributes like status codes, body structures, specific values, latency, and headers.
+- **Visual Failure Reporting:** Failed assertions generate clear error trace logs in the Test Results tab, making failures easy to diagnose.
+- **Evolvable Test Suites:** Creating structured test scripts turns a list of manual requests into an automated regression suite ready for CI/CD integration.
+
+---
+
+### 8.7 API Chaining: Passing Data Between Requests
+
+#### 🔍 Simple Analogy
+Imagine a relay race with two runners. The first runner completes their lap and passes a baton to the second runner. The second runner can only start once they have received that baton.
+
+In API Chaining:
+- **Runner 1** = Create post (chain start)
+- **Runner 2** = Get chained post (chain end)
+- **The Baton** = The `postId` value returned by Runner 1 and needed by Runner 2.
+
+Instead of copying and pasting this baton by hand every time, you train Postman to extract the ID from the first response and automatically insert it into the next request.
+
+#### 💼 Professional Context
+In real-world testing, you rarely test endpoints in complete isolation. User scenarios usually span multiple steps:
+1. **Create a resource** (e.g., POST `/posts` $\rightarrow$ returns ID `101`).
+2. **Read, update, or delete** that resource using its ID (e.g., GET `/posts/101`).
+
+Manually copying and pasting IDs between requests is slow and error-prone. Postman automates this hand-off using environment variables to share state between requests.
+
+##### The Golden Rule of Chaining
+> **Request 1 saves a value $\rightarrow$ Request 2 uses that value**
+
+##### Where Each Piece Lives in Postman
+
+| Component | Location & Function |
+| :--- | :--- |
+| **Saving a value** | **Test script** tab of Request 1 — runs automatically after response arrives. |
+| **The shared locker** | **Environment variables** (e.g., your `JSONPlaceholder Dev` environment). |
+| **Using the value** | **URL / headers / body** of Request 2 using double curly braces: `{{variableName}}`. |
+
+#### 🧪 Real-World Example & Step-by-Step
+We’ll chain two requests: POST a new post $\rightarrow$ get back the ID $\rightarrow$ GET that exact post.
+
+1. **Create the first request ("Create a new post"):**
+   - Add a new request in your collection.
+   - Name it: `Create a new post (chaining)`.
+   - Method: **POST**.
+   - URL: `{{baseUrl}}/posts`
+   - Body tab $\rightarrow$ **raw** $\rightarrow$ **JSON**:
+     ```json
+     {
+         "title": "API Chaining Test",
+         "body": "This post was created to test chaining",
+         "userId": 1
+     }
+     ```
+   - Click **Send** once to verify it returns `201 Created` with an `id` (usually `101`).
+
+2. **Add a test script to capture the ID:**
+   - Under the **Scripts** tab $\rightarrow$ **Post-response** of the POST request, add:
+     ```javascript
+     // Capture the new post ID from the response
+     const jsonData = pm.response.json();
+     const newPostId = jsonData.id;
+
+     // Save it into an environment variable
+     pm.environment.set("postId", newPostId);
+
+     // Print it to the console for debugging
+     console.log("Stored postId:", newPostId);
+     ```
+   - Click **Send**.
+   - Check the **Environment quick look** (eye icon in the top right). You should see `postId` set with the value `101` (or the ID returned).
+
+3. **Create the second request ("Get the newly created post"):**
+   - Add another request to the collection.
+   - Name it: `Get the newly created post (chained)`.
+   - Method: **GET**.
+   - URL: `{{baseUrl}}/posts/{{postId}}`
+   - Click **Send**. Postman automatically opens the environment locker, retrieves `postId`, and swaps `{{postId}}` for its value. The request URL resolves to `.../posts/101`.
+
+4. **Add assertions to verify the chained data:**
+   - In the GET request’s **Scripts** $\rightarrow$ **Post-response** tab, add:
+     ```javascript
+     pm.test("Status code is 200 OK", function () {
+         pm.response.to.have.status(200);
+     });
+
+     pm.test("Fetched post matches the expected title", function () {
+         const jsonData = pm.response.json();
+         pm.expect(jsonData.title).to.eql("API Chaining Test");
+     });
+     ```
+
+#### 🔁 Automating the Full Chain with the Collection Runner
+To run the chain automatically without clicking each request:
+1. Click on your collection in the sidebar $\rightarrow$ click **Run**.
+2. Select the two requests (ensuring the POST request is ordered before the GET request).
+3. Click **Run [Collection Name]**. The runner executes the POST request, extracts and stores the ID, and then executes the GET request seamlessly.
+
+#### ❓ Why This Matters for a QA/SDET
+- **Simulates user journeys:** Real user behavior involves sequential API calls, and chaining lets you mock these flows.
+- **Eliminates manual effort:** Automating data transfer saves massive regression testing time.
+- **Prepares for code automation:** This exact pattern (extracting values from response bodies and passing them to next calls) is used programmatically in Playwright API tests.
+
+**Explanation:**
+- **Dynamic Handoff:** API chaining passes data (such as IDs or auth tokens) from the response of one request to the input parameters of the next.
+- **State Management:** This is done by writing a post-response script to parse the JSON response (`pm.response.json()`) and saving it to an environment variable (`pm.environment.set("key", value)`).
+- **Variable Injection:** The subsequent request accesses the shared locker using double curly braces (e.g., `{{key}}`) in the URL, headers, or body.
+- **Workflow Automation:** Sequence runner runs the chained requests in order, validating complex workflows automatically and mirroring real-world integration scenarios.
+
+---
+
+### 8.8 Data-Driven Testing: CSV/JSON with Collection Runner
+
+#### 🔍 Simple Analogy
+Imagine you are testing a new coffee machine. You want to verify that it prepares the correct drink for any order combination.
+Instead of making one order, tasting it, changing the selections, and repeating, you write a list of orders on a sheet of paper:
+- Latte, Large, Oat Milk
+- Espresso, Small, Whole Milk
+- Cappuccino, Medium, Almond Milk
+
+You feed this list to the machine and say, “Process each row on this list automatically and show me the results.” The machine runs through the list, preparing each drink and logging the outcome.
+
+In Postman, that sheet of paper is a **CSV or JSON data file**, the coffee machine is the **Collection Runner**, and the list of orders is your **test data**.
+
+#### 💼 Professional Context
+In API testing, you often need to validate the same endpoint against a variety of inputs (positive inputs, invalid inputs, boundary values, etc.). Doing this manually by duplicating requests is inefficient.
+
+Postman’s **Data-Driven Testing (DDT)** allows you to execute a request repeatedly, replacing parameters with values loaded from a external CSV or JSON file.
+- The request uses `{{variableName}}` placeholders.
+- The placeholders must exactly match the column headers (in CSV) or object keys (in JSON) of the data file.
+- The Collection Runner executes one iteration per row/object in the data file.
+
+This allows you to implement Equivalence Partitioning (EP) and Boundary Value Analysis (BVA) systematically and at scale.
+
+#### 📄 Data File Formats & Structures
+Before setting up the request, let's look at how the data files are structured:
+
+````carousel
+CSV Format (postData.csv)
+```text
+title,body,userId
+"Valid Post", "This is a valid body", 1
+"", "Empty title test", 2
+"Special chars !@#", "Body with symbols", 1
+"Boundary length title", "Body", 5
+```
+<!-- slide -->
+JSON Format (postData.json)
+```json
+[
+    {
+        "title": "Valid Post",
+        "body": "This is a valid body",
+        "userId": 1
+    },
+    {
+        "title": "",
+        "body": "Empty title test",
+        "userId": 2
+    },
+    {
+        "title": "Special chars !@#",
+        "body": "Body with symbols",
+        "userId": 1
+    },
+    {
+        "title": "Boundary length title",
+        "body": "Body",
+        "userId": 5
+    }
+]
+```
+````
+
+#### 🛠️ Step-by-Step: Data-Driven Test with JSONPlaceholder
+We will test the `POST /posts` endpoint using multiple iterations of test data.
+
+1. **Prepare the request:**
+   - Open your creation request (`POST {{baseUrl}}/posts`).
+   - In the **Body** tab, replace the hardcoded values with variables:
+     ```json
+     {
+         "title": "{{title}}",
+         "body": "{{body}}",
+         "userId": {{userId}}
+     }
+     ```
+     *(Note: `{{userId}}` is not wrapped in quotes because the API expects a number).*
+
+2. **Add dynamic assertions in Scripts:**
+   - Under **Scripts** $\rightarrow$ **Post-response**, add:
+     ```javascript
+     pm.test("Status is 201 Created", function () {
+         pm.response.to.have.status(201);
+     });
+
+     pm.test("Response title matches sent title", function () {
+         var jsonData = pm.response.json();
+         // pm.iterationData.get("key") gets the value from the current row
+         pm.expect(jsonData.title).to.eql(pm.iterationData.get("title"));
+     });
+     ```
+
+3. **Create and save the data file:**
+   - Open a text editor and copy either the CSV or JSON data from the **Data File Formats** carousel above.
+   - Save the file on your computer as `postData.csv` or `postData.json`.
+
+4. **Run the Collection Runner:**
+   - Click on your collection name in the sidebar $\rightarrow$ click **Run**.
+   - In the Runner configurations:
+     - Select only the `POST` request to avoid running other requests repeatedly.
+     - Under **Data**, click **Select File** $\rightarrow$ upload your `postData` file.
+     - The "Iterations" count will automatically update to `4` (since the file has 4 data rows).
+     - Select the correct data file type (CSV or JSON) if not auto-detected.
+     - Click **Run [Collection Name]**.
+
+5. **Review the results:**
+   - The Runner executes the request 4 times.
+   - In the results view, you’ll see the test passes/failures for each iteration. For instance, if an empty title is sent, you can verify if the API echoed back the empty string correctly.
+
+#### ❓ Why This Matters for a QA/SDET
+- **High test coverage:** One request can be tested against dozens of edge cases and boundary values in seconds.
+- **Repeatability:** The data file can be easily expanded with new scenarios without editing the Postman requests.
+- **Newman Integration:** You can export the collection and run it in a CI/CD pipeline using Newman, feeding in different data files for different environments.
+
+**Explanation:**
+- **Data-Driven Automation:** Data-Driven testing runs a single request multiple times, feeding in different inputs from an external data source (CSV or JSON).
+- **Automatic Parameter Mapping:** Postman maps file column headers or JSON keys to URL/body variables matching `{{variableName}}`.
+- **Iteration Data Access:** Test scripts access active row data using `pm.iterationData.get("variableName")` to perform dynamic, row-specific assertions.
+- **Efficient Scalability:** DDT enables QA engineers to execute comprehensive EP/BVA matrices without manually copying requests or bloating the collection size.
