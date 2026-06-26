@@ -11,6 +11,7 @@
   - [3.1 SELECT and FROM](#31-select-and-from)
   - [3.2 WHERE clause with AND, OR, NOT](#32-where-clause-with-and-or-not)
   - [3.3 IN, BETWEEN, LIKE, and wildcards](#33-in-between-like-and-wildcards)
+  - [3.4 NULL Handling (IS NULL, IS NOT NULL)](#34-null-handling-is-null-is-not-null)
 
 ---
 
@@ -584,3 +585,65 @@ SELECT name FROM users WHERE name LIKE 'B_b';
 - `LIKE` allows pattern searching using `%` (any number of characters) and `_` (exactly one character).
 - These operators are essential for writing concise, readable filters when testing data.
 - I use `IN` to verify a set of test users, `BETWEEN` to check date‑bound orders, and `LIKE` to find partially‑known strings like email domains or names with typos.
+
+---
+
+## 3.4 NULL Handling (IS NULL, IS NOT NULL)
+### 🔍 Simple Analogy
+- Imagine you’re filling in a customer information form.
+- Some boxes are left completely blank – you didn’t write anything. That’s a NULL.
+- Some boxes have a value like 0 or "N/A" – you deliberately filled them. That’s not NULL.
+- A NULL is not zero, not an empty string, and not a space. It means “no data was entered” or “unknown”. The database treats NULL as a very special marker.
+- When you test an application, you must know if missing data is allowed, and how the system handles it. Sometimes a NULL is perfectly fine (like an optional middle name). Other times, a NULL means a bug (like a missing email for a user who must be contactable).
+
+### 💼 Professional Context
+- In SQL, you cannot compare NULL with the usual `=` or `<>` operators. You must use `IS NULL` or `IS NOT NULL`.
+- Why? Because NULL means unknown. Asking “is unknown equal to something?” is meaningless. So SQL requires you to ask: “Is this value missing? Yes or no?”
+- As a QA, you use NULL checks to:
+  - Verify that optional columns correctly allow missing values.
+  - Find records where critical data was not saved (a bug).
+  - Clean up incomplete test data.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- First, let’s add a test user with some missing information so we can see NULLs in action.
+```sql
+INSERT INTO users (name, email, age, city) VALUES
+('Diana', 'diana@mail.com', NULL, NULL);
+```
+- Now run the following queries one by one.
+
+#### 1. Find all users who have no age specified (NULL)
+```sql
+SELECT name, age FROM users
+WHERE age IS NULL;
+```
+- You’ll see only Diana — the one we just inserted with a missing age.
+
+#### 2. Find all users who do have an age specified (NOT NULL)
+```sql
+SELECT name, age FROM users
+WHERE age IS NOT NULL;
+```
+- Alice, Bob, and Charlie appear. Diana is excluded.
+
+#### 3. Find all users whose city is missing
+```sql
+SELECT name, city FROM users
+WHERE city IS NULL;
+```
+- Again, only Diana appears (her city is NULL).
+
+#### 4. (Common mistake) Never use = or <> with NULL
+- Try this incorrect query:
+```sql
+SELECT name, age FROM users
+WHERE age = NULL;
+```
+- This returns nothing — even though Diana has a NULL age. That’s because `= NULL` is not valid SQL logic. Always use `IS NULL`.
+
+### 📝 Explanation
+- NULL means “missing” or “unknown” — it’s not the same as zero or an empty string.
+- Use `IS NULL` to find rows where a column has no value.
+- Use `IS NOT NULL` to find rows where a column is filled.
+- Never use `= NULL` or `<> NULL` — they will not work as expected.
+- As a QA, I check nullable columns after tests to ensure optional data is correctly omitted or, if required, that missing data is flagged as a defect.
