@@ -12,6 +12,7 @@
   - [3.2 WHERE clause with AND, OR, NOT](#32-where-clause-with-and-or-not)
   - [3.3 IN, BETWEEN, LIKE, and wildcards](#33-in-between-like-and-wildcards)
   - [3.4 NULL Handling (IS NULL, IS NOT NULL)](#34-null-handling-is-null-is-not-null)
+  - [3.5 DISTINCT](#35-distinct)
 
 ---
 
@@ -647,3 +648,54 @@ WHERE age = NULL;
 - Use `IS NOT NULL` to find rows where a column is filled.
 - Never use `= NULL` or `<> NULL` — they will not work as expected.
 - As a QA, I check nullable columns after tests to ensure optional data is correctly omitted or, if required, that missing data is flagged as a defect.
+
+---
+
+## 3.5 DISTINCT
+### 🔍 Simple Analogy
+- Imagine a bowl of mixed fruit: apple, banana, apple, orange, banana, banana.
+- You ask someone: “What types of fruit are in the bowl?”
+- They don't list every single piece. They say: “Apple, banana, orange.” They've removed the repeats and given you only the unique types.
+- In SQL, `DISTINCT` does exactly that. It takes a column (or combination of columns) that may contain duplicate values and returns each unique value only once.
+
+### 💼 Professional Context
+- When testing, you often need to answer questions like:
+  - “How many different cities do our users come from?”
+  - “Which unique products have been ordered?”
+  - “Show me all the distinct user IDs that have placed an order – without repeating the ones who ordered multiple times.”
+- Without `DISTINCT`, you'd get a long list full of repeats. With `DISTINCT`, you get a clean, de‑duplicated list. This is especially useful for counting unique items, generating drop‑down lists for UI testing, or verifying that a column doesn't contain unexpected duplicates.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- We'll use the orders table because it naturally contains duplicate values. User 1 (Alice) placed two orders, so the user_id column has the number 1 twice.
+
+#### 1. See the duplicate values first
+```sql
+SELECT user_id FROM orders;
+```
+- You'll see: 1, 1, 2, 3 – user 1 appears twice.
+
+#### 2. Now remove duplicates with DISTINCT
+```sql
+SELECT DISTINCT user_id FROM orders;
+```
+- The result is: 1, 2, 3 – only the unique user IDs.
+
+#### 3. Distinct on text columns – Unique cities
+- Although your users table currently has all different cities, let's see it in action anyway:
+```sql
+SELECT DISTINCT city FROM users;
+```
+- You'll see: New York, London, Paris, and a NULL for Diana. Each appears only once.
+
+#### 4. Distinct on multiple columns
+- You can also find unique combinations. For example, unique city and age pairs:
+```sql
+SELECT DISTINCT city, age FROM users;
+```
+- This shows each existing combination. If two users lived in London and were both 25, they'd be collapsed into one row. Right now, all combinations are unique anyway, but you can see the pattern.
+
+### 📝 Explanation
+- `DISTINCT` removes duplicate rows from the result set, showing only unique values or unique combinations.
+- It works on one column or multiple columns together.
+- Use it to answer “how many different…?” questions, clean up data displays, and check for unexpected duplicates.
+- As a QA, I use `DISTINCT` to quickly verify the variety of data in a table (e.g., distinct statuses, distinct product names) and to count unique users, orders, or other entities.
