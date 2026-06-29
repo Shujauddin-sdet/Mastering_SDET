@@ -15,6 +15,7 @@
   - [3.5 DISTINCT](#35-distinct)
   - [3.6 Aliases (AS) for columns and tables](#36-aliases-as-for-columns-and-tables)
   - [3.7 ORDER BY (ASC, DESC)](#37-order-by-asc-desc)
+  - [3.8 LIMIT (and OFFSET)](#38-limit-and-offset)
 
 ---
 
@@ -823,4 +824,80 @@ ORDER BY city ASC, age DESC;
 - `DESC` (descending) = largest first (Z→A, 9→1).
 - You can sort by multiple columns: `ORDER BY col1, col2`. Each column gets its own direction.
 - As a QA, I use `ORDER BY` to inspect data in a logical sequence, find extremes (oldest, most expensive), and produce readable reports.
+
+---
+
+## 3.8 LIMIT (and OFFSET)
+### 🔍 Simple Analogy
+- Imagine a thick telephone directory with thousands of names.
+- You don’t want to read the whole book. You only want to see the first 5 names.
+- Or you want to see names 11 to 20 — the second page of results.
+- You tell the directory:
+  - “Give me only 5 rows.” (that’s `LIMIT`)
+  - “Skip the first 10 rows, then give me 5.” (that’s `OFFSET`)
+- `LIMIT` tells the database exactly how many rows you want back. `OFFSET` tells it how many rows to jump over before starting.
+
+### 💼 Professional Context
+- In real testing, you rarely want all rows — especially if a table has thousands of records. You use `LIMIT` to:
+  - Quickly peek at the first few rows to check data structure.
+  - Test pagination logic (page 1, page 2, etc.).
+  - Retrieve a single row, like the most recent order.
+  - Speed up queries during debugging.
+- `OFFSET` is optional. It’s used to skip rows, usually together with `LIMIT` to simulate “pages” of results.
+- Syntax pattern:
+```sql
+SELECT columns FROM table
+ORDER BY column
+LIMIT number_of_rows OFFSET number_to_skip;
+```
+- `LIMIT` always comes last (or before `OFFSET`). `OFFSET` can be zero — that’s the same as not writing it.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Run these one by one in your editor.
+
+#### 1. Get only the first 2 users
+```sql
+SELECT id, name FROM users
+ORDER BY id
+LIMIT 2;
+```
+- You’ll see Alice (id=1) and Bob (id=2). Only 2 rows, even though the table has more.
+
+#### 2. Get the single most expensive order
+```sql
+SELECT product, amount FROM orders
+ORDER BY amount DESC
+LIMIT 1;
+```
+- Only the Laptop row (1200.00) appears.
+
+#### 3. Skip the first row, then get the next 2 (pagination)
+```sql
+SELECT id, name FROM users
+ORDER BY id
+LIMIT 2 OFFSET 1;
+```
+- This skips Alice (id=1) and returns Bob (id=2) and Charlie (id=3).
+
+#### 4. Page 2 of orders (2 orders per page)
+- Page 1 (first 2 orders):
+```sql
+SELECT id, product, amount FROM orders
+ORDER BY id
+LIMIT 2 OFFSET 0;
+```
+- Page 2 (next 2 orders):
+```sql
+SELECT id, product, amount FROM orders
+ORDER BY id
+LIMIT 2 OFFSET 2;
+```
+- (Page 2 returns orders with id 3 and 4 — Monitor and Mouse.)
+
+### 📝 Explanation
+- `LIMIT n` restricts the result to only `n` rows.
+- `OFFSET m` skips the first `m` rows before starting to return results.
+- Together, `LIMIT` and `OFFSET` are used for pagination — fetching results one “page” at a time.
+- `LIMIT` without `OFFSET` just grabs the first rows, which is perfect for a quick data preview.
+- As a QA, I use `LIMIT` to verify sample data, test pagination behaviour in APIs, and speed up manual checks on large tables.
 
