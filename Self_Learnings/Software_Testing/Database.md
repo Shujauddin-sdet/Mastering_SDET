@@ -13,6 +13,9 @@
   - [3.3 IN, BETWEEN, LIKE, and wildcards](#33-in-between-like-and-wildcards)
   - [3.4 NULL Handling (IS NULL, IS NOT NULL)](#34-null-handling-is-null-is-not-null)
   - [3.5 DISTINCT](#35-distinct)
+  - [3.6 Aliases (AS) for columns and tables](#36-aliases-as-for-columns-and-tables)
+  - [3.7 ORDER BY (ASC, DESC)](#37-order-by-asc-desc)
+  - [3.8 LIMIT (and OFFSET)](#38-limit-and-offset)
 
 ---
 
@@ -699,3 +702,204 @@ SELECT DISTINCT city, age FROM users;
 - It works on one column or multiple columns together.
 - Use it to answer “how many different…?” questions, clean up data displays, and check for unexpected duplicates.
 - As a QA, I use `DISTINCT` to quickly verify the variety of data in a table (e.g., distinct statuses, distinct product names) and to count unique users, orders, or other entities.
+
+---
+
+## 3.6 Aliases (AS) for columns and tables
+### 🔍 Simple Analogy
+- Think of a passport application form with column headings like Surname, Given Name, Date of Birth.
+- Those headings are short, clear, and easy to read.
+- Now imagine the form’s original database columns are named `app_surname_txt`, `app_given_name_txt`, `app_dob_dt`.
+- If you handed that raw list to a customer, they’d be confused.
+- So you take a sticky note, write a friendly name over each ugly column, and say: “From now on, display Surname instead of `app_surname_txt`.”
+- In SQL, the `AS` keyword is that sticky note. It gives a column, a calculation, or even a whole table a temporary, friendly name—just for the output. It doesn’t change the real table; it only changes how the result looks.
+
+### 💼 Professional Context
+- When you write queries, column names can be cryptic, especially when using functions like `COUNT(*)` or `SUM(amount)`. The result might show `COUNT(*)` as the column header, which is meaningless in a test report.
+- Aliases fix that. They give you clean, readable column headers in your result sets. You also use them to rename columns when joining tables (to avoid confusion between columns with the same name) or to give a temporary name to a subquery.
+- As a QA, you’ll use aliases to:
+  - Produce clear test evidence reports.
+  - Label calculated fields like totals or averages.
+  - Distinguish columns with the same name from different tables when joining.
+
+### 🧪 Try It Now (Using Your Practice Database)
+
+#### 1. Simple column alias
+```sql
+SELECT name AS customer_name, email AS contact_email
+FROM users;
+```
+- You’ll see the results with headers `customer_name` and `contact_email` instead of `name` and `email`.
+
+#### 2. Alias on a calculation
+- Count how many users exist and give the result a meaningful name:
+```sql
+SELECT COUNT(*) AS total_users
+FROM users;
+```
+- The result header will say `total_users` instead of `COUNT(*)`.
+
+#### 3. Alias with spaces or mixed case (use double quotes)
+- If you want a header like "Total Orders", wrap the alias in double quotes:
+```sql
+SELECT COUNT(*) AS "Total Orders"
+FROM orders;
+```
+- Without quotes, the space would break the query. (In some databases, square brackets `[]` are used; in SQLite, double quotes work.)
+
+#### 4. Table alias (shorter name for a table)
+- Later, when you join tables, you’ll write something like:
+```sql
+SELECT u.name, u.email
+FROM users AS u
+WHERE u.city = 'London';
+```
+- Here `users AS u` assigns the temporary nickname `u` to the `users` table. You can then use `u.name` instead of `users.name`. It makes long queries much cleaner.
+
+### 📝 Explanation
+- The `AS` keyword creates a temporary alias (nickname) for a column or table in the output.
+- It does not change the original table or column name in the database.
+- Column aliases make result headers readable; table aliases shorten and simplify complex queries.
+- Use double quotes around an alias if it contains spaces or special characters.
+- As a QA, I use aliases constantly to turn raw query output into clear, professional test evidence.
+
+---
+
+## 3.7 ORDER BY (ASC, DESC)
+### 🔍 Simple Analogy
+- You've got a pile of customer cards on your desk. Right now they're in no particular order — just the way they fell out of the box.
+- Now you want them sorted:
+  - Alphabetically by name → from Alice to Charlie.
+  - By age, oldest first → from 35 down to 25.
+  - By city, reverse alphabetical → from Paris down to London.
+- The database is the same. After filtering rows with `WHERE`, you often want the results in a specific order. `ORDER BY` does exactly that — it rearranges the output rows, just like sorting physical cards.
+  - `ASC` (ascending) = smallest to largest, A to Z, earliest to latest. This is the default.
+  - `DESC` (descending) = largest to smallest, Z to A, latest to earliest.
+
+### 💼 Professional Context
+- As a QA, sorted results are essential for:
+  - Seeing the most recent orders first.
+  - Listing users by registration date for a test report.
+  - Finding the highest product price.
+  - Presenting clean, readable data to developers or in test evidence.
+- `ORDER BY` works on numbers, text, and dates. You can sort by multiple columns too — for example, sort users by city, then by name inside each city.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Run these one by one in your editor.
+
+#### 1. Sort users by name alphabetically (ASC is the default)
+```sql
+SELECT name, email FROM users
+ORDER BY name;
+```
+- Or explicitly:
+```sql
+SELECT name, email FROM users
+ORDER BY name ASC;
+```
+- Result: Alice, Bob, Charlie, Diana.
+
+#### 2. Sort users by name descending (Z to A)
+```sql
+SELECT name, email FROM users
+ORDER BY name DESC;
+```
+- Result: Diana, Charlie, Bob, Alice.
+
+#### 3. Sort orders by amount, smallest first
+```sql
+SELECT product, amount FROM orders
+ORDER BY amount ASC;
+```
+- Mouse (25.50), Keyboard (75.00), Monitor (300.00), Laptop (1200.00).
+
+#### 4. Sort by multiple columns
+- Sort users by city ascending, then by age descending inside each city:
+```sql
+SELECT name, city, age FROM users
+ORDER BY city ASC, age DESC;
+```
+- (Notice London with Bob, New York with Alice, Paris with Charlie, then Diana's `NULL` city last — `NULL`s appear at the end in `ASC` order by default in SQLite.)
+
+### 📝 Explanation
+- `ORDER BY column` sorts the result rows based on that column.
+- `ASC` (ascending) = smallest first (A→Z, 1→9). This is the default and can be omitted.
+- `DESC` (descending) = largest first (Z→A, 9→1).
+- You can sort by multiple columns: `ORDER BY col1, col2`. Each column gets its own direction.
+- As a QA, I use `ORDER BY` to inspect data in a logical sequence, find extremes (oldest, most expensive), and produce readable reports.
+
+---
+
+## 3.8 LIMIT (and OFFSET)
+### 🔍 Simple Analogy
+- Imagine a thick telephone directory with thousands of names.
+- You don’t want to read the whole book. You only want to see the first 5 names.
+- Or you want to see names 11 to 20 — the second page of results.
+- You tell the directory:
+  - “Give me only 5 rows.” (that’s `LIMIT`)
+  - “Skip the first 10 rows, then give me 5.” (that’s `OFFSET`)
+- `LIMIT` tells the database exactly how many rows you want back. `OFFSET` tells it how many rows to jump over before starting.
+
+### 💼 Professional Context
+- In real testing, you rarely want all rows — especially if a table has thousands of records. You use `LIMIT` to:
+  - Quickly peek at the first few rows to check data structure.
+  - Test pagination logic (page 1, page 2, etc.).
+  - Retrieve a single row, like the most recent order.
+  - Speed up queries during debugging.
+- `OFFSET` is optional. It’s used to skip rows, usually together with `LIMIT` to simulate “pages” of results.
+- Syntax pattern:
+```sql
+SELECT columns FROM table
+ORDER BY column
+LIMIT number_of_rows OFFSET number_to_skip;
+```
+- `LIMIT` always comes last (or before `OFFSET`). `OFFSET` can be zero — that’s the same as not writing it.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Run these one by one in your editor.
+
+#### 1. Get only the first 2 users
+```sql
+SELECT id, name FROM users
+ORDER BY id
+LIMIT 2;
+```
+- You’ll see Alice (id=1) and Bob (id=2). Only 2 rows, even though the table has more.
+
+#### 2. Get the single most expensive order
+```sql
+SELECT product, amount FROM orders
+ORDER BY amount DESC
+LIMIT 1;
+```
+- Only the Laptop row (1200.00) appears.
+
+#### 3. Skip the first row, then get the next 2 (pagination)
+```sql
+SELECT id, name FROM users
+ORDER BY id
+LIMIT 2 OFFSET 1;
+```
+- This skips Alice (id=1) and returns Bob (id=2) and Charlie (id=3).
+
+#### 4. Page 2 of orders (2 orders per page)
+- Page 1 (first 2 orders):
+```sql
+SELECT id, product, amount FROM orders
+ORDER BY id
+LIMIT 2 OFFSET 0;
+```
+- Page 2 (next 2 orders):
+```sql
+SELECT id, product, amount FROM orders
+ORDER BY id
+LIMIT 2 OFFSET 2;
+```
+- (Page 2 returns orders with id 3 and 4 — Monitor and Mouse.)
+
+### 📝 Explanation
+- `LIMIT n` restricts the result to only `n` rows.
+- `OFFSET m` skips the first `m` rows before starting to return results.
+- Together, `LIMIT` and `OFFSET` are used for pagination — fetching results one “page” at a time.
+- `LIMIT` without `OFFSET` just grabs the first rows, which is perfect for a quick data preview.
+- As a QA, I use `LIMIT` to verify sample data, test pagination behaviour in APIs, and speed up manual checks on large tables.
