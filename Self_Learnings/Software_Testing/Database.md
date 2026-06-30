@@ -721,6 +721,8 @@ SELECT DISTINCT city, age FROM users;
   - Distinguish columns with the same name from different tables when joining.
 
 ### 🧪 Try It Now (Using Your Practice Database)
+
+
 #### 1. Simple column alias
 ```sql
 SELECT name AS customer_name, email AS contact_email
@@ -737,7 +739,7 @@ FROM users;
 - The result header will say `total_users` instead of `COUNT(*)`.
 
 #### 3. Alias with spaces or mixed case (use double quotes)
-- If you want a header like *Total Orders*, wrap the alias in double quotes:
+- If you want a header like "Total Orders", wrap the alias in double quotes:
 ```sql
 SELECT COUNT(*) AS "Total Orders"
 FROM orders;
@@ -816,7 +818,7 @@ ORDER BY amount ASC;
 SELECT name, city, age FROM users
 ORDER BY city ASC, age DESC;
 ```
-- Notice London with Bob, New York with Alice, Paris with Charlie, then Diana's NULL city last — NULLs appear at the end in ASC order by default in SQLite.
+- (Notice London with Bob, New York with Alice, Paris with Charlie, then Diana's `NULL` city last — `NULL`s appear at the end in `ASC` order by default in SQLite.)
 
 ### 📝 Explanation
 - `ORDER BY column` sorts the result rows based on that column.
