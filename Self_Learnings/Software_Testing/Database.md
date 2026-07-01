@@ -16,6 +16,8 @@
   - [3.6 Aliases (AS) for columns and tables](#36-aliases-as-for-columns-and-tables)
   - [3.7 ORDER BY (ASC, DESC)](#37-order-by-asc-desc)
   - [3.8 LIMIT (and OFFSET)](#38-limit-and-offset)
+- [Modifying Data](#modifying-data)
+  - [4.1 INSERT INTO (Single and Multiple Rows)](#41-insert-into-single-and-multiple-rows)
 
 ---
 
@@ -902,4 +904,78 @@ LIMIT 2 OFFSET 2;
 - Together, `LIMIT` and `OFFSET` are used for pagination — fetching results one “page” at a time.
 - `LIMIT` without `OFFSET` just grabs the first rows, which is perfect for a quick data preview.
 - As a QA, I use `LIMIT` to verify sample data, test pagination behaviour in APIs, and speed up manual checks on large tables.
+
+---
+
+# Modifying Data
+
+## 4.1 INSERT INTO (Single and Multiple Rows)
+### 🔍 Simple Analogy
+- You have an empty page in your customer ledger. You want to add a new customer.
+- You could write down one customer at a time — name, email, age, city — and save the page.
+- Or, if five new customers just signed up, you could write all five in one go.
+- `INSERT INTO` is the pen that writes new rows into your database table. You decide whether to insert a single row or multiple rows at once.
+
+### 💼 Professional Context
+- As a QA or SDET, you’ll use `INSERT INTO` constantly to:
+  - Create test data before running manual or automated tests.
+  - Add new records that you will later read, update, or delete.
+  - Populate a fresh database with sample data so your queries return something meaningful.
+- The basic pattern is:
+```sql
+INSERT INTO table_name (column1, column2, …)
+VALUES (value1, value2, …);
+```
+- For multiple rows, just add more sets of values separated by commas:
+```sql
+INSERT INTO table_name (column1, column2, …)
+VALUES
+  (value1_row1, value2_row1, …),
+  (value1_row2, value2_row2, …),
+  ...;
+```
+- You don’t have to provide a value for the primary key if it’s set to `AUTOINCREMENT` — the database generates it automatically.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Run these queries in your editor.
+
+#### 1. Insert a single new user
+```sql
+INSERT INTO users (name, email, age, city)
+VALUES ('Eve', 'eve@mail.com', 28, 'Berlin');
+```
+- Then check:
+```sql
+SELECT * FROM users WHERE name = 'Eve';
+```
+- You’ll see Eve’s row with a new `id` assigned automatically.
+
+#### 2. Insert multiple orders at once
+```sql
+INSERT INTO orders (user_id, product, amount, order_date)
+VALUES
+  (5, 'Tablet', 450.00, '2026-07-01'),
+  (5, 'Headphones', 80.00, '2026-07-02');
+```
+- (We used `user_id = 5` because Eve is the fifth user inserted — her ID is 5. Verify with `SELECT * FROM users;`.)
+- Check the orders table:
+```sql
+SELECT * FROM orders WHERE user_id = 5;
+```
+- Both new orders appear.
+
+#### 3. Insert using SELECT (copy data from another table)
+- You can also insert rows by copying from an existing table. For example, create a test copy of some users:
+```sql
+INSERT INTO test_users (name, email)
+SELECT name, email FROM users WHERE city = 'London';
+```
+- (You don’t have a `test_users` table yet; this is just to show the syntax. You can try it after creating one.)
+
+### 📝 Explanation
+- `INSERT INTO table (columns) VALUES (values)` adds one or more new rows.
+- For multiple rows, list each row’s values in parentheses, separated by commas.
+- Columns with `AUTOINCREMENT` (like `id`) can be omitted; the database assigns the next value automatically.
+- You must respect all constraints (`NOT NULL`, `UNIQUE`, `FOREIGN KEY`) or the insert will fail — that’s the database protecting your data.
+- As a QA, I insert test data before runs, and sometimes I insert deliberately bad data to check that constraints block it.
 
