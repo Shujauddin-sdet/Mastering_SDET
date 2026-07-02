@@ -978,4 +978,3 @@ SELECT name, email FROM users WHERE city = 'London';
 - Columns with `AUTOINCREMENT` (like `id`) can be omitted; the database assigns the next value automatically.
 - You must respect all constraints (`NOT NULL`, `UNIQUE`, `FOREIGN KEY`) or the insert will fail — that’s the database protecting your data.
 - As a QA, I insert test data before runs, and sometimes I insert deliberately bad data to check that constraints block it.
-
