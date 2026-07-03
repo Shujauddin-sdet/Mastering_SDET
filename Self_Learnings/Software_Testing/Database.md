@@ -18,6 +18,7 @@
   - [3.8 LIMIT (and OFFSET)](#38-limit-and-offset)
 - [Modifying Data](#modifying-data)
   - [4.1 INSERT INTO (Single and Multiple Rows)](#41-insert-into-single-and-multiple-rows)
+  - [4.2 UPDATE (with WHERE)](#42-update-with-where)
 
 ---
 
@@ -978,3 +979,79 @@ SELECT name, email FROM users WHERE city = 'London';
 - Columns with `AUTOINCREMENT` (like `id`) can be omitted; the database assigns the next value automatically.
 - You must respect all constraints (`NOT NULL`, `UNIQUE`, `FOREIGN KEY`) or the insert will fail — that’s the database protecting your data.
 - As a QA, I insert test data before runs, and sometimes I insert deliberately bad data to check that constraints block it.
+
+---
+
+## 4.2 UPDATE (with WHERE)
+### 🔍 Simple Analogy
+- Imagine you keep a notebook of regular customers. One day, a customer tells you: “I’ve moved house. Please change my city from London to Manchester.”
+- You take your eraser, find only their row, and carefully replace the old city with the new one. If you erased the city for everyone, that would be a disaster.
+- In SQL, `UPDATE` is the eraser. The `WHERE` clause is your finger pointing at the exact row. Without `WHERE`, you’d accidentally change every row in the table.
+
+### 💼 Professional Context
+- As a QA, you update data to:
+  - Fix test data that became stale.
+  - Simulate a user changing their profile.
+  - Change an order’s status to test different scenarios.
+  - Verify that an update operation works correctly before automating it.
+- The basic pattern is:
+```sql
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+```
+- **Always use WHERE.** An `UPDATE` without `WHERE` changes every row. That’s fine when you want a mass update, but in testing, it’s usually an accident you want to avoid.
+
+### 🧪 Try It Now (Using Your Practice Database)
+#### 1. Update a single user’s city
+- Bob currently lives in London. Let’s move him to Manchester.
+```sql
+UPDATE users
+SET city = 'Manchester'
+WHERE name = 'Bob';
+```
+- Verify:
+```sql
+SELECT name, city FROM users WHERE name = 'Bob';
+```
+- Bob’s city is now Manchester.
+
+#### 2. Update multiple columns at once
+- Change Eve’s age and city together:
+```sql
+UPDATE users
+SET age = 29, city = 'Hamburg'
+WHERE email = 'eve@mail.com';
+```
+- Check:
+```sql
+SELECT name, age, city FROM users WHERE email = 'eve@mail.com';
+```
+
+#### 3. Increase the amount of all orders placed by user 5 by 10% (bulk update with a condition)
+```sql
+UPDATE orders
+SET amount = amount * 1.10
+WHERE user_id = 5;
+```
+- Then see the updated amounts:
+```sql
+SELECT product, amount FROM orders WHERE user_id = 5;
+```
+- The Tablet (450) becomes 495, Headphones (80) becomes 88.
+
+#### ⚠️ The Danger of UPDATE Without WHERE
+- Try this only if you’re curious — it will change every row:
+```sql
+UPDATE users
+SET city = 'Nowhere';
+```
+- Now every user lives in Nowhere. That’s a useful reminder: always use `WHERE` unless you truly mean “all rows”.
+- *(To undo, you can re‑run your original INSERT script to rebuild the tables. That’s why we saved it.)*
+
+### 📝 Explanation
+- `UPDATE table_name SET column = value WHERE condition` modifies existing rows.
+- `SET` lists the columns and their new values; separate multiple changes with commas.
+- `WHERE` restricts which rows are updated. Without it, every row gets updated — a common and dangerous mistake.
+- As a QA, I use `UPDATE` to prepare test data, simulate user actions, and validate that the system responds correctly to data changes.
+
