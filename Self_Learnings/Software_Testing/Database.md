@@ -19,6 +19,11 @@
 - [Modifying Data](#modifying-data)
   - [4.1 INSERT INTO (Single and Multiple Rows)](#41-insert-into-single-and-multiple-rows)
   - [4.2 UPDATE (with WHERE)](#42-update-with-where)
+  - [4.3 DELETE (with WHERE, and TRUNCATE concept)](#43-delete-with-where-and-truncate-concept)
+- [Aggregating Data](#aggregating-data)
+  - [5.1 COUNT, SUM, AVG](#51-count-sum-avg)
+  - [5.2 GROUP BY](#52-group-by)
+  - [5.3 HAVING (Filtering Groups)](#53-having-filtering-groups)
 
 ---
 
@@ -1054,4 +1059,321 @@ SET city = 'Nowhere';
 - `SET` lists the columns and their new values; separate multiple changes with commas.
 - `WHERE` restricts which rows are updated. Without it, every row gets updated — a common and dangerous mistake.
 - As a QA, I use `UPDATE` to prepare test data, simulate user actions, and validate that the system responds correctly to data changes.
+
+---
+
+## 4.3 DELETE (with WHERE, and TRUNCATE concept)
+### 🔍 Simple Analogy
+- Think of your customer notebook again.
+- A customer asks you to remove their entire record because they closed their account. You find their row and erase it completely. That’s `DELETE` with a `WHERE` clause – surgical, precise.
+- Now imagine you want to wipe the whole notebook clean but keep the empty lined pages ready for new customers. That’s `DELETE` without `WHERE` – every row vanishes, but the table shell remains.
+- If you want to tear out the entire page and start a fresh blank one, that’s `TRUNCATE` (in databases that support it), or in SQLite you simply `DROP` the table and recreate it.
+
+### 💼 Professional Context
+- As a QA, you use `DELETE` to:
+  - Remove test data you inserted during a test run, so the database is clean for the next run.
+  - Simulate a user deleting their account and verify the application handles it correctly.
+  - Clear out stale rows before inserting fresh ones.
+  - Test that foreign key constraints prevent deletion of a parent row that still has child rows (e.g., deleting a user who still has orders).
+- Basic pattern:
+```sql
+DELETE FROM table_name
+WHERE condition;
+```
+- **Critical rule:** Just like `UPDATE`, a `DELETE` without `WHERE` removes every single row from the table. Be extremely careful, and always double‑check your condition before running it.
+
+#### ⚡ TRUNCATE vs DELETE (Brief Concept)
+| Action | DELETE FROM table (no WHERE) | TRUNCATE TABLE table | DROP TABLE table |
+|---|---|---|---|
+| **What it removes** | All rows, row by row. | All rows, but faster (deallocates entire data pages). | The entire table – structure and rows. |
+| **Where used** | Every database, including SQLite. | MySQL, PostgreSQL, Oracle etc. Not in SQLite. | Every database. |
+| **Recovery** | Can be rolled back if inside a transaction. | Usually cannot be rolled back. | Cannot be rolled back. |
+| **Table structure** | Remains. | Remains. | Gone. |
+
+- Since SQLite doesn’t have a `TRUNCATE` command, you mimic it by either:
+  - Using `DELETE FROM table;` (slower for huge tables, but fine for testing).
+  - Dropping the table and recreating it: `DROP TABLE users;` then re‑run `CREATE TABLE users (...);`.
+- For test databases with just a few rows, `DELETE FROM table;` is perfectly fine.
+
+### 🧪 Try It Now (Using Your Practice Database)
+#### 1. Delete a single specific row
+- Delete the user named Eve:
+```sql
+DELETE FROM users
+WHERE name = 'Eve';
+```
+- Verify:
+```sql
+SELECT * FROM users;
+```
+- Eve is gone. The other users remain untouched.
+
+#### 2. Delete all orders for a specific user (bulk delete with condition)
+- Remove all orders placed by user 3 (Charlie):
+```sql
+DELETE FROM orders
+WHERE user_id = 3;
+```
+- Check:
+```sql
+SELECT * FROM orders;
+```
+- Only orders from Alice (user 1) and Bob (user 2) remain. Charlie’s orders are wiped.
+
+#### 3. Delete all rows from a table (careful!)
+```sql
+DELETE FROM users;
+```
+- Now run:
+```sql
+SELECT * FROM users;
+```
+- Zero rows. The users table still exists, with all its columns, but it’s empty.
+- *(To bring back your test data, just re‑run the original INSERT script you saved.)*
+
+### 📝 Explanation
+- `DELETE FROM table WHERE condition` removes specific rows that match the condition.
+- A `DELETE` without `WHERE` removes all rows – the table stays, but is empty.
+- `TRUNCATE` is a faster, non‑transactional way to empty a table in other databases; SQLite doesn’t support it, so we use `DELETE FROM table;` or `DROP` + recreate.
+- As a QA, I use `DELETE` to clean up test data, simulate user data removal, and test constraint behaviours (like foreign key restrictions).
+- Always verify your `WHERE` clause before running a `DELETE`. A missing condition can wipe your entire dataset.
+
+---
+
+# Aggregating Data
+
+## 5.1 COUNT, SUM, AVG
+### 🔍 Simple Analogy
+- You have a pile of order receipts. Now, instead of looking at each receipt one by one, you want quick answers:
+  - How many orders did we receive? → You count the receipts.
+  - How much money did we make in total? → You add up all the amounts.
+  - What’s the average order value? → You divide the total by the number of receipts.
+- `COUNT`, `SUM`, and `AVG` are the calculator buttons that do exactly that—instantly, without you needing to add anything manually.
+
+### 💼 Professional Context
+- As a QA, you use aggregate functions to verify business logic and data correctness. For example:
+  - Does the dashboard show the correct number of registered users? → `COUNT(*)`
+  - Is the total revenue on the reports page calculated correctly? → `SUM(amount)`
+  - Is the average order value within an expected range? → `AVG(amount)`
+- Aggregates work on many rows and collapse them into a single value. They are often used with `WHERE` to answer questions about a specific subset, like “How many orders were placed in June?”
+
+#### Most common aggregate functions:
+| Function | What it returns |
+|---|---|
+| **COUNT(*)** | Total number of rows |
+| **COUNT(column)** | Number of rows where that column is not NULL |
+| **SUM(column)** | Total sum of values in a numeric column |
+| **AVG(column)** | Average (mean) of values in a numeric column |
+| **MIN(column)** | Smallest value |
+| **MAX(column)** | Largest value |
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Before running these, make sure you have sample data. If you deleted everything while testing `DELETE`, just re‑run your original `INSERT` script to bring back the rows.
+
+#### 1. Count all users
+```sql
+SELECT COUNT(*) AS total_users FROM users;
+```
+- You’ll see total_users: 4 (Alice, Bob, Charlie, Diana).
+
+#### 2. Count users with a known city (not NULL)
+```sql
+SELECT COUNT(city) AS users_with_city FROM users;
+```
+- Diana’s city is NULL, so this returns 3.
+
+#### 3. Total sales amount from all orders
+```sql
+SELECT SUM(amount) AS total_revenue FROM orders;
+```
+- Laptop (1200) + Mouse (25.50) + Keyboard (75) + Monitor (300) + Tablet (450) + Headphones (80) = 2130.50. *(Assuming default data plus the recent inserted tablet/headphones).*
+
+#### 4. Average order amount
+```sql
+SELECT AVG(amount) AS average_order FROM orders;
+```
+- 2130.50 ÷ 6 ≈ 355.0833...
+
+#### 5. Highest and lowest order amount
+```sql
+SELECT MIN(amount) AS smallest_order, MAX(amount) AS largest_order FROM orders;
+```
+- Smallest: Mouse (25.50). Largest: Laptop (1200).
+
+#### 6. Filtered aggregate – total orders by Alice (user_id = 1)
+```sql
+SELECT SUM(amount) AS alice_total FROM orders WHERE user_id = 1;
+```
+- Alice spent 1200 + 25.50 = 1225.50.
+
+### 📝 Explanation
+- `COUNT(*)` counts all rows; `COUNT(column)` counts only rows where that column is not NULL.
+- `SUM(column)` adds up numeric values; ignores NULLs automatically.
+- `AVG(column)` calculates the mean of a numeric column (ignores NULLs).
+- `MIN` and `MAX` find the smallest and largest values.
+- These functions condense many rows into a single meaningful number, perfect for verifying statistics and summaries.
+- As a QA, I use them to check dashboard numbers, validate report totals, and spot anomalies quickly.
+
+---
+
+## 5.2 GROUP BY
+### 🔍 Simple Analogy
+- You’re organising a stack of order receipts.
+- Right now you can count them all (31 receipts), or add up the total money (₹14,000). But what if you want to know:
+  - “How many orders did each customer place?”
+  - “What’s the total spending per customer?”
+  - “How many customers do we have in each city?”
+- You can’t answer these with just `COUNT(*)` or `SUM()` on the whole table — you need to group the receipts by customer, and then count inside each group.
+- In SQL, `GROUP BY` does exactly that. It sorts the rows into piles (one pile per customer, or per city), and then the aggregate function (`COUNT`, `SUM`, etc.) runs on each pile separately.
+
+### 💼 Professional Context
+- As a QA, you use `GROUP BY` constantly:
+  - “Show me the number of orders placed by each user, so I can test the user dashboard.”
+  - “What’s the total revenue per product category?”
+  - “How many failed login attempts per user in the last 24 hours?”
+  - “Show me the count of test records I inserted, grouped by test run ID.”
+- `GROUP BY` is always used with an aggregate function — otherwise, you’d just get a distinct list, which `DISTINCT` does better.
+- Basic pattern:
+```sql
+SELECT column_to_group_by, AGGREGATE_FUNCTION(column_to_aggregate)
+FROM table
+GROUP BY column_to_group_by;
+```
+- You can also group by multiple columns. Any column in the `SELECT` that is not an aggregate must appear in the `GROUP BY`.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- If you deleted data earlier, re‑run your original INSERT script so the users and orders tables are populated with the default sample rows (Alice, Bob, Charlie, Diana, and their orders).
+
+#### 1. Count orders per user
+```sql
+SELECT user_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY user_id;
+```
+- Result: User 1 (Alice): 2 orders, User 2 (Bob): 1 order, User 3 (Charlie): 1 order.
+
+#### 2. Total spending per user
+```sql
+SELECT user_id, SUM(amount) AS total_spent
+FROM orders
+GROUP BY user_id
+ORDER BY total_spent DESC;
+```
+- Now you see who spent the most.
+
+#### 3. Number of users per city
+```sql
+SELECT city, COUNT(*) AS users_in_city
+FROM users
+GROUP BY city;
+```
+- You’ll see counts for London, New York, Paris, and a NULL group for Diana (if her city is still NULL). The database treats all NULLs as one group in `GROUP BY`.
+
+#### 4. Average age per city (excluding NULL cities)
+```sql
+SELECT city, AVG(age) AS average_age
+FROM users
+WHERE city IS NOT NULL
+GROUP BY city;
+```
+
+#### 5. Group by multiple columns – count orders per user per product
+```sql
+SELECT user_id, product, COUNT(*) AS times_ordered
+FROM orders
+GROUP BY user_id, product;
+```
+- Shows you if a user ordered the same product more than once.
+
+### 📝 Explanation
+- `GROUP BY` divides rows into groups that share the same value in the specified column(s).
+- Aggregate functions (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`) are then applied to each group independently.
+- Any column in the `SELECT` that isn’t an aggregate must be in the `GROUP BY` clause.
+- You often combine `GROUP BY` with `ORDER BY` to sort the groups (e.g., biggest spenders first).
+- As a QA, `GROUP BY` is essential for verifying grouped data on dashboards, reports, and summary views.
+
+---
+
+## 5.3 HAVING (Filtering Groups)
+### 🔍 Simple Analogy
+- You’ve just sorted your order receipts into piles — one pile for each customer.
+- Now you want to find only the customers who have more than one order. You can’t check that before making the piles, because the count doesn’t exist yet. You must create the piles first, then look at each pile’s size and throw away the ones that are too small.
+- In SQL:
+  - `WHERE` filters individual rows **before** the piles are made.
+  - `HAVING` filters the piles themselves **after** `GROUP BY` has done its work.
+- So `WHERE` works on raw rows; `HAVING` works on grouped results.
+
+### 💼 Professional Context
+- As a QA, you’ll use `HAVING` to answer questions like:
+  - “Which users have placed more than 3 orders?” (test power‑user logic)
+  - “Which products have a total sales value below ₹500?” (find unpopular items)
+  - “Which cities have an average user age over 30?” (verify demographic filters)
+  - “Show me only the test runs where the number of failures is greater than zero.”
+- `HAVING` always comes after `GROUP BY`. You can’t use aggregate functions in `WHERE` — they belong in `HAVING`.
+- Basic pattern:
+```sql
+SELECT column, AGGREGATE_FUNCTION(...)
+FROM table
+GROUP BY column
+HAVING condition_on_aggregate;
+```
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Make sure your users and orders tables contain the default sample rows. If you deleted anything, re‑run your original INSERT script.
+
+#### 1. Users who have placed more than 1 order
+```sql
+SELECT user_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY user_id
+HAVING order_count > 1;
+```
+- Only user 1 (Alice) appears, because she has two orders.
+
+#### 2. Users whose total spending is above ₹500
+```sql
+SELECT user_id, SUM(amount) AS total_spent
+FROM orders
+GROUP BY user_id
+HAVING total_spent > 500;
+```
+- Alice (1225.50) will show up.
+
+#### 3. Cities with more than one user
+```sql
+SELECT city, COUNT(*) AS user_count
+FROM users
+GROUP BY city
+HAVING user_count > 1;
+```
+- Since all cities in our default data have only one user each, this might return nothing. You can test the opposite: `HAVING user_count = 1`.
+
+#### 4. Average order value per user, showing only those with average above ₹100
+```sql
+SELECT user_id, AVG(amount) AS avg_order
+FROM orders
+GROUP BY user_id
+HAVING avg_order > 100;
+```
+
+#### ⚖️ WHERE vs HAVING
+| Clause | What it filters | Works with… | Position in query |
+|---|---|---|---|
+| **WHERE** | Individual rows before grouping | Column values directly | Before `GROUP BY` |
+| **HAVING** | Groups after grouping | Aggregate results (`COUNT`, `SUM`, `AVG`, etc.) | After `GROUP BY` |
+
+- You can use both in the same query. For example, first filter out orders below ₹30 with `WHERE`, then group by user, then keep only groups with more than one order using `HAVING`.
+```sql
+SELECT user_id, COUNT(*) AS orders_above_30
+FROM orders
+WHERE amount > 30
+GROUP BY user_id
+HAVING orders_above_30 > 1;
+```
+
+### 📝 Explanation
+- `HAVING` filters groups created by `GROUP BY`, just as `WHERE` filters rows before grouping.
+- It’s used with aggregate functions — `HAVING COUNT(*) > 5`, `HAVING AVG(amount) < 100`.
+- `WHERE` cannot use aggregates; `HAVING` cannot exist without `GROUP BY` (in standard SQL, though some databases tolerate it).
+- As a QA, `HAVING` helps me find outliers, validate business rules on grouped data, and focus my testing on the most relevant subsets.
 
