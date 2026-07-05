@@ -24,6 +24,14 @@
   - [5.1 COUNT, SUM, AVG](#51-count-sum-avg)
   - [5.2 GROUP BY](#52-group-by)
   - [5.3 HAVING (Filtering Groups)](#53-having-filtering-groups)
+- [Combining Tables](#combining-tables)
+  - [6.1 INNER JOIN](#61-inner-join)
+  - [6.2 LEFT JOIN (and RIGHT JOIN briefly)](#62-left-join-and-right-join-briefly)
+  - [6.3 Joining Multiple Tables](#63-joining-multiple-tables)
+- [Subqueries Basics](#subqueries-basics)
+  - [7.1 Subquery in WHERE Clause](#71-subquery-in-where-clause)
+  - [7.2 Subquery in SELECT Clause](#72-subquery-in-select-clause)
+  - [7.3 Subquery in FROM Clause (Derived Tables)](#73-subquery-in-from-clause-derived-tables)
 
 ---
 
@@ -1376,4 +1384,489 @@ HAVING orders_above_30 > 1;
 - It’s used with aggregate functions — `HAVING COUNT(*) > 5`, `HAVING AVG(amount) < 100`.
 - `WHERE` cannot use aggregates; `HAVING` cannot exist without `GROUP BY` (in standard SQL, though some databases tolerate it).
 - As a QA, `HAVING` helps me find outliers, validate business rules on grouped data, and focus my testing on the most relevant subsets.
+
+---
+
+# Combining Tables
+
+## 6.1 INNER JOIN
+### 🔍 Simple Analogy
+- You have two separate ledgers:
+  - **Customers ledger** – lists every customer’s ID, name, email, and city.
+  - **Orders ledger** – lists every order: what product, how much, and the customer ID who bought it.
+- But the orders ledger doesn’t show the customer’s name – only their ID. If you want to see who placed each order, you must bring the two ledgers together. You take a row from the orders ledger, find the matching customer ID in the customers ledger, and combine them into one row.
+- That’s `INNER JOIN`. It links two tables on a shared column, returning only the rows that match in both.
+
+### 💼 Professional Context
+- As a QA, you rarely query a single table for meaningful checks. You join tables to:
+  - Verify that an order belongs to a real user.
+  - Display a human‑readable test report showing user names next to their orders.
+  - Check that all foreign key relationships are intact.
+  - Combine data from multiple sources to validate end‑to‑end scenarios.
+- `INNER JOIN` returns only rows where the join condition is true in both tables. If a customer has no orders, they won’t appear. If an order references a non‑existent user, it also won’t appear (which is good for finding orphaned data).
+- Basic pattern:
+```sql
+SELECT table1.column, table2.column, ...
+FROM table1
+INNER JOIN table2 ON table1.common_column = table2.common_column;
+```
+- You can join more than two tables by chaining additional `INNER JOIN` clauses.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Make sure your users and orders tables have the default rows. Re‑run your original INSERT script if needed, so Alice (id=1), Bob (id=2), Charlie (id=3), Diana (id=4), and their orders are present.
+
+#### 1. See every order with the customer name
+```sql
+SELECT users.name, orders.product, orders.amount
+FROM orders
+INNER JOIN users ON orders.user_id = users.id;
+```
+- Result:
+  - Alice (Laptop, 1200.00)
+  - Alice (Mouse, 25.50)
+  - Bob (Keyboard, 75.00)
+  - Charlie (Monitor, 300.00)
+- Diana doesn’t appear because she has no orders — the join is only for matching rows.
+
+#### 2. Join with a WHERE clause – only orders above ₹100
+```sql
+SELECT users.name, orders.product, orders.amount
+FROM orders
+INNER JOIN users ON orders.user_id = users.id
+WHERE orders.amount > 100;
+```
+- Shows Laptop (1200) and Monitor (300).
+
+#### 3. Join and aggregate – total spending per user
+```sql
+SELECT users.name, SUM(orders.amount) AS total_spent
+FROM orders
+INNER JOIN users ON orders.user_id = users.id
+GROUP BY users.name
+ORDER BY total_spent DESC;
+```
+- Result: Alice has the highest total, followed by Charlie, then Bob. Diana is absent because she has no orders.
+
+#### 4. Check for orphaned orders (advanced practice)
+- To find orders that have an invalid user_id (not in the users table), you’d use a `LEFT JOIN` (covered next). `INNER JOIN` automatically hides them, which is why it’s safe for clean data.
+
+### 📝 Explanation
+- `INNER JOIN` combines rows from two tables where the join condition is true in both.
+- It’s the standard way to bring together related data, like customer names with their orders.
+- Rows that don’t have a match in the other table are excluded from the result.
+- The join condition usually compares a foreign key in one table with the primary key in another.
+- As a QA, I use `INNER JOIN` to verify relational integrity, create readable test evidence, and validate business rules across multiple tables.
+
+---
+
+## 6.2 LEFT JOIN (and RIGHT JOIN briefly)
+### 🔍 Simple Analogy
+- You have your two ledgers again: customers and orders.
+- Last time, with `INNER JOIN`, you only saw customers who had placed orders. Diana was invisible because she had no orders – like she was standing outside the shop and we ignored her.
+- Now you want a complete customer list, and if someone hasn’t ordered anything yet, you still want to see their name – with just a blank space or a dash in the order columns.
+- That’s `LEFT JOIN`. It says: “Give me all rows from the left table (customers), and if there’s a matching order, attach it. If not, leave the order columns empty.”
+- The left table is the one written first in the query, before `LEFT JOIN`. The right table is the second one. So `LEFT JOIN` keeps every row from the first table, no matter what.
+
+### 💼 Professional Context
+- As a QA, you use `LEFT JOIN` to:
+  - Find all users, including those who have never placed an order (inactive users).
+  - Identify orphaned records – e.g., orders that reference a missing user (by checking where the joined column is `NULL`).
+  - Build complete reports where the primary table must keep all rows, and the secondary data is optional.
+  - Test that the system correctly handles missing related data.
+- `RIGHT JOIN` does the same thing, but keeps every row from the right table instead. In practice, most developers simply swap the table order and use `LEFT JOIN` because it’s easier to read. `RIGHT JOIN` is rare, and SQLite doesn’t support it at all, so we’ll focus on `LEFT JOIN`.
+- Basic pattern:
+```sql
+SELECT left_table.column, right_table.column, ...
+FROM left_table
+LEFT JOIN right_table ON left_table.common_column = right_table.common_column;
+```
+
+### 🧪 Try It Now (Using Your Practice Database)
+- Make sure users has Alice, Bob, Charlie, and Diana (who has no orders). If you inserted Eve earlier and she has orders, that’s fine. Re‑run the original INSERT script if needed.
+
+#### 1. List all users, with their orders if they exist
+```sql
+SELECT users.name, orders.product, orders.amount
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id;
+```
+- Diana appears, but her order columns are `NULL` because she has no matching row in orders. She’s no longer invisible.
+
+#### 2. Count orders per user, including those with zero orders
+```sql
+SELECT users.name, COUNT(orders.id) AS order_count
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+GROUP BY users.name;
+```
+- Result: Alice (2), Bob (1), Charlie (1), Diana (0). Diana’s count is zero because `COUNT(orders.id)` ignores `NULL`s, which is exactly what we want.
+
+#### 3. Find users with no orders (the inactive list)
+```sql
+SELECT users.name
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+WHERE orders.id IS NULL;
+```
+- Only Diana appears. This is a classic QA check: “Show me all users who haven’t placed an order.”
+
+#### 🔄 RIGHT JOIN (Briefly)
+- `RIGHT JOIN` keeps every row from the right table. If you swapped the table order, you could achieve the same result with `LEFT JOIN`. For example:
+```sql
+-- This is a RIGHT JOIN (not supported in SQLite, but in other databases):
+SELECT users.name, orders.product
+FROM users
+RIGHT JOIN orders ON users.id = orders.user_id;
+
+-- The equivalent LEFT JOIN (swap the tables):
+SELECT users.name, orders.product
+FROM orders
+LEFT JOIN users ON users.id = orders.user_id;
+```
+- Since SQLite doesn’t support `RIGHT JOIN`, just remember: you can always reverse the table order and use `LEFT JOIN`. It’s the industry standard approach.
+
+### 📝 Explanation
+- `LEFT JOIN` keeps every row from the first (left) table, and attaches matching rows from the second table when they exist.
+- If there’s no match, the columns from the second table are filled with `NULL`.
+- This is perfect for finding records with missing related data, like users with no orders, or products never purchased.
+- `RIGHT JOIN` is the mirror image; it’s rarely used because you can swap the table order and write a `LEFT JOIN` instead.
+- As a QA, I use `LEFT JOIN` to build complete test reports that include all base records, and to verify that the absence of related data is correctly handled.
+
+---
+
+## 6.3 Joining Multiple Tables
+### 🔍 Simple Analogy
+- You have three ledgers this time:
+  - **Customers** – who each customer is.
+  - **Orders** – what they bought and when.
+  - **Shipments** – the delivery status of each order.
+- You want a single report that shows: Customer name, Product they ordered, And whether it was shipped or still processing.
+- You can’t get that from just two ledgers. You need all three, linked together. You start with customers, walk over to their orders, then from each order walk to the shipment information. That’s joining multiple tables — one chain of links.
+
+### 💼 Professional Context
+- Real databases are rarely just two tables. An e‑commerce system might have users, orders, order_items, products, shipments, payments, etc. As a QA, you often need to pull data from three, four, or even more tables to verify a complete user journey.
+- The good news is the pattern doesn’t change. You simply add another `JOIN` after the first one, linking the third table to one of the previous tables on a shared column. The same rules apply: `INNER JOIN` if you only want rows that match everywhere, or `LEFT JOIN` to keep all rows from one side.
+- Basic pattern:
+```sql
+SELECT table1.col, table2.col, table3.col, ...
+FROM table1
+JOIN table2 ON table1.common_col = table2.common_col
+JOIN table3 ON table2.another_col = table3.another_col
+...;
+```
+- Each `JOIN` adds one more table to the chain. You can mix `INNER JOIN` and `LEFT JOIN` as needed.
+
+### 🛠️ Add a Third Table (One‑Time Setup)
+- We need a third table to practise with. Let’s create a shipments table that tracks the delivery status of each order.
+- Run the following in your editor once:
+```sql
+CREATE TABLE shipments (
+    order_id INTEGER PRIMARY KEY,
+    status TEXT NOT NULL,
+    shipped_date TEXT,
+    FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+
+INSERT INTO shipments (order_id, status, shipped_date) VALUES
+(1, 'Delivered', '2026-06-05'),
+(2, 'Delivered', '2026-06-06'),
+(3, 'Shipped', '2026-06-04'),
+(4, 'Processing', NULL),
+(5, 'Delivered', '2026-07-05'),
+(6, 'Processing', NULL);
+```
+- *(Note: order IDs 5 and 6 may exist if you still have Eve’s orders. If you don’t have those orders, you can insert only rows that match existing `orders.id` values. To be safe, you can adapt the insert or check what order IDs exist with `SELECT id FROM orders;` and only insert matching ones.)*
+- You can quickly check your order IDs:
+```sql
+SELECT id FROM orders;
+```
+- Then adjust the `INSERT INTO shipments` accordingly. If you’re missing some orders, just insert rows for the ones you have, or re‑run the original INSERT script for orders to have all six.
+
+### 🧪 Try It Now
+- Now we’ll join users → orders → shipments to see customer names, what they ordered, and their shipment status.
+
+#### 1. Full chain: customer name, product, amount, shipment status
+```sql
+SELECT users.name,
+       orders.product,
+       orders.amount,
+       shipments.status
+FROM users
+INNER JOIN orders ON users.id = orders.user_id
+INNER JOIN shipments ON orders.id = shipments.order_id;
+```
+- You’ll see a clean table with four columns. Only orders that have a matching shipment will appear (because of `INNER JOIN`). If some orders don’t have a shipment row, they’ll be hidden.
+
+#### 2. Include all orders, even if shipment status is missing
+- Here we use a `LEFT JOIN` for the last step, so orders without a shipment will show `NULL` in the status column:
+```sql
+SELECT users.name,
+       orders.product,
+       orders.amount,
+       shipments.status
+FROM users
+INNER JOIN orders ON users.id = orders.user_id
+LEFT JOIN shipments ON orders.id = shipments.order_id;
+```
+
+#### 3. Add a filter: only delivered items
+```sql
+SELECT users.name, orders.product, shipments.status
+FROM users
+INNER JOIN orders ON users.id = orders.user_id
+INNER JOIN shipments ON orders.id = shipments.order_id
+WHERE shipments.status = 'Delivered';
+```
+
+#### 4. Count the number of shipments per status (using the same joins)
+```sql
+SELECT shipments.status, COUNT(*) AS count
+FROM orders
+INNER JOIN shipments ON orders.id = shipments.order_id
+GROUP BY shipments.status;
+```
+
+### 📝 Explanation
+- Joining multiple tables means adding more `JOIN` clauses after the first one, each linking a new table to one already in the query.
+- Each `JOIN` needs its own `ON` condition that defines how the tables relate.
+- You can mix `INNER JOIN` and `LEFT JOIN` to control which rows are kept when relationships are optional.
+- The sequence of joins usually follows the natural chain of relationships: users → orders → shipments.
+- As a QA, I use multi‑table joins to validate full workflows, generate comprehensive test evidence, and check data integrity across the entire system.
+
+---
+
+# Subqueries Basics
+
+## 7.1 Subquery in WHERE Clause
+### 🔍 Simple Analogy
+- You have two ledgers again: customers and orders. Now imagine you want to find all customers who have ever placed an order. You don’t know their IDs off the top of your head. So you do this:
+  - First, you go to the orders ledger and write down every user_id that appears there.
+  - Then you go to the customers ledger and pick only those customers whose ID is in that list.
+- In SQL, you can do this in one step using a subquery. The inner query (`SELECT user_id FROM orders`) produces a list, and the outer query (`SELECT * FROM users WHERE id IN (...)`) uses that list as a filter. The inner query runs first, hands its result to the outer query, and you get the final answer.
+- A subquery is just a query inside another query. When it’s used in a `WHERE` clause, it acts as a dynamic filter that depends on live data from another table.
+
+### 💼 Professional Context
+- As a QA, you’ll use subqueries in `WHERE` to:
+  - Find records that match a condition from another table (e.g., "all users who placed an order in June").
+  - Compare a value against a calculated aggregate (e.g., "all orders above the average amount").
+  - Check for the existence of related rows ("users who have at least one order").
+  - Check for the absence of related rows ("users who have never placed an order").
+- Subqueries are especially handy when you don’t want to hardcode values. If the data changes, the subquery result changes automatically.
+- Basic pattern:
+```sql
+SELECT columns
+FROM table
+WHERE column IN (SELECT column FROM another_table WHERE condition);
+```
+- You can also use comparison operators like `=`, `>`, `<`, `>=`, `<=`, `<>` when the subquery returns a single value (like an average).
+
+### 🧪 Try It Now (Using Your Practice Database)
+- We’ll use the existing users and orders tables. If you don’t have recent data, re‑run your original INSERT script for the default rows.
+
+#### 1. Find all users who have placed at least one order
+```sql
+SELECT name, email
+FROM users
+WHERE id IN (SELECT DISTINCT user_id FROM orders);
+```
+- This returns Alice, Bob, and Charlie. Diana is excluded because she has no orders. The inner query `SELECT DISTINCT user_id FROM orders` returns (1,2,3,5?) — only those IDs. The outer query then picks the matching users.
+
+#### 2. Find all orders that belong to users living in London or Paris
+```sql
+SELECT product, amount
+FROM orders
+WHERE user_id IN (SELECT id FROM users WHERE city IN ('London', 'Paris'));
+```
+- The inner query finds Bob (London) and Charlie (Paris), returns their IDs, then the outer query pulls their orders.
+
+#### 3. Compare against an aggregate: orders above the average amount
+```sql
+SELECT product, amount
+FROM orders
+WHERE amount > (SELECT AVG(amount) FROM orders);
+```
+- The inner query calculates the average order amount (let’s say ~355). The outer query returns only orders above that average.
+
+#### 4. Users with zero orders (using NOT IN)
+```sql
+SELECT name, email
+FROM users
+WHERE id NOT IN (SELECT DISTINCT user_id FROM orders);
+```
+- Diana appears. This is the classic “inactive users” check.
+
+### 📝 Explanation
+- A subquery is a complete `SELECT` statement placed inside another SQL statement, usually inside parentheses.
+- When used in a `WHERE` clause, the subquery runs first and produces a list of values or a single value.
+- `IN` checks if a value exists in the list returned by the subquery.
+- `NOT IN` checks for the opposite.
+- Comparison operators (`=`, `>`, `<`) are used when the subquery is guaranteed to return a single value (like an aggregate).
+- Subqueries make queries dynamic: you don’t need to know the exact IDs or values beforehand.
+- As a QA, I use subqueries to verify relationships, check business rules that span multiple tables, and quickly isolate data for testing.
+
+---
+
+## 7.2 Subquery in SELECT Clause
+### 🔍 Simple Analogy
+- You’re writing a report card for each customer. Next to their name, you want to show:
+  - Their total number of orders (calculated from the orders ledger).
+  - Their total spending (summed from the orders ledger).
+  - The average order value for the whole shop (so they can see if they’re above or below).
+- You don’t want to write these numbers down by hand. You want the database to look them up automatically as it prints each customer’s row.
+- A subquery in the `SELECT` clause does exactly that. It runs a tiny query inside the main query, once for each row (or once overall, depending on how it’s written), and displays the result right there as a new column.
+
+### 💼 Professional Context
+- As a QA, you use subqueries in `SELECT` to:
+  - Add calculated values from other tables without joining (e.g., total orders per user as a column).
+  - Show comparisons against overall statistics (e.g., average order value next to each order).
+  - Create rich test evidence: each row is self‑contained with all its relevant metrics.
+  - Verify that per‑user summaries match what’s shown on the application’s dashboard.
+- This type of subquery is placed in the column list of the main query and usually returns a single value per row. It can be correlated (referring to something in the outer row) or non‑correlated (independent of the outer row).
+- Basic pattern (correlated subquery):
+```sql
+SELECT column1,
+       (SELECT AGGREGATE(...) FROM table2 WHERE table2.common_col = table1.common_col) AS alias
+FROM table1;
+```
+- The condition `table2.common_col = table1.common_col` ties the inner query to the current row of the outer query.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- We’ll use the existing users and orders tables. Ensure you have the default rows (Alice, Bob, Charlie, Diana, plus any additional orders from earlier inserts).
+
+#### 1. Show each user with their total number of orders
+```sql
+SELECT name,
+       (SELECT COUNT(*) FROM orders WHERE orders.user_id = users.id) AS order_count
+FROM users;
+```
+- Result: Alice 2, Bob 1, Charlie 1, Diana 0. The inner query counts orders for the specific `user_id` that matches each user’s `id`.
+
+#### 2. Show each user with their total spending
+```sql
+SELECT name,
+       (SELECT SUM(amount) FROM orders WHERE orders.user_id = users.id) AS total_spent
+FROM users;
+```
+
+#### 3. Show each order with the average order amount for the whole shop (non‑correlated)
+```sql
+SELECT product, amount,
+       (SELECT AVG(amount) FROM orders) AS shop_average
+FROM orders;
+```
+- Every row shows the same shop average, next to the order amount. You can easily compare if each order is above or below average.
+
+#### 4. Show each user’s name and the average value of their orders (correlated, useful for loyalty analysis)
+```sql
+SELECT name,
+       (SELECT AVG(amount) FROM orders WHERE orders.user_id = users.id) AS avg_order_value
+FROM users;
+```
+- Users with no orders will show `NULL` for the average, which is correct.
+
+### 📝 Explanation
+- A subquery in the `SELECT` clause is a mini‑query that runs as part of the column list, returning a value for each output row.
+- A **correlated subquery** has a `WHERE` condition that links it to the outer query’s current row (e.g., `WHERE orders.user_id = users.id`). It runs once per row.
+- A **non‑correlated subquery** has no such link and runs once, returning the same value for every row (e.g., the overall average).
+- These subqueries are perfect for adding dynamic summaries, comparisons, and metrics without altering the main table structure.
+- As a QA, I use them to build rich, informative test reports that combine raw data with calculated indicators, helping me spot discrepancies quickly.
+
+---
+
+## 7.3 Subquery in FROM Clause (Derived Tables)
+### 🔍 Simple Analogy
+- You’ve been writing queries that produce result tables — like a list of users and their order counts. Now imagine you want to run another query on top of that result table, as if it were a real table in the database.
+- Think of it like this:
+  - You take all the order receipts and create a summary sheet: “Total spending per customer”.
+  - Then, on that summary sheet, you highlight only the customers who spent more than ₹500.
+- The summary sheet isn’t a permanent ledger — it’s a temporary report you just created. But you can still ask questions about it.
+- In SQL, a subquery inside the `FROM` clause is exactly that temporary report. It’s called a **derived table** (or inline view). You wrap a `SELECT` statement in parentheses, give it a name, and then treat it like any other table in the outer query.
+
+### 💼 Professional Context
+- As a QA, you use derived tables when:
+  - You need to filter or group the results of an aggregation (e.g., “show me all users whose total spending exceeds ₹500”). You can’t do that with a simple `HAVING` on the raw orders table because you first need to aggregate, then filter on the aggregate.
+  - You want to break a complex query into logical steps, making it easier to read and debug.
+  - You want to combine data from multiple aggregates side by side (e.g., total orders and total spending per user, then join them).
+- The derived table approach is powerful because it lets you think step‑by‑step: “First I’ll build this summary, then I’ll query that summary.”
+- Basic pattern:
+```sql
+SELECT derived_table.column, ...
+FROM (
+    SELECT column1, AGGREGATE(...)
+    FROM table
+    GROUP BY column1
+) AS derived_table
+WHERE derived_table.aggregate_column > value;
+```
+- The inner query runs first, producing a temporary table (the derived table). The outer query then uses that temporary table as its data source.
+
+### 🧪 Try It Now (Using Your Practice Database)
+- We’ll use the familiar users and orders tables.
+
+#### 1. Show users whose total spending is above ₹500
+```sql
+SELECT spending.name, spending.total_spent
+FROM (
+    SELECT users.name, SUM(orders.amount) AS total_spent
+    FROM users
+    INNER JOIN orders ON users.id = orders.user_id
+    GROUP BY users.name
+) AS spending
+WHERE spending.total_spent > 500;
+```
+- The inner query builds a temporary table `spending` with columns `name` and `total_spent`. The outer query then selects only the rows where `total_spent > 500`.
+
+#### 2. Show products ordered by users who live in London
+```sql
+SELECT london_orders.product, london_orders.amount
+FROM (
+    SELECT orders.product, orders.amount
+    FROM orders
+    INNER JOIN users ON orders.user_id = users.id
+    WHERE users.city = 'London'
+) AS london_orders;
+```
+- Here the derived table `london_orders` filters all orders down to those belonging to London users. The outer query simply presents the result.
+
+#### 3. Rank users by total spending (without window functions)
+- You can compute an aggregate, then order it, using a derived table:
+```sql
+SELECT *
+FROM (
+    SELECT users.name, SUM(orders.amount) AS total_spent
+    FROM users
+    INNER JOIN orders ON users.id = orders.user_id
+    GROUP BY users.name
+) AS user_totals
+ORDER BY user_totals.total_spent DESC;
+```
+- The outer query sorts the derived table. You can also add a `LIMIT` to find the top spender.
+
+#### 4. Find users with above‑average total spending (nested derived tables)
+- This uses a derived table for user totals and another for the overall average:
+```sql
+SELECT user_totals.name, user_totals.total_spent
+FROM (
+    SELECT users.name, SUM(orders.amount) AS total_spent
+    FROM users
+    INNER JOIN orders ON users.id = orders.user_id
+    GROUP BY users.name
+) AS user_totals
+WHERE user_totals.total_spent > (
+    SELECT AVG(total_spent)
+    FROM (
+        SELECT SUM(orders.amount) AS total_spent
+        FROM orders
+        GROUP BY user_id
+    ) AS all_totals
+);
+```
+- That’s advanced, but it shows how derived tables can be layered. For most test checks, a single derived table is enough.
+
+### 📝 Explanation
+- A subquery in the `FROM` clause is called a **derived table**. It’s a temporary table created by the inner `SELECT` and used by the outer query.
+- The derived table **must be given an alias** (a name) so the outer query can refer to it.
+- This technique lets you break down complex logic into two clear steps: first build a summary, then filter or sort that summary.
+- It’s often used for aggregations that need further filtering (like “show me users with total sales > ₹500”), which can’t be done with a simple `WHERE` on the original table.
+- As a QA, I use derived tables to create test datasets that mirror application dashboard queries, validate multi‑step business rules, and produce clean, readable test evidence.
 
