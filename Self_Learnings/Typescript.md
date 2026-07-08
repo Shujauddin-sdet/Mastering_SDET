@@ -1,8 +1,5 @@
 # TypeScript Learning Notes
 
-> [!NOTE]
-> This document contains notes on learning TypeScript, formatted for easy reading.
-
 ## 1. Why TypeScript? (Simplified)
 
 ### 🔍 Simple Analogy
