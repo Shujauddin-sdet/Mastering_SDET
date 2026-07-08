@@ -17,7 +17,7 @@ coverage/
 *.local
 
 # Personal notes - not for GitHub
-secret.md
+secret
 
 
 # Playwright
