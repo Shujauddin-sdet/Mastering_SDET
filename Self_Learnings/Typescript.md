@@ -314,42 +314,44 @@ Now your type stickers get more flexible — you can allow more than one type fo
 - **Type alias** — You give a nickname to a long label so you don't have to keep rewriting the whole thing.
 - **Const assertion (`as const`)** — You lock a label so it can never change — it becomes the exact value forever.
 
-### 💻 Full Code Example (create `unions.ts`)
-
-Paste this into a new file called `unions.ts`, compile with `tsc`, and run `node unions.js`.
+### 🔄 Union Types (`|`)
+A variable that can be one of several types.
 
 ```typescript
-// --------------------- UNION TYPES (|) ---------------------
-// A variable that can be one of several types.
-
 let result: string | number;
 result = "Success";
 console.log("union string:", result); // Success
 result = 200;
 console.log("union number:", result); // 200
 // result = true; // ❌ Error: Type 'boolean' is not assignable
+```
 
-// --------------------- LITERAL TYPES ---------------------
-// A variable that can only hold one specific value (or a union of specific values).
+### 🏷️ Literal Types
+A variable that can only hold one specific value (or a union of specific values).
 
+```typescript
 let direction: "left" | "right" | "up" | "down";
 direction = "left"; // ✅
 // direction = "north"; // ❌ Error: "north" is not allowed
 console.log("literal:", direction);
+```
 
-// --------------------- TYPE ALIASES ---------------------
-// A nickname for a type, so you don't repeat long definitions.
+### 📛 Type Aliases
+A nickname for a type, so you don't repeat long definitions.
 
+```typescript
 type Status = "pass" | "fail" | "blocked";
 let testStatus: Status = "pass";
 console.log("alias:", testStatus);
 
 type User = { name: string; age: number }; // object shape alias
 let user1: User = { name: "Alice", age: 30 };
+```
 
-// --------------------- TYPE NARROWING (typeof) ---------------------
-// Checking a union value at runtime with `typeof`.
+### 🔦 Type Narrowing (`typeof`)
+Checking a union value at runtime with `typeof`.
 
+```typescript
 function printValue(val: string | number): void {
   if (typeof val === "string") {
     console.log("It's a string:", val.toUpperCase()); // TS knows it's a string here
@@ -359,10 +361,12 @@ function printValue(val: string | number): void {
 }
 printValue("hello");
 printValue(42);
+```
 
-// --------------------- TYPE NARROWING (instanceof) ---------------------
-// Checking if an object is an instance of a specific class.
+### 🐕 Type Narrowing (`instanceof`)
+Checking if an object is an instance of a specific class.
 
+```typescript
 class Dog {
   breed: string = "Labrador";
   bark() {
@@ -385,10 +389,12 @@ function handlePet(pet: Dog | Cat): void {
 }
 handlePet(new Dog());
 handlePet(new Cat());
+```
 
-// --------------------- CONST ASSERTIONS (as const) ---------------------
-// Locks an object or array into its exact literal values (readonly).
+### 🔒 Const Assertions (`as const`)
+Locks an object or array into its exact literal values (making it readonly).
 
+```typescript
 const config = {
   apiUrl: "https://api.example.com",
   timeout: 5000,
@@ -397,10 +403,12 @@ const config = {
 
 // config.apiUrl = "other"; // ❌ Error: cannot reassign readonly property
 console.log("const assertion:", config.apiUrl);
+```
 
-// --------------------- EXHAUSTIVENESS CHECKING (with never) ---------------------
-// Ensures you've handled every possible case in a union.
+### 🛡️ Exhaustiveness Checking (with `never`)
+Ensures you've handled every possible case in a union.
 
+```typescript
 type Shape = "circle" | "square" | "triangle";
 
 function getArea(shape: Shape): number {
