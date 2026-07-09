@@ -4,6 +4,7 @@
 * [**2. Setting Up TypeScript**](#2-setting-up-typescript)
 * [**3. TypeScript Basic Types**](#3-typescript-basic-types)
 * [**4. Functions with Types**](#4-functions-with-types)
+* [**5. Union Types & Type Narrowing**](#5-union-types--type-narrowing)
 
 ---
 
@@ -298,3 +299,131 @@ Playwright’s methods are heavily typed functions. For example:
 
 - `page.goto(url: string): Promise<null>` — expects a string URL, returns a Promise.
 - `locator.fill(value: string): Promise<void>` — expects a string value to type, returns nothing.
+
+---
+
+## 5. Union Types & Type Narrowing
+
+Now your type stickers get more flexible — you can allow more than one type for the same variable, and TypeScript helps you figure out exactly which type you’re dealing with at any moment.
+
+### 🔍 Simple Analogy
+
+- **Union type (`|`)** — A label that says “this box can hold a book OR a magazine”. You can put either inside, but nothing else.
+- **Literal type** — A label so specific it says “this box can only hold the book titled ‘The Alchemist’” — not just any book, that exact one.
+- **Type narrowing** — You shine a flashlight into the box to check what’s inside (`typeof`, `instanceof`), so you can safely read it.
+- **Type alias** — You give a nickname to a long label so you don't have to keep rewriting the whole thing.
+- **Const assertion (`as const`)** — You lock a label so it can never change — it becomes the exact value forever.
+
+### 💻 Full Code Example (create `unions.ts`)
+
+Paste this into a new file called `unions.ts`, compile with `tsc`, and run `node unions.js`.
+
+```typescript
+// --------------------- UNION TYPES (|) ---------------------
+// A variable that can be one of several types.
+
+let result: string | number;
+result = "Success";
+console.log("union string:", result); // Success
+result = 200;
+console.log("union number:", result); // 200
+// result = true; // ❌ Error: Type 'boolean' is not assignable
+
+// --------------------- LITERAL TYPES ---------------------
+// A variable that can only hold one specific value (or a union of specific values).
+
+let direction: "left" | "right" | "up" | "down";
+direction = "left"; // ✅
+// direction = "north"; // ❌ Error: "north" is not allowed
+console.log("literal:", direction);
+
+// --------------------- TYPE ALIASES ---------------------
+// A nickname for a type, so you don't repeat long definitions.
+
+type Status = "pass" | "fail" | "blocked";
+let testStatus: Status = "pass";
+console.log("alias:", testStatus);
+
+type User = { name: string; age: number }; // object shape alias
+let user1: User = { name: "Alice", age: 30 };
+
+// --------------------- TYPE NARROWING (typeof) ---------------------
+// Checking a union value at runtime with `typeof`.
+
+function printValue(val: string | number): void {
+  if (typeof val === "string") {
+    console.log("It's a string:", val.toUpperCase()); // TS knows it's a string here
+  } else {
+    console.log("It's a number:", val.toFixed(2)); // TS knows it's a number here
+  }
+}
+printValue("hello");
+printValue(42);
+
+// --------------------- TYPE NARROWING (instanceof) ---------------------
+// Checking if an object is an instance of a specific class.
+
+class Dog {
+  breed: string = "Labrador";
+  bark() {
+    console.log("Woof!");
+  }
+}
+class Cat {
+  color: string = "black";
+  meow() {
+    console.log("Meow!");
+  }
+}
+
+function handlePet(pet: Dog | Cat): void {
+  if (pet instanceof Dog) {
+    pet.bark(); // TS knows it's Dog here
+  } else {
+    pet.meow(); // TS knows it's Cat here
+  }
+}
+handlePet(new Dog());
+handlePet(new Cat());
+
+// --------------------- CONST ASSERTIONS (as const) ---------------------
+// Locks an object or array into its exact literal values (readonly).
+
+const config = {
+  apiUrl: "https://api.example.com",
+  timeout: 5000,
+  retries: 3,
+} as const;
+
+// config.apiUrl = "other"; // ❌ Error: cannot reassign readonly property
+console.log("const assertion:", config.apiUrl);
+
+// --------------------- EXHAUSTIVENESS CHECKING (with never) ---------------------
+// Ensures you've handled every possible case in a union.
+
+type Shape = "circle" | "square" | "triangle";
+
+function getArea(shape: Shape): number {
+  switch (shape) {
+    case "circle":
+      return Math.PI * 10 * 10;
+    case "square":
+      return 10 * 10;
+    case "triangle":
+      return 0.5 * 10 * 5;
+    default:
+      // If we ever add a new shape and forget to handle it, this line
+      // will give a compile‑time error because the `never` type can't be satisfied.
+      const _exhaustiveCheck: never = shape;
+      return _exhaustiveCheck;
+  }
+}
+console.log("circle area:", getArea("circle"));
+```
+
+### 🧠 Why these matter for Playwright
+
+- Playwright options often accept unions: `waitForLoadState("load" | "domcontentloaded" | "networkidle")` — literal union.
+- You’ll store environment‑specific configs using `as const` to make them immutable.
+- When writing custom test helpers, you’ll use `typeof` checks to handle different input types (like a locator or a string).
+- Exhaustiveness checking is a powerful pattern for handling test statuses or browser types.
