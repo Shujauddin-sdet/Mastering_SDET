@@ -22,12 +22,12 @@
 
 - **Plain JavaScript (no types)** – no error shown until you run it:
   ```javascript
-  let price = 100;
+  let price = 100; // Create a variable holding a number
   price = "expensive"; // JavaScript says nothing. But later, if you try price * 2, you get NaN (confusing).
   ```
 - **TypeScript (with types)** – error shown immediately in your editor:
   ```typescript
-  let price: number = 100;
+  let price: number = 100; // Create a variable explicitly typed as a number
   price = "expensive"; // ❌ Error: Type 'string' is not assignable to type 'number'.
   ```
 - **The Benefit**: The moment you type the wrong thing, a red squiggly line appears. You fix it in seconds. No more weird runtime bugs. That's the whole point. TypeScript catches dumb mistakes for you, so your code is more reliable.
@@ -81,8 +81,8 @@
 - **6. Create your first TypeScript file**:
   - In your editor, create a file named `index.ts` and write:
     ```typescript
-    let message: string = "Hello, TypeScript!";
-    console.log(message);
+    let message: string = "Hello, TypeScript!"; // Variable strictly assigned to hold text
+    console.log(message); // Print the text to the console
     ```
   - This is exactly like JavaScript, but with `: string` after the variable name – the **type annotation**.
 - **7. Compile the TypeScript to JavaScript**:
@@ -126,13 +126,13 @@ Think of the types as the labels on storage boxes in your warehouse:
 ### 📦 The Three Most Common Types
 
 ```typescript
-let userName: string = "Alice";
+let userName: string = "Alice"; // Stores text
 console.log("string:", userName); // Output: Alice
 
-let userAge: number = 30;
+let userAge: number = 30; // Stores numbers
 console.log("number:", userAge); // Output: 30
 
-let isActive: boolean = true;
+let isActive: boolean = true; // Stores true or false
 console.log("boolean:", isActive); // Output: true
 ```
 
@@ -140,13 +140,14 @@ console.log("boolean:", isActive); // Output: true
 
 - **`any`**: Turns off type checking – avoid it when possible.
   ```typescript
-  let anything: any = "hello";
-  anything = 42; // no error, even though we changed the type
+  let anything: any = "hello"; // Opting out of type checking completely
+  anything = 42; // no error, even though we changed the type from string to number
   console.log("any:", anything); // Output: 42
   ```
 - **`unknown`**: Like `any` but safer – you must check the type before using.
   ```typescript
-  let uncertain: unknown = "a secret message";
+  let uncertain: unknown = "a secret message"; // We don't know the type yet
+  // We must prove to TypeScript that it's a string before using string methods
   if (typeof uncertain === "string") {
     // TypeScript now knows it's a string inside this block
     console.log("unknown as string:", uncertain.toUpperCase()); // A SECRET MESSAGE
@@ -157,6 +158,7 @@ console.log("boolean:", isActive); // Output: true
 
 - **`void`**: A function that returns nothing.
   ```typescript
+  // The ': void' means this function does not return any value
   function logMessage(msg: string): void {
     console.log("void function:", msg);
   }
@@ -164,8 +166,9 @@ console.log("boolean:", isActive); // Output: true
   ```
 - **`never`**: A function that never finishes (throws an error).
   ```typescript
+  // The ': never' means this function stops execution (crashes) and never returns
   function raiseError(message: string): never {
-    throw new Error(message);
+    throw new Error(message); // Throwing an error stops the script
   }
   // raiseError("Something went wrong!"); // crashes script
   ```
@@ -175,15 +178,16 @@ console.log("boolean:", isActive); // Output: true
 - **Arrays**: An array of strings or numbers.
 
   ```typescript
-  let names: string[] = ["Alice", "Bob", "Charlie"];
+  let names: string[] = ["Alice", "Bob", "Charlie"]; // An array that only allows strings
   console.log("string array:", names);
 
-  let scores: number[] = [95, 87, 100];
+  let scores: number[] = [95, 87, 100]; // An array that only allows numbers
   console.log("number array:", scores);
   ```
 
 - **Tuples**: Fixed number of elements, each with its own type.
   ```typescript
+  // A tuple guarantees exactly 2 items: first a string, second a number
   let user: [string, number] = ["Alice", 30];
   console.log("tuple:", user); // Output: [ 'Alice', 30 ]
   ```
@@ -191,11 +195,13 @@ console.log("boolean:", isActive); // Output: true
 ### 🏷️ Enums
 
 ```typescript
+// Define a fixed set of named constants
 enum Role {
   Admin = "ADMIN",
   User = "USER",
   Guest = "GUEST",
 }
+// Assigning a value using the Enum makes sure we don't misspell "ADMIN"
 let currentRole: Role = Role.Admin;
 console.log("enum:", currentRole); // Output: ADMIN
 ```
@@ -229,11 +235,13 @@ Think of a function as a machine in a factory.
 The two most common type stickers you'll use.
 
 ```typescript
+// Takes two numbers (a and b), and returns a number
 function add(a: number, b: number): number {
   return a + b;
 }
 console.log("add(3,5):", add(3, 5)); // Output: 8
 
+// Takes a string (name), and returns a string
 function greet(name: string): string {
   return "Hello, " + name;
 }
@@ -245,11 +253,12 @@ console.log("greet:", greet("Alice")); // Output: Hello, Alice
 The `?` means "you can leave this out".
 
 ```typescript
+// The '?' on 'age' means it is optional. You can call the function without it.
 function logUser(name: string, age?: number): void {
   if (age) {
-    console.log(`${name} is ${age} years old.`);
+    console.log(`${name} is ${age} years old.`); // Runs if age is provided
   } else {
-    console.log(`${name}, age unknown.`);
+    console.log(`${name}, age unknown.`); // Runs if age is skipped
   }
 }
 logUser("Bob"); // Output: Bob, age unknown.
@@ -261,10 +270,11 @@ logUser("Alice", 30); // Output: Alice is 30 years old.
 If you don't pass a value, the default is used.
 
 ```typescript
+// If 'isAdmin' is not provided, it defaults to false
 function createUser(name: string, isAdmin: boolean = false): string {
   return isAdmin ? `${name} (Admin)` : `${name} (User)`;
 }
-console.log(createUser("Eve")); // Output: Eve (User)
+console.log(createUser("Eve")); // Output: Eve (User) (because default is false)
 console.log(createUser("Alice", true)); // Output: Alice (Admin)
 ```
 
@@ -273,7 +283,9 @@ console.log(createUser("Alice", true)); // Output: Alice (Admin)
 Collects any number of arguments into an array.
 
 ```typescript
+// The '...numbers' gathers any number of arguments into a single array of numbers
 function sumAll(...numbers: number[]): number {
+  // reduce() adds them all up
   return numbers.reduce((total, n) => total + n, 0);
 }
 console.log("sumAll:", sumAll(1, 2, 3, 4)); // Output: 10
@@ -318,21 +330,26 @@ Now your type stickers get more flexible — you can allow more than one type fo
 A variable that can be one of several types.
 
 ```typescript
+// The variable can hold text OR a number
 let result: string | number;
-result = "Success";
+
+result = "Success"; // Valid string
 console.log("union string:", result); // Success
-result = 200;
+
+result = 200; // Valid number
 console.log("union number:", result); // 200
-// result = true; // ❌ Error: Type 'boolean' is not assignable
+// result = true; // ❌ Error: Type 'boolean' is not assignable to 'string | number'
 ```
 
 ### 🏷️ Literal Types
 A variable that can only hold one specific value (or a union of specific values).
 
 ```typescript
+// The variable can only be one of these exact 4 strings
 let direction: "left" | "right" | "up" | "down";
-direction = "left"; // ✅
-// direction = "north"; // ❌ Error: "north" is not allowed
+
+direction = "left"; // ✅ Allowed
+// direction = "north"; // ❌ Error: "north" is not in the allowed list
 console.log("literal:", direction);
 ```
 
@@ -340,21 +357,25 @@ console.log("literal:", direction);
 A nickname for a type, so you don't repeat long definitions.
 
 ```typescript
+// We define 'Status' once and use it everywhere
 type Status = "pass" | "fail" | "blocked";
-let testStatus: Status = "pass";
+let testStatus: Status = "pass"; // Must be one of the three
 console.log("alias:", testStatus);
 
+// Creating a blueprint for a user object
 type User = { name: string; age: number }; // object shape alias
-let user1: User = { name: "Alice", age: 30 };
+let user1: User = { name: "Alice", age: 30 }; // Must have a string name and number age
 ```
 
 ### 🔦 Type Narrowing (`typeof`)
 Checking a union value at runtime with `typeof`.
 
 ```typescript
+// 'val' could be a string or number
 function printValue(val: string | number): void {
+  // Using typeof to check if it's a string at runtime
   if (typeof val === "string") {
-    console.log("It's a string:", val.toUpperCase()); // TS knows it's a string here
+    console.log("It's a string:", val.toUpperCase()); // TS knows it's safe to use string methods
   } else {
     console.log("It's a number:", val.toFixed(2)); // TS knows it's a number here
   }
@@ -380,11 +401,13 @@ class Cat {
   }
 }
 
+// 'pet' could be a Dog or a Cat object
 function handlePet(pet: Dog | Cat): void {
+  // Using instanceof to check which class created the object
   if (pet instanceof Dog) {
-    pet.bark(); // TS knows it's Dog here
+    pet.bark(); // TS knows it's Dog here, so .bark() is safe
   } else {
-    pet.meow(); // TS knows it's Cat here
+    pet.meow(); // TS knows it's Cat here, so .meow() is safe
   }
 }
 handlePet(new Dog());
@@ -395,13 +418,14 @@ handlePet(new Cat());
 Locks an object or array into its exact literal values (making it readonly).
 
 ```typescript
+// Adding 'as const' makes all properties read-only and locks them to exact values
 const config = {
   apiUrl: "https://api.example.com",
   timeout: 5000,
   retries: 3,
 } as const;
 
-// config.apiUrl = "other"; // ❌ Error: cannot reassign readonly property
+// config.apiUrl = "other"; // ❌ Error: cannot reassign because it is locked by 'as const'
 console.log("const assertion:", config.apiUrl);
 ```
 
@@ -409,8 +433,10 @@ console.log("const assertion:", config.apiUrl);
 Ensures you've handled every possible case in a union.
 
 ```typescript
+// The allowed shapes
 type Shape = "circle" | "square" | "triangle";
 
+// We must handle all three shapes
 function getArea(shape: Shape): number {
   switch (shape) {
     case "circle":
@@ -420,8 +446,8 @@ function getArea(shape: Shape): number {
     case "triangle":
       return 0.5 * 10 * 5;
     default:
-      // If we ever add a new shape and forget to handle it, this line
-      // will give a compile‑time error because the `never` type can't be satisfied.
+      // If we ever add a new shape (e.g., "rectangle") to the Shape type,
+      // this line will trigger an error reminding us to handle it here too!
       const _exhaustiveCheck: never = shape;
       return _exhaustiveCheck;
   }
