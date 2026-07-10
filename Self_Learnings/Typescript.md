@@ -6,6 +6,7 @@
 * [**4. Functions with Types**](#4-functions-with-types)
 * [**5. Union Types & Type Narrowing**](#5-union-types--type-narrowing)
 * [**6. Interfaces & Object Types**](#6-interfaces--object-types)
+* [**7. Classes & Object-Oriented Programming (OOP)**](#7-classes--object-oriented-programming-oop)
 
 ---
 
@@ -697,3 +698,201 @@ console.log("Status:", userStatus);
 - **Configuration typing**: `playwright.config.ts` is a typed object with optional and readonly properties.
 - **Extensibility**: You can extend a base test interface with custom fixtures using interface merging (exactly how Playwright’s test fixtures work).
 
+---
+
+## 7. Classes & Object-Oriented Programming (OOP)
+
+Classes are the moulds for creating objects. They combine data (properties) and behaviour (methods) into a single package.
+In Playwright, you’ll use classes to build Page Object Models — each page becomes a class, with locators as properties and user actions as methods.
+
+### 🔍 Simple Analogy
+
+A **class** is a cookie cutter. It defines the shape (properties) and what you can do with it (methods).
+Every actual cookie (object) you make from that cutter will have the same shape, but different details (like different icing).
+
+- **Access modifiers (`public`, `private`, `protected`)** → labels on compartments that say who can touch them.
+- **Readonly properties** → stamped‑in details that can’t be altered after baking.
+- **Interfaces with classes (`implements`)** → a contract that says “this class must provide certain methods”.
+- **Abstract classes** → a half‑finished cutter; you can’t use it directly, but you can base other cutters on it.
+- **Getters and Setters** → special doors that run logic when you read or write a property.
+
+### 🚪 Access Modifiers
+`public` (default), `private`, `protected` control visibility.
+
+```typescript
+// We create a blueprint for a Person using a class
+class Person {
+  // 'public' means anyone outside the class can see and use this name
+  public name: string;         
+  // 'private' means ONLY the code inside this Person class can see the ssn
+  private ssn: string;         
+  // 'protected' means this class and any 'child' classes can see the dob
+  protected dob: string;       
+
+  // The constructor is a special function that runs once when we create a new Person
+  constructor(name: string, ssn: string, dob: string) {
+    // We save the passed-in name into our public property
+    this.name = name;
+    // We save the passed-in ssn into our private property
+    this.ssn = ssn;
+    // We save the passed-in dob into our protected property
+    this.dob = dob;
+  }
+
+  // A public function that anyone can call to make the person introduce themselves
+  public introduce(): string {
+    // We can safely use 'this.name' because it belongs to the class
+    return `Hi, I'm ${this.name}`;
+  }
+}
+
+// We create a new real Person object named 'p' using the 'new' keyword
+const p = new Person("Alice", "123-45-6789", "1990-01-01");
+
+// We can call the public introduce method successfully
+console.log(p.introduce());   // Hi, I'm Alice
+
+// console.log(p.ssn);        // ❌ ERROR: 'ssn' is private, we can't see it from out here!
+// console.log(p.dob);        // ❌ ERROR: 'dob' is protected, we can't see it from out here either!
+```
+
+### 🔒 Readonly Properties in Classes
+
+```typescript
+// We create a blueprint for configuration
+class Config {
+  // 'readonly' means once this is set in the constructor, it's locked forever
+  readonly version: string;
+  // 'readonly' means the port number is also locked forever
+  readonly port: number;
+
+  // The constructor runs once when creating the Config object
+  constructor(version: string, port: number) {
+    // This is the ONLY time we are allowed to set the readonly 'version'
+    this.version = version;
+    // This is the ONLY time we are allowed to set the readonly 'port'
+    this.port = port;
+  }
+}
+
+// We create a new configuration object with version "1.0.0" and port 3000
+const cfg = new Config("1.0.0", 3000);
+
+// cfg.version = "2.0.0";   // ❌ ERROR: TypeScript stops us because 'version' is readonly!
+// We can still safely read and print the values
+console.log("Config:", cfg.version, cfg.port);
+```
+
+### 🤝 Interfaces with Classes (`implements`)
+A contract: a class that implements an interface must provide those methods.
+
+```typescript
+// We define a rule (interface) that says any Logger MUST have a 'log' function
+interface Logger {
+  // The log function must take a string and return nothing
+  log(message: string): void;
+}
+
+// We create a class and use 'implements Logger' to promise we will follow the rule
+class ConsoleLogger implements Logger {
+  // We MUST provide the log function exactly as promised
+  log(message: string): void {
+    // We print the message to the console with a special prefix
+    console.log("[LOG]", message);
+  }
+}
+
+// We create a new logger object
+const logger = new ConsoleLogger();
+// We use the guaranteed 'log' function
+logger.log("System started");
+```
+
+### 🧩 Abstract Classes and Methods
+Abstract = "incomplete". You can't instantiate it directly; subclasses must finish it.
+
+```typescript
+// 'abstract' means this class is incomplete and cannot be used directly to make an object
+abstract class Animal {
+  // 'abstract' means we don't write the code here — any child class MUST write it instead
+  abstract makeSound(): void;   
+
+  // This is a normal function that all animals will automatically share
+  move(): void {
+    // All animals know how to move
+    console.log("Moving...");
+  }
+}
+
+// 'extends' means Dog is a child of the incomplete Animal class
+class Dog extends Animal {
+  // We MUST finish the 'makeSound' function because the parent left it abstract
+  makeSound(): void {
+    // Dogs bark
+    console.log("Woof!");
+  }
+}
+
+// const a = new Animal();   // ❌ ERROR: Animal is abstract (incomplete), so we can't create it!
+
+// We CAN create a Dog because it finished all the incomplete parts
+const dog = new Dog();
+// We call the function the Dog class provided
+dog.makeSound();   // Woof!
+// We call the function the Dog inherited from the Animal class
+dog.move();        // Moving...
+```
+
+### 🚪 Getters and Setters
+Properties that run code when you read or write them.
+
+```typescript
+// We create a class to manage temperature safely
+class Temperature {
+  // We hide the real number inside a private variable with an underscore
+  private _celsius: number = 0;
+
+  // 'get' creates a fake property that runs a function when we try to read it
+  get celsius(): number {
+    // We just return the hidden private value
+    return this._celsius;
+  }
+
+  // 'set' creates a fake property that runs a function when we try to change it
+  set celsius(value: number) {
+    // We can run logic to check if the new value is safe!
+    if (value < -273.15) {
+      // If it's too cold, we crash the program instead of accepting it
+      throw new Error("Below absolute zero!");
+    }
+    // If it's safe, we update the hidden private value
+    this._celsius = value;
+  }
+
+  // We can even create a getter that calculates a value on the fly!
+  get fahrenheit(): number {
+    // We convert celsius to fahrenheit automatically whenever this is read
+    return (this._celsius * 9) / 5 + 32;
+  }
+}
+
+// We create a new temperature object
+const temp = new Temperature();
+
+// This looks like setting a variable, but it actually runs the 'set celsius' function!
+temp.celsius = 25;            
+// This looks like reading a variable, but it runs the 'get celsius' function!
+console.log("Celsius:", temp.celsius);    
+// This runs the math in 'get fahrenheit' automatically!
+console.log("Fahrenheit:", temp.fahrenheit);  
+
+// temp.celsius = -300;      // ❌ ERROR: Our 'set' logic blocks this and throws an Error!
+```
+
+### 🧠 Why these matter for Playwright
+
+- **Page Object Models are classes.** Each page class holds locators (readonly properties) and user actions (methods).
+- **Access modifiers keep test internals hidden;** only the public actions are exposed to test scripts.
+- **Abstract classes** can define a base `BasePage` with common methods (like `navigate()`) that every page inherits.
+- **Getters** are great for dynamic locators (e.g., `get submitBtn() { return this.page.locator('button'); }`).
+- **Interfaces** can define the contract for test fixtures, ensuring consistency across test suites.
