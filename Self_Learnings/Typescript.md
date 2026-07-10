@@ -5,6 +5,7 @@
 * [**3. TypeScript Basic Types**](#3-typescript-basic-types)
 * [**4. Functions with Types**](#4-functions-with-types)
 * [**5. Union Types & Type Narrowing**](#5-union-types--type-narrowing)
+* [**6. Interfaces & Object Types**](#6-interfaces--object-types)
 
 ---
 
@@ -461,3 +462,238 @@ console.log("circle area:", getArea("circle"));
 - You’ll store environment‑specific configs using `as const` to make them immutable.
 - When writing custom test helpers, you’ll use `typeof` checks to handle different input types (like a locator or a string).
 - Exhaustiveness checking is a powerful pattern for handling test statuses or browser types.
+
+---
+
+## 6. Interfaces & Object Types
+
+Now you’ll learn to describe the shape of objects — what fields they have, what types those fields are, and what’s optional or locked. This is the most important concept for writing clean, safe test data in Playwright.
+
+### 🔍 Simple Analogy
+
+An **interface** is a form template.
+Imagine a customer registration form with labelled boxes:
+- **“Full Name”** (required, text)
+- **“Age”** (optional, number)
+- **“Membership ID”** (once printed, you cannot change it)
+
+The form itself isn’t a real customer — it’s the blueprint. Any real customer you create must fill in the boxes exactly as the template says.
+
+- **Optional properties (`?`)** → a box marked “leave blank if you want”.
+- **Readonly properties** → a box that’s printed in ink; once written, you can’t erase it.
+- **Extending an interface** → taking the basic form and adding extra boxes for a “VIP Customer”.
+- **Index signature** → a form with a flexible number of identical boxes (like a list of phone numbers).
+- **Interface merging** → you can add more boxes to the same form later, across different files.
+- **Intersection types (`&`)** → combining two different forms into one master form.
+- **Type alias vs interface** → two ways to create a form; interfaces are extensible, aliases are more compact for unions and literals.
+
+### 📝 Basic Interface
+Describing the shape of a user object.
+
+```typescript
+// We create a blueprint named 'User' using the 'interface' keyword
+interface User {
+  // The user MUST have a 'name' that is text (string)
+  name: string; 
+  // The user MUST have an 'age' that is a number
+  age: number; 
+}
+
+// We create a variable 'alice' and say it must exactly match the 'User' blueprint
+const alice: User = { 
+  name: "Alice", // We provide the required string name
+  age: 30        // We provide the required number age
+};
+// Print the user object to the terminal
+console.log("Basic user:", alice);
+```
+
+### ❓ Optional Properties (`?`)
+A property that may or may not exist.
+
+```typescript
+// We create a blueprint for a 'Product'
+interface Product {
+  // A required ID number
+  id: number;
+  // A required product name (text)
+  name: string;
+  // The '?' makes 'description' optional. You can provide it or skip it!
+  description?: string; 
+}
+
+// Here we skip the description, and TypeScript is totally fine with it
+const laptop: Product = { id: 1, name: "Laptop" }; 
+// Here we provide the description, which is also fine
+const phone: Product = { id: 2, name: "Phone", description: "A smart phone" }; 
+
+// Print both products to the console
+console.log("Product without desc:", laptop);
+console.log("Product with desc:", phone);
+```
+
+### 🔒 Readonly Properties
+Once set, cannot be changed.
+
+```typescript
+// We create a blueprint for configuration settings
+interface Config {
+  // 'readonly' means once this URL is set, no one can ever change it again
+  readonly apiUrl: string; 
+  // A normal number that can be changed later
+  timeout: number;
+}
+
+// We create the config object and set both values initially
+const config: Config = { apiUrl: "https://api.example.com", timeout: 5000 };
+
+// config.apiUrl = "new-url"; // ❌ ERROR: TypeScript stops you from changing a readonly value!
+config.timeout = 10000;       // ✅ SUCCESS: timeout is not readonly, so we can change it to 10000
+
+// Print the final config to the console
+console.log("Config:", config);
+```
+
+### ➕ Extending Interfaces
+Creating a new interface that includes all properties of another.
+
+```typescript
+// First, we create a basic blueprint for a normal Person
+interface Person {
+  name: string;  // Needs a name
+  email: string; // Needs an email
+}
+
+// 'extends Person' means the Employee automatically gets 'name' and 'email'
+// PLUS we add two new specific properties just for Employees
+interface Employee extends Person {
+  employeeId: number; // New required number
+  department: string; // New required text
+}
+
+// When we create an Employee, we MUST provide all 4 properties (2 from Person + 2 from Employee)
+const emp: Employee = {
+  name: "Bob",                 // From Person
+  email: "bob@company.com",    // From Person
+  employeeId: 101,             // From Employee
+  department: "Engineering"    // From Employee
+};
+// Print the employee object to the console
+console.log("Employee:", emp);
+```
+
+### 📖 Index Signatures
+An object with unknown property names, but all values are of a specific type.
+
+```typescript
+// We create a dictionary blueprint where we don't know the exact property names in advance
+interface StringDictionary {
+  // '[key: string]' means you can add ANY property name (like 'hello' or 'apple')
+  // ': string' means the value you assign to it MUST be text.
+  [key: string]: string; 
+}
+
+// We create an object using this dictionary rule
+const translations: StringDictionary = {
+  hello: "Hola",    // 'hello' is a string key, "Hola" is a string value (✅ Valid)
+  goodbye: "Adiós"  // 'goodbye' is a string key, "Adiós" is a string value (✅ Valid)
+  // age: 30        // ❌ ERROR: 30 is a number, but our dictionary only allows string values!
+};
+// Print to console
+console.log("Translations:", translations);
+```
+
+### 🤝 Interface Merging
+Declaring the same interface twice merges them together automatically.
+
+```typescript
+// We create the Animal blueprint and give it one property
+interface Animal {
+  species: string; // Must have species
+}
+
+// Later in the code, we use the EXACT SAME NAME 'Animal' to add another property.
+// TypeScript automatically merges them together into one big Animal blueprint!
+interface Animal {
+  legs: number; // Must have legs
+}
+
+// Because they merged, a valid Animal must now have BOTH 'species' and 'legs'
+const dog: Animal = { 
+  species: "Canine", // From the first declaration
+  legs: 4            // From the second declaration
+};
+// Print to console
+console.log("Merged Animal:", dog);
+```
+
+### 🔀 Intersection Types (`&`)
+Combine multiple types (interfaces or aliases) into one.
+
+```typescript
+// A blueprint for things that can fly
+interface Flyable {
+  fly(): void; // A function that returns nothing
+}
+
+// A blueprint for things that can swim
+interface Swimable {
+  swim(): void; // A function that returns nothing
+}
+
+// The '&' symbol smashes the two blueprints together.
+// A 'Duck' MUST have both the fly() AND swim() functions.
+type Duck = Flyable & Swimable;
+
+// We create a duck and provide both required functions
+const daffy: Duck = {
+  fly() { console.log("Flying"); },   // Fulfills the Flyable requirement
+  swim() { console.log("Swimming"); } // Fulfills the Swimable requirement
+};
+
+// We can now call both functions
+daffy.fly();
+daffy.swim();
+```
+
+### 🆚 Interfaces vs Type Aliases
+Both can describe objects, but interfaces can be extended/merged; aliases are better for unions/literals.
+
+```typescript
+// INTERFACE: Use this for defining object shapes (like a Car).
+// They are easy to extend and merge later.
+interface Car {
+  brand: string;
+  model: string;
+}
+
+// TYPE ALIAS: Use this for simple unions or specific values.
+// You CANNOT do this easily with an interface!
+type Status = "active" | "inactive";
+
+// TYPE ALIAS: You CAN use it for objects too, but it cannot be merged later like an interface.
+type Point = {
+  x: number;
+  y: number;
+};
+
+// Creating a Car using the interface
+const myCar: Car = { brand: "Tesla", model: "Model 3" };
+// Creating a Point using the type alias
+const myPoint: Point = { x: 10, y: 20 };
+// Creating a Status using the type alias (must be exactly "active" or "inactive")
+const userStatus: Status = "active";
+
+// Print them all out
+console.log("Car:", myCar);
+console.log("Point:", myPoint);
+console.log("Status:", userStatus);
+```
+
+### 🧠 Why these matter for Playwright
+
+- **Test data shapes**: You’ll define interfaces for test users, orders, and configuration, ensuring every test uses consistent data.
+- **Page Object Models**: Each page object (LoginPage, DashboardPage) is often typed as an interface or a class with typed properties (locators as `Locator` type).
+- **Configuration typing**: `playwright.config.ts` is a typed object with optional and readonly properties.
+- **Extensibility**: You can extend a base test interface with custom fixtures using interface merging (exactly how Playwright’s test fixtures work).
+
